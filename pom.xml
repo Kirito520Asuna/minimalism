@@ -22,4 +22,36 @@
         <module>micro-service-module-all</module>
     </modules>
 
+    <!--远程仓库-->
+    <repositories>
+        <repository>
+            <id>aliyun-public</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
 </project>

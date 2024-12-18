@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.minimalism</groupId>
+    <artifactId>common-base</artifactId>
+    <version>${project-module.version}</version>
+
+    <properties>
+        <java.version>8</java.version>
+        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
+        <aop.version>1.9.19</aop.version>
+        <spring-web.version>6.0.10</spring-web.version>
+        <javax.version>4.0.1</javax.version>
+        <spring-boot-starter-web.version>2.5.0</spring-boot-starter-web.version>
+
+        <jakarta.version>2.2.3</jakarta.version>
+        <hutool.version>5.8.18</hutool.version>
+        <lombok.version>1.18.20</lombok.version>
+        <gson.version>2.8.6</gson.version>
+        <guava.version>30.0-jre</guava.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-codec.version>1.16.0</commons-codec.version>
+        <commons-text.version>1.10.0</commons-text.version>
+        <okhttp.version>4.9.1</okhttp.version>
+
+        <jackson.version>2.12.5</jackson.version>
+        <sms.version>1.0.4</sms.version>
+        <pagehelper.version>5.1.11</pagehelper.version>
+        <fastjson.version>2.0.32</fastjson.version>
+        <alibaba-ttl.version>2.14.4</alibaba-ttl.version>
+        <velocity.version>2.3</velocity.version>
+        <poi.version>4.1.2</poi.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+            <version>${alibaba-ttl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${springfox-boot-starter.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+            <!--<optional>true</optional>-->
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+<!--            <optional>true</optional>-->
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>${pagehelper.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>2.2.8</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--okhttp-->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+        <!--guava工具集-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+        <!-- Apache Lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!-- Apache Velocity -->
+        <!-- 代码生成使用模板 -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>${velocity.version}</version>
+        </dependency>
+
+        <!-- excel工具 -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

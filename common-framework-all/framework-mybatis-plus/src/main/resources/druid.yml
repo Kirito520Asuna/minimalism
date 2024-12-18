@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      stat-view-servlet:
+        enabled: true
+        loginUsername: admin
+        loginPassword: 123456
+      web-stat-filter:
+        enabled: true
+
+      # 初始化连接数
+      initialSize: 10
+      # 最小连接池数量
+      minIdle: 20
+      # 最大连接池数量
+      maxActive: 100
+      # 配置连接等待超时的时间，单位为毫秒
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictionIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictionIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      # testOnBorrow 能够确保我们每次都能获取到可用的连接，但是如果设置为 true，则每次获取连接时候都要到数据库验证连接有效性，这在高并发的时候会造成性能下降，
+      # 可以将 testOnBorrow 设置成 false，testWhileIdle 设置成 true 这样能获得比较好的性能
+      testWhileIdle: true
+      testOnBorrow: false
+      # testOnBorrow 和 testOnReturn 在生产环境一般是不开启的，主要是性能考虑。
+      testOnRetrun: false
+#================================================================================================================================================================================
+# mybatis plus 配置
+#================================================================================================================================================================================
+mybatis-plus:
+  # 设置Mapper文件位置
+  mapper-locations: classpath:mapper/*.xml, classpath:mapper/**/*.xml
+  #配置
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    # 使用JDBC的getGeneratedKeys，获取数据库自增主键值
+    use-generated-keys: true
+    # 使用列别名
+    use-column-label: true
+    # 驼峰下划线转换
+    map-underscore-to-camel-case: true

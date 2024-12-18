@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common-base-all/common-base/common-base.iml" filepath="$PROJECT_DIR$/common-base-all/common-base/common-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-base-all/common-base-all.iml" filepath="$PROJECT_DIR$/common-base-all/common-base-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-base-all/common-base-aop/common-base-aop.iml" filepath="$PROJECT_DIR$/common-base-all/common-base-aop/common-base-aop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-base-all/common-code/common-code.iml" filepath="$PROJECT_DIR$/common-base-all/common-code/common-code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-dao-module-all/common-dao-module-all.iml" filepath="$PROJECT_DIR$/common-dao-module-all/common-dao-module-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/common-framework-all.iml" filepath="$PROJECT_DIR$/common-framework-all/common-framework-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-module-all/common-module-all.iml" filepath="$PROJECT_DIR$/common-module-all/common-module-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-service-module-all/common-service-module-all.iml" filepath="$PROJECT_DIR$/common-service-module-all/common-service-module-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-dynamic-datasource/framework-dynamic-datasource.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-dynamic-datasource/framework-dynamic-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-easy-elasticsearch/framework-easy-elasticsearch.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-easy-elasticsearch/framework-easy-elasticsearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-elasticsearch/framework-elasticsearch.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-elasticsearch/framework-elasticsearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-jpa/framework-jpa.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-jpa/framework-jpa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-knife4j/framework-knife4j.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-knife4j/framework-knife4j.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-mybatis-plus/framework-mybatis-plus.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-mybatis-plus/framework-mybatis-plus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-nacos/framework-nacos.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-nacos/framework-nacos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-rabbitmq/framework-rabbitmq.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-rabbitmq/framework-rabbitmq.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-redis/framework-redis.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-redis/framework-redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-seata/framework-seata.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-seata/framework-seata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-sharding-sphere/framework-sharding-sphere.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-sharding-sphere/framework-sharding-sphere.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-framework-all/framework-weixin-java/framework-weixin-java.iml" filepath="$PROJECT_DIR$/common-framework-all/framework-weixin-java/framework-weixin-java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/micro-service-module-all/micro-service-module-all.iml" filepath="$PROJECT_DIR$/micro-service-module-all/micro-service-module-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/minimalism.iml" filepath="$PROJECT_DIR$/.idea/minimalism.iml" />
+    </modules>
+  </component>
+</project>

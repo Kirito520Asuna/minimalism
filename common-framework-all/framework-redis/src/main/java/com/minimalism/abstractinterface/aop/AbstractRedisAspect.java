@@ -1,0 +1,352 @@
+package com.minimalism.abstractinterface.aop;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import lombok.*;
+import lombok.experimental.Accessors;
+import org.apache.commons.jexl3.JexlEngine;
+import org.apache.commons.jexl3.JexlExpression;
+import org.apache.commons.jexl3.internal.Engine;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.MethodSignature;
+
+import javax.servlet.http.HttpServletRequest;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+
+
+/**
+ * @Author yan
+ * @Date 2024/5/24 0024 10:00
+ * @Description
+ */
+public interface AbstractRedisAspect {
+    JSONConfig config = new JSONConfig().setIgnoreNullValue(false);
+    /*#####################################################################################################################################*/
+    /*常量模块*/
+    // templateKey 缓存模板   placeholder 占位符   splicer 拼接符
+    String templateKey = "%s:%s", placeholder = "#", splicer = "+";
+    // 比较运算符
+    List<String> comparisonOperators = Arrays.stream("> < = >= <= != + - * / % & | ^ ! ? :".split(" ")).collect(Collectors.toList());
+    // 条件截取剔除
+    List<String> conditionOperators = Arrays.stream("( ) { }".split(" ")).collect(Collectors.toList());
+
+    /*#####################################################################################################################################*/
+    /*记录实体模块*/
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(chain = true)
+    class RedisCacheParameters {
+        /**
+         * 缓存key请求参数
+         */
+        private Map<String, Object> request;
+        /**
+         * 缓存key响应参数
+         */
+        private Map<String, Object> response;
+    }
+
+    /**
+     * 获取请求参数设置请求参数
+     *
+     * @param redisCacheParameters
+     * @param joinPoint
+     * @return
+     */
+    default RedisCacheParameters setRequesRedisCacheParameters(RedisCacheParameters redisCacheParameters, JoinPoint joinPoint) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        Object[] pointArgs = joinPoint.getArgs();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        String[] parameterNames = signature.getParameterNames();
+        for (int i = 0; i < parameterNames.length; i++) {
+            map.put(parameterNames[i], pointArgs[i]);
+        }
+
+        /*// 接收到请求，记录请求内容
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        String method = request.getMethod();
+        if (StrUtil.equalsIgnoreCase(method, "post") || StrUtil.equalsIgnoreCase(method, "put")) {
+//        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+            StringBuilder stringBuilder = new StringBuilder();
+
+            // 读取请求体中的文本数据
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+            } catch (IOException e) {
+
+            }
+            String bodyStr = stringBuilder.toString();
+            if (JSONUtil.isTypeJSON(bodyStr)) {
+                Map<String, Object> toBean = JSONUtil.toBean(bodyStr, Map.class);
+                if (ObjectUtil.isNotEmpty(toBean)) {
+                    map.putAll(toBean);
+                }
+            }
+
+            if (ObjectUtil.isEmpty(map)) {
+
+                String args = ObjectUtil.isEmpty(pointArgs) ? "{}" : JSONUtil.toJsonStr(pointArgs[0], config);
+
+                Map<String, Object> toBean = JSONUtil.toBean(args, Map.class);
+                if (ObjectUtil.isNotEmpty(toBean)) {
+                    map.putAll(toBean);
+                }
+            }
+        } else {
+            Map<String, String[]> parameterMap = wrapper.getParameterMap();
+            if (CollUtil.isNotEmpty(parameterMap)) {
+                parameterMap.keySet().stream().forEach(k -> {
+                    List<String> asList = Arrays.asList(parameterMap.get(k));
+                    asList = CollUtil.isNotEmpty(asList) ? asList : Arrays.asList("");
+                    if (asList.size() > 1) {
+                        map.put(k, asList);
+                    } else {
+                        map.put(k, asList.get(0));
+                    }
+                });
+            }
+        }
+*/
+
+        return redisCacheParameters.setRequest(map);
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(chain = true)
+    class RedisEntity<T> {
+        private T entity;
+        private RedisCacheParameters redisCacheParameters;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    enum OperationType {
+        str, condition
+    }
+    /*#####################################################################################################################################*/
+    /*aop模块*/
+
+    default <T extends Annotation> T getAnnotation(JoinPoint joinPoint, Class<T> tClass) {
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+        T cachePut = method.getAnnotation(tClass);
+        return cachePut;
+    }
+
+
+    /**
+     * 切面方法
+     */
+    default void pointcutAspect() {
+    }
+
+    /**
+     * 前置通知
+     *
+     * @param joinPoint
+     */
+    @SneakyThrows
+//    @Before(value = "pointcutAspect()")
+    default void doBefore(JoinPoint joinPoint) {
+    }
+
+    /**
+     * 环绕通知
+     *
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
+//    @Around(value = "pointcutAspect()")
+    default Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        //joinPoint.proceed() 目标方法执行
+        return joinPoint.proceed();
+    }
+
+    /**
+     * 后置通知
+     *
+     * @param joinPoint
+     * @param result
+     */
+    @SneakyThrows
+//    @AfterReturning(pointcut = "pointcutAspect()", returning = "result")
+    default void afterReturning(JoinPoint joinPoint, Object result) {
+    }
+    default String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        // 如果通过多层代理，X-Forwarded-For的值中可能会有多个IP地址，第一个IP地址才是真实的客户端IP
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0];
+        }
+        return ip;
+    }
+    /*#####################################################################################################################################*/
+    /*拼接模块*/
+
+    /**
+     * 拼接有效Key
+     *
+     * @param key
+     * @return
+     */
+    default String effectiveSplicingString(String key, JSONObject json, Collection<String> collection, OperationType operationType) {
+        boolean contains = key.contains(placeholder);
+        boolean conditionType = ObjectUtil.equals(operationType, OperationType.condition);
+
+        //占位符名称==>占位符值
+        Map<String, Object> placeholderMap = new LinkedHashMap();
+        List<String> arrayList = CollUtil.isEmpty(collection) ? CollUtil.newArrayList() : CollUtil.newArrayList(collection);
+        if (contains) {
+            //占位符
+            List<String> keys = Arrays.stream(key.split(placeholder)).filter(StrUtil::isNotBlank).collect(Collectors.toList());
+            if (CollUtil.isEmpty(keys)) {
+                keys = CollUtil.newArrayList();
+            } else {
+                String firstStr = keys.get(0);
+                if (key.startsWith(firstStr)) {
+                    keys.remove(firstStr);
+                }
+            }
+            AtomicReference<String> conditionTypeKey = new AtomicReference<>(key.replace(conditionType ? "" : splicer, ""));
+            //处理拼接
+            keys.stream().forEach(key1 -> {
+                int index = key1.length();
+                if (CollUtil.isNotEmpty(arrayList)) {
+                    index = arrayList.stream()
+                            .map(containKey -> key1.indexOf(containKey)).filter(i -> i > 0)
+                            .mapToInt(i -> i).min().orElse(index);
+                }
+                String op = key1.substring(0, index);
+                boolean conditionTypeBool = false;
+                for (String operator : conditionOperators) {
+                    if (op.startsWith(operator) || op.endsWith(operator)) {
+                        conditionTypeBool = true;
+                        break;
+                    }
+                }
+
+                if (conditionType || conditionTypeBool) {
+                    AtomicReference<String> conditionTypeOp = new AtomicReference<>(op);
+                    conditionOperators.stream().forEach(op1 -> {
+                        String s = conditionTypeOp.get();
+                        conditionTypeOp.set(s.replace(op1, ""));
+                    });
+                    op = conditionTypeOp.get();
+                }
+
+                Object byPath = json.getByPath(op);
+
+                if (conditionType) {
+                    String str = byPath.toString();
+                    boolean typeJSON = JSONUtil.isTypeJSON(str);
+                    byPath = typeJSON ? new StringBuffer("'").append(str).append("'").toString() : str;
+                }
+                placeholderMap.put(placeholder + op, byPath);
+            });
+            key = conditionTypeKey.get();
+        }
+        Map<String, String> jsonMap = new LinkedHashMap<>();
+
+        Iterator<String> iterator = placeholderMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            if (conditionType) {
+                AtomicReference<String> conditionTypeOp = new AtomicReference<>(next);
+                conditionOperators.stream().forEach(op1 -> {
+                    String s = conditionTypeOp.get();
+                    conditionTypeOp.set(s.replace(op1, ""));
+                });
+                next = conditionTypeOp.get();
+            }
+            String jsonStr = JSONUtil.toJsonStr(placeholderMap.get(next));
+
+            if (!key.contains(next)) {
+                String mode = placeholder + "%s%s%s";
+                String nextMode = next.replace(placeholder, "");
+
+                List<String> collect = Arrays.stream("( ),{ }".split(",")).collect(Collectors.toList());
+                for (String str : collect) {
+                    String[] split = str.split(" ");
+                    String format = String.format(mode, split[0], nextMode, split[1]);
+                    if (key.contains(format)) {
+                        next = format;
+                        break;
+                    }
+                }
+            }
+            jsonMap.put(next, jsonStr);
+        }
+
+        if (CollUtil.isNotEmpty(jsonMap)) {
+            List<String> jsonKeys = CollUtil.newArrayList(jsonMap.keySet())
+                    .stream()
+                    .sorted((s1, s2) -> s2.length() - s1.length())
+                    .collect(Collectors.toList());
+            for (String jsonKey : jsonKeys) {
+                key = key.replace(jsonKey, jsonMap.get(jsonKey));
+            }
+        }
+        if (conditionType) {
+        } else {
+            key = key.replace(splicer + "'", "")
+                    .replace("'" + splicer, "")
+                    .replace("'", "");
+        }
+        return key;
+    }
+    /*#####################################################################################################################################*/
+
+    default String replaceKey(String key, String[] replaceSplicingList) {
+        return key.replace(replaceSplicingList[0],replaceSplicingList[1]);
+    }
+
+
+    /**
+     * 判断是否是条件
+     *
+     * @param condition
+     * @return
+     */
+    default boolean verifiedOkCondition(String condition) {
+        // 创建JexlEngine实例 解除jdk 8 强制要求
+        JexlEngine jexl = new Engine();
+        JexlExpression expression = jexl.createExpression(condition);
+        boolean evalResult = (Boolean) expression.evaluate(null);
+        return evalResult || Boolean.parseBoolean(condition);
+    }
+}

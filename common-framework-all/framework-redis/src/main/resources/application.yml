@@ -1,0 +1,28 @@
+#\u82E5\u914D\u7F6E\u8FDE\u63A5\u6C60\u9700\u6392\u9664redisson\u81EA\u5E26\u8FDE\u63A5\u6C60
+#spring:
+#  autoconfigure:
+#    exclude: org.redisson.spring.starter.RedissonAutoConfiguration
+
+#spring:
+#  redis:
+#    mode: single
+#    host: 127.0.0.1
+#    port: 6379
+#    database: 0
+#    cluster:
+#      nodes: 127.0.0.1:6380,127.0.0.1:6381,
+#  # Spring Redis Cache
+#  cache:
+#    # \u8BBE\u7F6E\u7F13\u5B58\u7C7B\u578B\uFF0C\u8FD9\u91CC\u4F7F\u7528Redis\u4F5C\u4E3A\u7F13\u5B58\u670D\u52A1\u5668
+#    type: redis
+#    # \u5B9A\u4E49cache\u540D\u79F0\uFF0C\u7528\u4E8E\u5728\u7F13\u5B58\u6CE8\u89E3\u4E2D\u5F15\u7528\uFF0C\u591A\u4E2A\u540D\u79F0\u53EF\u4EE5\u4F7F\u7528\u9017\u53F7\u5206\u9694
+#    cache-names: redisCache
+#    redis:
+#      # \u5141\u8BB8\u4FDD\u5B58\u7A7A\u503C
+#      cache-null-values: true
+#      # \u81EA\u5B9A\u4E49\u7F13\u5B58\u524D\u7F00
+#      #key-prefix:
+#      # \u662F\u5426\u4F7F\u7528\u524D\u7F00
+#      use-key-prefix: true
+#      # \u8BBE\u7F6E\u7F13\u5B58\u5931\u6548\u65F6\u95F4\uFF0C0\u6216\u8005\u9ED8\u8BA4\u4E3A\u6C38\u8FDC\u4E0D\u5931\u6548
+#      time-to-live: 0

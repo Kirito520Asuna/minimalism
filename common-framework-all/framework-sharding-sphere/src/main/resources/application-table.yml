@@ -1,0 +1,96 @@
+# todo 多数据源方案 dynamic-datasource 实现 水平分表
+#访问没有分表的数据时使用默认的普通数据源，访问分表的数据时使用@DS("sharding")注解，
+#@DS(“slave”) 括号内即是application.yml中配置的数据源名称，不加注解默认是访问主库master，可加在service方法上，也可加在mapper方法上，但强烈不建议同时在service和mapper注解。 (可能会有问题)
+#@DS 可以注解在方法上和类上，同时存在方法注解优先于类上注解
+spring:
+  datasource:
+    dynamic:
+      primary: master # 设置默认的数据源或者数据源组,默认值即为master
+      strict: false # 严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/dev?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+          username: root
+          password: root
+
+  shardingsphere:
+    props:
+      sql-show: true
+    datasource:
+      names: sharding
+      sharding:
+        type: ${spring.shardingsphere.datasource.common.type}
+        driver-class-name: ${spring.shardingsphere.datasource.common.driver-class-name}
+        initial-size: ${spring.shardingsphere.datasource.common.initial-size}
+        min-idle: ${spring.shardingsphere.datasource.common.min-idle}
+        maxActive: ${spring.shardingsphere.datasource.common.maxActive}
+        # 配置获取连接等待超时的时间
+        maxWait: ${spring.shardingsphere.datasource.common.maxWait}
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: ${spring.shardingsphere.datasource.common.timeBetweenEvictionRunsMillis}
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: ${spring.shardingsphere.datasource.common.minEvictableIdleTimeMillis}
+        #Oracle需要打开注释
+        #validationQuery: ${spring.shardingsphere.datasource.common.validationQuery}
+        testWhileIdle:  ${spring.shardingsphere.datasource.common.testWhileIdle}
+        testOnBorrow: ${spring.shardingsphere.datasource.common.testOnBorrow}
+        testOnReturn: ${spring.shardingsphere.datasource.common.testOnReturn}
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        poolPreparedStatements: ${spring.shardingsphere.datasource.common.poolPreparedStatements}
+        maxPoolPreparedStatementPerConnectionSize:  ${spring.shardingsphere.datasource.common.maxPoolPreparedStatementPerConnectionSize}
+        # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+        filters: ${spring.shardingsphere.datasource.common.filters}
+        # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+        connectionProperties: ${spring.shardingsphere.datasource.common.connectionProperties}
+        wall:
+          multi-statement-allow: ${spring.shardingsphere.datasource.common.wall.multi-statement-allow}
+        #使用 druid  jdbc-url替换url
+        #        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1:3306/dev?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&allowMultiQueries=true
+        #        type: com.zaxxer.hikari.HikariDataSource
+        #        jdbc-url: jdbc:mysql://127.0.0.1:3306/dev?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&allowMultiQueries=true
+        #        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: root
+        password: root
+
+    rules:
+      sharding:
+        sharding-algorithms:
+          # 分表算法
+          table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: sys_user_$->{id % 2}
+          # 分库算法 只分表不使用
+        #          database-inline:
+        #            type: INLINE
+        #            props:
+        #              algorithm-expression: ds$->{sharding_key % 2}
+
+        tables:
+          sys_user:
+            actual-data-nodes: sharding.sys_user_$->{0..1}
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+            # 分库策略 只分表不使用
+            #            database-strategy:
+            #              standard:
+            #                sharding-column: sharding_key
+            #                sharding-algorithm-name: database-inline
+            # 分表策略
+            table-strategy:
+              standard:
+                sharding-column: id
+                sharding-algorithm-name: table-inline
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+            props:
+              worker-id: 1
+  #    mode:
+  #      type: Standalone
+  #      repository:
+  #        type: File
+  #      overwrite: true

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/common-base-all/common-base/pom.xml" />
+        <option value="$PROJECT_DIR$/common-base-all/common-base-aop/pom.xml" />
+        <option value="$PROJECT_DIR$/common-base-all/common-code/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-weixin-java/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-sharding-sphere/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-seata/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-redis/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-rabbitmq/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-nacos/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-mybatis-plus/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-knife4j/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-jpa/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-elasticsearch/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-easy-elasticsearch/pom.xml" />
+        <option value="$PROJECT_DIR$/common-framework-all/framework-dynamic-datasource/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="jpab" />
+  </component>
+</project>

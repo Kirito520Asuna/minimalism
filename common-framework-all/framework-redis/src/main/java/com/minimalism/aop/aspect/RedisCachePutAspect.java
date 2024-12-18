@@ -1,0 +1,193 @@
+package com.minimalism.aop.aspect;
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
+import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
+import com.minimalism.aop.redis.RedisCachePut;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.jexl3.JexlEngine;
+import org.apache.commons.jexl3.JexlExpression;
+import org.apache.commons.jexl3.internal.Engine;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Author yan
+ * @Date 2024/5/24 0024 10:54
+ * @Description
+ */
+@Aspect
+@Slf4j
+@Component
+@Getter
+public class RedisCachePutAspect implements AbstractRedisAspect {
+    @Lazy
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    /**
+     * 缓存参数缓存key模板
+     */
+    protected ThreadLocal<RedisCacheParameters> redisCacheThreadLocal = new ThreadLocal<>();
+
+    public RedisCacheParameters getOne() {
+        RedisCacheParameters one = redisCacheThreadLocal.get();
+        if (one == null) {
+            one = new RedisCacheParameters();
+        }
+        setOne(one);
+        return one;
+    }
+
+    public RedisCacheParameters setOne(RedisCacheParameters one) {
+        redisCacheThreadLocal.set(one);
+        return one;
+    }
+
+
+    @SneakyThrows
+    public static void main(String[] args) {
+        // 创建JexlEngine实例
+        JexlEngine jexl = new Engine();
+
+        // 定义并评估表达式，判断一个JSON字符串是否不为null
+        String expressionStr = "{'key':'1212','value':'5464'} == null";
+         expressionStr = "false";
+        JexlExpression expression = jexl.createExpression(expressionStr);
+        boolean evalResult = (Boolean) expression.evaluate(null);
+        System.out.println(evalResult);
+
+        if (true) return;
+
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("JavaScript");
+        boolean eval = (Boolean) engine.eval("'{\"key\":\"1212\",\"value\":\"5464\"}'!=null");
+        System.out.println(eval);
+        Class<?> timoutClass = TimeUnit.DAYS.getClass();
+        System.out.println(ObjectUtil.equals(timoutClass, TimeUnit.class));
+    }
+
+
+    @Override
+    @Pointcut("@annotation(com.minimalism.aop.redis.RedisCachePut)")
+    public void pointcutAspect() {
+    }
+
+    @Override
+    @SneakyThrows
+    @Before(value = "pointcutAspect()")
+    public void doBefore(JoinPoint joinPoint) {
+        RedisCachePut cachePut = getAnnotation(joinPoint, RedisCachePut.class);
+        if (cachePut == null) {
+            return;
+        }
+        setOne(setRequesRedisCacheParameters(getOne(), joinPoint));
+    }
+
+
+    @SneakyThrows
+    @Override
+    @AfterReturning(pointcut = "pointcutAspect()", returning = "result")
+    public void afterReturning(JoinPoint joinPoint, Object result) {
+        try {
+            RedisCachePut cachePut = getAnnotation(joinPoint, RedisCachePut.class);
+            if (cachePut == null) {
+                return;
+            }
+            String cacheName = cachePut.cacheName();
+            String key = cachePut.key();
+            TimeUnit timeUnit = cachePut.timeUnit();
+            long timout = cachePut.timeout();
+            String condition = cachePut.condition();
+            String value = cachePut.value();
+            String requestAsName = cachePut.requestAsName();
+            String responseAsName = cachePut.responseAsName();
+            boolean openReplace = cachePut.openReplace();
+            String[] replaceSplicingList = cachePut.replaceSplicingList();
+
+            setOne(getOne().setResponse(BeanUtil.beanToMap(result)));
+            RedisCacheParameters one = getOne();
+            Map<String, Object> request = one.getRequest();
+            Map<String, Object> response = one.getResponse();
+
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put(requestAsName, request);
+            map.put(responseAsName, response);
+            JSONObject jsonObject = new JSONObject(map);
+
+            key = effectiveSplicingString(key, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
+            if (StrUtil.isNotBlank(value)) {
+                value = effectiveSplicingString(value, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
+            }
+
+            String formatKey = String.format(templateKey, cacheName, key);
+            if (openReplace) {
+                if (replaceSplicingList.length!=2){
+                    replaceSplicingList = new String[]{":",":"};
+                }
+                formatKey = replaceKey(formatKey, replaceSplicingList);
+            }
+            // 判断是否需要缓存
+            try {
+                condition = effectiveSplicingString(condition, jsonObject, comparisonOperators, OperationType.condition);
+            } catch (Exception e) {
+                log.error("condition is error,condition:{}", condition);
+                condition = cachePut.condition();
+            }
+
+            boolean okCondition = verifiedOkCondition(condition);
+            // 判断条件 判断是否需要缓存
+            if (okCondition) {
+                Object setValue = result;
+                if (StrUtil.isNotBlank(value)) {
+                    setValue = value;
+                }
+                if (cachePut.isHash()){
+                    redisTemplate.opsForHash().put(cacheName, key, setValue);
+                }else if (timout < 1) {
+                    redisTemplate.opsForValue().set(formatKey, setValue);
+                } else {
+                    redisTemplate.opsForValue().set(formatKey, setValue, timout, timeUnit);
+                }
+                log.info("redis cache put key:{},value:{}", formatKey, setValue);
+            }
+        } finally {
+            setOne(null);
+        }
+
+    }
+
+/*
+    @SneakyThrows
+    @Override
+    public boolean verifiedOkCondition(String condition) {
+        //jdk8 以上可能报错 原因：包名改变
+        // 获取表达式引擎 判断是否需要缓存
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("JavaScript");
+        boolean okCondition = AbstractRedisAspect.super.verifiedOkCondition(condition) ||
+                (StrUtil.isNotEmpty(condition) && (Boolean) engine.eval(condition));
+        return okCondition;
+    }
+*/
+
+
+}
