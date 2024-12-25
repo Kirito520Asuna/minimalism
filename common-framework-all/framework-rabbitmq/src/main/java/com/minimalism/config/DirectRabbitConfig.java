@@ -1,6 +1,7 @@
 package com.minimalism.config;
 
 import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
+import com.minimalism.pojo.QueueInfo;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
@@ -14,19 +15,27 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class DirectRabbitConfig implements AbstractRabbitMq {
+    private static QueueInfo QUEUE_INFO = new QueueInfo(DIRECT_QUEUE, DIRECT_EXCHANGE, DIRECT_ROUTING);
+
+
     //队列
     @Bean
     public Queue directQueue() {
-        return AbstractRabbitMq.super.directQueue(DIRECT_QUEUE);
+        return QUEUE_INFO.getQueue();
+        //return AbstractRabbitMq.super.buildQueue(DIRECT_QUEUE);
     }
+
     //Direct交换机
     @Bean
     public DirectExchange directExchange() {
-        return AbstractRabbitMq.super.directExchange(DIRECT_EXCHANGE);
+        return QUEUE_INFO.getDirectExchange();
+        //return AbstractRabbitMq.super.buildExchange(DIRECT_EXCHANGE);
     }
+
     //绑定  将队列和交换机绑定
     @Bean
     public Binding bindingDirect() {
-        return AbstractRabbitMq.super.bindingDirect(directQueue(), directExchange(), DIRECT_ROUTING);
+        return QUEUE_INFO.getBinding();
+        //return AbstractRabbitMq.super.buildBinding(directQueue(), directExchange(), DIRECT_ROUTING);
     }
 }
