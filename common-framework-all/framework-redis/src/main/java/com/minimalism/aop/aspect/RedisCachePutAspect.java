@@ -3,6 +3,7 @@ package com.minimalism.aop.aspect;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
@@ -27,6 +28,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,7 +72,7 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
 
         // 定义并评估表达式，判断一个JSON字符串是否不为null
         String expressionStr = "{'key':'1212','value':'5464'} == null";
-         expressionStr = "false";
+        expressionStr = "false";
         JexlExpression expression = jexl.createExpression(expressionStr);
         boolean evalResult = (Boolean) expression.evaluate(null);
         System.out.println(evalResult);
@@ -122,6 +124,8 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
             String responseAsName = cachePut.responseAsName();
             boolean openReplace = cachePut.openReplace();
             String[] replaceSplicingList = cachePut.replaceSplicingList();
+            boolean random = cachePut.random();
+            String randomRange = cachePut.randomRange();
 
             setOne(getOne().setResponse(BeanUtil.beanToMap(result)));
             RedisCacheParameters one = getOne();
@@ -140,8 +144,8 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
 
             String formatKey = String.format(templateKey, cacheName, key);
             if (openReplace) {
-                if (replaceSplicingList.length!=2){
-                    replaceSplicingList = new String[]{":",":"};
+                if (replaceSplicingList.length != 2) {
+                    replaceSplicingList = new String[]{":", ":"};
                 }
                 formatKey = replaceKey(formatKey, replaceSplicingList);
             }
@@ -160,34 +164,28 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
                 if (StrUtil.isNotBlank(value)) {
                     setValue = value;
                 }
-                if (cachePut.isHash()){
+                if (random) {
+                    try {
+                        String[] split = randomRange.split("~");
+                        timout = RandomUtil.randomLong(Long.parseLong(split[0]), Long.parseLong(split[1]));
+                    }catch (Exception e){
+                        log.error("randomRange is error,randomRange:{}", randomRange);
+                        throw e;
+                    }
+                    redisTemplate.opsForValue().set(formatKey, setValue, timout, timeUnit);
+                } else if (cachePut.isHash()) {
                     redisTemplate.opsForHash().put(cacheName, key, setValue);
-                }else if (timout < 1) {
+                } else if (timout < 1) {
                     redisTemplate.opsForValue().set(formatKey, setValue);
                 } else {
                     redisTemplate.opsForValue().set(formatKey, setValue, timout, timeUnit);
                 }
-                log.info("redis cache put key:{},value:{}", formatKey, setValue);
+                log.info("redis cache put key:{},value:{},timout:{}", formatKey, setValue,timout);
             }
         } finally {
             setOne(null);
         }
 
     }
-
-/*
-    @SneakyThrows
-    @Override
-    public boolean verifiedOkCondition(String condition) {
-        //jdk8 以上可能报错 原因：包名改变
-        // 获取表达式引擎 判断是否需要缓存
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("JavaScript");
-        boolean okCondition = AbstractRedisAspect.super.verifiedOkCondition(condition) ||
-                (StrUtil.isNotEmpty(condition) && (Boolean) engine.eval(condition));
-        return okCondition;
-    }
-*/
-
 
 }

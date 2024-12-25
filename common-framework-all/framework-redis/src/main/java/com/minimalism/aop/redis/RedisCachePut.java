@@ -60,4 +60,9 @@ public @interface RedisCachePut {
      * @return
      */
     boolean isHash() default false;
+
+    // 是否随机时间
+    boolean random() default false;
+    // 随机时间范围 0~1 ==> [0,1)
+    String randomRange() default "0~1";
 }
