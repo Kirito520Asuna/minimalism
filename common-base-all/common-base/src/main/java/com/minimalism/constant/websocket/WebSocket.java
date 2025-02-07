@@ -1,4 +1,4 @@
-package com.minimalism.constant;
+package com.minimalism.constant.websocket;
 
 /**
  * @Author yan

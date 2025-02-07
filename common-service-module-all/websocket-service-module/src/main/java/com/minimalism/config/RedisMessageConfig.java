@@ -2,7 +2,7 @@ package com.minimalism.config;
 
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.constant.WebSocket;
+import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.message.listener.RedisMessageListener;
 import org.springframework.context.annotation.Bean;

@@ -4,7 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.endpoint.WebSocketEndpoint;
-import com.minimalism.constant.WebSocket;
+import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.domain.Message;
 import org.springframework.data.redis.core.RedisTemplate;
 

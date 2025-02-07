@@ -5,7 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.domain.Message;
-import com.minimalism.constant.WebSocket;
+import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
