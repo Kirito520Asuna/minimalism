@@ -23,16 +23,20 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
      */
     default boolean isAdmin(String key) {
         Environment env = SpringUtil.getBean(Environment.class);
-        String property = env.getProperty("spring.profiles.active");
+        String property = env.getProperty("auth.admin");
         String admin = ObjectUtils.defaultIfEmpty(property, "admin");
         key = ObjectUtils.defaultIfEmpty(key, "");
 
         if (key.startsWith(Roles.roles)) {
             key = key.replace(Roles.roles, "");
+        } else if (key.startsWith(Roles.perms)) {
+            key = key.replace(Roles.perms, "");
         }
 
         if (admin.startsWith(Roles.roles)) {
             admin = admin.replace(Roles.roles, "");
+        }else if (admin.startsWith(Roles.perms)) {
+            admin = admin.replace(Roles.perms, "");
         }
 
         return ObjectUtils.equals(admin, key);
@@ -47,7 +51,7 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
     default boolean hasAuthority(String authority) {
         boolean hasAuthority = false;
         try {
-            List<String> roles = getAuthorityList();
+            //List<String> roles = getAuthorityList();
             hasAuthority = isAdmin(authority) || getAuthorityList().contains(authority);
         } catch (Exception e) {
             error("err {} ", e.getMessage());
@@ -63,7 +67,7 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
         }
 
         try {
-            List<String> roles = getRoles();
+            //List<String> roles = getRoles();
             hasRole = isAdmin(role) || getRoles().contains(role);
         } catch (Exception e) {
             error("err {} ", e.getMessage());

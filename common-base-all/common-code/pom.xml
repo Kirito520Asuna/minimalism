@@ -39,8 +39,21 @@
         <fastjson.version>2.0.32</fastjson.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <rapidocr.version>0.0.7</rapidocr.version>
+        <kaptcha.version>2.3.3</kaptcha.version>
+        <fastexcel.version>1.1.0</fastexcel.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>cn.idev.excel</groupId>
+            <artifactId>fastexcel</artifactId>
+            <version>${fastexcel.version}</version>
+        </dependency>
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>pro.fessional</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>${kaptcha.version}</version>
+        </dependency>
         <!--  rapidocr这个必须要引入     -->
         <!--  可前往maven中央仓库https://central.sonatype.com/artifact/io.github.mymonstercat/rapidocr/versions，查看版本      -->
         <dependency>
@@ -238,6 +251,13 @@
             <version>2.5.0</version>
             <optional>true</optional>
             <scope>true</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+            <version>3.1.7</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

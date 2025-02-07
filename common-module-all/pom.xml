@@ -17,7 +17,8 @@
     </properties>
 
     <modules>
-
+        <module>common-security-module</module>
+        <module>common-shiro-module</module>
     </modules>
 
 </project>
