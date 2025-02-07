@@ -201,7 +201,7 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
 
         Object around = AbstractSysLog.super.around(joinPoint);
 
-        if (hasSysLog && sysLog.logResultData()) {
+        if (hasSysLog && sysLog.enableOperate() && sysLog.logResultData()) {
             //记录响应
             JSON parse = JSONUtil.parse(around != null ? around : new LinkedHashMap<>(), jsonConfig);
             Result bean = parse.toBean(Result.class);

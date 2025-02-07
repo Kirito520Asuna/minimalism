@@ -17,6 +17,7 @@
     </properties>
 
     <modules>
+        <module>gen-service-module</module>
         <module>websocket-service-module</module>
     </modules>
 

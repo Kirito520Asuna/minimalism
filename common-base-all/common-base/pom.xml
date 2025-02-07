@@ -40,6 +40,12 @@
         <poi.version>4.1.2</poi.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.6.11</version> <!-- 请根据需要选择版本 -->
+        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>transmittable-thread-local</artifactId>

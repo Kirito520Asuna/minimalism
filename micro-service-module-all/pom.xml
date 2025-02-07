@@ -17,6 +17,7 @@
     </properties>
 
     <modules>
+        <module>gen</module>
         <module>websocket</module>
     </modules>
 

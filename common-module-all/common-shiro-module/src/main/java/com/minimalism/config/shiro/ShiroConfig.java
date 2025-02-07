@@ -4,6 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.AbstractShiroConfig;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.ExpressionConstants;
+import com.minimalism.filter.CorsRequestFilter;
 import com.minimalism.filter.JwtAuthFilter;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authz.Authorizer;
@@ -40,6 +41,11 @@ public class ShiroConfig implements AbstractBean, AbstractShiroConfig {
     @ConditionalOnExpression(ExpressionConstants.filterAllExpression)
     public JwtAuthFilter jwtAuthFilter() {
         return new JwtAuthFilter();
+    }
+    @Bean @Primary
+    @ConditionalOnExpression(ExpressionConstants.corsFilterExpression)
+    public CorsRequestFilter corsRequestFilter() {
+        return new CorsRequestFilter();
     }
     @Bean
     public Authorizer authorizer() {
