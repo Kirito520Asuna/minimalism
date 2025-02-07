@@ -24,7 +24,7 @@
         <module>framework-knife4j</module>
         <module>framework-mybatis-plus</module>
         <module>framework-nacos</module>
-        <module>framework-rabbitmq</module>
+        <module>framework-redis</module>
         <module>framework-rabbitmq</module>
         <module>framework-seata</module>
         <module>framework-sharding-sphere</module>

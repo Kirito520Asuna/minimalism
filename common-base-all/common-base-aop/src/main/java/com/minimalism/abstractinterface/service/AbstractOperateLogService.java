@@ -61,9 +61,8 @@ public interface AbstractOperateLogService extends AbstractBean {
      * @param operateLog 操作日志请求
      */
     default void createOperateLog(OperateLogInfo operateLog) {
-        org.slf4j.Logger log = getLogger();
         JSON json = JSONUtil.parse(operateLog, jsonConfig);
-        log.debug("operateLog==>{}", json);
+        debug("operateLog==>{}", json);
     }
 
 
@@ -71,9 +70,8 @@ public interface AbstractOperateLogService extends AbstractBean {
      * 更新操作日志
      */
     default void updateOperateLog(OperateLogInfo operateLog) {
-        org.slf4j.Logger log = getLogger();
         JSON json = JSONUtil.parse(operateLog, jsonConfig);
-        log.info("operateLog==>{}", json);
+        info("operateLog==>{}", json);
     }
 
 
@@ -88,9 +86,8 @@ public interface AbstractOperateLogService extends AbstractBean {
      */
     @AsyncFuture(useExecutor = true)
     default void createOperateLogAsync(OperateLogInfo operateLog) {
-        org.slf4j.Logger log = getLogger();
         JSON json = JSONUtil.parse(operateLog, jsonConfig);
-        log.debug("operateLog==>{}", json);
+        debug("operateLog==>{}", json);
     }
 
     /**
@@ -98,9 +95,8 @@ public interface AbstractOperateLogService extends AbstractBean {
      */
     @AsyncFuture(useExecutor = true)
     default void updateOperateLogAsync(OperateLogInfo operateLog) {
-        org.slf4j.Logger log = getLogger();
         JSON json = JSONUtil.parse(operateLog, jsonConfig);
-        log.debug("operateLog==>{}", json);
+        debug("operateLog==>{}", json);
     }
 
 }
