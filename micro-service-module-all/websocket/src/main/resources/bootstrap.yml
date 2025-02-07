@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: websocket
+
+  profiles:
+    active: dev
+
+  main:
+   allow-circular-references: true
+
+  cloud:
+    nacos:
+      discovery:
+        service: ${spring.application.name}
+        server-addr: ${nacos.server-addr}
+        username: ${nacos.username}
+        password: ${nacos.username}
+      config:
+        server-addr: ${nacos.server-addr}
+        username: ${nacos.username}
+        password: ${nacos.username}
+        refresh-enabled: true
+        refreshable-dataids: ${spring.cloud.nacos.discovery.service:${spring.application.name}}-${spring.profiles.active:test}.${spring.cloud.nacos.config.file-extension:yaml}
+
+server:
+  port: 18900
+  servlet:
+    context-path: /websocket
+############################################自定义############################################
+nacos:
+  server-addr: 127.0.0.1:8848
+  username: nacos
+  password: nacos
+
+logstash:
+  addr: 127.0.0.1:4560
+  file: var/log/${spring.application.name}/${spring.profiles.active}/${spring.application.name}.log
+  fileNamePattern: var/log/${spring.application.name}/${spring.profiles.active}/${spring.application.name}-logstash.%d{yyyy-MM-dd}.log
+  maxHistory: 30
+  totalSizeCap: 10MB

@@ -47,7 +47,7 @@ public interface AbstractUserService {
         JwtConfig jwtConfig = SpringUtil.getBean(JwtConfig.class);
         String tokenName = jwtConfig.getTokenName();
         String refreshTokenName = jwtConfig.getRefreshTokenName();
-        Boolean openTwoToken = ObjectUtils.defaultIfEmpty(jwtConfig.getOpenTwoToken(), false);
+        Boolean openTwoToken = ObjectUtils.defaultIfEmpty(jwtConfig.getEnableTwoToken(), false);
         String token = JwtUtils.createJWT(id);
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setTokenName(tokenName)

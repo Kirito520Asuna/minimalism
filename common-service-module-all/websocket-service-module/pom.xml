@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+<!--	<parent>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-parent</artifactId>-->
+<!--		<version>2.7.9</version>-->
+<!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+<!--	</parent>-->
+	<groupId>com.minimalism</groupId>
+	<artifactId>websocket-service-module</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>websocket-service-module</name>
+	<description>websocket-service-module</description>
+	<properties>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<spring-boot.version>2.7.18</spring-boot.version>
+		<project-module.version>0.0.1-SNAPSHOT</project-module.version>
+		<spring-cloud.version>2021.0.5</spring-cloud.version>
+		<alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
+
+		<hutool.version>5.8.20</hutool.version>
+		<fastjson.version>2.0.32</fastjson.version>
+		<logstash.version>5.3</logstash.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- Spring Cloud Version BOM -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba.cloud</groupId>
+				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
+				<version>${alibaba-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+
+		<!--nacos-->
+		<dependency>
+			<groupId>com.minimalism</groupId>
+			<artifactId>framework-nacos</artifactId>
+			<version>${project-module.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.alibaba.cloud</groupId>
+					<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.alibaba.cloud</groupId>
+					<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!--用于加载bootstrap-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+		<!-- Spring Cloud LoadBalancer 依赖 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
+		</dependency>
+		<!-- Spring Cloud Starter Alibaba Nacos Discovery -->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<!-- Spring Cloud Starter Alibaba Nacos Config -->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
+		<!--nacos-->
+
+		<dependency>
+			<groupId>com.minimalism</groupId>
+			<artifactId>framework-redis</artifactId>
+			<version>${project-module.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.minimalism</groupId>
+			<artifactId>common-base</artifactId>
+			<version>${project-module.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.springfox</groupId>
+					<artifactId>springfox-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.minimalism</groupId>
+			<artifactId>common-base-aop</artifactId>
+			<version>${project-module.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.minimalism</groupId>
+					<artifactId>common-base</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.springfox</groupId>
+					<artifactId>springfox-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.minimalism</groupId>
+			<artifactId>common-code</artifactId>
+			<version>${project-module.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.minimalism</groupId>
+					<artifactId>common-base</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.minimalism</groupId>
+					<artifactId>common-base-aop</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.springfox</groupId>
+					<artifactId>springfox-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+
+		<!--集成logstash-->
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>${logstash.version}</version>
+		</dependency>
+
+	</dependencies>
+</project>

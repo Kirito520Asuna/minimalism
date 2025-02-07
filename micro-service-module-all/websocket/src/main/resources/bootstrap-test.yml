@@ -1,0 +1,16 @@
+nacos:
+  server-addr: 192.168.3.22:8848
+  username: nacos
+  password: nacos
+
+spring:
+  redis:
+    host: 192.168.3.22
+    database: 1
+
+websocket:
+  config:
+#    allowedOrigins: https://wstool.js.org
+    allowedOriginPatterns: '*'
+server:
+  port: 18800
