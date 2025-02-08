@@ -36,7 +36,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
             ShiroLogical shiroLogical = getAnnotation(joinPoint, ShiroLogical.class);
             if (ObjectUtil.isNotEmpty(shiroLogical)) {
                 logical = shiroLogical.logical();
-                getLogger().info("启用灵活逻辑控制：{}", logical);
+                info("启用灵活逻辑控制：{}", logical);
             }
             switch (logical) {
                 case OR:
@@ -102,7 +102,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
         Logical logical = Logical.AND;
 
         if (ObjectUtil.isNotEmpty(shiroRoles)) {
-            getLogger().info("角色权限校验");
+            info("角色权限校验");
             name = shiroRoles.getClass().getName();
             simpleName = shiroRoles.getClass().getSimpleName();
             value = shiroRoles.value();
@@ -125,7 +125,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
         Logical logical = Logical.AND;
 
         if (ObjectUtil.isNotEmpty(shiroPermissions)) {
-            getLogger().info("权限校验");
+            info("权限校验");
             name = shiroPermissions.getClass().getName();
             simpleName = shiroPermissions.getClass().getSimpleName();
             value = shiroPermissions.value();
@@ -158,7 +158,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
         try {
             classInterfacesList.addAll(Arrays.stream(aclass.getInterfaces()).collect(Collectors.toList()));
         } catch (Exception e) {
-            getLogger().warn("warn : {}", e.getMessage());
+            warn("warn : {}", e.getMessage());
         }
 
         List<String> keys = CollUtil.newArrayList();
@@ -176,7 +176,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
                     }
             ).collect(Collectors.toList()));
         } catch (Exception e) {
-            getLogger().error("{} error:{}", simpleName, e.getMessage());
+            error("{} error:{}", simpleName, e.getMessage());
             throw new Exception(name + " value must have value and not null");
         }
         boolean pass = checkPass(logical, keys, aclass);
@@ -189,10 +189,10 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
             msg = "权限";
         }
         if (!pass) {
-            getLogger().info("{}校验失败", msg);
+            info("{}校验失败", msg);
             throw new GlobalCustomException(ApiCode.FORBIDDEN);
         }
-        getLogger().info("{}校验通过", msg);
+        info("{}校验通过", msg);
         return hasAnnotation;
 
     }
@@ -208,7 +208,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
         try {
             classInterfacesList.addAll(Arrays.stream(shiroRolesOrPermissionClass.getInterfaces()).collect(Collectors.toList()));
         } catch (Exception e) {
-            getLogger().warn("warn : {}", e.getMessage());
+            warn("warn : {}", e.getMessage());
         }
         if (classInterfacesList.contains(ShiroRoles.class)) {
             keys.addAll(getRoles());

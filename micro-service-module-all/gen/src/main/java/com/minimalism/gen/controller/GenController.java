@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @Description
  */
 @Tag(name = "代码生成")
-@RequestMapping({"/gen", "/api/gen"})
+@RequestMapping({"/gen", "/api/gen", "/jwt/gen"})
 @RestController
 public class GenController implements AbstractBaseController {
     @Resource

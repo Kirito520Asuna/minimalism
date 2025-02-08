@@ -5,7 +5,9 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.minimalism.abstractinterface.AbstractIpBan;
 import com.minimalism.abstractinterface.AbstractUserDetailsByShiroService;
+import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.Redis;
 import com.minimalism.constant.Roles;
 import com.minimalism.enums.ApiCode;
@@ -30,7 +32,7 @@ import java.util.List;
  * @Description
  */
 @Slf4j
-public class SecurityContextUtil{
+public class SecurityContextUtil implements AbstractBean {
     public static ThreadLocal<UserHolder> threadLocal = new TransmittableThreadLocal<>();
 
     @Data
@@ -150,7 +152,7 @@ public class SecurityContextUtil{
             userHolder.getRoles()
                     .stream()
                     .filter(role -> role.startsWith(Roles.roles))
-                    .forEach(role -> roles.add(role));
+                    .forEach(roles::add);
         }
         return roles;
     }
@@ -167,7 +169,7 @@ public class SecurityContextUtil{
             userHolder.getRoles()
                     .stream()
                     .filter(role -> role.startsWith(Roles.perms))
-                    .forEach(role -> permissions.add(role));
+                    .forEach(permissions::add);
         }
         return permissions;
     }

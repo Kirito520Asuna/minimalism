@@ -59,24 +59,22 @@ public interface AbstractAuthorizationShiro extends AbstractAuthorization {
      */
     @NotNull
     default UsernamePasswordToken generateUsernamePasswordToken(String userId) {
-        Logger log = getLogger();
         AbstractUserDetailsByShiroService userService = SpringUtil.getBean(AbstractUserDetailsByShiroService.class);
         UserBase user = userService.getLoginUser(userId);
         if (ObjectUtil.isEmpty(user)) {
             throw new GlobalCustomException(ApiCode.UNAUTHORIZED);
         }
-        log.info("用户信息：{}", user);
+        info("用户信息：{}", user);
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(user.getUsername(), user.getPassword());
         return usernamePasswordToken;
     }
 
     @SneakyThrows
     default boolean checkToken(HttpServletRequest request, HttpServletResponse response) {
-        Logger log = getLogger();
 
         JwtUtils bean = SpringUtil.getBean(JwtUtils.class);
         JwtConfig jwtConfig = SpringUtil.getBean(JwtConfig.class);
-        log.info("jwtConfig=>{}", jwtConfig);
+        info("jwtConfig=>{}", jwtConfig);
         String tokenName = ObjectUtils.defaultIfEmpty(jwtConfig.getTokenName(), JwtUtils.HEADER_AS_TOKEN);
         String userId = null;
         //获取token
@@ -95,7 +93,7 @@ public interface AbstractAuthorizationShiro extends AbstractAuthorization {
                 //存入SecurityContextHolder
                 UsernamePasswordToken usernamePasswordToken = generateUsernamePasswordToken(userId);
                 SecurityContextUtil.login(userId, usernamePasswordToken);
-                log.info("Subject:{},Principal:{},UserId:{}"
+                info("Subject:{},Principal:{},UserId:{}"
                         , SecurityContextUtil.getSubject()
                         , SecurityContextUtil.getPrincipal()
                         , SecurityContextUtil.getUserId()
@@ -108,6 +106,7 @@ public interface AbstractAuthorizationShiro extends AbstractAuthorization {
                     Result result = Result.result(ApiCode.UNAUTHORIZED);
                     String json = JSONUtil.toJsonStr(result, JSONConfig.create().setIgnoreNullValue(false));
                     ResponseUtils.responsePush(response, contentType, json);
+                    error("未授权");
                 }
             }
         } catch (Exception e) {
@@ -120,7 +119,6 @@ public interface AbstractAuthorizationShiro extends AbstractAuthorization {
         String userIdNoThrow = SecurityContextUtil.getUserIdNoThrow();
         if (ObjectUtil.isEmpty(userIdNoThrow)) {
             checkToken(request, response);
-
             SecurityContextUtil.getUserId();
         }
     }

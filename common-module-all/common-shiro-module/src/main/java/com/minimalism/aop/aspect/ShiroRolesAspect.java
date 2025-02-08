@@ -19,17 +19,4 @@ public class ShiroRolesAspect implements AbstractShiroAopAspect {
     @Override
     public void SysLog() {
     }
-
-
-    //@Override
-    //public <T extends Annotation> List<String> getKeyList(T shiroRolesOrPermission) {
-    //    return AbstractShiroAopAspect.super.getKeyList(shiroRolesOrPermission);
-    //}
-    //
-    //@Around(value = "SysLog()")
-    //@Override
-    //public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-    //    hasRoles(joinPoint);
-    //    return AbstractShiroAopAspect.super.around(joinPoint);
-    //}
 }

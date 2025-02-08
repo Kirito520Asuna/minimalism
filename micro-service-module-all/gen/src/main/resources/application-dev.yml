@@ -14,5 +14,5 @@ spring:
 
 common:
   jwt:
-    openFilter: false
-    openInterceptor: true
+    openFilter: true
+    openInterceptor: false
