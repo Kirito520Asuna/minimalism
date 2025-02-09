@@ -25,11 +25,6 @@ public class LogInterceptor implements AbstractLogInInterceptor, AbstractAuthori
     @Override
     public void checkLogin(HttpServletRequest request, HttpServletResponse response) {
         AbstractAuthorizationSecurity.super.checkTokenLogin(request, response);
-        //String userIdNoThrow = SecurityContextUtil.getUserIdNoThrow();
-        //if (ObjectUtil.isEmpty(userIdNoThrow)) {
-        //    checkToken(request, response);
-        //    SecurityContextUtil.getUserId();
-        //}
     }
 
 }

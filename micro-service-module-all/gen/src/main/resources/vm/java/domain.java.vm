@@ -12,10 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 #if($table.isCrud() || $table.isSub())
-import com.yan.pojo.BaseEntity;
 #elseif($table.isTree())
-import com.yan.aop.tree.Tree;
-import com.yan.pojo.TreeEntity;
+import com.minimalism.aop.tree.Tree;
 #end
 
 /**

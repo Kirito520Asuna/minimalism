@@ -1,7 +1,6 @@
 package com.minimalism.aop.aspect;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSON;
@@ -11,9 +10,8 @@ import com.minimalism.abstractinterface.aop.AbstractSysLog;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.enums.RequestMethod;
 
+import com.minimalism.utils.gateway.GatewayUtils;
 import com.minimalism.utils.object.ObjectUtils;
-import io.swagger.annotations.Api;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -21,7 +19,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,7 +26,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -63,11 +59,9 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             of(RequestMethod.POST.name(), RequestMethod.PUT.name()).collect(Collectors.toList());
 
 
-
     public static <T extends Annotation> T getClassAnnotation(JoinPoint joinPoint, Class<T> annotationClass) {
         return ((MethodSignature) joinPoint.getSignature()).getMethod().getDeclaringClass().getAnnotation(annotationClass);
     }
-
 
 
     /**
@@ -123,9 +117,12 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             String declaringTypeName = joinPoint.getSignature().getDeclaringTypeName();
             String name = joinPoint.getSignature().getName();
             String module = getModule(joinPoint);
-            if (StrUtil.isBlank(title)){
+            if (StrUtil.isBlank(title)) {
                 title = getDescription(joinPoint);
             }
+
+            String url = GatewayUtils.replaceUrl(request, requestURL.toString());
+
             log.info(new StringBuffer()
                             .append("\n====================================请求内容====================================")
                             .append("\n请求服务名 : {}")
@@ -138,7 +135,7 @@ public class AbstractSysLogAspect implements AbstractSysLog {
                             .append("\n请求类方法 : {}.{}")
                             .append("\n================================================================================")
                             .toString()
-                    , applicationName,module, title, remoteAddr, requestURL.toString(), method, args, declaringTypeName, name);
+                    , applicationName, module, title, remoteAddr, url, method, args, declaringTypeName, name);
         }
         // 执行方法
         Object around = AbstractSysLog.super.around(joinPoint);

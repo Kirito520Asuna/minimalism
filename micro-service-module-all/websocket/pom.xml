@@ -65,6 +65,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.minimalism</groupId>
+			<artifactId>framework-knife4j</artifactId>
+			<version>${project-module.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>

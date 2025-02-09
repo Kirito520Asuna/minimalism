@@ -15,6 +15,7 @@ import com.minimalism.enums.Openfeign;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.pojo.SaltInfo;
 import com.minimalism.pojo.http.CachedBodyHttpServletRequest;
+import com.minimalism.utils.gateway.GatewayUtils;
 import com.minimalism.utils.api.ApiUtil;
 import com.minimalism.utils.date.DateUtils;
 import com.minimalism.utils.api.SingleSignature;
@@ -79,19 +80,18 @@ public interface AbstractApiSign extends AbstractBean {
             url = requestURL.toString();
         }
 
-        Logger log = getLogger();
         String s = apiConfig.getUrl(url);
         boolean apiPathBoolean = s.contains(apiPath);
         if (verifyIpBlackList(remoteAddr, apiConfig.getIpBlackList())) {
-            log.error("ip={}黑名单", remoteAddr);
+            error("ip={}黑名单", remoteAddr);
             throw new GlobalCustomException("ip 非法访问");
         } else if (apiPathBoolean) {
-            log.info("路径符合验签逻辑");
+            info("路径符合验签逻辑");
             if (verifyIpWhiteList(remoteAddr, apiConfig.getIpWhitelist())) {
-                log.info("ip白名单");
+                info("ip白名单");
                 //白名单
             } else if (ObjectUtil.isNotEmpty(signEnable) && signEnable) {
-                log.info("api验签-已开启");
+                info("api验签-已开启");
                 verifyTimestamp(request, timestampAsName, signTimeOut);
                 //验签
                 List<String> exCollection = CollUtil.newArrayList(timestampAsName, signAsName);
@@ -120,26 +120,26 @@ public interface AbstractApiSign extends AbstractBean {
                     try {
                         verifySign = verifySign(cachedBodyHttpServletRequest, signAsName, salt.getSalt(), serviceName, null, exCollection);
                         if (verifySign) {
-                            log.info("[{}]==>验签通过", serviceName);
+                            info("[{}]==>验签通过", serviceName);
                             break;
                         }
                     } catch (GlobalCustomException e) {
-                        log.info("<==验签失败==>{}", e.getMessage());
+                        info("<==验签失败==>{}", e.getMessage());
                     } finally {
                         verifySignList.add(verifySign);
                     }
                 }
 
                 if (!verifySignList.contains(true)) {
-                    log.error("<==验签失败==>");
+                    error("<==验签失败==>");
                     throw new GlobalCustomException("签名不合法");
                 } else {
-                    log.info("验签通过");
+                    info("验签通过");
                 }
 
             }
         } else {
-            log.info("非api验签");
+            info("非api验签");
         }
     }
 
@@ -200,7 +200,8 @@ public interface AbstractApiSign extends AbstractBean {
             url = new StringBuffer(urlSplit[0]).append(openFeign).append(urlSplit[urlSplit.length - 1]).toString();
             logger.info("[{}] sign ...", Openfeign.OPENFEIGN.getDesc());
         }
-
+        url = GatewayUtils.replaceUrl(request, url);
+        
         String generalSign = generalSign(salt, method, url, parameterMap, body, exCollection);
         String signHeader = request.getHeader(signAsName);
         logger.info("验签 {}:{}", signAsName, signHeader);

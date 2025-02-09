@@ -12,9 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import com.yan.aop.excel.Excel;
-import com.yan.pojo.BaseEntity;
-
 /**
  * ${subTable.functionName}对象 ${subTableName}
  * 

@@ -108,30 +108,33 @@ public class WebSocketEndpoint implements AbstractBean {
     @OnMessage
     public void onMessage(String message, Session session, @PathParam("userId") String senderId) {
         info("收到消息: {}", message);
-        try {
-            Message msg = JSONUtil.toBean(message, Message.class);
-            String targetUserId = msg.getTargetId();
-            String targetUserKey = WebSocket.WS_USER + targetUserId;
-            String instanceId = getInstanceId();
-            // 查询目标用户所在实例
-            String targetInstanceId = redisTemplate.opsForValue().get(targetUserKey);
+        boolean isTypeJSON = JSONUtil.isTypeJSON(message);
+        if (isTypeJSON) {
+            try {
+                Message msg = JSONUtil.toBean(message, Message.class);
+                String targetUserId = msg.getTargetId();
+                String targetUserKey = WebSocket.WS_USER + targetUserId;
+                String instanceId = getInstanceId();
+                // 查询目标用户所在实例
+                String targetInstanceId = redisTemplate.opsForValue().get(targetUserKey);
 
-            if (targetInstanceId == null) {
-                handleOfflineMessage(msg);
-                return;
+                if (targetInstanceId == null) {
+                    handleOfflineMessage(msg);
+                    return;
+                }
+
+                msg.setTargetInstanceId(targetInstanceId);
+                msg.setSendInstanceId(instanceId);
+
+                if (targetInstanceId.equals(instanceId)) {
+                    sendLocalMessage(targetUserId, msg); // 本地发送
+                } else {
+                    sendCrossInstanceMessage(targetInstanceId, msg); // 跨实例发送
+                }
+            } catch (Exception e) {
+                // 异常处理逻辑
+                error("处理消息时发生异常: {}", e.getMessage());
             }
-
-            msg.setTargetInstanceId(targetInstanceId);
-            msg.setSendInstanceId(instanceId);
-
-            if (targetInstanceId.equals(instanceId)) {
-                sendLocalMessage(targetUserId, msg); // 本地发送
-            } else {
-                sendCrossInstanceMessage(targetInstanceId, msg); // 跨实例发送
-            }
-        } catch (Exception e) {
-            // 异常处理逻辑
-            error("处理消息时发生异常: {}", e.getMessage());
         }
     }
 
@@ -158,31 +161,17 @@ public class WebSocketEndpoint implements AbstractBean {
     // --- 消息发送方法 ---
     // 发送本地消息
     public void sendLocalMessage(String userId, Message msg) {
-        info("[本地消息]sendLocalMessage-->msg:{}", JSONUtil.toJsonStr(msg));
-        Session session = findSessionByUserId(userId);
-        if (session != null && session.isOpen()) {
-            String toJsonStr = JSONUtil.toJsonStr(msg);
-            //String compressed = compress(message);
-            session.getAsyncRemote().sendText(toJsonStr);
-        }
+        SpringUtil.getBean(MessageService.class).sendLocalMessage(userId, msg);
     }
 
     // 发送Redis的跨实例消息
     private void sendCrossInstanceMessage(String targetInstanceId, Message msg) {
-        info("[跨实例消息]sendCrossInstanceMessage-->targetInstanceId:{},msg:{}", targetInstanceId, msg);
-        redisTemplate.convertAndSend(WebSocket.WS_MSG + targetInstanceId, msg);
-        //String url = NacosUtils.getUrl();
-        //OkHttpUtils.post(url, msg);
+        SpringUtil.getBean(MessageService.class).sendCrossInstanceMessage(targetInstanceId, msg);
     }
 
     // 处理来自Redis的跨实例消息
     public void handleRedisMessage(String messageJson) {
-        Message msg = JSONUtil.toBean(messageJson, Message.class);
-        Session session = findSessionByUserId(msg.getTargetId());
-        if (session != null) {
-            info("[处理跨实例消息]handleRedisMessage");
-            session.getAsyncRemote().sendText(messageJson);
-        }
+        SpringUtil.getBean(MessageService.class).handleRedisMessage(messageJson);
     }
 
     private void handleOfflineMessage(Message msg) {

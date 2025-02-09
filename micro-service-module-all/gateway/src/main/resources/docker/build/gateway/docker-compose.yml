@@ -1,0 +1,26 @@
+version: '3'
+services:
+  service-insurance:
+#    network_mode: "host"
+    #container_name: im 设置容器的名称为 "im"
+    container_name: gateway
+    #build 段用于构建镜像的相关配置：
+    build:
+      #context: ./build 表示 Dockerfile 所在的上下文路径为 "./build"，即构建上下文的目录。
+      #context: ./build/gateway
+      context: ./
+      #dockerfile: Dockerfile 指定使用的 Dockerfile 文件为 "Dockerfile"。
+      dockerfile: Dockerfile
+    #environment 段设置环境变量：
+    environment:
+      #- JAR_ENV=test 设置名为 JAR_ENV 的环境变量的值为 "test"。这个环境变量用于指定应用程序的配置文件。
+      - JAR_ENV=test
+
+    #volumes 段用于设置挂载卷：
+#    volumes:
+      #- /var/log/im/:/var/log/im/ 将本地的 "/var/log/im/" 目录挂载到容器的 "/var/log/im/" 目录。可以用来将容器内的日志文件保存到宿主机上。
+#      - /var/log/gateway/:/var/log/gateway/
+    #ports 段用于设置端口映射
+    ports:
+      #- "9600:9500" 将宿主机的 9600 端口映射到容器内的 9500 端口。这样可以通过访问宿主机的 9600 端口来访问容器内的服务。
+      - "10010:10010"

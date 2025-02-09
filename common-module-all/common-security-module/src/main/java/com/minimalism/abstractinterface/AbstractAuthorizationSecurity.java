@@ -62,7 +62,7 @@ public interface AbstractAuthorizationSecurity extends AbstractAuthorization {
         if (ObjectUtil.isEmpty(user)) {
             throw new GlobalCustomException(ApiCode.UNAUTHORIZED);
         }
-        getLogger().info("用户信息：{}", user);
+        info("用户信息：{}", user);
         //获取权限信息 使用数据库查询的信息
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         //String password = user.getPassword();
@@ -78,10 +78,9 @@ public interface AbstractAuthorizationSecurity extends AbstractAuthorization {
     }
 
     default boolean checkToken(HttpServletRequest request, HttpServletResponse response){
-        Logger log = getLogger();
         JwtUtils bean = SpringUtil.getBean(JwtUtils.class);
         JwtConfig jwtConfig = SpringUtil.getBean(JwtConfig.class);
-        log.info("jwtConfig=>{}", jwtConfig);
+        info("jwtConfig=>{}", jwtConfig);
         String tokenName = ObjectUtils.defaultIfEmpty(jwtConfig.getTokenName(), JwtUtils.HEADER_AS_TOKEN);
         String userId = null;
         //获取token
@@ -98,7 +97,7 @@ public interface AbstractAuthorizationSecurity extends AbstractAuthorization {
             //存入SecurityContextHolder
             UsernamePasswordAuthenticationToken authenticationToken = generateUsernamePasswordAuthenticationToken(userId);
             SecurityContextUtil.getContext().setAuthentication(authenticationToken);
-            log.info("Authentication=>{},userId=>{},anyRoles=>{};"
+            info("Authentication=>{},userId=>{},anyRoles=>{};"
                     , SecurityContextUtil.getAuthentication()
                     , SecurityContextUtil.getUserId()
                     , SecurityContextUtil.getAnyRoles()
