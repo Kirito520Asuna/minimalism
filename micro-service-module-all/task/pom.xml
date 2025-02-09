@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.minimalism</groupId>
-    <artifactId>micro-service-module-all</artifactId>
+    <artifactId>task</artifactId>
     <version>${project-module.version}</version>
     <packaging>pom</packaging>
 
@@ -17,11 +17,8 @@
     </properties>
 
     <modules>
-        <module>gateway</module>
-        <module>gen</module>
-        <module>websocket</module>
-        <module>task</module>
-
+        <module>quartz</module>
+        <module>xxl-job</module>
     </modules>
 
 </project>
