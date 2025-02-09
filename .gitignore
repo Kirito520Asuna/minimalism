@@ -31,10 +31,9 @@ hs_err_pid*
 **/.mvn/
 #排除热部署文件
 rebel.xml
+**/rebel.xml
 ### VS Code ###
 .vscode/
 mvnw
 mvnw.cmd
-/.idea/
-/var
-*/.idea/
+/var/
