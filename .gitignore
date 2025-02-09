@@ -35,3 +35,5 @@ rebel.xml
 .vscode/
 mvnw
 mvnw.cmd
+/.idea/
+/var
