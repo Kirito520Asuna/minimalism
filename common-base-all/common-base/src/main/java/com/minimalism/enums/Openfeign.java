@@ -10,7 +10,8 @@ import lombok.Getter;
  */
 @Getter @AllArgsConstructor
 public enum Openfeign {
-    OPENFEIGN("Openfeign",true);
+    OPENFEIGN("X-HEADER-OPENFEIGN","openfeign",true);
+    private String header;
     private String desc;
     private boolean aBoolean;
 }

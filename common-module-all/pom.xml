@@ -19,6 +19,7 @@
     <modules>
         <module>common-security-module</module>
         <module>common-shiro-module</module>
+        <module>common-openfeign-module</module>
     </modules>
 
 </project>

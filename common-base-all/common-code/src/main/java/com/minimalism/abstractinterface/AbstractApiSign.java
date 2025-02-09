@@ -166,15 +166,8 @@ public interface AbstractApiSign extends AbstractBean {
 
     @SneakyThrows
     default boolean verifySign(HttpServletRequest request, String signAsName, String salt, String serviceName, String url, Collection<String> exCollection) {
-        Logger logger = getLogger();
-        // 使用 CachedBodyHttpServletRequest 包装原始请求，以支持多次读取请求体
-        //ContentCachingRequestWrapper wrapper = new ContentCachingRequestWrapper(request);
-        //ContentCachingRequestWrapper requestWrapper = getContentCachingRequestWrapper(request);
-
         String method = request.getMethod();
         url = StrUtil.isBlank(url) ? String.valueOf(request.getRequestURL()) : url;
-        // 使用 CachedBodyHttpServletRequest 包装原始请求，以支持多次读取请求体
-        //ContentCachingRequestWrapper wrapper = new ContentCachingRequestWrapper(request);
         Map<String, String[]> parameterMap = Maps.newLinkedHashMap(request.getParameterMap());
         Map<String, Object> body = Maps.newLinkedHashMap();
         if (CollUtil.isEmpty(parameterMap)) {
@@ -191,21 +184,21 @@ public interface AbstractApiSign extends AbstractBean {
             body.putAll(readValue);
         }
 
-        logger.info("请求参数 parameter:{}", parameterMap);
-        logger.info("请求参数 body:{}", body);
-        String openFeign = request.getHeader(Openfeign.OPENFEIGN.name());
+        info("请求参数 parameter:{}", parameterMap);
+        info("请求参数 body:{}", body);
+        String openFeign = request.getHeader(Openfeign.OPENFEIGN.getHeader());
         if (StrUtil.isNotBlank(openFeign)) {
             String host = request.getHeader("host");
             String[] urlSplit = url.split(host);
             url = new StringBuffer(urlSplit[0]).append(openFeign).append(urlSplit[urlSplit.length - 1]).toString();
-            logger.info("[{}] sign ...", Openfeign.OPENFEIGN.getDesc());
+            info("[{}] sign ...", Openfeign.OPENFEIGN.getDesc());
         }
         url = GatewayUtils.replaceUrl(request, url);
         
         String generalSign = generalSign(salt, method, url, parameterMap, body, exCollection);
         String signHeader = request.getHeader(signAsName);
-        logger.info("验签 {}:{}", signAsName, signHeader);
-        logger.info("验签 {}:{}", "generalSign", generalSign);
+        info("验签 {}:{}", signAsName, signHeader);
+        info("验签 {}:{}", "generalSign", generalSign);
         if (!ObjectUtil.equals(generalSign, signHeader)) {
             throw new GlobalCustomException("[serviceName]==>签名不合法".replace("serviceName", serviceName));
         }
