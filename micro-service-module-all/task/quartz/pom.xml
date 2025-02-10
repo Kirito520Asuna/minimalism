@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.minimalism</groupId>
     <artifactId>quartz</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${project-module.version}</version>
 
     <url/>
     <licenses>
@@ -27,18 +27,122 @@
     </scm>
     <properties>
         <java.version>8</java.version>
+        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <alibaba-cloud.version>2.2.5.RELEASE</alibaba-cloud.version>
+        <seata.version>1.7.1</seata.version>
+
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${alibaba-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.8.18</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.minimalism</groupId>-->
-<!--            <artifactId>framework-redis</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>common-openfeign-module</artifactId>
+            <version>${project-module.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>framework-nacos</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>framework-seata</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-nacos</artifactId>
+            <version>${project-module.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!--seata-start-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-seata</artifactId>
+            <version>${project-module.version}</version>
+            <exclusions>
+                <!--排除依赖 调整到和安装的seata 版本一致-->
+                <exclusion>
+                    <groupId>io.seata</groupId>
+                    <artifactId>seata-all</artifactId>
+                </exclusion>
+                <!--排除依赖 seata-spring-boot-starter 因为可以报错 SeataDataSourceBeanPostProcessor异常-->
+                <exclusion>
+                    <groupId>io.seata</groupId>
+                    <artifactId>seata-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-spring-boot-starter</artifactId>
+            <version>${seata.version}</version>
+        </dependency>
+        <!--seata-end-->
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
