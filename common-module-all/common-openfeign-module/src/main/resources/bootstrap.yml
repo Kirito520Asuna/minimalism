@@ -8,8 +8,10 @@ spring:
       #不再使用ribbon,所以我们在pom文件中还需要导入loadbalancer依赖，并排除掉nacos的ribbon依赖。
   cloud:
     loadbalancer:
+      enabled: true
       ribbon:
         enabled: false
+
 # seata配置
 seata:
   enabled: true
