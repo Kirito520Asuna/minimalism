@@ -1,6 +1,7 @@
 package com.minimalism.task.quartz.dstributed;
 
 import cn.hutool.core.date.DatePattern;
+import com.minimalism.abstractinterface.bean.AbstractBean;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -21,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 @PersistJobDataAfterExecution
 // 禁止并发执行
 @DisallowConcurrentExecution
-public class DistributedJob extends QuartzJobBean {
+public class DistributedJob extends QuartzJobBean implements AbstractBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {

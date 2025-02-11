@@ -38,7 +38,7 @@ spring:
         - id: ${spring.application.name}
           uri: no://op
           predicates:
-            - Path=${server.servlet.context-path}/websocket/**,${server.servlet.context-path}/**,false
+            - Path=${server.servlet.context-path}/websocket/**,${server.servlet.context-path}/quartz/**,${server.servlet.context-path}/**,false
           filters:
             #本地
             - RedirectTo=302, http://${domains.all-paths}/home
@@ -85,5 +85,17 @@ spring:
             document-uri: /doc.html
           predicates:
             - Path=${server.servlet.context-path}/gen/**
+          filters:
+            - StripPrefix=1
+
+        - id: quartz
+          uri: lb://quartz
+          order: 2
+          metadata:
+            summary: quartz服务
+            description: quartz服务
+            document-uri: /doc.html
+          predicates:
+            - Path=${server.servlet.context-path}/quartz/**
           filters:
             - StripPrefix=1

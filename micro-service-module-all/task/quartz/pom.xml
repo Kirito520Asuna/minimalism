@@ -155,6 +155,12 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-knife4j</artifactId>
+            <version>${project-module.version}</version>
+        </dependency>
+
         <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
