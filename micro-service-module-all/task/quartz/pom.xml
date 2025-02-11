@@ -12,19 +12,6 @@
     <artifactId>quartz</artifactId>
     <version>${project-module.version}</version>
 
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <properties>
         <java.version>8</java.version>
         <project-module.version>0.0.1-SNAPSHOT</project-module.version>
@@ -33,7 +20,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <spring-cloud.version>2021.0.3</spring-cloud.version>
-        <alibaba-cloud.version>2.2.5.RELEASE</alibaba-cloud.version>
+        <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
         <seata.version>1.7.1</seata.version>
 
     </properties>
@@ -78,6 +65,14 @@
                     <groupId>com.minimalism</groupId>
                     <artifactId>framework-seata</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -110,6 +105,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+        <!--web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
@@ -181,11 +182,18 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 
     <build>
         <plugins>

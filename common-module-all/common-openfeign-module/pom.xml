@@ -14,7 +14,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <spring-cloud.version>2021.0.3</spring-cloud.version>
-        <alibaba-cloud.version>2.2.5.RELEASE</alibaba-cloud.version>
+        <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
         <seata.version>1.7.1</seata.version>
 
         <hutool.version>5.8.18</hutool.version>
@@ -53,6 +53,20 @@
             <groupId>com.minimalism</groupId>
             <artifactId>common-code</artifactId>
             <version>${project-module.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -84,6 +98,12 @@
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-okhttp</artifactId>
             <version>${feign-okhttp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.0</version>
         </dependency>
 
         <dependency>

@@ -7,8 +7,10 @@ spring:
 
   cloud:
     loadbalancer:
+      enabled: true
       ribbon:
         enabled: false
+
     nacos:
       discovery:
         service: ${spring.application.name}

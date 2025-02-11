@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>common-base</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project-module.version}</version>
         </dependency>
 
         <dependency>
