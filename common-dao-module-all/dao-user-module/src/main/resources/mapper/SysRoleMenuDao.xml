@@ -13,7 +13,7 @@
   </sql>
   <update id="updateBatchSelective" parameterType="java.util.List">
     <!--@mbg.generated-->
-    update sys_role_menu
+    update `sys_role_menu`
     <trim prefix="set" suffixOverrides="," />
     where role_id in
     <foreach close=")" collection="list" item="item" open="(" separator=", ">
@@ -22,7 +22,7 @@
   </update>
   <insert id="batchInsert" parameterType="map">
     <!--@mbg.generated-->
-    insert into sys_role_menu
+    insert into `sys_role_menu`
     (role_id, menu_id)
     values
     <foreach collection="list" item="item" separator=",">
@@ -40,7 +40,7 @@
   </update>
   <insert id="batchInsertSelectiveUseDefaultForNull" parameterType="map">
     <!--@mbg.generated-->
-    insert into sys_role_menu
+    insert into `sys_role_menu`
     (role_id, menu_id)
     values
     <foreach collection="list" item="item" separator=",">
@@ -68,7 +68,7 @@
   </insert>
   <insert id="insertOrUpdate" parameterType="com.minimalism.user.domain.SysRoleMenu">
     <!--@mbg.generated-->
-    insert into sys_role_menu
+    insert into `sys_role_menu`
     (role_id, menu_id)
     values
     (#{roleId,jdbcType=BIGINT}, #{menuId,jdbcType=BIGINT})

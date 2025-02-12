@@ -19,4 +19,5 @@ public interface SysRoleMenuDao extends BaseMapper<SysRoleMenu> {
     int batchInsertSelectiveUseDefaultForNull(@Param("list") List<SysRoleMenu> list);
     int insertOrUpdate(SysRoleMenu record);
     int insertOrUpdateSelective(SysRoleMenu record);
+    int deleteByPrimaryKeyIn(List<Long> list);
 }
