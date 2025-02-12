@@ -6,6 +6,7 @@ import com.minimalism.domain.Message;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.result.Result;
 
+import com.minimalism.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class MessageController {
     @Operation(summary = "发送消息")
     @PostMapping("/send")
     public Result<String> sendLocalMessage(@RequestBody Message message) {
-        SpringUtil.getBean(WebSocketEndpoint.class).sendLocalMessage(message.getSenderId(),message);
+        SpringUtil.getBean(MessageService.class).sendLocalMessage(message.getSenderId(),message);
         return Result.ok();
     }
 }

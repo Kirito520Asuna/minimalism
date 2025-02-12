@@ -5,6 +5,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.message.listener.RedisMessageListener;
+import com.minimalism.service.MessageService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.Message;
@@ -51,7 +52,7 @@ public class RedisMessageConfig {
             public void onMessage(Message message, byte[] pattern) {
                 String channel = new String(message.getChannel());
                 String msg = new String(message.getBody());
-                SpringUtil.getBean(WebSocketEndpoint.class).handleRedisMessage(msg);
+                SpringUtil.getBean(MessageService.class).handleRedisMessage(msg);
             }
         };
 

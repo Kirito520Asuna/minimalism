@@ -2,6 +2,7 @@ package com.minimalism.message.listener;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.endpoint.WebSocketEndpoint;
+import com.minimalism.service.MessageService;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,6 @@ public class RedisMessageListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String channel = new String(message.getChannel());
         String msg = new String(message.getBody());
-        SpringUtil.getBean(WebSocketEndpoint.class).handleRedisMessage(msg);
+        SpringUtil.getBean(MessageService.class).handleRedisMessage(msg);
     }
 }

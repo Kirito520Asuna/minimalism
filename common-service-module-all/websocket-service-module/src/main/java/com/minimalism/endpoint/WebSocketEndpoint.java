@@ -36,7 +36,7 @@ public class WebSocketEndpoint implements AbstractBean {
     @Resource
     private RedisTemplate<String, String> redisTemplate = getRedisTemplate();
     @Resource
-    private NacosDiscoveryProperties nacosProperties = getNacosDiscoveryProperties();
+    private NacosDiscoveryProperties nacosDiscoveryProperties = getNacosDiscoveryProperties();
 
     // 当前实例ID（格式：ip:port）
 
@@ -107,30 +107,15 @@ public class WebSocketEndpoint implements AbstractBean {
 
     @OnMessage
     public void onMessage(String message, Session session, @PathParam("userId") String senderId) {
+        MessageService messageService = SpringUtil.getBean(MessageService.class);
         info("收到消息: {}", message);
         boolean isTypeJSON = JSONUtil.isTypeJSON(message);
         if (isTypeJSON) {
             try {
                 Message msg = JSONUtil.toBean(message, Message.class);
-                String targetUserId = msg.getTargetId();
-                String targetUserKey = WebSocket.WS_USER + targetUserId;
                 String instanceId = getInstanceId();
-                // 查询目标用户所在实例
-                String targetInstanceId = redisTemplate.opsForValue().get(targetUserKey);
-
-                if (targetInstanceId == null) {
-                    handleOfflineMessage(msg);
-                    return;
-                }
-
-                msg.setTargetInstanceId(targetInstanceId);
                 msg.setSendInstanceId(instanceId);
-
-                if (targetInstanceId.equals(instanceId)) {
-                    sendLocalMessage(targetUserId, msg); // 本地发送
-                } else {
-                    sendCrossInstanceMessage(targetInstanceId, msg); // 跨实例发送
-                }
+                messageService.onMessage(msg);
             } catch (Exception e) {
                 // 异常处理逻辑
                 error("处理消息时发生异常: {}", e.getMessage());
@@ -156,27 +141,5 @@ public class WebSocketEndpoint implements AbstractBean {
                 })
                 .findFirst()
                 .orElse(null);
-    }
-
-    // --- 消息发送方法 ---
-    // 发送本地消息
-    public void sendLocalMessage(String userId, Message msg) {
-        SpringUtil.getBean(MessageService.class).sendLocalMessage(userId, msg);
-    }
-
-    // 发送Redis的跨实例消息
-    private void sendCrossInstanceMessage(String targetInstanceId, Message msg) {
-        SpringUtil.getBean(MessageService.class).sendCrossInstanceMessage(targetInstanceId, msg);
-    }
-
-    // 处理来自Redis的跨实例消息
-    public void handleRedisMessage(String messageJson) {
-        SpringUtil.getBean(MessageService.class).handleRedisMessage(messageJson);
-    }
-
-    private void handleOfflineMessage(Message msg) {
-        info("[离线消息]handleOfflineMessage");
-        // 离线消息存储逻辑（如存入数据库）
-        SpringUtil.getBean(MessageService.class).sendOfflineMessage(msg);
     }
 }

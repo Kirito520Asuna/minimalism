@@ -5,6 +5,8 @@ package com.minimalism.domain;
  * @Date 2025/2/4 1:48:04
  * @Description
  */
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.minimalism.enums.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +24,10 @@ public class Message {
     public static final String TYPE_TEXT = "text";
     public static final String TYPE_IMAGE = "image";
     public static final String TYPE_SYSTEM = "system";
+    @JsonIgnore
     //消息发送者实例ID
     private String sendInstanceId;
+    @JsonIgnore
     //消息接收者实例ID
     private String targetInstanceId;
 
@@ -37,7 +41,7 @@ public class Message {
     private String content;
 
     // 消息类型（text/image/system...）
-    private String type = TYPE_TEXT;
+    private String type = MessageType.text.name();
 
     // 消息时间戳
     private Long timestamp = System.currentTimeMillis();
