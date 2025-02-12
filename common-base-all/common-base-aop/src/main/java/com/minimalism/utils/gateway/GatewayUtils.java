@@ -3,6 +3,7 @@ package com.minimalism.utils.gateway;
 import cn.hutool.core.util.StrUtil;
 import com.minimalism.constant.gateway.GatewayConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,9 +22,22 @@ public class GatewayUtils {
                 log.error("请求头缺少参数 {} or 值为空", GatewayConstants.GATEWAY_DOMAINS_NAME);
                 throw new Exception();
             }
-            if (url.contains(gatewayDomainsName) && !url.contains(gatewayDomainsAllPaths)) {
-                url = url.replace(gatewayDomainsName, gatewayDomainsAllPaths);
+
+            if (gatewayDomainsName.contains("127.0.0.1") && url.contains("localhost")) {
+                gatewayDomainsName = gatewayDomainsName.replace("127.0.0.1", "localhost");
+            } else if (gatewayDomainsName.contains("localhost") && url.contains("127.0.0.1")) {
+                gatewayDomainsName = gatewayDomainsName.replace("localhost", "127.0.0.1");
             }
+
+            url = replaceUrl(url, gatewayDomainsAllPaths, gatewayDomainsName);
+        }
+        return url;
+    }
+
+    @NotNull
+    private static String replaceUrl(String url, String gatewayDomainsAllPaths, String gatewayDomainsName) {
+        if (url.contains(gatewayDomainsName) && !url.contains(gatewayDomainsAllPaths)) {
+            url = url.replace(gatewayDomainsName, gatewayDomainsAllPaths);
         }
         return url;
     }

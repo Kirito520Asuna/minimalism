@@ -133,11 +133,13 @@ public interface AbstractRedissonConfig {
 
                 SingleServerConfig singleServerConfig = config.useSingleServer();
                 singleServerConfig.setAddress(addresses.stream().findFirst().orElse(new StringBuffer("redis://").append(DEFAULT_REDIS).toString()));
+                singleServerConfig.setDatabase(redisProperties.getDatabase());
                 baseConfig = singleServerConfig;
                 break;
         }
         baseConfig.setUsername(redisProperties.getUsername());
         baseConfig.setPassword(redisProperties.getPassword());
+
         return Redisson.create(config);
     }
     default RedissonClient getRedissonClient(List<String> addresses, String redisPassword, Integer redisTimeout, String redisMode) {

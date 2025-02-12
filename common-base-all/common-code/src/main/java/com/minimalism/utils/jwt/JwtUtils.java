@@ -2,6 +2,8 @@ package com.minimalism.utils.jwt;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.enums.ApiCode;
+import com.minimalism.exception.GlobalCustomException;
 import io.jsonwebtoken.*;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -179,6 +181,15 @@ public class JwtUtils {
 
     public static Claims parseJWT(String jwt) throws Exception {
         return parseJWT(jwt, getJWT_KEY());
+    }
+
+    public static String getSubjectByParseJWT(String jwt) throws Exception {
+        try {
+            String subject = parseJWT(jwt).getSubject();
+            return subject;
+        }catch (Exception e){
+            throw new GlobalCustomException(ApiCode.UNAUTHORIZED);
+        }
     }
 
     // 判断JWT是否过期
