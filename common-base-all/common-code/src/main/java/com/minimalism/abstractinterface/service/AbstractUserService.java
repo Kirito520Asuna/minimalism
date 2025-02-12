@@ -51,12 +51,12 @@ public interface AbstractUserService {
         String token = JwtUtils.createJWT(id);
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setTokenName(tokenName)
-                .setOpenTwoToke(openTwoToken)
-                .setTokenValue(token);
+                .setEnableTwoToken(openTwoToken)
+                .setToken(token);
         if (openTwoToken) {
             String refreshToken = JwtUtils.createJWT(id, JwtUtils.getLONG_JWT_TTL());
             tokenInfo.setRefreshTokenName(refreshTokenName)
-                    .setRefreshTokenValue(refreshToken);
+                    .setRefreshToken(refreshToken);
         }
         return tokenInfo;
     }

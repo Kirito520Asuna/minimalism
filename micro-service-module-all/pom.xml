@@ -21,7 +21,7 @@
         <module>gen</module>
         <module>websocket</module>
         <module>task</module>
-
+        <module>user</module>
     </modules>
 
 </project>

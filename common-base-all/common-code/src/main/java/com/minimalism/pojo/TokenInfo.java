@@ -21,11 +21,11 @@ public class TokenInfo implements Serializable {
     @Schema(description = "token名称")
     String tokenName;
     @Schema(description = "token值")
-    String tokenValue;
+    String token;
     @Schema(description = "刷新token名称")
     String refreshTokenName;
     @Schema(description = "刷新token值")
-    String refreshTokenValue;
+    String refreshToken;
     @Schema(description = "是否开启双token")
-    Boolean openTwoToke;
+    Boolean enableTwoToken;
 }
