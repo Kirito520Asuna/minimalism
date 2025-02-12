@@ -1,5 +1,6 @@
 package com.minimalism.config;
 
+import com.minimalism.constant.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,11 @@ public class AuthorizationConfig {
     private boolean enableShiro = false;
     @Value("${authorization.security.enable:true}")
     private boolean enableSecurity = true;
+    @Value("${authorization.admin.key:admin}")
+    private String adminKey = "admin";
+
+    public String getAdminKey() {
+        String admin = adminKey.startsWith(Roles.roles) ? adminKey : new StringBuffer(Roles.roles).append(adminKey).toString();
+        return admin;
+    }
 }

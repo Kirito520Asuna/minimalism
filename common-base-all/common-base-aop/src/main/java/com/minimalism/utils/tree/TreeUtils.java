@@ -1,6 +1,7 @@
 package com.minimalism.utils.tree;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.minimalism.aop.tree.TreeMap;
 import com.minimalism.utils.object.ObjectUtils;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @Author yan
+ * @Author minimalism
  * @Date 2024/2/27 0027 17:44
  * @Description 通用树状结构
  */
@@ -127,6 +128,19 @@ public class TreeUtils {
             }
         }
         return roots;
+    }
+
+    /**
+     *  将list转换为树状结构 @See {@link com.minimalism.aop.tree.Tree}
+     * @param list
+     * @param tClass
+     * @return
+     * @param <T>
+     */
+    public static <T> List<T> listToTree(List<T> list,Class<T> tClass){
+        List<Map<String, Object>> listToMapList = listToMapList(list);
+        List<T> treeVos = TreeUtils.mapsToTree(listToMapList, tClass, true, TreeMap.getTreeFieldMaps(tClass));
+        return treeVos;
     }
 }
 

@@ -7,6 +7,7 @@ import com.minimalism.abstractinterface.aop.AbstractSysLog;
 import com.minimalism.aop.shiro.ShiroLogical;
 import com.minimalism.aop.shiro.ShiroPermissions;
 import com.minimalism.aop.shiro.ShiroRoles;
+import com.minimalism.config.AuthorizationConfig;
 import com.minimalism.config.shiro.ShiroAnnotationConfig;
 import com.minimalism.constant.Roles;
 import com.minimalism.enums.ApiCode;
@@ -272,8 +273,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
      * @return
      */
     default boolean isAdmin(String key) {
-        Environment env = SpringUtil.getBean(Environment.class);
-        String property = env.getProperty("auth.admin");
+        String property = SpringUtil.getBean(AuthorizationConfig.class).getAdminKey();
         String admin = ObjectUtils.defaultIfEmpty(property, "admin");
         key = ObjectUtils.defaultIfEmpty(key, "");
 

@@ -3,10 +3,12 @@ package com.minimalism.abstractinterface.security;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.config.AuthorizationConfig;
 import com.minimalism.constant.Roles;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.core.env.Environment;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,8 +24,7 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
      * @return
      */
     default boolean isAdmin(String key) {
-        Environment env = SpringUtil.getBean(Environment.class);
-        String property = env.getProperty("auth.admin");
+        String property = SpringUtil.getBean(AuthorizationConfig.class).getAdminKey();
         String admin = ObjectUtils.defaultIfEmpty(property, "admin");
         key = ObjectUtils.defaultIfEmpty(key, "");
 
@@ -35,11 +36,24 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
 
         if (admin.startsWith(Roles.roles)) {
             admin = admin.replace(Roles.roles, "");
-        }else if (admin.startsWith(Roles.perms)) {
+        } else if (admin.startsWith(Roles.perms)) {
             admin = admin.replace(Roles.perms, "");
         }
 
         return ObjectUtils.equals(admin, key);
+    }
+
+    default boolean isAdmin(List<String> keys) {
+        keys = ObjectUtils.defaultIfEmpty(keys, new ArrayList<>());
+        boolean isAdmin = false;
+
+        for (String key : keys) {
+            isAdmin = isAdmin || isAdmin(key);
+            if (isAdmin) {
+                break;
+            }
+        }
+        return isAdmin;
     }
 
     /**
@@ -51,8 +65,7 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
     default boolean hasAuthority(String authority) {
         boolean hasAuthority = false;
         try {
-            //List<String> roles = getAuthorityList();
-            hasAuthority = isAdmin(authority) || getAuthorityList().contains(authority);
+            hasAuthority = isAdmin(getRoles()) || getAuthorityList().contains(authority);
         } catch (Exception e) {
             error("err {} ", e.getMessage());
         }
@@ -67,7 +80,6 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
         }
 
         try {
-            //List<String> roles = getRoles();
             hasRole = isAdmin(role) || getRoles().contains(role);
         } catch (Exception e) {
             error("err {} ", e.getMessage());
