@@ -1,4 +1,4 @@
-package com.minimalism.service;
+package com.minimalism.validate_code.service;
 
 import com.minimalism.pojo.CaptchaInfo;
 

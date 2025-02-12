@@ -1,4 +1,4 @@
-package com.minimalism.service.impl;
+package com.minimalism.validate_code.service.impl;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
@@ -10,7 +10,7 @@ import com.minimalism.constant.cache.CacheConstants;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.pojo.CaptchaInfo;
 import com.minimalism.properties.CaptchaProperties;
-import com.minimalism.service.ValidateCodeService;
+import com.minimalism.validate_code.service.ValidateCodeService;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

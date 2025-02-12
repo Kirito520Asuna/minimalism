@@ -12,7 +12,7 @@ import com.minimalism.pojo.TokenInfo;
 import com.minimalism.pojo.User;
 import com.minimalism.pojo.UserInfo;
 import com.minimalism.result.Result;
-import com.minimalism.service.ValidateCodeService;
+import com.minimalism.validate_code.service.ValidateCodeService;
 import com.minimalism.utils.shiro.SecurityContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

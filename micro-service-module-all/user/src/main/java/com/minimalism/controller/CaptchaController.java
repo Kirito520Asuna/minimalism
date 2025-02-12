@@ -3,7 +3,7 @@ package com.minimalism.controller;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.pojo.CaptchaInfo;
 import com.minimalism.result.Result;
-import com.minimalism.service.ValidateCodeService;
+import com.minimalism.validate_code.service.ValidateCodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
