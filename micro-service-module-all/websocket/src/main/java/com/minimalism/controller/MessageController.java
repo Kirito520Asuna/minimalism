@@ -2,6 +2,7 @@ package com.minimalism.controller;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.log.SysLog;
+import com.minimalism.aop.security.Login;
 import com.minimalism.domain.Message;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.result.Result;
@@ -23,7 +24,7 @@ public class MessageController {
     public Result<String> test() {
         return Result.ok();
     }
-    @SysLog
+    @SysLog @Login
     @Operation(summary = "发送消息")
     @PostMapping("/send")
     public Result<String> sendLocalMessage(@RequestBody Message message) {
