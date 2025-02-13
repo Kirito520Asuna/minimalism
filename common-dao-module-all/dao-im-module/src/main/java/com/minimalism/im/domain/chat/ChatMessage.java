@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import com.minimalism.im.domain.enums.MessageType;
+import com.minimalism.enums.im.MessageType;
 import com.minimalism.im.domain.im.User;
 import com.minimalism.view.BaseJsonView;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,4 +1,4 @@
-package com.minimalism.im.domain.enums;
+package com.minimalism.enums.im;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

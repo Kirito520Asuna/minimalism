@@ -3,7 +3,7 @@ package com.minimalism.im.mapper.chat;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.minimalism.im.domain.chat.ChatUser;
-import com.minimalism.im.domain.enums.ChatType;
+import com.minimalism.enums.im.ChatType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
