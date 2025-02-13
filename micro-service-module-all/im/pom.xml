@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.8</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.minimalism</groupId>
+    <artifactId>im</artifactId>
+    <version>${project-module.version}</version>
+ 
+    <properties>
+        <java.version>8</java.version>
+        <jwt.version>0.9.1</jwt.version>
+        <hutool-all.version>5.8.16</hutool-all.version>
+        <fastjson.version>2.0.32</fastjson.version>
+        <alibaba-druid.version>1.2.18</alibaba-druid.version>
+        <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
+        <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
+        <spring-cloud.version>2021.0.5</spring-cloud.version>
+        <!--        <revision>2021.0.5.0</revision>-->
+        <!--        &lt;!&ndash; Spring Cloud &ndash;&gt;-->
+        <!--        <spring.cloud.version>2021.0.5</spring.cloud.version>-->
+        <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
+        <mysql.version>8.0.11</mysql.version>
+        <logstash.version>5.3</logstash.version>
+        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Cloud Version BOM -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <!--                <version>2021.0.3</version>-->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${alibaba-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!--集成logstash-->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.version}</version>
+        </dependency>
+        <!--nacos-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-nacos</artifactId>
+            <version>${project-module.version}</version>
+        </dependency>
+
+        <!--用于加载bootstrap-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
+        <!-- Spring Cloud LoadBalancer 依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <!--nacos-->
+
+        <!--redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!--redis连接池 jedis-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+
+        <!--redis-->
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+
+
+        <!--web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+<!--
+        &lt;!&ndash;configuration-processor&ndash;&gt;
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--netty-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>im-service-module</artifactId>
+            <version>${project-module.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>user-service-module</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>common-shiro-module</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>framework-knife4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>user-service-module</artifactId>
+            <version>${project-module.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>common-shiro-module</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>framework-knife4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>dao-user-module</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>dao-all</artifactId>
+            <version>${project-module.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!--swagger-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-knife4j</artifactId>
+            <version>${project-module.version}</version>
+        </dependency>
+
+        <!--ali线程池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${alibaba-druid.version}</version>
+        </dependency>
+        <!--dao-->
+        <!--test-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

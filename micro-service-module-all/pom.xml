@@ -19,6 +19,7 @@
     <modules>
         <module>gateway</module>
         <module>gen</module>
+        <module>im</module>
         <module>websocket</module>
         <module>task</module>
         <module>user</module>

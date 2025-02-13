@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 public class CaptchaController implements AbstractBaseController {
     @Resource
     private ValidateCodeService validateCodeService;
-        @SysLog
+    @SysLog
     @Operation(summary = "获取验证码")
     @GetMapping("/getImgCode")
     public Result<CaptchaInfo> getCaptcha() {

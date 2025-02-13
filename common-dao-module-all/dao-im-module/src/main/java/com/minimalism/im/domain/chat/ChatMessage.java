@@ -8,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import com.minimalism.enums.im.MessageType;
-import com.minimalism.im.domain.im.User;
+import com.minimalism.pojo.User;
 import com.minimalism.view.BaseJsonView;
+import com.minimalism.vo.user.UserVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -66,7 +67,7 @@ public class ChatMessage implements Serializable {
     @TableField(exist = false)
     @Schema(description="发送人")
     @JsonView(value = {BaseJsonView.ChatView.class})
-    private User sendUser;
+    private UserVo sendUser;
     @TableField(exist = false)
     @Schema(description="内容")
     @NotNull(groups = {BaseJsonView.SendMessageView.class})

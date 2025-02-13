@@ -34,7 +34,7 @@ public class AuthController implements AbstractBaseController {
     /**
      * 查询用户信息列表
      */
-    @SysLog(title = "登陆")
+    @SysLog
     @Operation(summary = "登陆")
     @PostMapping("/login")
     @AviatorValids(
@@ -54,7 +54,6 @@ public class AuthController implements AbstractBaseController {
 
         UserInfo userInfo = new UserInfo().setPassword(dto.getPassword()).setUsername(dto.getUsername());
         TokenInfo tokenInfo = SpringUtil.getBean(AbstractLoginService.class).login(userInfo);
-
         response.setHeader(tokenInfo.getTokenName(), tokenInfo.getToken());
         if (tokenInfo.getEnableTwoToken()) {
             response.setHeader(tokenInfo.getRefreshTokenName(), tokenInfo.getRefreshToken());
@@ -62,7 +61,7 @@ public class AuthController implements AbstractBaseController {
         return ok(tokenInfo);
     }
 
-    @SysLog(title = "注册")
+    @SysLog
     @Operation(summary = "注册")
     @PostMapping("/register")
     @AviatorValids(values = {
@@ -74,7 +73,7 @@ public class AuthController implements AbstractBaseController {
         return ok(register);
     }
 
-    @SysLog(title = "登出")
+    @SysLog
     @Operation(summary = "登出")
     @PostMapping("/logout")
     public Result logout() {

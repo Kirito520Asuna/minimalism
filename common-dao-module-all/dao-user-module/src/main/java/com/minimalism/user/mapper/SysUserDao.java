@@ -1,8 +1,11 @@
 package com.minimalism.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.enums.im.ChatType;
 import com.minimalism.user.domain.SysUser;
 import java.util.List;
+
+import com.minimalism.vo.user.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,4 +29,15 @@ public interface SysUserDao extends BaseMapper<SysUser> {
     int insertOrUpdate(SysUser record);
 
     int insertOrUpdateSelective(SysUser record);
+
+    List<SysUser> getFriends(SysUser user);
+
+    List<SysUser> applyList(@Param("userId") Long userId);
+
+    SysUser getUser(@Param("chatId") Long chatId, @Param("userId") Long userId, @Param("chatType") ChatType chatType);
+
+    SysUser getOneUser(@Param("userId") Long userId, @Param("nowUserId") Long nowUserId);
+
+    List<SysUser> getUsers(SysUser user);
+    UserVo getUserVoById(Long id);
 }

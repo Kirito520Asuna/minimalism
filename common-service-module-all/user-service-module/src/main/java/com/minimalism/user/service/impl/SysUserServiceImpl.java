@@ -4,7 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.minimalism.constant.DataSourceName;
+import com.minimalism.enums.im.ChatType;
 import com.minimalism.user.service.SysRoleMenuService;
 import com.minimalism.user.service.SysRoleService;
 import com.minimalism.user.service.SysUserRoleService;
@@ -43,8 +46,10 @@ import javax.annotation.Resource;
  * @Date 2024/9/28 上午1:26:19
  * @Description
  */
-@Service
+@Service @DS(DataSourceName.user)
 public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> implements SysUserService {
+    @Resource
+    private SysUserDao sysUserDao;
     @Resource
     private SysUserRoleService sysUserRoleService;
     @Resource
@@ -224,5 +229,30 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     @Transactional(rollbackFor = Exception.class)
     public int insertOrUpdateSelective(SysUser record) {
         return baseMapper.insertOrUpdateSelective(record);
+    }
+
+    @Override
+    public List<SysUser> getFriends(SysUser user) {
+        return sysUserDao.getFriends(user);
+    }
+
+    @Override
+    public List<SysUser> applyList(Long userId) {
+        return baseMapper.applyList(userId);
+    }
+
+    @Override
+    public SysUser getUser(Long chatId, Long userId, ChatType chatType) {
+        return baseMapper.getUser(chatId, userId, chatType);
+    }
+
+    @Override
+    public SysUser getOneUser(Long userId, Long nowUserId) {
+        return baseMapper.getOneUser(userId, nowUserId);
+    }
+
+    @Override
+    public List<SysUser> getUsers(SysUser user) {
+        return baseMapper.getUsers(user);
     }
 }

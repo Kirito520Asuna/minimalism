@@ -3,6 +3,7 @@ package com.minimalism.user.service;
 import com.minimalism.abstractinterface.service.AbstractUserService;
 import com.minimalism.aop.redis.RedisCachePut;
 import com.minimalism.constant.Redis;
+import com.minimalism.enums.im.ChatType;
 import com.minimalism.pojo.TokenInfo;
 import com.minimalism.pojo.User;
 import com.minimalism.pojo.UserInfo;
@@ -11,6 +12,7 @@ import com.minimalism.user.domain.SysUser;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -83,5 +85,14 @@ public interface SysUserService extends IService<SysUser>, AbstractUserService {
 
     int insertOrUpdateSelective(SysUser record);
 
+    List<SysUser> getFriends(SysUser user);
 
+
+    List<SysUser> applyList(Long userId);
+
+    SysUser getUser(Long chatId, Long userId, ChatType chatType);
+
+    SysUser getOneUser(Long userId,Long nowUserId);
+
+    List<SysUser> getUsers(SysUser user);
 }

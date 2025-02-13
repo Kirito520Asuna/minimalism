@@ -37,6 +37,9 @@ public class CustomBeanUtils extends BeanUtil {
      * @param target 目标对象
      */
     public static void copyPropertiesIgnoreNull(Object source, Object target) {
+        if (source == null || target == null) {
+            return;
+        }
         // 获取源对象中所有的属性名
         String[] ignoreProperties = getNullPropertyNames(source);
         // 执行复制操作，忽略null值属性

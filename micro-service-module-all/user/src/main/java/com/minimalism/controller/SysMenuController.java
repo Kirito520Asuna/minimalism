@@ -47,7 +47,7 @@ public class SysMenuController implements AbstractBaseController {
     /**
      * 查询菜单权限列表
      */
-    @SysLog(title = "查询菜单权限列表")
+    @SysLog
     @Operation(summary = "查询菜单权限列表")
     @ShiroPermissions("system:menu:list")
     @GetMapping("/list")
@@ -65,7 +65,7 @@ public class SysMenuController implements AbstractBaseController {
     /**
      * 导出菜单权限列表
      */
-    @SysLog(title = "导出菜单权限列表", businessType = BusinessType.EXPORT)
+    @SysLog(businessType = BusinessType.EXPORT)
     @Operation(summary = "导出菜单权限列表")
     @ShiroPermissions("system:menu:export")
     @PostMapping("/export")
@@ -80,7 +80,7 @@ public class SysMenuController implements AbstractBaseController {
      * 导入菜单权限
      */
     @SneakyThrows
-    @SysLog(title = "导入菜单权限", businessType = BusinessType.EXPORT)
+    @SysLog(businessType = BusinessType.EXPORT)
     @Operation(summary = "导入菜单权限")
     @ShiroPermissions("system:menu:import")
     @PostMapping("/importData")
@@ -96,7 +96,7 @@ public class SysMenuController implements AbstractBaseController {
     /**
      * 获取菜单权限详细信息
      */
-    @SysLog(title = "获取菜单权限详细信息")
+    @SysLog
     @Operation(summary = "获取菜单权限详细信息")
     @ShiroPermissions("system:menu:query")
     @GetMapping(value = "/{menuId}")
@@ -107,7 +107,7 @@ public class SysMenuController implements AbstractBaseController {
     /**
      * 新增菜单权限
      */
-    @SysLog(title = "新增菜单权限", businessType = BusinessType.INSERT)
+    @SysLog(businessType = BusinessType.INSERT)
     @Operation(summary = "新增菜单权限")
     @ShiroPermissions("system:menu:add")
     @PostMapping
@@ -118,7 +118,7 @@ public class SysMenuController implements AbstractBaseController {
     /**
      * 修改菜单权限
      */
-    @SysLog(title = "修改菜单权限", businessType = BusinessType.UPDATE)
+    @SysLog(businessType = BusinessType.UPDATE)
     @Operation(summary = "修改菜单权限")
     @ShiroPermissions("system:menu:edit")
     @PutMapping
@@ -129,7 +129,7 @@ public class SysMenuController implements AbstractBaseController {
     /**
      * 删除菜单权限
      */
-    @SysLog(title = "删除菜单权限", businessType = BusinessType.DELETE)
+    @SysLog(businessType = BusinessType.DELETE)
     @Operation(summary = "删除菜单权限")
     @ShiroPermissions("system:menu:remove")
     @DeleteMapping("/{menuIds}")

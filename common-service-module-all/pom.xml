@@ -19,6 +19,7 @@
     <modules>
         <module>gen-service-module</module>
         <module>user-service-module</module>
+        <module>im-service-module</module>
         <module>validate-code-service-module</module>
         <module>websocket-service-module</module>
     </modules>

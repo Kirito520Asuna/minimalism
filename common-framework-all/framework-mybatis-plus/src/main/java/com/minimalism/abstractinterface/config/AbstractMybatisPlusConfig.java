@@ -11,7 +11,7 @@ import org.mybatis.spring.annotation.MapperScan;
  * @Date 2024/5/22 0022 9:50
  * @Description
  */
-@MapperScan(basePackages = {"com.**.dao","com.**.**.dao"})
+@MapperScan(basePackages = {"com.minimalism.**.dao","com.minimalism.**.**.dao","com.minimalism.**.mapper","com.minimalism.**.**.mapper"})
 public interface AbstractMybatisPlusConfig {
 
     /**

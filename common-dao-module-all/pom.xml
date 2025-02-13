@@ -19,6 +19,8 @@
     <modules>
         <module>dao-gen-module</module>
         <module>dao-user-module</module>
+        <module>dao-im-module</module>
+        <module>dao-all</module>
     </modules>
 
 </project>

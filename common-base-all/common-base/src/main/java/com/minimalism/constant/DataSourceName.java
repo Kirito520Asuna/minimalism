@@ -10,5 +10,6 @@ package com.minimalism.constant;
 //@Component
 public interface DataSourceName {
     String im = "im";
+    String user = "user";
     String master = "master";
 }

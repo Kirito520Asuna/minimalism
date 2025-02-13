@@ -23,6 +23,12 @@
     </properties>
     <dependencies>
 
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>dao-user-module</artifactId>
+            <version>${project-module.version}</version>
+        </dependency>
+
         <!--swagger-->
         <dependency>
             <groupId>com.minimalism</groupId>
