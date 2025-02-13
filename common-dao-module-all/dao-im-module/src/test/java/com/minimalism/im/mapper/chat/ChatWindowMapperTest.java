@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.minimalism.im.domain.chat.ChatWindow;
-import com.minimalism.im.domain.enums.ChatType;
+import com.minimalism.enums.im.ChatType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
