@@ -2,6 +2,7 @@ package com.minimalism.im.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minimalism.result.Result;
+import org.apache.ibatis.type.Alias;
 
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import java.io.PrintWriter;
  * @Date 2023/8/11 0011 16:48
  * @Description
  */
+@Alias("ImResponseUtils")
 public class ResponseUtils {
     /**
      *

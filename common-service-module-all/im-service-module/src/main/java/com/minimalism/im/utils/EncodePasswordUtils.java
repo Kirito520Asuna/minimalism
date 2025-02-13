@@ -2,6 +2,7 @@ package com.minimalism.im.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.minimalism.exception.GlobalCustomException;
+import org.apache.ibatis.type.Alias;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @Date 2023/9/6 0006 14:24
  * @Description
  */
+@Alias("ImEncodePasswordUtils")
 public class EncodePasswordUtils extends com.minimalism.utils.EncodePasswordUtils{
     //public static void encodePassword(User user) throws Exception {
     //    String password = user.getPassword();
