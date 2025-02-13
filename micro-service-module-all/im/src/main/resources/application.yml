@@ -46,7 +46,7 @@ springdoc:
     tags-sorter: alpha
 
 mybatis-plus:
-  type-aliases-package: com.minimalism.im,com.minimalism.user
+  type-aliases-package: com.minimalism
   # 设置Mapper文件位置
   mapper-locations: classpath:mapper/*.xml, classpath:mapper/**/*.xml
   #配置

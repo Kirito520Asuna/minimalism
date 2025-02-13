@@ -16,8 +16,6 @@ public class AppConfig implements AbstractBean {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-            System.out.println("扫描到的实体类包：com.example.domain");
-            System.out.println("扫描到的 Mapper XML 文件路径：classpath:/mapper/**/*.xml");
         };
     }
 }

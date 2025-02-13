@@ -30,7 +30,13 @@ public interface SysUserDao extends BaseMapper<SysUser> {
 
     int insertOrUpdateSelective(SysUser record);
 
-    List<SysUser> getFriends(SysUser user);
+    /**
+     * @param user
+     * @param friendIds
+     * @param commonDatasource 相同数据源
+     * @return
+     */
+    List<SysUser> getFriends(@Param("user") SysUser user, @Param("friendIds") List<Long> friendIds, @Param("commonDatasource") boolean commonDatasource);
 
     List<SysUser> applyList(@Param("userId") Long userId);
 

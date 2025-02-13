@@ -671,16 +671,34 @@
         select
         <include refid="Base_Column_List"/>
         from `sys_user`
-        where user_id in (select f.fid from `friend` f where f.`uid` = #{userId})
-        <if test="(nickName != null and nickName != '') and (userName == null or userName == '')">
-            and `nick_name` like concat(#{nickName}, '%')
+        where
+        <choose>
+            <when test="!commonDatasource">
+                 <choose>
+                    <when test="friendIds != null and friendIds.size() != 0">
+                        <foreach collection="friendIds" item="friendId" open=" `user_id` in (" close=")" separator=",">
+                            #{friendId}
+                        </foreach>
+                    </when>
+                     <otherwise>
+                         false
+                     </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                `user_id` in (select f.fid from `friend` f where f.`uid` = #{user.userId})
+            </otherwise>
+        </choose>
+
+        <if test="(user.nickName != null and user.nickName != '') and (user.userName == null or user.userName == '')">
+            and `nick_name` like concat(#{user.nickName}, '%')
         </if>
-        <if test="(userName != null and userName != '')and (nickName == null or nickName == '')">
-            and `user_name` like concat(#{userName}, '%')
+        <if test="(user.userName != null and user.userName != '')and (user.nickName == null or user.nickName == '')">
+            and `user_name` like concat(#{user.userName}, '%')
         </if>
-        <if test="(userName != null and userName != '') or (nickName != null and nickName != '')">
-            and (`user_name` like concat(#{userName}, '%')
-            or `nick_name` like concat(#{nickName}, '%')
+        <if test="(user.userName != null and user.userName != '') or (user.nickName != null and user.nickName != '')">
+            and (`user_name` like concat(#{user.userName}, '%')
+            or `nick_name` like concat(#{user.nickName}, '%')
             )
         </if>
     </select>

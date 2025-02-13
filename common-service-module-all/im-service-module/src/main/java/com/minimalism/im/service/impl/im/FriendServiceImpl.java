@@ -1,9 +1,14 @@
 package com.minimalism.im.service.impl.im;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.minimalism.constant.DataSourceName;
 import com.minimalism.im.domain.chat.ChatUser;
@@ -34,7 +39,9 @@ import java.util.stream.Collectors;
  * @Date 2023/8/7 0007 10:36
  * @Description
  */
-@Service @DS(DataSourceName.im) @Transactional(rollbackFor = Exception.class)
+@Service
+@DS(DataSourceName.im)
+@DSTransactional
 public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> implements FriendService {
 
     @Resource
@@ -52,14 +59,28 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
         user1.setUserId(userId);
         user1.setUserName(keyword);
         user1.setNickName(keyword);
-        List<UserVo> list = userService.getFriends(user1)
-                .stream().filter(ObjectUtils::isNotEmpty)
-                .map(o-> {
-                    UserVo vo = new UserVo();
-                    CustomBeanUtils.copyPropertiesIgnoreNull(o, vo);
-                    return vo;
-                }).collect(Collectors.toList());
-        //
+        List<UserVo> list = CollUtil.newArrayList();
+
+        List<Long> friendIds = list(Wrappers.lambdaQuery(Friend.class).select(Friend::getFid).eq(Friend::getUid, userId))
+                .stream().map(Friend::getFid).collect(Collectors.toList());
+
+        DynamicDataSourceContextHolder.push(DataSourceName.user);
+        try {
+            //因为测试时使用了不同数据源 sys_user 和 friend 在不同数据源 因此设置 commonDatasource = false
+            boolean commonDatasource = false;
+            list.addAll(
+                    userService.getFriends(user1,friendIds,commonDatasource)
+                            .stream().filter(ObjectUtils::isNotEmpty)
+                            .map(o -> {
+                                UserVo vo = new UserVo();
+                                CustomBeanUtils.copyPropertiesIgnoreNull(o, vo);
+                                return vo;
+                            }).collect(Collectors.toList())
+            );
+        } finally {
+            DynamicDataSourceContextHolder.clear();
+        }
+
         LambdaQueryWrapper<ChatUser> chatUserLambdaQueryWrapper = new LambdaQueryWrapper<>();
         ChatType oneOnOneChat = ChatType.ONE_ON_ONE_CHAT;
         chatUserLambdaQueryWrapper.select(ChatUser::getChatId)

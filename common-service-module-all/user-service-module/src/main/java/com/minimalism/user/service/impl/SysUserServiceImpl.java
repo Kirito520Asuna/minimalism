@@ -3,7 +3,6 @@ package com.minimalism.user.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.constant.DataSourceName;
@@ -14,19 +13,14 @@ import com.minimalism.user.service.SysUserRoleService;
 import com.minimalism.user.service.SysUserService;
 import com.minimalism.aop.redis.RedisCachePut;
 import com.minimalism.aop.redis.RedisCacheable;
-import com.minimalism.config.JwtConfig;
 import com.minimalism.constant.Redis;
 import com.minimalism.enums.SysUserStatus;
 import com.minimalism.exception.GlobalCustomException;
-import com.minimalism.pojo.TokenInfo;
 import com.minimalism.pojo.User;
 import com.minimalism.pojo.UserInfo;
 import com.minimalism.user.domain.SysUserRole;
-import com.minimalism.user.service.*;
-import com.minimalism.util.ObjectUtils;
 import com.minimalism.utils.EncodePasswordUtils;
 import com.minimalism.utils.enums.EnumUtils;
-import com.minimalism.utils.jwt.JwtUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -232,8 +226,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     }
 
     @Override
-    public List<SysUser> getFriends(SysUser user) {
-        return sysUserDao.getFriends(user);
+    public List<SysUser> getFriends(SysUser user, List<Long> friendIds, boolean commonDatasource) {
+        return sysUserDao.getFriends(user,friendIds,commonDatasource);
     }
 
     @Override
