@@ -22,11 +22,20 @@
         <project-module.version>0.0.1-SNAPSHOT</project-module.version>
     </properties>
     <dependencies>
-        <dependency>
+
+
+<!--        <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>dao-gen-module</artifactId>
             <version>${project-module.version}</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>dao-all</artifactId>
+            <version>${project-module.version}</version>
         </dependency>
+
         <!--common-security-module  common-shiro-module 二选一-->
         <dependency>
             <groupId>com.minimalism</groupId>

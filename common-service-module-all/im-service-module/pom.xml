@@ -23,7 +23,7 @@
     </properties>
     <dependencies>
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>dao-im-module</artifactId>
             <version>${project-module.version}</version>
@@ -32,6 +32,12 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>dao-user-module</artifactId>
+            <version>${project-module.version}</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>dao-all</artifactId>
             <version>${project-module.version}</version>
         </dependency>
 
