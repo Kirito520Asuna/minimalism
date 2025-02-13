@@ -12,5 +12,6 @@ import lombok.Getter;
 @Getter
 public enum MessageType {
     TXT("文本"), IMAGE("图片");
+
     private String desc;
 }

@@ -4,9 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.minimalism</groupId>
 	<artifactId>websocket-service-module</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>websocket-service-module</name>
-	<description>websocket-service-module</description>
+	<version>${project-module.version}</version>
+
 	<properties>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -167,5 +166,17 @@
 			<version>${logstash.version}</version>
 		</dependency>
 
-	</dependencies>
+		<dependency>
+			<groupId>com.minimalism</groupId>
+			<artifactId>common-openfeign-module</artifactId>
+			<version>${project-module.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.minimalism</groupId>
+					<artifactId>framework-seata</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+    </dependencies>
 </project>

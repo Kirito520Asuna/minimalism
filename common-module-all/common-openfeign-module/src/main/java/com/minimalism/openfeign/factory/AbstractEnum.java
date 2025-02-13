@@ -12,7 +12,8 @@ import lombok.Getter;
 @Getter @AllArgsConstructor
 public enum AbstractEnum {
     DEFAULT, ORDER("order","订单模块"),
-    OPENFEIGN_ONE("open-one")
+    OPENFEIGN_ONE("open-one"),
+    IM("im","即时通讯模块"),
     ;
     String serverName;
     String desc;

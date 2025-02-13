@@ -70,17 +70,6 @@
 			<version>${project-module.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.minimalism</groupId>
-			<artifactId>common-openfeign-module</artifactId>
-			<version>${project-module.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.minimalism</groupId>
-					<artifactId>framework-seata</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
