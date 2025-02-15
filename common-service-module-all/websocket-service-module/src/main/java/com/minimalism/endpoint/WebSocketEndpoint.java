@@ -7,6 +7,7 @@ import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.domain.Message;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;
+import com.minimalism.utils.bean.CustomBeanUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -112,7 +114,9 @@ public class WebSocketEndpoint implements AbstractBean {
         boolean isTypeJSON = JSONUtil.isTypeJSON(message);
         if (isTypeJSON) {
             try {
-                Message msg = JSONUtil.toBean(message, Message.class);
+                Map<String,Object> map = JSONUtil.toBean(message, Map.class);
+                Message msg = new Message();
+                CustomBeanUtils.copyPropertiesIgnoreNull(map,msg);
                 String instanceId = getInstanceId();
                 msg.setSendInstanceId(instanceId);
                 messageService.onMessage(msg);

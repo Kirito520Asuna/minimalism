@@ -5,6 +5,11 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONNull;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.minimalism.abstractinterface.bean.AbstractBean;
@@ -180,9 +185,19 @@ public interface AbstractApiSign extends AbstractBean {
             json = reader.lines().collect(Collectors.joining("\n"));
         }
         if (StrUtil.isNotBlank(json)) {
-            Map<String, Object> readValue = getObjectMapper().readValue(json, Map.class);
-            body.putAll(readValue);
+            Map<String, Object> readValue = JSON.parseObject(json, Map.class);
+            readValue.entrySet().stream().forEach(o -> {
+                String empty = null;
+                if (o.getValue() instanceof String) {
+                    empty = StrUtil.EMPTY;
+                }
+                Object value = (o.getValue() == null || "null".equals(o.getValue())) ? o.getValue() : empty;
+                body.put(o.getKey(), value);
+            });
+
+            //body.putAll(readValue);
         }
+
 
         info("请求参数 parameter:{}", parameterMap);
         info("请求参数 body:{}", body);
@@ -194,7 +209,7 @@ public interface AbstractApiSign extends AbstractBean {
             info("[{}] sign ...", Openfeign.OPENFEIGN.getDesc());
         }
         url = GatewayUtils.replaceUrl(request, url);
-        
+
         String generalSign = generalSign(salt, method, url, parameterMap, body, exCollection);
         String signHeader = request.getHeader(signAsName);
         info("验签 {}:{}", signAsName, signHeader);

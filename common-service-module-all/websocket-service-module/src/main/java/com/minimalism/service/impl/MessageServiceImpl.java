@@ -6,12 +6,14 @@ import com.minimalism.domain.Message;
 import com.minimalism.enums.MessageType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.openfeign.factory.interfaces.ImClient;
-import com.minimalism.pojo.openfeign.ChatMessage;
+import com.minimalism.pojo.openfeign.OpenfeignChatMessage;
 import com.minimalism.result.Result;
 import com.minimalism.service.MessageService;
 import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.vo.user.UserVo;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -22,6 +24,8 @@ import java.util.Map;
  */
 @Service
 public class MessageServiceImpl implements MessageService {
+    @Resource
+    private ImClient imClient;
     @Override
     public void sendOfflineMessage(Message message) {
         //todo : 消息转发
@@ -44,13 +48,16 @@ public class MessageServiceImpl implements MessageService {
 
         }
 
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setChatId(Long.parseLong("chatId"));
-        chatMessage.setSendUserId(Long.parseLong("sendUserId"));
-        chatMessage.setContent("message");
-        chatMessage.setType(com.minimalism.enums.im.MessageType.valueOf("type"));
-        chatMessage.setTime(LocalDateTime.now());
-        Result result = SpringUtil.getBean(ImClient.class).sendMessage(chatMessage);
+        OpenfeignChatMessage openfeignChatMessage = new OpenfeignChatMessage();
+        openfeignChatMessage.setChatId(Long.parseLong("1"/*"chatId"*/));
+        openfeignChatMessage.setSendUserId(Long.parseLong("1"/*"sendUserId"*/));
+        openfeignChatMessage.setSendUser(new UserVo());
+        openfeignChatMessage.setMessageId(null);
+        openfeignChatMessage.setContent("message");
+        openfeignChatMessage.setType(com.minimalism.enums.im.MessageType.valueOf("TXT"/*"type"*/));
+        openfeignChatMessage.setTime(LocalDateTime.now());
+        Result result = /*SpringUtil.getBean(ImClient.class)*/
+        imClient.sendMessage(openfeignChatMessage);
         if (!result.validateOk()) {
             throw new GlobalCustomException(result.getMessage());
         }

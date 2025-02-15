@@ -5,13 +5,18 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONNull;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -42,6 +47,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -205,7 +211,7 @@ public interface AbstractRedissonConfig {
         template.setConnectionFactory(connectionFactory);
         // 使用Jackson进行JSON序列化
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(initObjectMapper(null));
-
+        
         // 使用StringRedisSerializer来序列化和反序列化redis的key值
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         template.setKeySerializer(stringRedisSerializer);
@@ -225,6 +231,7 @@ public interface AbstractRedissonConfig {
      */
     default ObjectMapper initObjectMapper(ObjectMapper objectMapper) {
         objectMapper = ObjectUtil.isEmpty(objectMapper)? new ObjectMapper():objectMapper;
+
         // 设置可见性
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         // 序列化后添加类信息(不配置,序列化后就是一个Json字符串)
@@ -245,6 +252,19 @@ public interface AbstractRedissonConfig {
         timeModule.addDeserializer(Date.class, new DateDeserializers.DateDeserializer());
         // 设置自定义时间模块
         objectMapper.registerModule(timeModule);
+
+        SimpleModule hutoolModule = new SimpleModule();
+        class HutoolJsonNullSerializer extends JsonSerializer<JSONNull> {
+            @Override
+            public void serialize(JSONNull value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+                gen.writeNull();  // 将 JSONNull 转换为 null
+            }
+        }
+        hutoolModule.addSerializer(JSONNull.class, new HutoolJsonNullSerializer());
+        objectMapper.registerModule(hutoolModule);
+
+        // 7. 禁用空对象序列化失败（避免其他类似问题）
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         return objectMapper;
     }
 

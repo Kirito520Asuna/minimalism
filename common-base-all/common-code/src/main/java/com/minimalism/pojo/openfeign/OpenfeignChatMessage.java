@@ -29,7 +29,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatMessage implements Serializable {
+public class OpenfeignChatMessage implements Serializable {
+    private static final long serialVersionUID = -8920555648220770635L;
     @Schema(description="")
     @NotNull(message = "不能为null",groups = {BaseJsonView.UpdateView.class})
     @JsonView(value = {BaseJsonView.ChatView.class})
@@ -58,16 +59,13 @@ public class ChatMessage implements Serializable {
     @JsonView(value = {BaseJsonView.ChatView.class})
     private UserVo sendUser;
     @Schema(description="内容")
-    @NotNull(groups = {BaseJsonView.SendMessageView.class})
     @JsonView(value = {BaseJsonView.ChatView.class,BaseJsonView.SendMessageView.class})
     private String content;
     @Schema(description="类型")
-    @NotNull(groups = {BaseJsonView.SendMessageView.class})
     @JsonView(value = {BaseJsonView.ChatView.class,BaseJsonView.SendMessageView.class})
     @Enumerated(value = EnumType.STRING)
     private MessageType type;
     @Schema(description="时间")
-    @JsonView(value = {BaseJsonView.ChatView.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
 

@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
@@ -109,11 +111,23 @@ public interface AbstractRequestInterceptor extends RequestInterceptor, Abstract
                         // 获取请求体
                         requestBody.putAll(getRequestBody(requestTemplate));
                     } else if (JSONUtil.isTypeJSON(json)) {
-                        Map<String, Object> bean = JSONUtil.toBean(json, Map.class);
+                        //Map<String, Object> bean = JSONUtil.toBean(json, JSONConfig.create().setIgnoreNullValue(true), Map.class);
+                        Map<String, Object> bean = com.alibaba.fastjson2.JSON.parseObject(json, Map.class);
                         if (ObjectUtil.isNotEmpty(bean)) {
                             requestBody.putAll(bean);
+                            Map<String, Object> readValue = com.alibaba.fastjson2.JSON.parseObject(json, Map.class);
+                            readValue.entrySet().stream().forEach(o -> {
+                                String empty = null;
+                                if (o.getValue() instanceof String) {
+                                    empty = StrUtil.EMPTY;
+                                }
+                                Object value = (o.getValue() == null || "null".equals(o.getValue())) ? o.getValue() : empty;
+                                requestBody.put(o.getKey(), value);
+                            });
+
                         }
                     }
+
                     String sign = StrUtil.EMPTY;
                     String url = buffer.toString();
                     if (url.endsWith("?") || url.endsWith("&")) {

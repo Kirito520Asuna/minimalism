@@ -53,11 +53,17 @@ public class ApiUtil {
             params.entrySet().stream().forEach(o -> {
                 String key = o.getKey();
                 String[] value = o.getValue();
-                String value1 = ObjectUtils.defaultIfEmpty(value[0], StrUtil.EMPTY);
+                boolean aNull = ObjectUtils.equal(value[0], "null");
+                String value1 = ObjectUtils.defaultIfEmpty(aNull ? null : value[0], StrUtil.EMPTY);
                 hashMap.put(key, value1);
             });
         } else if (CollUtil.isNotEmpty(body)) {
-            hashMap.putAll(body);
+            body.entrySet().stream()
+                    .forEach(o -> {
+                        boolean aNull = ObjectUtils.equal(o.getValue(), "null");
+                        hashMap.put(o.getKey(), ObjectUtils.defaultIfEmpty(aNull ? null : o.getValue(), StrUtil.EMPTY));
+                    });
+            //hashMap.putAll(body);
         }
         log.info("hashMap:{}", hashMap);
         TreeMap<String, Object> treeMap = new TreeMap<>();

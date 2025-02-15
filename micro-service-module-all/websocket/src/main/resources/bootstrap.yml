@@ -8,6 +8,10 @@ spring:
   main:
    allow-circular-references: true
 
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
   cloud:
     nacos:
       discovery:
@@ -38,3 +42,4 @@ logstash:
   fileNamePattern: var/log/${spring.application.name}/${spring.profiles.active}/${spring.application.name}-logstash.%d{yyyy-MM-dd}.log
   maxHistory: 30
   totalSizeCap: 10MB
+

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.minimalism.openfeign.factory.AbstractEnum;
 import com.minimalism.openfeign.factory.interfaces.impl.OrderClientFallback;
 import com.minimalism.openfeign.interfaces.impl.OpenFeignDefaultClientConfiguration;
-import com.minimalism.pojo.openfeign.ChatMessage;
+import com.minimalism.pojo.openfeign.OpenfeignChatMessage;
 import com.minimalism.result.Result;
 import com.minimalism.view.BaseJsonView;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -30,6 +30,6 @@ public interface ImClient extends AbstractClient{
 
     @PostMapping(value = "/api/chat/send/message")
     Result sendMessage(@JsonView(value = {BaseJsonView.SendMessageView.class})
-                       @RequestBody ChatMessage chatMessage);
+                       @RequestBody OpenfeignChatMessage openfeignChatMessage);
 
 }
