@@ -28,6 +28,11 @@
             <artifactId>dao-user-module</artifactId>
             <version>${project-module.version}</version>
         </dependency>-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>common-openfeign-module</artifactId>
+            <version>${project-module.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.minimalism</groupId>
