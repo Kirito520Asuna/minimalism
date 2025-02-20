@@ -707,7 +707,7 @@
         select
         <include refid="Base_Column_User_List"/>,a.id as apply_id
         from `sys_user`
-        left join `apply` a on a.`uid` = `user`.`id`
+        left join `apply` a on a.`uid` = `sys_user`.`user_id`
         where a.`tid` = #{userId}
     </select>
 

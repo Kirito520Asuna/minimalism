@@ -60,8 +60,7 @@ public interface AbstractUserDetailsService extends UserDetailsService  {
             condition = "#rq.userId!=null",throwException = false,
             key = "#rq.userId",classType = UserBase.class)
     default UserBase getLoginUser(String userId) {
-        //RedisTemplate bean = SpringUtil.getBean(RedisTemplate.class);
-        //User user = (User) getRedisTemplate().opsForValue().get(Redis.login_user + ":" + userId);
+        //UserBase user = (UserBase) getRedisTemplate().opsForValue().get(Redis.login_user + ":" + userId);
         return null;
     }
 

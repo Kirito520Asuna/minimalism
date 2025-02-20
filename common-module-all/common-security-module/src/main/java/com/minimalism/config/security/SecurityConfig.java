@@ -53,7 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry = http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests();
+                .authorizeRequests()
+                .antMatchers("/login", "/logout").permitAll();
 
         if (openFilter) {
             jwtPath = ObjectUtil.defaultIfNull(jwtConfig.getJwtPath(), jwtPath);

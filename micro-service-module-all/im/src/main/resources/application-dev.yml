@@ -24,6 +24,7 @@ jwt:
 spring:
   redis:
     host: 192.168.3.22
+    database: 2
   # Spring Redis Cache
   cache:
     # 设置缓存类型，这里使用Redis作为缓存服务器
