@@ -95,7 +95,7 @@ public class SysUserController implements AbstractBaseController {
     @Operation(summary = "获取用户信息详细信息")
     @GetMapping(value = "getUserInfo")
     public Result<UserInfoVo> getUserInfo(@RequestParam(required = false) Long userId) {
-        if (ObjectUtils.isEmpty(userId)){
+        if (ObjectUtils.isEmpty(userId)) {
             userId = Long.parseLong(SecurityContextUtil.getUserId());
         }
         AbstractUserService bean = SpringUtil.getBean(AbstractUserService.class);
@@ -159,7 +159,8 @@ public class SysUserController implements AbstractBaseController {
         }
         return ok();
     }
-//=========================================================================================
+
+    //=========================================================================================
     private static UserVo createUserVo(SysUser user) {
         UserVo userVo = new UserVo();
         CustomBeanUtils.copyPropertiesIgnoreNull(user, userVo);
@@ -199,9 +200,15 @@ public class SysUserController implements AbstractBaseController {
     @Operation(summary = "获取用户")
     @SysLog(title = "获取用户")
     @JsonView(value = {BaseJsonView.UserChatView.class})
-    public Result<UserVo> getOneUser(@Parameter(description = "用户id") @RequestParam Long userId,
-                                     @Parameter(description = "当前登录用户id") @RequestParam Long nowUserId) {
-        SysUser user = sysUserService.getOneUser(userId,nowUserId);
+    public Result<UserVo> getOneUser(@Parameter(description = "用户id") @RequestParam(required = false) Long userId,
+                                     @Parameter(description = "当前登录用户id") @RequestParam(required = false) Long nowUserId) {
+        if (userId == null && nowUserId == null) {
+            String userIdStr = SecurityContextUtil.getUserId();
+            Long userIdLong = Long.parseLong(userIdStr);
+            userId = nowUserId = userIdLong;
+        }
+
+        SysUser user = sysUserService.getOneUser(userId, nowUserId);
         UserVo userVo = createUserVo(user);
         return ok(userVo);
     }

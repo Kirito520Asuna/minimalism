@@ -188,9 +188,6 @@ public interface AbstractApiSign extends AbstractBean {
             Map<String, Object> readValue = JSON.parseObject(json, Map.class);
             readValue.entrySet().stream().forEach(o -> {
                 String empty = null;
-                if (o.getValue() instanceof String) {
-                    empty = StrUtil.EMPTY;
-                }
                 Object value = (o.getValue() == null || "null".equals(o.getValue())) ? empty :  o.getValue();
                 body.put(o.getKey(), value);
             });

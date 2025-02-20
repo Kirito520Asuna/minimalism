@@ -48,6 +48,10 @@ public class ObjectUtils extends ObjectUtil{
         return toMap(null, obj, null, null);
     }
 
+    public static void main(String[] args) {
+        String s = "{\"username\":\"admin\",\"password\":\"123456\",\"captchaEnabled\":true,\"isAdmin\":false,\"code\":null,\"uuid\":null}";
+        System.err.println(toMap(s));
+    }
     /**
      * obj 转 map
      * obj:{"a":"a","b":"{\"a\":\"a\",\"b\":\"a\"}","c":"[{\"a\":\"a\",\"b\":\"a\"}]"}
@@ -74,7 +78,7 @@ public class ObjectUtils extends ObjectUtil{
                 Object value = entry.getValue();
                 String fullKey = StrUtil.isBlank(prx) ? key : prx + "." + key;
 
-                String toJsonStr = JSONUtil.toJsonStr(value, jsonConfig);
+                String toJsonStr = String.valueOf(value);
                 if (JSONUtil.isTypeJSONArray(toJsonStr)) {
                     // Handle JSONArray type
                     JSONArray array = new JSONArray(toJsonStr);

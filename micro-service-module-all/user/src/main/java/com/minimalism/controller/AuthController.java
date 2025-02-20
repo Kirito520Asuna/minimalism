@@ -42,11 +42,11 @@ public class AuthController implements AbstractBaseController {
             notBlanks = {
                     @AviatorNotBlank(key = "dto.username", errorMessage = "用户名不能为空"),
                     @AviatorNotBlank(key = "dto.password", errorMessage = "密码不能为空"),
-                    @AviatorNotBlank(key = "dto.code", errorMessage = "验证码不能为空"),
-                    @AviatorNotBlank(key = "dto.uuid", errorMessage = "验证码唯一值不能为空"),
+                    @AviatorNotBlank(precondition = "dto.isAdmin",key = "dto.code", errorMessage = "验证码不能为空"),
+                    @AviatorNotBlank(precondition = "dto.isAdmin",key = "dto.uuid", errorMessage = "验证码唯一值不能为空"),
             },
             values = {
-                    @AviatorValid(expression = "dto.captchaEnabled==true && dto.code!=null && dto.code!=''", errorMessage = "验证码不能为空"),
+                    @AviatorValid(precondition = "dto.isAdmin",expression = "dto.captchaEnabled==true && dto.code!=null && dto.code!=''", errorMessage = "验证码不能为空"),
             }
     )
     public Result<TokenInfo> login(@RequestBody LoginDto dto, HttpServletResponse response) {
@@ -69,7 +69,7 @@ public class AuthController implements AbstractBaseController {
     @Operation(summary = "注册")
     @PostMapping("/register")
     @AviatorValids(values = {
-            @AviatorValid(expression = "dto.password != dto.password2", errorMessage = "密码不一致")
+            @AviatorValid(expression = "dto.password == dto.password2", errorMessage = "密码不一致")
     })
     public Result<User> register(@Validated @NotNull @RequestBody RegisterDto dto) {
         User register = SpringUtil.getBean(AbstractLoginService.class)

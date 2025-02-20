@@ -97,7 +97,8 @@ public interface AbstractAviatorValidAspect extends AbstractSysLog {
                 //classMaps.put(argsName, (Class) parameters[i].getParameterizedType());
             }
 
-            Map<String, Object> variablesMap = ObjectUtils.mapKeyLengthReversed(ObjectUtils.toMap(variables));
+            Map<String, Object> compareTo = ObjectUtils.toMap(variables);
+            Map<String, Object> variablesMap = ObjectUtils.mapKeyLengthReversed(compareTo);
             variablesMap = ObjectUtils.blankReplace(variablesMap);
             info("parameters参数：{}", JSONUtil.toJsonStr(parameters, jsonConfig));
             info("variables参数：{}", variables);
