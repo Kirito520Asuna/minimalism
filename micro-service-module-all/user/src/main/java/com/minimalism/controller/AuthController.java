@@ -12,6 +12,7 @@ import com.minimalism.pojo.TokenInfo;
 import com.minimalism.pojo.User;
 import com.minimalism.pojo.UserInfo;
 import com.minimalism.result.Result;
+//import com.minimalism.security.SecurityContextUtil;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.validate_code.service.ValidateCodeService;
 import com.minimalism.utils.shiro.SecurityContextUtil;

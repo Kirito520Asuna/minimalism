@@ -6,11 +6,13 @@ import com.google.common.collect.Maps;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.gateway.GatewayConstants;
 import com.minimalism.gateway.config.GatewayConfig;
+import com.minimalism.utils.object.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -28,10 +30,12 @@ import java.util.Map;
 @Slf4j
 public class HttpsToHttpFilter implements GlobalFilter, Ordered, AbstractBean {
     private static final int HTTPS_TO_HTTP_FILTER_ORDER = 10099;
+
     @Override
     public int getOrder() {
         return HTTPS_TO_HTTP_FILTER_ORDER;
     }
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         info("HttpsToHttpFilter filter");
@@ -49,11 +53,18 @@ public class HttpsToHttpFilter implements GlobalFilter, Ordered, AbstractBean {
 
         Map<String, String> map = getDomainsHeader(env);
 
-        map.entrySet().stream().forEach(entry -> {
-            mutate.header(entry.getKey(), entry.getValue());
-        });
 
+        map.entrySet().stream().forEach(entry -> {
+
+            String value = entry.getValue();
+            String key = entry.getKey();
+            if (ObjectUtils.equals(HttpHeaders.ACCEPT_ENCODING, key)) {
+                value = "";
+            }
+            mutate.header(key, value);
+        });
         ServerHttpRequest build = mutate.build();
+
         ServerWebExchange webExchange = exchange.mutate().request(build).build();
         return chain.filter(webExchange);
     }
