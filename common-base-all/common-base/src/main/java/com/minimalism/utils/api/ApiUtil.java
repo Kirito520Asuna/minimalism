@@ -54,14 +54,20 @@ public class ApiUtil {
                 String key = o.getKey();
                 String[] value = o.getValue();
                 boolean aNull = ObjectUtils.equal(value[0], "null");
-                String value1 = ObjectUtils.defaultIfEmpty(aNull ? null : value[0], StrUtil.EMPTY);
-                hashMap.put(key, value1);
+                String value1 = aNull ? null : value[0];
+                if (value1 != null) {
+                    hashMap.put(key, value1);
+                }
             });
         } else if (CollUtil.isNotEmpty(body)) {
             body.entrySet().stream()
                     .forEach(o -> {
                         boolean aNull = ObjectUtils.equal(o.getValue(), "null");
-                        hashMap.put(o.getKey(), ObjectUtils.defaultIfEmpty(aNull ? null : o.getValue(), StrUtil.EMPTY));
+                        Object value = o.getValue();
+                        Object value1 = aNull ? null : value;
+                        if (value1 != null) {
+                            hashMap.put(o.getKey(), value1);
+                        }
                     });
             //hashMap.putAll(body);
         }

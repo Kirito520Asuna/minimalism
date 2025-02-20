@@ -12,6 +12,7 @@ import com.minimalism.pojo.TokenInfo;
 import com.minimalism.pojo.User;
 import com.minimalism.pojo.UserInfo;
 import com.minimalism.result.Result;
+import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.validate_code.service.ValidateCodeService;
 import com.minimalism.utils.shiro.SecurityContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ import javax.validation.constraints.NotNull;
  */
 @RestController
 @Tag(name = "登陆注册模块")
-@RequestMapping(value = {"/api/auth", "/jwt/auth"})
+@RequestMapping(value = {"/api/auth", "/jwt/auth", "/auth"})
 public class AuthController implements AbstractBaseController {
     /**
      * 查询用户信息列表
@@ -49,8 +50,11 @@ public class AuthController implements AbstractBaseController {
             }
     )
     public Result<TokenInfo> login(@RequestBody LoginDto dto, HttpServletResponse response) {
-        SpringUtil.getBean(ValidateCodeService.class)
-                .checkCaptcha(dto.getCode(), dto.getUuid());
+
+        if (ObjectUtils.defaultIfEmpty(dto.getIsAdmin(),true)){
+            SpringUtil.getBean(ValidateCodeService.class)
+                    .checkCaptcha(dto.getCode(), dto.getUuid());
+        }
 
         UserInfo userInfo = new UserInfo().setPassword(dto.getPassword()).setUsername(dto.getUsername());
         TokenInfo tokenInfo = SpringUtil.getBean(AbstractLoginService.class).login(userInfo);

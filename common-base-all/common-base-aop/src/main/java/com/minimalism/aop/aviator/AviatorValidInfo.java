@@ -14,6 +14,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AviatorValidInfo {
+    private String preconditionExpression= "true";
     private boolean throwException = true;
     private String expression;
     private String errorMessage;

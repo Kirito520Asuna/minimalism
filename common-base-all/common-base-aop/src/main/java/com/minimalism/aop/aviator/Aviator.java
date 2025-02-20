@@ -15,6 +15,12 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Aviator {
     /**
+     * 前置条件
+     * @return
+     */
+    String[] preconditions() default {"true"};
+    String defaultPrecondition() default "参数不符合要求"; // 错误信息
+    /**
      * 解析异常是否抛出异常
      * @return
      */

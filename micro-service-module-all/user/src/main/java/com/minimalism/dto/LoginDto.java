@@ -26,6 +26,8 @@ public class LoginDto implements Serializable {
     @NotBlank(message = "密码不能为空")
     private String password;
     private Boolean captchaEnabled = true;
+    @Schema(description = "使用管理端登录？")
+    private Boolean isAdmin = true;
     @Schema(description = "验证码")
     //@NotBlank(message = "验证码不能为空")
     private String code;

@@ -112,9 +112,11 @@ public interface AbstractAviatorValidAspect extends AbstractSysLog {
     default List<AviatorValidInfo> aviatorToValidInfos(Aviator aviator) {
         boolean throwException = aviator.throwException();
         String defaultErrorMessage = aviator.defaultErrorMessage();
+        String defaultPrecondition = aviator.defaultPrecondition();
         boolean isStr = aviator.isStr();
         List<String> errorMessages = Arrays.stream(aviator.errorMessages()).collect(Collectors.toList());
         List<String> expressions = Arrays.stream(aviator.expressions()).collect(Collectors.toList());
+        List<String> preconditions = Arrays.stream(aviator.preconditions()).collect(Collectors.toList());
         int errorSize = errorMessages.size();
         int okSize;
 
@@ -132,12 +134,19 @@ public interface AbstractAviatorValidAspect extends AbstractSysLog {
             }
         }
 
+        if (okSize > preconditions.size()) {
+            for (int i = 0; i < (okSize - preconditions.size()); i++) {
+                preconditions.add(defaultPrecondition);
+            }
+        }
+
         List<AviatorValidInfo> infoList = CollUtil.newArrayList();
 
         for (int i = 0; i < okSize; i++) {
             String expression = replaceNullToNil(expressions.get(i));
+            String precondition = replaceNullToNil(preconditions.get(i));
             String errorMessage = errorMessages.get(i);
-            infoList.add(toAviatorValidInfo(throwException, expression, errorMessage));
+            infoList.add(toAviatorValidInfo(precondition, throwException, expression, errorMessage));
         }
 
         return infoList;
@@ -151,10 +160,12 @@ public interface AbstractAviatorValidAspect extends AbstractSysLog {
         String errorMessage = notBlank.errorMessage();
         String key = notBlank.key();
         boolean throwException = notBlank.throwException();
+        String precondition = notBlank.precondition();
 
         String expression = String.format("%s!=null&&%s!=''", key, key);
         expression = replaceNullToNil(expression);
-        return toAviatorValidInfo(throwException, expression, errorMessage);
+        precondition = replaceNullToNil(precondition);
+        return toAviatorValidInfo(precondition, throwException, expression, errorMessage);
     }
 
 
@@ -166,13 +177,16 @@ public interface AbstractAviatorValidAspect extends AbstractSysLog {
         boolean throwException = valid.throwException();
         String expression = valid.expression();
         String errorMessage = valid.errorMessage();
+        String precondition = valid.precondition();
         // null AviatorEvaluator 无法识别  null==> nil
         expression = replaceNullToNil(expression);
-        return toAviatorValidInfo(throwException, expression, errorMessage);
+        precondition = replaceNullToNil(precondition);
+        return toAviatorValidInfo(precondition, throwException, expression, errorMessage);
     }
 
-    default AviatorValidInfo toAviatorValidInfo(boolean throwException, String expression, String errorMessage) {
+    default AviatorValidInfo toAviatorValidInfo(String precondition, boolean throwException, String expression, String errorMessage) {
         return new AviatorValidInfo()
+                .setPreconditionExpression(precondition)
                 .setThrowException(throwException)
                 .setExpression(expression)
                 .setErrorMessage(errorMessage);
@@ -188,7 +202,15 @@ public interface AbstractAviatorValidAspect extends AbstractSysLog {
         boolean expressionThrowException = validInfo.isThrowException();
         String expression = validInfo.getExpression();
         String errorMessage = validInfo.getErrorMessage();
-        //expression = expressionReplace(expression, variablesMap);
+        String preconditionExpression = validInfo.getPreconditionExpression();
+
+        /**
+         * 前置条件
+         */
+        Boolean execute = (Boolean) AviatorEvaluator.execute(preconditionExpression, variablesMap);
+        if (!ObjectUtils.defaultIfEmpty(execute,true)) {
+            return;
+        }
         // 使用 Aviator 进行表达式校验
         try {
             info("aviator表达式：{}", expression);

@@ -15,6 +15,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface AviatorValid {
     /**
+     * 前置条件
+     * @return
+     */
+    String precondition() default "true";
+    /**
      * 解析异常是否抛出异常
      * @return
      */

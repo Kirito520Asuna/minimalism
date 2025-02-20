@@ -191,7 +191,7 @@ public interface AbstractApiSign extends AbstractBean {
                 if (o.getValue() instanceof String) {
                     empty = StrUtil.EMPTY;
                 }
-                Object value = (o.getValue() == null || "null".equals(o.getValue())) ? o.getValue() : empty;
+                Object value = (o.getValue() == null || "null".equals(o.getValue())) ? empty :  o.getValue();
                 body.put(o.getKey(), value);
             });
 
