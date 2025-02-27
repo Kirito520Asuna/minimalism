@@ -7,7 +7,7 @@ spring:
   application:
     name: user
   profiles:
-    active: dev
+    active: @spring.profiles.active@
   main:
     allow-bean-definition-overriding: true
     #防止循环依赖

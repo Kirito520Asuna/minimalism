@@ -7,7 +7,7 @@ spring:
     name: quartz
 
   profiles:
-    active: dev
+    active: @spring.profiles.active@
 
   cloud:
     loadbalancer:

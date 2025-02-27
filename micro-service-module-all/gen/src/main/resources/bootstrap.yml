@@ -7,7 +7,7 @@ spring:
   application:
     name: gen
   profiles:
-    active: dev
+    active: @spring.profiles.active@
   cloud:
     nacos:
       discovery:

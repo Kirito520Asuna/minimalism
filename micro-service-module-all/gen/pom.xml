@@ -1,38 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.8</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.minimalism</groupId>
+        <artifactId>micro-service-module-all</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.minimalism</groupId>
     <artifactId>gen</artifactId>
-    <version>${project-module.version}</version>
-    <name>gen</name>
-    <description>gen</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
-        <java.version>8</java.version>
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
+        <spring-boot.version>2.7.8</spring-boot.version>
+
         <velocity.version>2.3</velocity.version>
     </properties>
 
@@ -196,14 +178,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

@@ -3,33 +3,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.8</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.minimalism</groupId>
+        <artifactId>micro-service-module-all</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.minimalism</groupId>
     <artifactId>im</artifactId>
-    <version>${project-module.version}</version>
- 
+
     <properties>
-        <java.version>8</java.version>
+        <spring-cloud.version>2021.0.5</spring-cloud.version>
+        <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
+        <spring-boot.version>2.7.8</spring-boot.version>
+
         <jwt.version>0.9.1</jwt.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <fastjson.version>2.0.32</fastjson.version>
+
+        <mysql.version>8.0.11</mysql.version>
         <alibaba-druid.version>1.2.18</alibaba-druid.version>
         <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
         <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
         <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
-        <spring-cloud.version>2021.0.5</spring-cloud.version>
-        <!--        <revision>2021.0.5.0</revision>-->
-        <!--        &lt;!&ndash; Spring Cloud &ndash;&gt;-->
-        <!--        <spring.cloud.version>2021.0.5</spring.cloud.version>-->
-        <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
-        <mysql.version>8.0.11</mysql.version>
+
         <logstash.version>5.3</logstash.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
     </properties>
 
     <dependencyManagement>
@@ -66,69 +62,46 @@
             <artifactId>framework-nacos</artifactId>
             <version>${project-module.version}</version>
         </dependency>
-
         <!--用于加载bootstrap-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
-
         <!-- Spring Cloud LoadBalancer 依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
         <!--nacos-->
-
         <!--redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
         <!--redis连接池 jedis-->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
-
         <!--redis-->
-
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
         </dependency>
-
-
         <!--web-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-<!--
-        &lt;!&ndash;configuration-processor&ndash;&gt;
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
--->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
         <!--netty-->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>im-service-module</artifactId>
@@ -152,7 +125,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>user-service-module</artifactId>
@@ -176,7 +148,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>dao-all</artifactId>
@@ -188,15 +159,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-
         <!--swagger-->
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-knife4j</artifactId>
             <version>${project-module.version}</version>
         </dependency>
-
         <!--ali线程池-->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -215,24 +183,5 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

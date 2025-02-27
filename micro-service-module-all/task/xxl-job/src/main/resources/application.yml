@@ -1,6 +1,8 @@
 spring:
   application:
     name: xxl-job
+  profiles:
+    active: @spring.profiles.active@
 
 xxl:
   job:

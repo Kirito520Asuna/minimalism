@@ -2,7 +2,7 @@ spring:
   application:
     name: im
   profiles:
-    active: dev
+    active: @spring.profiles.active@
   cloud:
     nacos:
       discovery:

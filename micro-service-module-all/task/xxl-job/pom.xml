@@ -3,25 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.minimalism</groupId>
+        <artifactId>task</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.minimalism</groupId>
     <artifactId>xxl-job</artifactId>
-    <version>${project-module.version}</version>
 
     <properties>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
+        <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
         <spring-boot.version>2.7.18</spring-boot.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
+
         <xxl-job.version>2.2.0</xxl-job.version>
     </properties>
     <dependencies>
@@ -59,14 +52,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

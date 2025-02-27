@@ -3,7 +3,7 @@ spring:
     name: websocket
 
   profiles:
-    active: dev
+    active: @spring.profiles.active@
 
   main:
    allow-circular-references: true
