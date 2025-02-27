@@ -3,17 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.minimalism</groupId>
+    <parent>
+        <groupId>com.minimalism</groupId>
+        <artifactId>common-framework-all</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <artifactId>framework-elasticsearch</artifactId>
-    <version>${project-module.version}</version>
-
     <properties>
-        <java.version>8</java.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>2.7.8</spring-boot.version>
         <elasticsearch.high.version>7.17.8</elasticsearch.high.version>
     </properties>

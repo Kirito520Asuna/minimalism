@@ -3,18 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.minimalism</groupId>
+    <parent>
+        <groupId>com.minimalism</groupId>
+        <artifactId>common-framework-all</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <artifactId>framework-mybatis-plus</artifactId>
-    <version>${project-module.version}</version>
-
     <properties>
-        <java.version>8</java.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-
         <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
         <mybatis-plus-join.version>1.4.4</mybatis-plus-join.version>
         <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
@@ -25,10 +20,8 @@
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <jackson-annotation.version>2.17.2</jackson-annotation.version>
         <hutool.version>5.8.22</hutool.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
         <lombok.version>1.18.34</lombok.version>
         <swagger-annotations.version>2.2.8</swagger-annotations.version>
-
     </properties>
 
     <dependencyManagement>

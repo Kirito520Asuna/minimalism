@@ -2,19 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.minimalism</groupId>
+        <artifactId>minimalism</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-    <groupId>com.minimalism</groupId>
     <artifactId>common-module-all</artifactId>
-    <version>${project-module.version}</version>
     <packaging>pom</packaging>
-
-    <properties>
-        <java.version>1.8</java.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-    </properties>
 
     <modules>
         <module>common-security-module</module>

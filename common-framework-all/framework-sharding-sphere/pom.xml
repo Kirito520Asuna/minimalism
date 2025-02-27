@@ -3,19 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.minimalism</groupId>
+        <artifactId>common-framework-all</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-    <groupId>com.minimalism</groupId>
     <artifactId>framework-sharding-sphere</artifactId>
-    <version>${project-module.version}</version>
-
-
 
     <properties>
-        <java.version>8</java.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
         <!--2.4以下 Hoxton.SR12-2.2.7.RELEASE 2.4以上2021.0.5-2021.0.5.0 -->
         <alibaba-druid.version>1.2.22</alibaba-druid.version>
         <!--5.2.0该版本和drud存在冲突sql界面无法使用自动配置进入,
