@@ -5,7 +5,7 @@ server:
 #===========================================================================
 spring:
   profiles:
-    active: test
+    active: @spring.profiles.active@
 #===========================================================================
   application:
     name: gateway
