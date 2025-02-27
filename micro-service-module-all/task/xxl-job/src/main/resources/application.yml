@@ -16,6 +16,6 @@ xxl:
       # 此执行器的端口
       port: 9999
       # 此执行器的日志存放路径
-      logpath: logs/xxl-job/first-study
+      logpath: var/log/xxl-job/first-study
       # 此执行器的日志保存时间
       logretentiondays: 7
