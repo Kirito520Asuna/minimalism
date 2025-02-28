@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GenModuleApplication {
+public class GenApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GenModuleApplication.class, args);
+        SpringApplication.run(GenApplication.class, args);
     }
 
 }
