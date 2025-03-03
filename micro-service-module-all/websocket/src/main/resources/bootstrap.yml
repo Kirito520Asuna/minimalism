@@ -29,7 +29,7 @@ spring:
 server:
   port: 18900
   servlet:
-    context-path: /websocket
+    context-path: /${spring.application.name}
 ############################################自定义############################################
 nacos:
   server-addr: 127.0.0.1:8848
