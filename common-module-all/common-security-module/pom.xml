@@ -2,17 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.minimalism</groupId>
+    <parent>
+        <groupId>com.minimalism</groupId>
+        <artifactId>common-module-all</artifactId>
+        <version>${revision}</version>
+    </parent>
     <artifactId>common-security-module</artifactId>
-    <version>${project-module.version}</version>
 
     <properties>
-        <java.version>1.8</java.version>
-        <project-module.version>0.0.1-SNAPSHOT</project-module.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
         <spring-boot.version>2.5.0</spring-boot.version>
     </properties>
 
@@ -35,13 +32,13 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>common-code</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
         </dependency>
 
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-redis</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
         </dependency>
 
         <dependency>
