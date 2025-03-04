@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.minimalism</groupId>
         <artifactId>common-dao-module-all</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>dao-all</artifactId>
     <properties>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-knife4j</artifactId>
-            <version>${project-module.version}</version>
+             <version>${revision}</version>
         </dependency>
 
         <!--framework-mybatis-plus-->
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-mybatis-plus</artifactId>
-            <version>${project-module.version}</version>
+             <version>${revision}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.github.yulichang</groupId>
@@ -119,7 +119,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>common-code</artifactId>
-            <version>${project-module.version}</version>
+             <version>${revision}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.github.pagehelper</groupId>

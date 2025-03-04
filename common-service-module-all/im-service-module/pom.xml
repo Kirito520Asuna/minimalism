@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.minimalism</groupId>
         <artifactId>common-service-module-all</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>im-service-module</artifactId>
     <properties>
@@ -21,13 +21,13 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>dao-all</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
         </dependency>
 
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>user-service-module</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.minimalism</groupId>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>common-security-module</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>common-shiro-module</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>

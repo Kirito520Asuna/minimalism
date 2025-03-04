@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.minimalism</groupId>
         <artifactId>task</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>quartz</artifactId>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>common-openfeign-module</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.minimalism</groupId>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-nacos</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.alibaba.cloud</groupId>
@@ -116,7 +116,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-seata</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
             <exclusions>
                 <!--排除依赖 调整到和安装的seata 版本一致-->
                 <exclusion>
@@ -152,7 +152,7 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-knife4j</artifactId>
-            <version>${project-module.version}</version>
+            <version>${revision}</version>
         </dependency>
 
         <!-- mysql -->
