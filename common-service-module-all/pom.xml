@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>common-service-module</module>
         <module>file-service-module</module>
         <module>gen-service-module</module>
         <module>user-service-module</module>

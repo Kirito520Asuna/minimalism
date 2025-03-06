@@ -29,22 +29,10 @@
             <artifactId>dao-all</artifactId>
             <version>${revision}</version>
         </dependency>
-        <!--common-security-module  common-shiro-module 二选一-->
+        <!--公共service模块-->
         <dependency>
             <groupId>com.minimalism</groupId>
-            <artifactId>common-security-module</artifactId>
-            <version>${revision}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-webmvc</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.minimalism</groupId>
-            <artifactId>common-shiro-module</artifactId>
+            <artifactId>common-service-module</artifactId>
             <version>${revision}</version>
             <exclusions>
                 <exclusion>
