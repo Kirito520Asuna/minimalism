@@ -1,6 +1,7 @@
 package com.minimalism.common.service.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.abstractinterface.service.MpUserService;
 import com.minimalism.common.service.CommonUserService;
 import org.springframework.context.annotation.Primary;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
  */
 @Primary
 @Service
-public class CommonMpServiceImpl implements MpUserService {
+public class CommonMpServiceImpl implements MpUserService, AbstractBean {
     @Override
     public String getUserId() {
         return SpringUtil.getBean(CommonUserService.class).getUserId();

@@ -18,14 +18,16 @@ import java.time.LocalDateTime;
 public class EntityHandler implements AbstractEntityHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
+        String userId = getUserId();
         AbstractEntityHandler.super.insertFill(metaObject);
-        this.strictInsertFill(metaObject, "createBy", () -> getUserId(), String.class);
+        this.strictInsertFill(metaObject, "createBy", () -> userId, String.class);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
+        String userId = getUserId();
         AbstractEntityHandler.super.updateFill(metaObject);
-        this.strictInsertFill(metaObject, "updateBy", () -> getUserId(), String.class);
+        this.strictInsertFill(metaObject, "updateBy", () -> userId, String.class);
     }
 
     // 定义一个名为 getUserId 的方法

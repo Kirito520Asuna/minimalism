@@ -46,7 +46,7 @@ public class FileController implements AbstractBaseController {
     @Value("${file.upload-dir:tmp/uploads}")
     private String uploadDir;
 
-    @AviatorValids(values = {@AviatorValid(expression = "dto.img && dto.dir", errorMessage = "非法请求")})
+    @AviatorValids(values = {@AviatorValid(expression = "arg0.img && arg0.dir", errorMessage = "非法请求")})
     @SysLog
     @Operation(summary = "分片上传 初始调用")
     @PostMapping("/upload/start")
