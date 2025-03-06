@@ -42,9 +42,9 @@ public class CustomerConfig {
     final static String customerEntityManagerFactoryName = "customerEntityManagerFactory";
     final static String customerTransactionManagerName = "customerTransactionManager";
     /*dao地址*/
-    final static String customerJpaBasePackage = "com.yan.jpa.customer.repository";
+    final static String customerJpaBasePackage = "com.minimalism.jpa.customer.repository";
     /*实体类地址*/
-    final static String customerPackageToScan = "com.yan.jpa.customer.models";
+    final static String customerPackageToScan = "com.minimalism.jpa.customer.models";
     /*dao地址*/
     final static String[] customerJpaBasePackages = {customerJpaBasePackage};
     /*实体类地址*/
@@ -53,7 +53,7 @@ public class CustomerConfig {
     final static String[] getCustomerJpaBasePackages() {
         String[] packages = CustomerConfig.customerJpaBasePackages;
         List<String> packageList = Arrays.stream(packages).collect(Collectors.toList());
-        packageList.add("com.yan.config");
+        packageList.add("com.minimalism.config");
         packages = packageList.toArray(new String[packageList.size()]);
         return packages;
     }
