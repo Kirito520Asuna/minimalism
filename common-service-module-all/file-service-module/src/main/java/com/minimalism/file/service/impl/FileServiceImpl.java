@@ -74,7 +74,7 @@ public class FileServiceImpl implements FileService {
             e.printStackTrace();
             throw new GlobalCustomException("合并错误！");
         }
-        filePartService.removePart(identifier, fileId);
+        //filePartService.removePart(identifier, fileId);
         return out;
     }
 }

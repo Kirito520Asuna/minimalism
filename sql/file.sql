@@ -25,7 +25,7 @@ drop table if exists `file_part`;
 create table `file_part`
 (
     `part_id`   bigint(20) not null auto_increment comment '编号',
-    `part_code` varchar(20) not null comment 'code用于合并文件',
+    `part_code` varchar(50) not null comment 'code用于合并文件',
     `file_id`   bigint(20) not null comment '文件编号',
     `url`       varchar(255) default null comment '资源路径',
     `local_resource`       varchar(255) default null comment '本地资源路径',
@@ -33,5 +33,6 @@ create table `file_part`
 
     `part_size` bigint       default 0 comment '分片大小',
     `part_sort` int          default 0 comment '分片顺序',
+    `merge_delete` tinyint(1) default 0 comment '合并后是否删除分片',
     primary key (`part_id`)
 ) engine=innodb auto_increment=1 comment = '文件分片表';

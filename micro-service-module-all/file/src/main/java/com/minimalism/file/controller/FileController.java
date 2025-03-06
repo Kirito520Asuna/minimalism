@@ -1,14 +1,25 @@
 package com.minimalism.file.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONUtil;
+import com.minimalism.aop.aviator.Aviator;
+import com.minimalism.aop.aviator.AviatorValid;
+import com.minimalism.aop.aviator.AviatorValids;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.controller.AbstractBaseController;
+import com.minimalism.dto.FileUpDto;
 import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.file.domain.FileInfo;
+import com.minimalism.file.service.FileInfoService;
 import com.minimalism.file.service.FilePartService;
 import com.minimalism.file.service.FileService;
 import com.minimalism.result.Result;
+import com.minimalism.utils.bean.CustomBeanUtils;
+import com.minimalism.vo.FileUploadVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
@@ -16,7 +27,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.*;
+import java.util.UUID;
 
 
 /**
@@ -28,12 +41,33 @@ import java.io.*;
 @RequestMapping({"/file", "/api/file", "/jwt/file"})
 @RestController
 public class FileController implements AbstractBaseController {
+    @Resource
+    private FileInfoService fileInfoService;
     @Value("${file.upload-dir:tmp/uploads}")
     private String uploadDir;
 
+    @AviatorValids(values = {@AviatorValid(expression = "dto.img && dto.dir", errorMessage = "非法请求")})
+    @SysLog
+    @Operation(summary = "分片上传 初始调用")
+    @PostMapping("/upload/start")
+    public Result<FileUploadVo> uploadStart(@RequestBody FileUpDto dto){
+        FileInfo fileInfo = new FileInfo();
+        CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
+        fileInfoService.save(fileInfo);
+
+        int chunkSize = 1024 * 1024; // 每个分片大小为1MB
+
+        Long size = fileInfo.getSize();
+        Long fileId = fileInfo.getFileId();
+        int totalChunks = (int) Math.ceil((double) size / chunkSize);
+        //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
+        return ok(new FileUploadVo().setFileId(fileId).setTotalChunks(totalChunks));
+    }
+
+
     @Operation(summary = "分片上传")
-    @SysLog(title = "分片上传")
-    @PostMapping("/upload/chunk/v1")
+    @SysLog
+    @PostMapping("/upload/chunk")
     public Result<String> uploadChunkV1(@RequestParam("file") MultipartFile file,
                                         @RequestParam("chunkNumber") int chunkNumber,
                                         @RequestParam("totalChunks") int totalChunks,
@@ -64,6 +98,11 @@ public class FileController implements AbstractBaseController {
             @RequestParam("identifier") String identifier,
             @RequestParam(value = "fileId", required = false) Long fileId) {
         getBean(FileService.class).mergeOutputStream(identifier, fileId);
+        if (fileId != null) {
+            FileInfo fileInfo = fileInfoService.getById(fileId);
+            String fileName = fileInfo.getFileName();
+            String suffix = fileInfo.getSuffix();
+        }
         return ok();
     }
 
