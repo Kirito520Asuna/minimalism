@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.minimalism.file.mapper.FilePartMapper">
+  <resultMap id="BaseResultMap" type="com.minimalism.file.domain.FilePart">
+    <!--@mbg.generated-->
+    <!--@Table file_part-->
+    <id column="part_id" jdbcType="BIGINT" property="partId" />
+    <result column="part_code" jdbcType="VARCHAR" property="partCode" />
+    <result column="file_id" jdbcType="BIGINT" property="fileId" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="part_size" jdbcType="BIGINT" property="partSize" />
+    <result column="part_sort" jdbcType="INTEGER" property="partSort" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    part_id, part_code, file_id, url, part_size, part_sort
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update file_part
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="part_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when part_id = #{item.partId,jdbcType=BIGINT} then #{item.partCode,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="file_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when part_id = #{item.partId,jdbcType=BIGINT} then #{item.fileId,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="url = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when part_id = #{item.partId,jdbcType=BIGINT} then #{item.url,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="part_size = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when part_id = #{item.partId,jdbcType=BIGINT} then #{item.partSize,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="part_sort = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when part_id = #{item.partId,jdbcType=BIGINT} then #{item.partSort,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+    </trim>
+    where part_id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.partId,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update file_part
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="part_code = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.partCode != null">
+            when part_id = #{item.partId,jdbcType=BIGINT} then #{item.partCode,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="file_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.fileId != null">
+            when part_id = #{item.partId,jdbcType=BIGINT} then #{item.fileId,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="url = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.url != null">
+            when part_id = #{item.partId,jdbcType=BIGINT} then #{item.url,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="part_size = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.partSize != null">
+            when part_id = #{item.partId,jdbcType=BIGINT} then #{item.partSize,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="part_sort = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.partSort != null">
+            when part_id = #{item.partId,jdbcType=BIGINT} then #{item.partSort,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where part_id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.partId,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="part_id" keyProperty="partId" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into file_part
+    (part_code, file_id, url, part_size, part_sort)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.partCode,jdbcType=VARCHAR}, #{item.fileId,jdbcType=BIGINT}, #{item.url,jdbcType=VARCHAR}, 
+        #{item.partSize,jdbcType=BIGINT}, #{item.partSort,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <delete id="deleteByPrimaryKeyIn">
+    <!--@mbg.generated-->
+    delete from file_part where part_id in 
+    <foreach close=")" collection="list" item="partId" open="(" separator=", ">
+      #{partId,jdbcType=BIGINT}
+    </foreach>
+  </delete>
+  <update id="updateBatchUseMultiQuery" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    <foreach collection="list" item="item" separator=";">
+      update file_part
+      <set>
+        <if test="item.partCode != null">
+          part_code = #{item.partCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.fileId != null">
+          file_id = #{item.fileId,jdbcType=BIGINT},
+        </if>
+        <if test="item.url != null">
+          url = #{item.url,jdbcType=VARCHAR},
+        </if>
+        <if test="item.partSize != null">
+          part_size = #{item.partSize,jdbcType=BIGINT},
+        </if>
+        <if test="item.partSort != null">
+          part_sort = #{item.partSort,jdbcType=INTEGER},
+        </if>
+      </set>
+      where part_id = #{item.partId,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsertSelectiveUseDefaultForNull" keyColumn="part_id" keyProperty="partId" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into file_part
+    (part_code, file_id, url, part_size, part_sort)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      <choose>
+        <when test="item.partCode != null">
+          #{item.partCode,jdbcType=VARCHAR},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.fileId != null">
+          #{item.fileId,jdbcType=BIGINT},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.url != null">
+          #{item.url,jdbcType=VARCHAR},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.partSize != null">
+          #{item.partSize,jdbcType=BIGINT},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.partSort != null">
+          #{item.partSort,jdbcType=INTEGER}
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT
+        </otherwise>
+      </choose>
+      )
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" keyColumn="part_id" keyProperty="partId" parameterType="com.minimalism.file.domain.FilePart" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into file_part
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="partId != null">
+        part_id,
+      </if>
+      part_code,
+      file_id,
+      url,
+      part_size,
+      part_sort,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="partId != null">
+        #{partId,jdbcType=BIGINT},
+      </if>
+      #{partCode,jdbcType=VARCHAR},
+      #{fileId,jdbcType=BIGINT},
+      #{url,jdbcType=VARCHAR},
+      #{partSize,jdbcType=BIGINT},
+      #{partSort,jdbcType=INTEGER},
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="partId != null">
+        part_id = #{partId,jdbcType=BIGINT},
+      </if>
+      part_code = #{partCode,jdbcType=VARCHAR},
+      file_id = #{fileId,jdbcType=BIGINT},
+      url = #{url,jdbcType=VARCHAR},
+      part_size = #{partSize,jdbcType=BIGINT},
+      part_sort = #{partSort,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="part_id" keyProperty="partId" parameterType="com.minimalism.file.domain.FilePart" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into file_part
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="partId != null">
+        part_id,
+      </if>
+      <if test="partCode != null">
+        part_code,
+      </if>
+      <if test="fileId != null">
+        file_id,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="partSize != null">
+        part_size,
+      </if>
+      <if test="partSort != null">
+        part_sort,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="partId != null">
+        #{partId,jdbcType=BIGINT},
+      </if>
+      <if test="partCode != null">
+        #{partCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null">
+        #{fileId,jdbcType=BIGINT},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="partSize != null">
+        #{partSize,jdbcType=BIGINT},
+      </if>
+      <if test="partSort != null">
+        #{partSort,jdbcType=INTEGER},
+      </if>
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="partId != null">
+        part_id = #{partId,jdbcType=BIGINT},
+      </if>
+      <if test="partCode != null">
+        part_code = #{partCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null">
+        file_id = #{fileId,jdbcType=BIGINT},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="partSize != null">
+        part_size = #{partSize,jdbcType=BIGINT},
+      </if>
+      <if test="partSort != null">
+        part_sort = #{partSort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>
