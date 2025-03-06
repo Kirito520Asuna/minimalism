@@ -1,5 +1,6 @@
 package com.minimalism.controller;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
@@ -31,4 +32,9 @@ public interface AbstractBaseController extends AbstractBean {
     default <T> Result<ResultPage<T>> listToPage(List<T> list) {
         return ok(ResultPage.listToPage(list));
     }
+
+    default <T> T getBean(Class<T> clazz) {
+        return SpringUtil.getBean(clazz);
+    }
+
 }

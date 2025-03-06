@@ -9,10 +9,10 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="file_name" jdbcType="VARCHAR" property="fileName" />
     <result column="suffix" jdbcType="VARCHAR" property="suffix" />
-    <result column="is_img" jdbcType="BOOLEAN" property="isImg" />
+    <result column="is_img" jdbcType="BOOLEAN" property="img" />
     <result column="size" jdbcType="BIGINT" property="size" />
     <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="is_dir" jdbcType="BOOLEAN" property="isDir" />
+    <result column="is_dir" jdbcType="BOOLEAN" property="dir" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -51,7 +51,7 @@
       </trim>
       <trim prefix="is_img = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.isImg,jdbcType=BOOLEAN}
+          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.img,jdbcType=BOOLEAN}
         </foreach>
       </trim>
       <trim prefix="`size` = case" suffix="end,">
@@ -66,7 +66,7 @@
       </trim>
       <trim prefix="is_dir = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.isDir,jdbcType=BOOLEAN}
+          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.dir,jdbcType=BOOLEAN}
         </foreach>
       </trim>
       <trim prefix="parent_id = case" suffix="end,">
@@ -139,8 +139,8 @@
       </trim>
       <trim prefix="is_img = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          <if test="item.isImg != null">
-            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.isImg,jdbcType=BOOLEAN}
+          <if test="item.img != null">
+            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.img,jdbcType=BOOLEAN}
           </if>
         </foreach>
       </trim>
@@ -160,8 +160,8 @@
       </trim>
       <trim prefix="is_dir = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          <if test="item.isDir != null">
-            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.isDir,jdbcType=BOOLEAN}
+          <if test="item.dir != null">
+            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.dir,jdbcType=BOOLEAN}
           </if>
         </foreach>
       </trim>
@@ -221,8 +221,8 @@
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
-        #{item.suffix,jdbcType=VARCHAR}, #{item.isImg,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=VARCHAR}, #{item.isDir,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, 
+        #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
+        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, 
         #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
@@ -235,8 +235,8 @@
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
-        #{item.suffix,jdbcType=VARCHAR}, #{item.isImg,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=VARCHAR}, #{item.isDir,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, 
+        #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
+        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, 
         #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
@@ -280,8 +280,8 @@
         <if test="item.suffix != null">
           suffix = #{item.suffix,jdbcType=VARCHAR},
         </if>
-        <if test="item.isImg != null">
-          is_img = #{item.isImg,jdbcType=BOOLEAN},
+        <if test="item.img != null">
+          is_img = #{item.img,jdbcType=BOOLEAN},
         </if>
         <if test="item.size != null">
           `size` = #{item.size,jdbcType=BIGINT},
@@ -289,8 +289,8 @@
         <if test="item.type != null">
           `type` = #{item.type,jdbcType=VARCHAR},
         </if>
-        <if test="item.isDir != null">
-          is_dir = #{item.isDir,jdbcType=BOOLEAN},
+        <if test="item.dir != null">
+          is_dir = #{item.dir,jdbcType=BOOLEAN},
         </if>
         <if test="item.parentId != null">
           parent_id = #{item.parentId,jdbcType=BIGINT},
@@ -359,8 +359,8 @@
         </otherwise>
       </choose>
       <choose>
-        <when test="item.isImg != null">
-          #{item.isImg,jdbcType=BOOLEAN},
+        <when test="item.img != null">
+          #{item.img,jdbcType=BOOLEAN},
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -386,8 +386,8 @@
         </otherwise>
       </choose>
       <choose>
-        <when test="item.isDir != null">
-          #{item.isDir,jdbcType=BOOLEAN},
+        <when test="item.dir != null">
+          #{item.dir,jdbcType=BOOLEAN},
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -482,10 +482,10 @@
       #{name,jdbcType=VARCHAR},
       #{fileName,jdbcType=VARCHAR},
       #{suffix,jdbcType=VARCHAR},
-      #{isImg,jdbcType=BOOLEAN},
+      #{img,jdbcType=BOOLEAN},
       #{size,jdbcType=BIGINT},
       #{type,jdbcType=VARCHAR},
-      #{isDir,jdbcType=BOOLEAN},
+      #{dir,jdbcType=BOOLEAN},
       #{parentId,jdbcType=BIGINT},
       #{createBy,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
@@ -502,10 +502,10 @@
       `name` = #{name,jdbcType=VARCHAR},
       file_name = #{fileName,jdbcType=VARCHAR},
       suffix = #{suffix,jdbcType=VARCHAR},
-      is_img = #{isImg,jdbcType=BOOLEAN},
+      is_img = #{img,jdbcType=BOOLEAN},
       `size` = #{size,jdbcType=BIGINT},
       `type` = #{type,jdbcType=VARCHAR},
-      is_dir = #{isDir,jdbcType=BOOLEAN},
+      is_dir = #{dir,jdbcType=BOOLEAN},
       parent_id = #{parentId,jdbcType=BIGINT},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -533,7 +533,7 @@
       <if test="suffix != null">
         suffix,
       </if>
-      <if test="isImg != null">
+      <if test="img != null">
         is_img,
       </if>
       <if test="size != null">
@@ -542,7 +542,7 @@
       <if test="type != null">
         `type`,
       </if>
-      <if test="isDir != null">
+      <if test="dir != null">
         is_dir,
       </if>
       <if test="parentId != null">
@@ -581,8 +581,8 @@
       <if test="suffix != null">
         #{suffix,jdbcType=VARCHAR},
       </if>
-      <if test="isImg != null">
-        #{isImg,jdbcType=BOOLEAN},
+      <if test="img != null">
+        #{img,jdbcType=BOOLEAN},
       </if>
       <if test="size != null">
         #{size,jdbcType=BIGINT},
@@ -590,8 +590,8 @@
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
       </if>
-      <if test="isDir != null">
-        #{isDir,jdbcType=BOOLEAN},
+      <if test="dir != null">
+        #{dir,jdbcType=BOOLEAN},
       </if>
       <if test="parentId != null">
         #{parentId,jdbcType=BIGINT},
@@ -629,8 +629,8 @@
       <if test="suffix != null">
         suffix = #{suffix,jdbcType=VARCHAR},
       </if>
-      <if test="isImg != null">
-        is_img = #{isImg,jdbcType=BOOLEAN},
+      <if test="img != null">
+        is_img = #{img,jdbcType=BOOLEAN},
       </if>
       <if test="size != null">
         `size` = #{size,jdbcType=BIGINT},
@@ -638,8 +638,8 @@
       <if test="type != null">
         `type` = #{type,jdbcType=VARCHAR},
       </if>
-      <if test="isDir != null">
-        is_dir = #{isDir,jdbcType=BOOLEAN},
+      <if test="dir != null">
+        is_dir = #{dir,jdbcType=BOOLEAN},
       </if>
       <if test="parentId != null">
         parent_id = #{parentId,jdbcType=BIGINT},

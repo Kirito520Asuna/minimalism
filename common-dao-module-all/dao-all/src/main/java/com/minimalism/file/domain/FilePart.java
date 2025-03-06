@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @Author yan
- * @Date 2025/3/6 14:19:22
+ * @Date 2025/3/6 15:27:40
  * @Description
  */
 
@@ -58,6 +58,20 @@ public class FilePart implements Serializable {
     private String url;
 
     /**
+     * 本地资源路径
+     */
+    @TableField(value = "local_resource")
+    @Schema(description = "本地资源路径")
+    private String localResource;
+
+    /**
+     * 是否本地资源
+     */
+    @TableField(value = "is_local")
+    @Schema(description = "是否本地资源")
+    private Boolean local;
+
+    /**
      * 分片大小
      */
     @TableField(value = "part_size")
@@ -80,6 +94,10 @@ public class FilePart implements Serializable {
     public static final String COL_FILE_ID = "file_id";
 
     public static final String COL_URL = "url";
+
+    public static final String COL_LOCAL_RESOURCE = "local_resource";
+
+    public static final String COL_IS_LOCAL = "is_local";
 
     public static final String COL_PART_SIZE = "part_size";
 

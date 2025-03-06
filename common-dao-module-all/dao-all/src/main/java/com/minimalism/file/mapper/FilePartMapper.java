@@ -5,12 +5,13 @@ import com.minimalism.file.domain.FilePart;
 
 import java.util.List;
 
+import com.minimalism.vo.PartVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @Author yan
- * @Date 2025/3/6 14:19:22
+ * @Date 2025/3/6 15:27:40
  * @Description
  */
 @Mapper
@@ -33,4 +34,7 @@ public interface FilePartMapper extends BaseMapper<FilePart> {
 
     int insertOnDuplicateUpdateSelective(FilePart record);
 
+    List<PartVo> getPartList(@Param("identifier") String identifier, @Param("fileId") Long fileId);
+
+    int deleteByFileId(@Param("identifier") String identifier, @Param("fileId") Long fileId);
 }

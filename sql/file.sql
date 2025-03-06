@@ -28,6 +28,9 @@ create table `file_part`
     `part_code` varchar(20) not null comment 'code用于合并文件',
     `file_id`   bigint(20) not null comment '文件编号',
     `url`       varchar(255) default null comment '资源路径',
+    `local_resource`       varchar(255) default null comment '本地资源路径',
+    `is_local`   tinyint(1) default 0 comment '是否本地资源',
+
     `part_size` bigint       default 0 comment '分片大小',
     `part_sort` int          default 0 comment '分片顺序',
     primary key (`part_id`)
