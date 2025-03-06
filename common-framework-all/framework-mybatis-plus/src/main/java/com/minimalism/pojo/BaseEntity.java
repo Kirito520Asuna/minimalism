@@ -8,7 +8,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.minimalism.abstractinterface.entity.AbstractEntity;
 import com.minimalism.util.ObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -21,7 +25,10 @@ import java.util.Map;
  *
  * @author yan
  */
-@Data
+
+@Data @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BaseEntity implements Serializable, AbstractEntity {
     private static final long serialVersionUID = 1L;
     /**
