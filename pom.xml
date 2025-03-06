@@ -17,6 +17,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
+        <maven.compiler.encoding>${project.Encoding}</maven.compiler.encoding>
         <project.build.sourceEncoding>${project.Encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.Encoding}</project.reporting.outputEncoding>
 
@@ -95,6 +96,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <skip>true</skip>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
 

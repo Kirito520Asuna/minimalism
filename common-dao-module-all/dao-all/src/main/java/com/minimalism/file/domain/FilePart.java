@@ -1,6 +1,5 @@
 package com.minimalism.file.domain;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -15,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @Author yan
- * @Date 2025/3/6 上午12:50:38
+ * @Date 2025/3/6 14:19:22
  * @Description
  */
 

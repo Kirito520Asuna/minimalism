@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * @Author yan
- * @Date 2025/3/6 上午12:50:38
+ * @Date 2025/3/6 14:19:22
  * @Description
  */
 @Mapper
@@ -25,9 +25,11 @@ public interface FileInfoMapper extends BaseMapper<FileInfo> {
 
     int batchInsertSelectiveUseDefaultForNull(@Param("list") List<FileInfo> list);
 
+    int batchInsertOrUpdate(@Param("list") List<FileInfo> list);
+
     int deleteByPrimaryKeyIn(List<Long> list);
 
-    int insertOrUpdate(FileInfo record);
+    int insertOnDuplicateUpdate(FileInfo record);
 
-    int insertOrUpdateSelective(FileInfo record);
+    int insertOnDuplicateUpdateSelective(FileInfo record);
 }

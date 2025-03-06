@@ -1,14 +1,12 @@
 package com.minimalism.file.domain;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.minimalism.pojo.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @Author yan
- * @Date 2025/3/6 上午12:50:38
+ * @Date 2025/3/6 14:19:22
  * @Description
  */
 
@@ -31,7 +29,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "file_info")
-public class FileInfo extends BaseEntity implements Serializable {
+public class FileInfo implements Serializable {
     /**
      * 编号
      */
@@ -99,7 +97,42 @@ public class FileInfo extends BaseEntity implements Serializable {
     @Schema(description = "")
     private Long parentId;
 
-    private static final long serialVersionUID = -3443066500234165412L;
+    /**
+     * 创建者
+     */
+    @TableField(value = "create_by")
+    @Schema(description = "创建者")
+    private String createBy;
+
+    /**
+     * 创建时间
+     */
+    @TableField(value = "create_time")
+    @Schema(description = "创建时间")
+    private LocalDateTime createTime;
+
+    /**
+     * 更新者
+     */
+    @TableField(value = "update_by")
+    @Schema(description = "更新者")
+    private String updateBy;
+
+    /**
+     * 更新时间
+     */
+    @TableField(value = "update_time")
+    @Schema(description = "更新时间")
+    private LocalDateTime updateTime;
+
+    /**
+     * 备注
+     */
+    @TableField(value = "remark")
+    @Schema(description = "备注")
+    private String remark;
+
+    private static final long serialVersionUID = 1L;
 
     public static final String COL_FILE_ID = "file_id";
 
@@ -121,4 +154,13 @@ public class FileInfo extends BaseEntity implements Serializable {
 
     public static final String COL_PARENT_ID = "parent_id";
 
+    public static final String COL_CREATE_BY = "create_by";
+
+    public static final String COL_CREATE_TIME = "create_time";
+
+    public static final String COL_UPDATE_BY = "update_by";
+
+    public static final String COL_UPDATE_TIME = "update_time";
+
+    public static final String COL_REMARK = "remark";
 }

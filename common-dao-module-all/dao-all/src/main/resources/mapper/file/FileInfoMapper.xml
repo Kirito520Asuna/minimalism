@@ -227,6 +227,35 @@
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
+  <insert id="batchInsertOrUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into file_info
+    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, parent_id, create_by, 
+      create_time, update_by, update_time, remark)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
+        #{item.suffix,jdbcType=VARCHAR}, #{item.isImg,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
+        #{item.type,jdbcType=VARCHAR}, #{item.isDir,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, 
+        #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+    </foreach>
+    on duplicate key update 
+    url=values(url),
+    name=values(name),
+    file_name=values(file_name),
+    suffix=values(suffix),
+    is_img=values(is_img),
+    size=values(size),
+    type=values(type),
+    is_dir=values(is_dir),
+    parent_id=values(parent_id),
+    create_by=values(create_by),
+    create_time=values(create_time),
+    update_by=values(update_by),
+    update_time=values(update_time),
+    remark=values(remark)
+  </insert>
   <delete id="deleteByPrimaryKeyIn">
     <!--@mbg.generated-->
     delete from file_info where file_id in 
@@ -422,7 +451,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOrUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -485,7 +514,7 @@
       remark = #{remark,jdbcType=VARCHAR},
     </trim>
   </insert>
-  <insert id="insertOrUpdateSelective" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdateSelective" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
