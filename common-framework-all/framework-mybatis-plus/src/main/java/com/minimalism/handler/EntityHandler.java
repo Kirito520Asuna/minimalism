@@ -1,7 +1,12 @@
 package com.minimalism.handler;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.handler.AbstractEntityHandler;
+import com.minimalism.abstractinterface.service.MpUserService;
+import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 
 /**
@@ -11,4 +16,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EntityHandler implements AbstractEntityHandler {
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        AbstractEntityHandler.super.insertFill(metaObject);
+        this.strictInsertFill(metaObject, "createBy", () -> getUserId(), String.class);
+    }
+
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        AbstractEntityHandler.super.updateFill(metaObject);
+        this.strictInsertFill(metaObject, "updateBy", () -> getUserId(), String.class);
+    }
+
+    // 定义一个名为 getUserId 的方法
+    public String getUserId() {
+        return SpringUtil.getBean(MpUserService.class).getUserId();
+    }
 }
