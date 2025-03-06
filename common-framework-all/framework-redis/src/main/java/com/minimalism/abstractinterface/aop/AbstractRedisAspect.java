@@ -72,58 +72,6 @@ public interface AbstractRedisAspect {
         for (int i = 0; i < parameterNames.length; i++) {
             map.put(parameterNames[i], pointArgs[i]);
         }
-
-        /*// 接收到请求，记录请求内容
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
-        String method = request.getMethod();
-        if (StrUtil.equalsIgnoreCase(method, "post") || StrUtil.equalsIgnoreCase(method, "put")) {
-//        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
-            StringBuilder stringBuilder = new StringBuilder();
-
-            // 读取请求体中的文本数据
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-            } catch (IOException e) {
-
-            }
-            String bodyStr = stringBuilder.toString();
-            if (JSONUtil.isTypeJSON(bodyStr)) {
-                Map<String, Object> toBean = JSONUtil.toBean(bodyStr, Map.class);
-                if (ObjectUtil.isNotEmpty(toBean)) {
-                    map.putAll(toBean);
-                }
-            }
-
-            if (ObjectUtil.isEmpty(map)) {
-
-                String args = ObjectUtil.isEmpty(pointArgs) ? "{}" : JSONUtil.toJsonStr(pointArgs[0], config);
-
-                Map<String, Object> toBean = JSONUtil.toBean(args, Map.class);
-                if (ObjectUtil.isNotEmpty(toBean)) {
-                    map.putAll(toBean);
-                }
-            }
-        } else {
-            Map<String, String[]> parameterMap = wrapper.getParameterMap();
-            if (CollUtil.isNotEmpty(parameterMap)) {
-                parameterMap.keySet().stream().forEach(k -> {
-                    List<String> asList = Arrays.asList(parameterMap.get(k));
-                    asList = CollUtil.isNotEmpty(asList) ? asList : Arrays.asList("");
-                    if (asList.size() > 1) {
-                        map.put(k, asList);
-                    } else {
-                        map.put(k, asList.get(0));
-                    }
-                });
-            }
-        }
-*/
-
         return redisCacheParameters.setRequest(map);
     }
 

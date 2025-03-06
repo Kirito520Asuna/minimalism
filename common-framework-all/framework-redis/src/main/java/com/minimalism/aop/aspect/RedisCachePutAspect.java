@@ -65,27 +65,27 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
     }
 
 
-    @SneakyThrows
-    public static void main(String[] args) {
-        // 创建JexlEngine实例
-        JexlEngine jexl = new Engine();
-
-        // 定义并评估表达式，判断一个JSON字符串是否不为null
-        String expressionStr = "{'key':'1212','value':'5464'} == null";
-        expressionStr = "false";
-        JexlExpression expression = jexl.createExpression(expressionStr);
-        boolean evalResult = (Boolean) expression.evaluate(null);
-        System.out.println(evalResult);
-
-        if (true) return;
-
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("JavaScript");
-        boolean eval = (Boolean) engine.eval("'{\"key\":\"1212\",\"value\":\"5464\"}'!=null");
-        System.out.println(eval);
-        Class<?> timoutClass = TimeUnit.DAYS.getClass();
-        System.out.println(ObjectUtil.equals(timoutClass, TimeUnit.class));
-    }
+    //@SneakyThrows
+    //public static void main(String[] args) {
+    //    // 创建JexlEngine实例
+    //    JexlEngine jexl = new Engine();
+    //
+    //    // 定义并评估表达式，判断一个JSON字符串是否不为null
+    //    String expressionStr = "{'key':'1212','value':'5464'} == null";
+    //    expressionStr = "false";
+    //    JexlExpression expression = jexl.createExpression(expressionStr);
+    //    boolean evalResult = (Boolean) expression.evaluate(null);
+    //    System.out.println(evalResult);
+    //
+    //    if (true) return;
+    //
+    //    ScriptEngineManager manager = new ScriptEngineManager();
+    //    ScriptEngine engine = manager.getEngineByName("JavaScript");
+    //    boolean eval = (Boolean) engine.eval("'{\"key\":\"1212\",\"value\":\"5464\"}'!=null");
+    //    System.out.println(eval);
+    //    Class<?> timoutClass = TimeUnit.DAYS.getClass();
+    //    System.out.println(ObjectUtil.equals(timoutClass, TimeUnit.class));
+    //}
 
 
     @Override
