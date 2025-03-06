@@ -85,6 +85,13 @@ public class FilePart implements Serializable {
     @Schema(description = "分片顺序")
     private Integer partSort;
 
+    /**
+     * 合并后是否删除分片
+     */
+    @TableField(value = "merge_delete")
+    @Schema(description = "合并后是否删除分片")
+    private Boolean mergeDelete;
+
     private static final long serialVersionUID = 1L;
 
     public static final String COL_PART_ID = "part_id";
@@ -102,4 +109,6 @@ public class FilePart implements Serializable {
     public static final String COL_PART_SIZE = "part_size";
 
     public static final String COL_PART_SORT = "part_sort";
+
+    public static final String COL_MERGE_DELETE = "merge_delete";
 }
