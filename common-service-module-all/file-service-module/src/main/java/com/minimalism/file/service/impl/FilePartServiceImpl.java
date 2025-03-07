@@ -4,6 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.service.FilePartService;
 import com.minimalism.vo.PartVo;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.minimalism.file.mapper.FilePartMapper;
@@ -79,6 +84,7 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int removePart(String identifier, Long fileId) {
+        //分片不存储至云端 ，直接删除本地文件
         List<PartVo> partList = getPartList(identifier, fileId);
         List<PartVo> localList = CollUtil.newArrayList();
         List<PartVo> urlList = CollUtil.newArrayList();
@@ -93,12 +99,17 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
         }
         //删除云端文件
         // todo:
-
         //删除本地文件
         localList.stream().map(PartVo::getLocalResource).forEach(FileUtil::del);
-
         //删除数据库记录
         return baseMapper.deleteByFileId(identifier, fileId);
     }
 
+    @Override
+    public Long getOneFileIdByCode(String identifier) {
+        PageHelper.startPage(1,1);
+        LambdaQueryWrapper<FilePart> wrapper = Wrappers.lambdaQuery(FilePart.class).select(FilePart::getFileId)
+                .eq(FilePart::getPartCode, identifier);
+        return Optional.ofNullable(getOne(wrapper)).orElseGet(FilePart::new).getFileId();
+    }
 }

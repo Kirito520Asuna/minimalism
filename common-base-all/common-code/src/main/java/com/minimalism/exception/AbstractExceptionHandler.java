@@ -3,6 +3,8 @@ package com.minimalism.exception;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.enums.ApiCode;
 import com.minimalism.result.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -19,15 +21,10 @@ import java.io.IOException;
  * @Date 2024/9/27 上午1:37:08
  * @Description
  */
-public interface AbstractExceptionHandler {
+public interface AbstractExceptionHandler extends AbstractBean {
 
     default String getActive(){
-        String active = "dev";
-        Environment environment = SpringUtil.getBean(Environment.class);
-        String property = environment.getProperty("spring.profiles.active");
-        if (StrUtil.isNotBlank(property)){
-            active = property;
-        }
+        String active = SpringUtil.getBean(Environment.class).getProperty("spring.profiles.active",String.class,"dev");
         return active;
     }
 
@@ -43,20 +40,26 @@ public interface AbstractExceptionHandler {
         e.printStackTrace();
         String errMessage = "系统繁忙";
         Result result = Result.fail();
-        if (e instanceof BusinessException) {
+
+        Integer code = ApiCode.FAIL.getCode();
+        String message = ApiCode.FAIL.getMessage();
+        if (e instanceof GlobalConfigException) {
+            GlobalConfigException exception = (GlobalConfigException) e;
+            code = exception.getCode();
+            message = exception.getMessage();
+        }else if (e instanceof BusinessException) {
             BusinessException exception = (BusinessException) e;
-            result.setCode(exception.getCode());
-            result.setMessage(exception.getMessage());
+            code = exception.getCode();
+            message = exception.getMessage();
         }else if (e instanceof GlobalCustomException) {
             GlobalCustomException exception = (GlobalCustomException) e;
-            result.setCode(exception.getCode());
-            result.setMessage(exception.getMessage());
+            code = exception.getCode();
+            message = exception.getMessage();
         } else {
-            //String env = environment.getProperty("spring.profiles.active");
-            String message = e.getMessage();
-            message = ObjectUtil.equals("prod", getActive()) ? errMessage : message;
-            result.setMessage(message);
+            message = ObjectUtil.equals("prod", getActive()) ? errMessage : e.getMessage();
         }
+        result.setCode(code);
+        result.setMessage(message);
         return result;
     }
 

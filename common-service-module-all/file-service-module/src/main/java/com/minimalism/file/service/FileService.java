@@ -5,6 +5,7 @@ import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,5 +22,13 @@ public interface FileService {
     List<PartVo> getPartList(String identifier, Long fileId);
     List<InputStream> getPartInputStreamList(String identifier, Long fileId);
     InputStream partToInputStream(PartVo partVo);
-    OutputStream mergeOutputStream(String identifier, Long fileId);
+    ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId);
+    boolean mergeOk(String identifier, Long fileId);
+    String getPartPath(String identifier, Integer chunkNumber);
+
+    String getMergePartPath(String identifier, String fileName, String suffix);
+
+    boolean uploadChunk(String path, InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId);
+
+    boolean mergeChunks(String identifier, Long fileId);
 }

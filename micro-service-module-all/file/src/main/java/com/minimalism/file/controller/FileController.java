@@ -43,14 +43,15 @@ import java.util.UUID;
 public class FileController implements AbstractBaseController {
     @Resource
     private FileInfoService fileInfoService;
-    @Value("${file.upload-dir:tmp/uploads}")
-    private String uploadDir;
+
+    @Resource
+    private FileService fileService;
 
     @AviatorValids(values = {@AviatorValid(expression = "arg0.img && arg0.dir", errorMessage = "非法请求")})
     @SysLog
     @Operation(summary = "分片上传 初始调用")
     @PostMapping("/upload/start")
-    public Result<FileUploadVo> uploadStart(@RequestBody FileUpDto dto){
+    public Result<FileUploadVo> uploadStart(@RequestBody FileUpDto dto) {
         FileInfo fileInfo = new FileInfo();
         CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
         fileInfoService.save(fileInfo);
@@ -73,16 +74,13 @@ public class FileController implements AbstractBaseController {
                                         @RequestParam("totalChunks") int totalChunks,
                                         @RequestParam(value = "fileId", required = false) Long fileId,
                                         @RequestParam("identifier") String identifier) {
-        // 使用HuTool保存分片文件
-        String part = ".part";
-        // 使用HuTool保存分片文件
-        String path = uploadDir  + "/" + identifier + "/" + chunkNumber + part;
+        String path = fileService.getPartPath(identifier, chunkNumber);
         try {
-            OutputStream outputStream = new ByteArrayOutputStream();
             InputStream inputStream = file.getInputStream();
-            IoUtil.copy(inputStream, outputStream);
-            FileUtil.writeFromStream(inputStream, FileUtil.newFile(path));
-            //String upload = upload(outputStream, part);
+            boolean uploadChunk = fileService.uploadChunk(path, inputStream, identifier, chunkNumber, totalChunks, fileId);
+            if (!uploadChunk) {
+                throw new GlobalCustomException("Upload failed");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new GlobalCustomException("Upload failed");
@@ -97,12 +95,9 @@ public class FileController implements AbstractBaseController {
     public Result<String> mergeChunks(
             @RequestParam("identifier") String identifier,
             @RequestParam(value = "fileId", required = false) Long fileId) {
-        getBean(FileService.class).mergeOutputStream(identifier, fileId);
-        if (fileId != null) {
-            FileInfo fileInfo = fileInfoService.getById(fileId);
-            String fileName = fileInfo.getFileName();
-            String suffix = fileInfo.getSuffix();
-        }
+        fileService.mergeChunks(identifier, fileId)
+
+
         return ok();
     }
 

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class GlobalCustomException extends RuntimeException {
-    private Integer code;
+    private Integer code = ApiCode.FAIL.getCode();
 
     public GlobalCustomException(ApiCode apiCode) {
         super(apiCode.getMessage());

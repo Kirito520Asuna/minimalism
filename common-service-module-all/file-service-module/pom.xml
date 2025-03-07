@@ -16,8 +16,17 @@
         <com.alibaba.fastjson.version>2.0.32</com.alibaba.fastjson.version>
         <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
         <mysql.version>8.0.28</mysql.version>
+
+        <aliyun-sdk-oss.version>3.10.2</aliyun-sdk-oss.version>
     </properties>
     <dependencies>
+        <!--阿里云oss-->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun-sdk-oss.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>dao-all</artifactId>

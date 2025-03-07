@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * fs上传配置资源类
+ *
  * @Author yan
  * @Date 2025/3/7 下午6:06:55
  * @Description
@@ -52,6 +53,11 @@ public class FileProperties {
         private String endPoint;
 
         private String nginxUrl;
+        private String uploadDir;
+
+        public String getUploadDir() {
+            return uploadDir.endsWith("/") ? uploadDir : uploadDir + "/";
+        }
     }
 
     @Data

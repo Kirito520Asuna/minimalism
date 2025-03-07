@@ -37,7 +37,9 @@ public enum ApiCode {
     USERNAME_PASSWORD_EORR(502, "用户名或者密码错误"),
     SERVICE_BUSYNESS(504,"服务暂不可用"),
     SERVICE_REPAIRING(505,"服务维护中"),
-    SERVICE_UNREACHABLE(506, "服务下线");
+    SERVICE_UNREACHABLE(506, "服务下线"),
+    SERVICE_CONFIG(507, "服务配置异常")
+    ;
     /**
      * 返回代码
      */
