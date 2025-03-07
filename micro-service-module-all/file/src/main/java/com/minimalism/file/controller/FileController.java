@@ -95,7 +95,7 @@ public class FileController implements AbstractBaseController {
     public Result<String> mergeChunks(
             @RequestParam("identifier") String identifier,
             @RequestParam(value = "fileId", required = false) Long fileId) {
-        fileService.mergeChunks(identifier, fileId)
+        fileService.mergeChunks(identifier, fileId);
 
 
         return ok();
