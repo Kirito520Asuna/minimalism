@@ -54,10 +54,10 @@ public class FileApplicationTest {
 
         List<InputStream> parts = IoUtils.splitInputStream(in, 10);
         System.out.println("拆分后的流数量: " + parts.size());
-        InputStream inM = IoUtils.mergeInputStream(parts);
+        InputStream inMerge = IoUtils.mergeInputStream(parts);
 
-        String mStr = new String(IoUtils.toByteArray(inM), "UTF-8");
-        System.out.println("Me :" + mStr);
+        String MergeStr = new String(IoUtils.toByteArray(inMerge), "UTF-8");
+        System.out.println("Merge :" + MergeStr);
     }
 
 }

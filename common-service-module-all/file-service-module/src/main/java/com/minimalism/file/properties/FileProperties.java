@@ -27,7 +27,7 @@ public class FileProperties {
     /**
      * 本地上传配置
      */
-    private LocalProperties local;
+    private LocalProperties local = new LocalProperties();
 
     /**
      * 七牛配置
@@ -48,12 +48,12 @@ public class FileProperties {
     @Data
     public static class LocalProperties {
 
-        private String directory;
+        private String directory = "local";
 
-        private String endPoint;
+        private String endPoint = "http://127.0.0.1:80";
 
         private String nginxUrl;
-        private String uploadDir;
+        private String uploadDir = "tmp/uploads";
 
         public String getUploadDir() {
             return uploadDir.endsWith("/") ? uploadDir : uploadDir + "/";

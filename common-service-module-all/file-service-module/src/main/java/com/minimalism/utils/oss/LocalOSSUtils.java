@@ -28,10 +28,8 @@ public class LocalOSSUtils {
         String uploadDir = "/";
         try {
             FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
-            if (ObjectUtils.equals(fileProperties.getType(), StorageType.local)) {
-                FileProperties.LocalProperties local = fileProperties.getLocal();
-                uploadDir = local.getUploadDir();
-            }
+            FileProperties.LocalProperties local = fileProperties.getLocal();
+            uploadDir = local.getUploadDir();
         } catch (Exception e) {
             uploadDir = SpringUtil.getBean(Environment.class).getProperty("file.properties.local.uploadDir", String.class, "tmp/uploads");
         }
@@ -40,11 +38,24 @@ public class LocalOSSUtils {
         if (!uploadDir.endsWith("/")) {
             uploadDir = uploadDir + "/";
         }
+        uploadDir = uploadDir + getBucket() + "/";
         File file = FileUtil.newFile(uploadDir);
         if (!file.exists()) {
             file.mkdirs();
         }
         return uploadDir;
+    }
+
+    public static String getBucket() {
+        String directory;
+        try {
+            FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
+            FileProperties.LocalProperties local = fileProperties.getLocal();
+            directory = local.getDirectory();
+        } catch (Exception e) {
+            directory = SpringUtil.getBean(Environment.class).getProperty("file.properties.local.directory", String.class, "local");
+        }
+        return ObjectUtils.defaultIfBlank(directory, "local");
     }
 
     public static String getChunkDir() {
@@ -128,17 +139,19 @@ public class LocalOSSUtils {
 
     /**
      * 上传单个分片
+     *
      * @param chunkNumber
      * @param fileName
      * @param identifier
      * @param input
      */
-    public static void splitChunkNumberFileLocal( int chunkNumber, String fileName, String identifier, InputStream input) {
+    public static void splitChunkNumberFileLocal(int chunkNumber, String fileName, String identifier, InputStream input) {
         splitChunkNumberFileLocal(getChunkDir(), chunkNumber, fileName, identifier, input);
     }
 
     /**
      * 上传单个分片
+     *
      * @param chunkDir
      * @param chunkNumber
      * @param fileName
@@ -158,7 +171,7 @@ public class LocalOSSUtils {
             tempFile.createNewFile();
         }
         BufferedOutputStream outputStream = FileUtil.getOutputStream(tempFile);
-        IoUtils.copy(input,outputStream);
+        IoUtils.copy(input, outputStream);
     }
 
     /**
