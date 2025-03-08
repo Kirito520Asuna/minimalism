@@ -5,6 +5,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSErrorCode;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
+import com.minimalism.utils.io.IoUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 
@@ -287,7 +288,8 @@ public class AliyunOSSUtils {
         // 链接地址是：https://help.aliyun.com/document_detail/oss/sdk/java-sdk/download_object.html?spm=5176.docoss/sdk/java-sdk/manage_object
         InputStream inputStream = downloadOssInput(ossClient, bucketName, fileName);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        inputStreamToOutputStream(inputStream, outputStream);
+        IoUtils.copy(inputStream, outputStream);
+        //inputStreamToOutputStream(inputStream, outputStream);
         inputStream.close();
         return outputStream;
     }
@@ -308,20 +310,20 @@ public class AliyunOSSUtils {
         return inputStream;
     }
 
-    /**
-     * 输入写入输出
-     *
-     * @param input
-     * @param output
-     * @throws IOException
-     */
-    private static void inputStreamToOutputStream(InputStream input, OutputStream output) throws IOException {
-        byte[] buf = new byte[8192];
-        int length;
-        while ((length = input.read(buf)) > 0) {
-            output.write(buf, 0, length);
-        }
-    }
+    ///**
+    // * 输入写入输出
+    // *
+    // * @param input
+    // * @param output
+    // * @throws IOException
+    // */
+    //private static void inputStreamToOutputStream(InputStream input, OutputStream output) throws IOException {
+    //    byte[] buf = new byte[8192];
+    //    int length;
+    //    while ((length = input.read(buf)) > 0) {
+    //        output.write(buf, 0, length);
+    //    }
+    //}
 
 
     /**
