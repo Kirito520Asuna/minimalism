@@ -85,7 +85,8 @@ public class LocalOSSUtils {
         return ".part";
     }
 
-/*===========================================================================================================================================================================================================================================*/
+    /*===========================================================================================================================================================================================================================================*/
+
     /**
      * 将指定文件拆分成若干个分块文件
      *
@@ -267,7 +268,7 @@ public class LocalOSSUtils {
             throw new RuntimeException("No chunk files found ");
         }
         // 按分块编号排序（假设分块文件名为 "1.part", "2.part", …）
-        List<FilePart> fileParts = Arrays.stream(chunkFiles).filter(file -> FileUtil.mainName(file).endsWith(getPartSuffix())).map(file ->
+        List<FilePart> fileParts = Arrays.stream(chunkFiles).filter(file -> ("." + FileUtil.getSuffix(file)).endsWith(getPartSuffix())).map(file ->
                 new FilePart()
                         .setFileId(fileId)
                         .setLocal(Boolean.TRUE)
