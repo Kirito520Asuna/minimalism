@@ -39,3 +39,4 @@ mvnw.cmd
 /var/
 /logs/
 **/.flattened-pom.xml
+tmp

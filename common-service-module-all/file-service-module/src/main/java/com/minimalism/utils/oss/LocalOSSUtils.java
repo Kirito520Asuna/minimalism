@@ -3,8 +3,10 @@ package com.minimalism.utils.oss;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.StorageType;
+import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.SneakyThrows;
 import org.springframework.core.env.Environment;
@@ -13,6 +15,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -21,38 +24,75 @@ import java.util.stream.Collectors;
  * @Description
  */
 public class LocalOSSUtils {
-    private static final int CHUNK_SIZE = 1024 * 1024; // 每个分片大小为1MB
-    // 分块文件存放目录
-    private static final String CHUNK_DIR = getUploadDir() + "chunks/";
-    // 合并后文件存放目录
-    private static final String MERGE_DIR = getUploadDir() + "merged/";
-
     public static String getUploadDir() {
         String uploadDir = "/";
-        //try {
-        //    FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
-        //    if (ObjectUtils.equals(fileProperties.getType(), StorageType.local)) {
-        //        FileProperties.LocalProperties local = fileProperties.getLocal();
-        //        uploadDir = local.getUploadDir();
-        //    }
-        //} catch (Exception e) {
-        //    uploadDir = SpringUtil.getBean(Environment.class).getProperty("file.properties.local.uploadDir", String.class, "tmp/uploads");
-        //}
-        uploadDir = "tmp/uploads";
+        try {
+            FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
+            if (ObjectUtils.equals(fileProperties.getType(), StorageType.local)) {
+                FileProperties.LocalProperties local = fileProperties.getLocal();
+                uploadDir = local.getUploadDir();
+            }
+        } catch (Exception e) {
+            uploadDir = SpringUtil.getBean(Environment.class).getProperty("file.properties.local.uploadDir", String.class, "tmp/uploads");
+        }
+        //uploadDir = "tmp/uploads";
 
         if (!uploadDir.endsWith("/")) {
             uploadDir = uploadDir + "/";
         }
+        File file = FileUtil.newFile(uploadDir);
+        if (!file.exists()){
+            file.mkdirs();
+        }
         return uploadDir;
+    }
+
+    public static String getChunkDir() {
+        String chunk = getUploadDir() + "chunks/";
+        File file = FileUtil.newFile(chunk);
+        if (!file.exists()){
+            file.mkdirs();
+        }
+        return chunk;
+    }
+
+    public static String getMergeDir() {
+        String merged = getUploadDir() + "merged/";
+        File file = FileUtil.newFile(merged);
+        if (!file.exists()){
+            file.mkdirs();
+        }
+        return merged;
+    }
+
+    public static int getChunkSize() {
+        // 每个分片大小为1MB
+        return 1024 * 1024;
+    }
+
+    public static String getPartSuffix() {
+        return ".part";
     }
 
 
     /**
      * 将指定文件拆分成若干个分块文件
-     * @param chunkDir 分块文件存放目录
-     * @param fileName 原始文件名
+     *
+     * @param fileName
+     * @param identifier
+     * @param input
+     */
+    public static void splitFileLocal(String fileName, String identifier, InputStream input) {
+        splitFileLocal(getChunkDir(), fileName, identifier, input);
+    }
+
+    /**
+     * 将指定文件拆分成若干个分块文件
+     *
+     * @param chunkDir   分块文件存放目录
+     * @param fileName   原始文件名
      * @param identifier 唯一值
-     * @param input 原始文件输入流
+     * @param input      原始文件输入流
      */
     @SneakyThrows
     public static void splitFileLocal(String chunkDir, String fileName, String identifier, InputStream input) {
@@ -68,12 +108,12 @@ public class LocalOSSUtils {
         }
 
         try (InputStream fis = input) {
-            byte[] buffer = new byte[CHUNK_SIZE];
+            byte[] buffer = new byte[getChunkSize()];
             int bytesRead;
             // 循环读取，直到返回 -1 表示读完
             while ((bytesRead = fis.read(buffer)) != -1) {
                 // 每个分块文件命名为 “chunkNumber.part”
-                File tempFile = FileUtil.newFile(chunkDirPath + "/" + chunkNumber + ".part");
+                File tempFile = FileUtil.newFile(chunkDirPath + "/" + chunkNumber + getPartSuffix());
                 // 写入读取的字节到分块文件中
                 try (OutputStream os = new FileOutputStream(tempFile)) {
                     os.write(buffer, 0, bytesRead);
@@ -85,9 +125,20 @@ public class LocalOSSUtils {
 
     /**
      * 将分块文件合并为一个完整文件，并清理临时分块文件
-     * @param chunkDir 分片文件夹(不包含唯一值)
-     * @param mergeDir 合并文件夹
-     * @param fileName 原始文件名
+     *
+     * @param fileName
+     * @param identifier
+     */
+    public static void mergeFileLocal(String fileName, String identifier) {
+        mergeFileLocal(getChunkDir(), getMergeDir(), fileName, identifier);
+    }
+
+    /**
+     * 将分块文件合并为一个完整文件，并清理临时分块文件
+     *
+     * @param chunkDir   分片文件夹(不包含唯一值)
+     * @param mergeDir   合并文件夹
+     * @param fileName   原始文件名
      * @param identifier 唯一值
      */
     @SneakyThrows
@@ -135,7 +186,46 @@ public class LocalOSSUtils {
         sortedChunks.stream().forEach(FileUtil::del);
     }
 
-    public static void main(String[] args) {
-        System.out.printf(" %s", getUploadDir());
+    /**
+     * 获取分块文件列表
+     *
+     * @param identifier
+     * @param fileId
+     * @return
+     */
+    public static List<FilePart> getFileParts(String identifier, Long fileId) {
+        return getFileParts(getChunkDir(), identifier, fileId);
     }
+
+    /**
+     * 获取分块文件列表
+     *
+     * @param chunkDir
+     * @param identifier
+     * @param fileId
+     * @return
+     */
+    public static List<FilePart> getFileParts(String chunkDir, String identifier, Long fileId) {
+        if (!chunkDir.endsWith("/")) {
+            chunkDir = chunkDir + "/";
+        }
+        // 分块文件所在目录
+        File chunkDirFile = FileUtil.newFile(chunkDir + identifier);
+        File[] chunkFiles = chunkDirFile.listFiles();
+        if (chunkFiles == null || chunkFiles.length == 0) {
+            throw new RuntimeException("No chunk files found ");
+        }
+        // 按分块编号排序（假设分块文件名为 "1.part", "2.part", …）
+        List<FilePart> fileParts = Arrays.stream(chunkFiles).filter(file -> FileUtil.mainName(file).endsWith(getPartSuffix())).map(file ->
+                new FilePart()
+                        .setFileId(fileId)
+                        .setLocal(Boolean.TRUE)
+                        .setLocalResource(FileUtil.getAbsolutePath(file))
+                        .setPartCode(identifier)
+                        .setPartSort(Integer.parseInt(FileUtil.mainName(file)))
+                        .setPartSize(IoUtils.size(FileUtil.getInputStream(file)))
+        ).sorted(Comparator.comparingInt(FilePart::getPartSort)).collect(Collectors.toList());
+        return fileParts;
+    }
+
 }

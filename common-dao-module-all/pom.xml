@@ -11,6 +11,15 @@
     <artifactId>common-dao-module-all</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
+        <alibaba-druid.version>1.1.21</alibaba-druid.version>
+        <com.alibaba.fastjson.version>2.0.32</com.alibaba.fastjson.version>
+        <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
+        <mysql.version>8.0.28</mysql.version>
+    </properties>
+
     <modules>
         <module>dao-gen-module</module>
         <module>dao-user-module</module>

@@ -24,8 +24,9 @@ logstash:
   totalSizeCap: 10MB
 
 file:
-  upload:
-    dir: tmp\uploads
+  properties:
+    local:
+      uploadDir: ../../tmp/uploads
 
 captcha:
   enabled: true
