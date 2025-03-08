@@ -12,7 +12,6 @@ import java.util.List;
  * @Date 2025/3/8 16:37:37
  * @Description
  */
-@Service
 public interface LocalClient extends IFileStorageClient {
     List<StorageType> localClientList = CollUtil.newArrayList(StorageType.local);
 

@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
@@ -27,6 +28,7 @@ import java.nio.charset.StandardCharsets;
  * @Date 2025/3/7 19:24:20
  * @Description
  */
+@Service
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

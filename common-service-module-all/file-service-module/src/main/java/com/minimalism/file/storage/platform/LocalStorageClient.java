@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
@@ -33,6 +34,7 @@ import java.util.UUID;
  * @Date 2025/3/7 20:44:58
  * @Description
  */
+@Service
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

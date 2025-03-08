@@ -12,7 +12,6 @@ import java.util.List;
  * @Date 2025/3/8 16:40:36
  * @Description
  */
-@Service
 public interface AliyunClient extends IFileStorageClient {
     List<StorageType> aliyunClientList = CollUtil.newArrayList(StorageType.aliyunOSS);
 

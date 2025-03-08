@@ -42,7 +42,7 @@ public class UploadTest {
         }
 
         String mergeUrl = "http://127.0.0.1:13600/file/file/upload/merge/chunks";
-        merge(mergeUrl, fileName, identifier);
+        merge(mergeUrl, fileName, identifier,totalChunks);
     }
 
     public static void uploadChunk(String url, String identifier, int chunkNumber, int totalChunks, InputStream inputStream) throws Exception {
@@ -68,11 +68,12 @@ public class UploadTest {
 
     }
 
-    public static void merge(String url, String fileName, String identifier) {
+    public static void merge(String url, String fileName, String identifier,int totalChunks) {
         System.err.println("Merging chunks...");
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", fileName);
         params.put("identifier", identifier);
+        params.put("totalChunks", totalChunks);
 
         HttpRequest request = HttpUtil.createPost(url);
         request.form(params);

@@ -1,6 +1,7 @@
 package com.minimalism.file.storage;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
@@ -19,13 +21,36 @@ import java.util.Map;
 public class FileFactory implements BeanFactoryAware, InitializingBean, AbstractBean {
     private ConfigurableListableBeanFactory beanFactory;
     private static List<IFileStorageClient> storages = CollUtil.newArrayList();
+    private static int index = 0;
     public static IFileStorageClient getClient(StorageType storageType) {
+
+        if (index == 0){
+            Map<String, IFileStorageClient> beansOfType = SpringUtil.getBeansOfType(IFileStorageClient.class);
+            beansOfType.forEach((key, value) -> {
+                storages.add(value);
+            });
+            index++;
+        }
+
         for (IFileStorageClient storage : storages) {
             if (storage.support(storageType)) {
                 return storage;
             }
         }
         throw new IllegalArgumentException();
+    }
+
+    @Override
+    @PostConstruct
+    public void init() {
+        AbstractBean.super.init();
+        if (index == 0){
+            Map<String, IFileStorageClient> beansOfType = SpringUtil.getBeansOfType(IFileStorageClient.class);
+            beansOfType.forEach((key, value) -> {
+                storages.add(value);
+            });
+            index++;
+        }
     }
 
     @Override
