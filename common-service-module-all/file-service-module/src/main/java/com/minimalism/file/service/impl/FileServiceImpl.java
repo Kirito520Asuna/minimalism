@@ -16,6 +16,7 @@ import com.minimalism.file.storage.StorageType;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,51 +110,68 @@ public class FileServiceImpl implements FileService {
         return true;
     }
 
+    @SneakyThrows
     @Override
-    public boolean mergeChunks(String identifier, Long fileId) {
+    public boolean mergeChunks(String identifier, Long fileId, String fileName) {
         ByteArrayOutputStream outputStream = mergeOutputStream(identifier, fileId);
         if (fileId == null) {
             fileId = filePartService.getOneFileIdByCode(identifier);
         }
 
+        String mainName;
+        String suffix;
+        String fileMainName;
+        String path;
+
         if (fileId != null) {
             FileInfo fileInfo = fileInfoService.getById(fileId);
-
-            String fileName = FileUtil.mainName(fileInfo.getFileName());
-            String suffix = fileInfo.getSuffix();
-            String fileMainName = fileName + suffix;
-            String path = getMergePartPath(identifier, fileName, suffix);
-
-            try {
-                InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-                OutputStream fileOutputStream = FileUtil.getOutputStream(FileUtil.newFile(path));
-                IoUtil.copy(inputStream, fileOutputStream);
-                inputStream = FileUtil.getInputStream(path);
-                uploadMergeChunks(inputStream, fileMainName);
-            } finally {
-                FileUtil.del(path);
-            }
+            mainName = FileUtil.mainName(fileName);
+            suffix = fileInfo.getSuffix();
+            path = getMergePartPath(identifier, "tmp_" + mainName, suffix);
         } else {
-            throw new GlobalCustomException("文件不存在！");
+            mainName = FileUtil.mainName(fileName);
+            suffix = FileUtil.getSuffix(fileName);
+            path = getMergePartPath(identifier, mainName, "." + FileUtil.getSuffix(fileName));
         }
-        mergeOk(identifier, fileId);
+
+        if (!suffix.startsWith(".")) {
+            suffix = "." + suffix;
+        }
+
+        fileMainName = mainName + suffix;
+        //生成临时文件
+        File tmpFile = FileUtil.newFile(path);
+        if (!tmpFile.exists()) {
+            tmpFile.createNewFile();
+        }
+
+        try {
+            InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+            OutputStream fileOutputStream = FileUtil.getOutputStream(tmpFile);
+            IoUtils.copy(inputStream, fileOutputStream);
+            inputStream = FileUtil.getInputStream(path);
+            uploadMergeChunks(inputStream, fileMainName,identifier);
+            mergeOk(identifier, fileId);
+        } finally {
+            FileUtil.del(path);
+        }
         return true;
     }
-
-    @Override
-    public boolean uploadMergeChunks(String identifier, int totalChunks, String fileName) {
+    public void uploadMergeChunks(InputStream inputStream, String fileMainName,String identifier) {
         IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
-        client.getInputStreams(identifier, totalChunks);
-        for (int i = 1; i <= totalChunks; i++) {
-            String partPath = getPartPath(identifier, i);
-            BufferedInputStream inputStream = FileUtil.getInputStream(partPath);
-        }
-        return false;
-    }
-
-    public void uploadMergeChunks(InputStream inputStream, String fileMainName) {
+        client.uploadMergeChunks(inputStream,fileMainName,identifier);
         SpringUtil.getBean(FileFactory.class).getClient(StorageType.local)
                 .uploadSharding("", fileMainName, inputStream);
     }
+    @Override
+    public boolean uploadMergeChunks(String identifier, int totalChunks, String fileName) {
+        IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
+        List<InputStream> inputStreams = client.getInputStreams(identifier, totalChunks);
+        //client.
+
+        return false;
+    }
+
+
 
 }

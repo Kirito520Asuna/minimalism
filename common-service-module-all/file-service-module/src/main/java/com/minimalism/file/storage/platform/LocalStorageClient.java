@@ -2,28 +2,24 @@ package com.minimalism.file.storage.platform;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
-import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.file.storage.clientAbs.LocalClient;
-import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -87,6 +83,21 @@ public class LocalStorageClient implements LocalClient {
     }
 
     @Override
+    public void delete(String bucketName, String objectName) {
+        LocalClient.super.delete(bucketName, objectName);
+        if (StringUtils.isEmpty(objectName)) {
+            throw new BusinessException("文件删除失败,文件路径为空");
+        }
+        try {
+            Path file = Paths.get(getUploadDir()).resolve(Paths.get(objectName));
+            FileUtil.del(file);
+        } catch (Exception e) {
+            error("[Local] file delete failed: {}", e.getMessage());
+            throw new BusinessException("文件删除失败");
+        }
+    }
+
+    @Override
     public FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
         LocalClient.super.upload(bucketName, flieName, inputStream);
         String uploadUrl = LocalOSSUtils.upload(flieName, inputStream);
@@ -98,6 +109,7 @@ public class LocalStorageClient implements LocalClient {
     public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
         LocalClient.super.uploadSharding(bucketName, flieName, inputStream);
         String bucketPath = uploadDir + "/" + bucketName + "/";
+        bucketPath = bucketPath.replace("//", "/");
         File bucketFile = FileUtil.newFile(bucketPath);
         if (!bucketFile.exists()) {
             bucketFile.mkdirs();
@@ -115,20 +127,13 @@ public class LocalStorageClient implements LocalClient {
         return bulidFilePart(identifier, chunkNumber, partFileLocalUrl, Boolean.TRUE, FileUtil.getInputStream(partFileLocalUrl));
     }
 
+
     @Override
-    public void delete(String bucketName, String objectName) {
-        LocalClient.super.delete(bucketName, objectName);
-        if (StringUtils.isEmpty(objectName)) {
-            throw new BusinessException("文件删除失败,文件路径为空");
-        }
-        try {
-            Path file = Paths.get(getUploadDir()).resolve(Paths.get(objectName));
-            FileUtil.del(file);
-        } catch (Exception e) {
-            error("[Local] file delete failed: {}", e.getMessage());
-            throw new BusinessException("文件删除失败");
-        }
+    public List<InputStream> getInputStreams(String bucketName, String identifier, int totalChunks) {
+        List<InputStream> list = LocalOSSUtils.getSplitFileLocal(identifier, totalChunks);
+        return list;
     }
+
 
     @Override
     public String getUrl(String bucketName, String objectName) {
@@ -147,10 +152,4 @@ public class LocalStorageClient implements LocalClient {
         return url;
     }
 
-
-    @Override
-    public List<InputStream> getInputStreams(String bucketName, String identifier, int totalChunks) {
-        List<InputStream> list = LocalOSSUtils.getSplitFileLocal(identifier, totalChunks);
-        return list;
-    }
 }

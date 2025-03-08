@@ -23,7 +23,7 @@ public interface FileService {
 
     boolean uploadChunk(InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId);
 
-    boolean mergeChunks(String identifier, Long fileId);
+    boolean mergeChunks(String identifier, Long fileId, String fileName);
 
     boolean uploadMergeChunks(String identifier, int totalChunks, String fileName);
 }

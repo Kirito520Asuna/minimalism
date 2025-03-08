@@ -87,6 +87,13 @@ public class LocalOSSUtils {
         return ".part";
     }
 
+    public static String getMergeFilePath(String fileMainName) {
+        return getMergeDir() + fileMainName;
+    }
+    public static String getChunkDirPath(String identifier) {
+        return getChunkDir() + identifier + "/" ;
+    }
+
     /*===========================================================================================================================================================================================================================================*/
 
     /**

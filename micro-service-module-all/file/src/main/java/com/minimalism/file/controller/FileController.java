@@ -48,7 +48,7 @@ public class FileController implements AbstractBaseController {
     @Resource
     private FileService fileService;
 
-    @AviatorValids(values = {@AviatorValid(expression = "arg0.img && arg0.dir", errorMessage = "非法请求")})
+    @AviatorValids(values = {@AviatorValid(expression = "!(arg0.img && arg0.dir)", errorMessage = "非法请求")})
     @SysLog
     @Operation(summary = "分片上传 初始调用")
     @PostMapping("/upload/start")
@@ -63,7 +63,7 @@ public class FileController implements AbstractBaseController {
         Long fileId = fileInfo.getFileId();
         int totalChunks = (int) Math.ceil((double) size / chunkSize);
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        return ok(new FileUploadVo().setFileId(fileId).setTotalChunks(totalChunks));
+        return ok(new FileUploadVo().setFileId(fileId).setChunkNumber(chunkSize).setTotalChunks(totalChunks));
     }
 
 
@@ -92,10 +92,14 @@ public class FileController implements AbstractBaseController {
     @Operation(summary = "分片合并")
     @SysLog
     @PostMapping("/upload/merge")
+    @AviatorValids(values = {
+            @AviatorValid(expression = "!(fileId==null && (fileName==null||fileName==''))", errorMessage = "非法请求"),
+    })
     public Result<String> mergeChunks(
             @RequestParam("identifier") String identifier,
-            @RequestParam(value = "fileId", required = false) Long fileId) {
-        fileService.mergeChunks(identifier, fileId);
+            @RequestParam(value = "fileId", required = false) Long fileId,
+            @RequestParam(value = "fileName", required = false) String fileName) {
+        fileService.mergeChunks(identifier, fileId, fileName);
         return ok();
     }
 
@@ -107,7 +111,7 @@ public class FileController implements AbstractBaseController {
             @RequestParam("identifier") String identifier,
             @RequestParam("totalChunks") int totalChunks,
             @RequestParam("fileName") String fileName) {
-        fileService.uploadMergeChunks(identifier,totalChunks, fileName);
+        fileService.uploadMergeChunks(identifier, totalChunks, fileName);
         return ok();
     }
 

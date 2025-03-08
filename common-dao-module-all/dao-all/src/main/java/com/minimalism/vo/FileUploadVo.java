@@ -25,8 +25,10 @@ public class FileUploadVo implements Serializable {
     private Long fileId;
     @Schema(description = "分片数")
     private int totalChunks;
+    @Schema(description = "分片上限大小/每份")
+    private int chunkSize;
     @Schema(description = "起始分片编号")
-    private int chunkNumber = 0;
+    private int chunkNumber = 1;
     @Schema(description = "唯一标识")
     private String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
 }

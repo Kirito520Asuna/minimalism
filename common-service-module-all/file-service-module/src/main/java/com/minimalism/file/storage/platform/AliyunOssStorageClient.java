@@ -111,5 +111,4 @@ public class AliyunOssStorageClient implements AliyunClient {
         return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
-
 }

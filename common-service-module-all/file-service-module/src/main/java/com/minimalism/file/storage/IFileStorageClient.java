@@ -261,4 +261,16 @@ public interface IFileStorageClient extends AbstractBean {
         }
         return null;
     }
+
+    /**
+     * 合并分片文件
+     *
+     * @param inputStream
+     * @param fileMainName
+     * @param identifier
+     * @return
+     */
+   default FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
+       return uploadSharding(fileMainName, inputStream);
+   }
 }
