@@ -24,15 +24,16 @@ import java.util.UUID;
 public class UploadTest {
     public static void main(String[] args) {
         uploadChunk();
+        //System.err.println(FileUtil.mainName("G:\\zip-all\\tbtool.7z") + "." + FileUtil.getSuffix("G:\\zip-all\\tbtool.7z"));
     }
 
     @SneakyThrows
     public static void uploadChunk() {
         String host = "192.168.3.22";
 
-        String fileName = "tbtool.7z";
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
         String path = "G:\\zip-all\\tbtool.7z";
+        String fileName = FileUtil.mainName(path) + "." + FileUtil.getSuffix(path);
 
         FileUpDto fileUpDto = new FileUpDto();
         fileUpDto.setFileName(fileName)
@@ -47,7 +48,7 @@ public class UploadTest {
         String response = request.execute().body();
         JSONObject entries = JSONUtil.toBean(response, JSONObject.class);
         Integer code = (Integer) entries.getByPath("code");
-        if (!ObjectUtils.equals(Integer.valueOf(200),code)) {
+        if (!ObjectUtils.equals(Integer.valueOf(200), code)) {
             throw new RuntimeException(entries.getByPath("message").toString());
         }
         //JSONObject data = entries.getByPath("data", JSONObject.class);
