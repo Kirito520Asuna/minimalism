@@ -5,7 +5,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
-import com.minimalism.file.storage.StorageType;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.SneakyThrows;
@@ -15,7 +14,6 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -180,9 +178,10 @@ public class LocalOSSUtils {
      *
      * @param fileName
      * @param identifier
+     * @return url
      */
-    public static void mergeFileLocal(String fileName, String identifier) {
-        mergeFileLocal(getChunkDir(), getMergeDir(), fileName, identifier);
+    public static String mergeFileLocal(String fileName, String identifier) {
+       return mergeFileLocal(getChunkDir(), getMergeDir(), fileName, identifier);
     }
 
     /**
@@ -192,9 +191,10 @@ public class LocalOSSUtils {
      * @param mergeDir   合并文件夹
      * @param fileName   原始文件名
      * @param identifier 唯一值
+     * @return url
      */
     @SneakyThrows
-    public static void mergeFileLocal(String chunkDir, String mergeDir, String fileName, String identifier) {
+    public static String mergeFileLocal(String chunkDir, String mergeDir, String fileName, String identifier) {
         if (!chunkDir.endsWith("/")) {
             chunkDir = chunkDir + "/";
         }
@@ -236,6 +236,7 @@ public class LocalOSSUtils {
         }
         sortedChunks.add(chunkDirFile);
         sortedChunks.stream().forEach(FileUtil::del);
+        return FileUtil.getAbsolutePath(mergedFile);
     }
 
     /**

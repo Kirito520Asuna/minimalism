@@ -11,6 +11,7 @@ import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.utils.oss.LocalOSSUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 /**
  * @Author yan
@@ -95,7 +97,11 @@ public class LocalStorageClient implements IFileStorageClient {
     @Override
     public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
         IFileStorageClient.super.uploadSharding(bucketName, flieName, inputStream);
-        return null;
+        String identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
+        LocalOSSUtils.splitFileLocal(flieName,identifier,inputStream);
+        String fileLocal = LocalOSSUtils.mergeFileLocal(flieName, identifier);
+        Boolean aFalse = Boolean.FALSE;
+        return buildFileInfo(flieName, inputStream, fileLocal, aFalse, aFalse);
     }
 
     @Override
@@ -105,8 +111,8 @@ public class LocalStorageClient implements IFileStorageClient {
             throw new BusinessException("文件删除失败,文件路径为空");
         }
         try {
-            Path file = Paths.get(directory).resolve(Paths.get(objectName));
-            Files.delete(file);
+            Path file = Paths.get(getUploadDir()).resolve(Paths.get(objectName));
+            FileUtil.del(file);
         } catch (Exception e) {
             error("[Local] file delete failed: {}", e.getMessage());
             throw new BusinessException("文件删除失败");
@@ -116,12 +122,12 @@ public class LocalStorageClient implements IFileStorageClient {
     @Override
     public String getUrl(String bucketName, String objectName) {
         IFileStorageClient.super.getUrl(bucketName, objectName);
-        String url = null;
+        String url;
         // 如果配置了nginxUrl则使用nginxUrl
         if (StrUtil.isNotBlank(nginxUrl)) {
             url = nginxUrl.endsWith("/") ? nginxUrl + bucketName + "/" + objectName : nginxUrl + "/" + bucketName + "/" + objectName;
         } else {
-            url = endPoint + "/" + uploadDir + "/" + bucketName + "/" + objectName;
+            url = endPoint + "/" + LocalOSSUtils.getUploadDir() + "/" + bucketName + "/" + objectName;
         }
         url = url.replace("//", "/").replace(":/", "://");
         return url;
