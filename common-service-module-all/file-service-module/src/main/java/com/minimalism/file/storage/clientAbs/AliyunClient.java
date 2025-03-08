@@ -3,6 +3,7 @@ package com.minimalism.file.storage.clientAbs;
 import cn.hutool.core.collection.CollUtil;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @Date 2025/3/8 16:40:36
  * @Description
  */
+@Service
 public interface AliyunClient extends IFileStorageClient {
     List<StorageType> aliyunClientList = CollUtil.newArrayList(StorageType.aliyunOSS);
 

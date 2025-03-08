@@ -3,6 +3,7 @@ package com.minimalism.file.storage.clientAbs;
 import cn.hutool.core.collection.CollUtil;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @Date 2025/3/8 16:37:37
  * @Description
  */
+@Service
 public interface LocalClient extends IFileStorageClient {
     List<StorageType> localClientList = CollUtil.newArrayList(StorageType.local);
 
