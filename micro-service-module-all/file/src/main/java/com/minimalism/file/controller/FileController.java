@@ -93,7 +93,7 @@ public class FileController implements AbstractBaseController {
     @SysLog
     @PostMapping("/upload/merge")
     @AviatorValids(values = {
-            @AviatorValid(expression = "!(fileId==null && (fileName==null||fileName==''))", errorMessage = "非法请求"),
+            @AviatorValid(expression = "!(arg1==null && (arg2==null||arg2==''))", errorMessage = "非法请求"),
     })
     public Result<String> mergeChunks(
             @RequestParam("identifier") String identifier,
