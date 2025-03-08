@@ -83,22 +83,16 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String getPartPath(String identifier, Integer chunkNumber) {
-        FileProperties.LocalProperties local = SpringUtil.getBean(FileProperties.class).getLocal();
-        String uploadDir = ObjectUtils.defaultIfEmpty(local.getUploadDir(), "tmp/uploads/");
         // 使用HuTool保存分片文件
         String part = ".part";
         // 使用HuTool保存分片文件
-        String path = uploadDir + identifier + "/" + chunkNumber + part;
-        return path;
+        return FileFactory.getClient(StorageType.local).getChunkDirPath(identifier) + chunkNumber + part;
     }
 
     @Override
     public String getMergePartPath(String identifier, String fileName, String suffix) {
-        FileProperties.LocalProperties local = SpringUtil.getBean(FileProperties.class).getLocal();
-        String uploadDir = ObjectUtils.defaultIfEmpty(local.getUploadDir(), "tmp/uploads/");
         // 使用HuTool保存分片文件
-        String path = uploadDir + identifier + "/" + fileName + suffix;
-        return path;
+        return FileFactory.getClient(StorageType.local).getMergeFilePath(fileName + suffix);
     }
 
     @Override
@@ -165,6 +159,7 @@ public class FileServiceImpl implements FileService {
     public static void main(String[] args) {
         System.err.println(FileUtil.mainName("【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip"));
     }
+
     public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
         IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
         FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);

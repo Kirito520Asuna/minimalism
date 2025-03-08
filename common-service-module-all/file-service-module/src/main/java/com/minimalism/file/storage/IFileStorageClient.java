@@ -7,6 +7,7 @@ import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.utils.oss.LocalOSSUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
@@ -240,22 +241,24 @@ public interface IFileStorageClient extends AbstractBean {
 
     /**
      * 获取 {@link List<InputStream>}
+     *
      * @param identifier
      * @param totalChunks
      * @return
      */
-   default List<InputStream> getInputStreams(String identifier, int totalChunks){
-        return getInputStreams(null,identifier, totalChunks);
+    default List<InputStream> getInputStreams(String identifier, int totalChunks) {
+        return getInputStreams(null, identifier, totalChunks);
     }
 
     /**
      * 获取 {@link List<InputStream>}
+     *
      * @param bucketName
      * @param identifier
      * @param totalChunks
      * @return
      */
-    default List<InputStream> getInputStreams(String bucketName,String identifier, int totalChunks){
+    default List<InputStream> getInputStreams(String bucketName, String identifier, int totalChunks) {
         if (StrUtil.isBlank(bucketName)) {
             bucketName = getBucket();
         }
@@ -270,7 +273,25 @@ public interface IFileStorageClient extends AbstractBean {
      * @param identifier
      * @return
      */
-   default FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
-       return uploadSharding(fileMainName, inputStream);
-   }
+    default FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
+        return uploadSharding(fileMainName, inputStream);
+    }
+
+    /**
+     * 获取本地合并文件路径
+     * @param fileMainName
+     * @return
+     */
+    default String getMergeFilePath(String fileMainName) {
+        return LocalOSSUtils.getMergeFilePath(fileMainName);
+    }
+
+    /**
+     * 获取本地分片文件目录路径
+     * @param identifier
+     * @return
+     */
+    default String getChunkDirPath(String identifier) {
+        return LocalOSSUtils.getChunkDirPath(identifier);
+    }
 }
