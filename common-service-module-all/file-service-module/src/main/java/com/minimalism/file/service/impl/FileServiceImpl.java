@@ -126,7 +126,7 @@ public class FileServiceImpl implements FileService {
 
         if (fileId != null) {
             FileInfo fileInfo = fileInfoService.getById(fileId);
-            mainName = FileUtil.mainName(fileName);
+            mainName = FileUtil.mainName(fileInfo.getFileName());
             suffix = fileInfo.getSuffix();
             path = getMergePartPath(identifier, "tmp_" + mainName, suffix);
         } else {
@@ -162,6 +162,9 @@ public class FileServiceImpl implements FileService {
         return true;
     }
 
+    public static void main(String[] args) {
+        System.err.println(FileUtil.mainName("【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip"));
+    }
     public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
         IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
         FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
