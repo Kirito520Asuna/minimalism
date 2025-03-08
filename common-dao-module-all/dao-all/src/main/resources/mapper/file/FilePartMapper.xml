@@ -438,7 +438,7 @@
         <if test="fileId != null">
             and file_id = #{fileId}
         </if>
-        order part_sort asc
+        order by part_sort asc
     </select>
 
     <delete id="deleteByFileId">
