@@ -63,7 +63,7 @@ public class FileController implements AbstractBaseController {
         Long fileId = fileInfo.getFileId();
         int totalChunks = (int) Math.ceil((double) size / chunkSize);
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        return ok(new FileUploadVo().setFileId(fileId).setChunkNumber(chunkSize).setTotalChunks(totalChunks));
+        return ok(new FileUploadVo().setFileId(fileId).setChunkSize(chunkSize).setTotalChunks(totalChunks));
     }
 
 
