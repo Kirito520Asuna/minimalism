@@ -112,6 +112,7 @@ public class FileServiceImpl implements FileService {
 
     @SneakyThrows
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean mergeChunks(String identifier, Long fileId, String fileName) {
         ByteArrayOutputStream outputStream = mergeOutputStream(identifier, fileId);
         if (fileId == null) {
@@ -150,19 +151,23 @@ public class FileServiceImpl implements FileService {
             OutputStream fileOutputStream = FileUtil.getOutputStream(tmpFile);
             IoUtils.copy(inputStream, fileOutputStream);
             inputStream = FileUtil.getInputStream(path);
-            uploadMergeChunks(inputStream, fileMainName,identifier);
+            FileInfo fileInfo = uploadMergeChunks(inputStream, fileMainName, identifier);
+            if (fileId != null) {
+                fileInfoService.updateById(fileInfo.setFileId(fileId));
+            }
             mergeOk(identifier, fileId);
         } finally {
             FileUtil.del(path);
         }
         return true;
     }
-    public void uploadMergeChunks(InputStream inputStream, String fileMainName,String identifier) {
+
+    public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
         IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
-        client.uploadMergeChunks(inputStream,fileMainName,identifier);
-        SpringUtil.getBean(FileFactory.class).getClient(StorageType.local)
-                .uploadSharding("", fileMainName, inputStream);
+        FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
+        return fileInfo.setLocal(Boolean.TRUE).setName(FileUtil.mainName(fileInfo.getFileName()));
     }
+
     @Override
     public boolean uploadMergeChunks(String identifier, int totalChunks, String fileName) {
         IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
@@ -171,7 +176,6 @@ public class FileServiceImpl implements FileService {
 
         return false;
     }
-
 
 
 }
