@@ -2,7 +2,11 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.minimalism.dto.FileUpDto;
 import com.minimalism.utils.io.IoUtils;
+import com.minimalism.utils.object.ObjectUtils;
 import lombok.SneakyThrows;
 
 import java.io.InputStream;
@@ -24,28 +28,54 @@ public class UploadTest {
 
     @SneakyThrows
     public static void uploadChunk() {
-        String fileName = "【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip";
-        String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        String path = "G:\\zip-all\\【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip";
+        String host = "192.168.3.22";
+
+        String fileName = "tbtool.7z";
+        //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
+        String path = "G:\\zip-all\\tbtool.7z";
+
+        FileUpDto fileUpDto = new FileUpDto();
+        fileUpDto.setFileName(fileName)
+                .setDir(Boolean.FALSE).setImg(Boolean.FALSE)
+                .setType(FileUtil.getSuffix(path)).setSize(IoUtils.size(FileUtil.getInputStream(path)))
+                .setSuffix("." + FileUtil.getSuffix(path));
+
+        String format = String.format("http://%s:13600/file/file/upload/start", host);
+        HttpRequest request = HttpUtil.createPost(format);
+        request.body(JSONUtil.toJsonStr(fileUpDto));
+
+        String response = request.execute().body();
+        JSONObject entries = JSONUtil.toBean(response, JSONObject.class);
+        Integer code = (Integer) entries.getByPath("code");
+        if (!ObjectUtils.equals(Integer.valueOf(200),code)) {
+            throw new RuntimeException(entries.getByPath("message").toString());
+        }
+        //JSONObject data = entries.getByPath("data", JSONObject.class);
+        int chunkSize = (Integer) entries.getByPath("data.chunkSize");
+
+        int totalChunks = (Integer) entries.getByPath("data.totalChunks");
+        Long fileId = Long.valueOf((Integer) entries.getByPath("data.fileId"));
+        String identifier = (String) entries.getByPath("data.identifier");
 
         InputStream inputStream = FileUtil.getInputStream(path);
 
-        List<InputStream> streamList = IoUtils.splitInputStream(inputStream, 1024 * 1024);
+        List<InputStream> streamList = IoUtils.splitInputStream(inputStream, chunkSize);
 
-        String uploadUrl = "http://127.0.0.1:13600/file/file/upload/chunk";
+
+        String uploadUrl = String.format("http://%s:13600/file/file/upload/chunk", host);
         int chunkNumber = 1;
-        int totalChunks = streamList.size();
+        //totalChunks = streamList.size();
 
         for (InputStream input : streamList) {
-            uploadChunk(uploadUrl, identifier, chunkNumber, totalChunks, input);
+            uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks, input);
             chunkNumber++;
         }
 
-        String mergeUrl = "http://127.0.0.1:13600/file/file/upload/merge/chunks";
-        merge(mergeUrl, fileName, identifier,totalChunks);
+        String mergeUrl = String.format("http://%s:13600/file/file/upload/merge/chunks", host);
+        merge(mergeUrl, fileName, identifier, totalChunks);
     }
 
-    public static void uploadChunk(String url, String identifier, int chunkNumber, int totalChunks, InputStream inputStream) throws Exception {
+    public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, InputStream inputStream) throws Exception {
 
         // 使用 Hutool 的 HttpRequest 发送 POST 请求
         Map<String, Object> form = new HashMap<>();
@@ -56,10 +86,11 @@ public class UploadTest {
         // 使用 Hutool 创建 POST 请求，上传 multipart 表单数据
         HttpResponse response = HttpRequest.post(url)
                 //.form(form)
-                .form("file", IoUtils.toByteArray(inputStream),"file")
+                .form("file", IoUtils.toByteArray(inputStream), "file")
                 .form("chunkNumber", chunkNumber)
                 .form("totalChunks", totalChunks)
                 .form("identifier", identifier)
+                .form("fileId", fileId)
                 // 如果需要传 fileId 参数，可添加 .form("fileId", "12345")
                 .execute();
 
@@ -68,7 +99,7 @@ public class UploadTest {
 
     }
 
-    public static void merge(String url, String fileName, String identifier,int totalChunks) {
+    public static void merge(String url, String fileName, String identifier, int totalChunks) {
         System.err.println("Merging chunks...");
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", fileName);

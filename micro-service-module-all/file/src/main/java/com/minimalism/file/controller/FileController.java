@@ -57,7 +57,7 @@ public class FileController implements AbstractBaseController {
         CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
         fileInfoService.save(fileInfo);
 
-        int chunkSize = 10 * 1024 * 1024; // 每个分片大小为10MB
+        int chunkSize = 1 * 1024 * 1024; // 每个分片大小为1MB
 
         Long size = fileInfo.getSize();
         Long fileId = fileInfo.getFileId();
