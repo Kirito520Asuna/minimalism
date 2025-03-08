@@ -1,6 +1,7 @@
 package com.minimalism.file.storage.platform;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.minimalism.exception.GlobalConfigException;
@@ -30,12 +31,28 @@ import java.nio.charset.StandardCharsets;
  */
 @Service
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 public class AliyunOssStorageClient implements AliyunClient {
     private OSS client;
     private String endPoint;
     private String bucket;
+
+    public AliyunOssStorageClient() {
+        FileProperties.AliyunOssProperties config = SpringUtil.getBean(FileProperties.AliyunOssProperties.class);
+        try {
+            String accessKey = config.getAccessKey();
+            String secretKey = config.getSecretKey();
+            String endPoint = config.getEndpoint();
+            String bucket = config.getBucket();
+            this.client = new OSSClientBuilder().build(endPoint, accessKey, secretKey);
+            this.endPoint = endPoint;
+            this.bucket = bucket;
+        } catch (Exception e) {
+            error("[AliyunOSS] OSSClient build failed: {}", e.getMessage());
+            throw new GlobalConfigException("请检查阿里云OSS配置是否正确");
+        }
+    }
 
     public AliyunOssStorageClient(FileProperties.AliyunOssProperties config) {
         try {

@@ -2,6 +2,7 @@ package com.minimalism.file.storage.platform;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
@@ -32,7 +33,7 @@ import java.util.UUID;
  */
 @Service
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 public class LocalStorageClient implements LocalClient {
     private String directory;
@@ -40,6 +41,26 @@ public class LocalStorageClient implements LocalClient {
     private String nginxUrl;
     private String uploadDir;
 
+    public LocalStorageClient(){
+        FileProperties.LocalProperties config = SpringUtil.getBean(FileProperties.LocalProperties.class);
+        try {
+            String directory = config.getDirectory();
+            String endPoint = config.getEndPoint();
+            String nginxUrl = config.getNginxUrl();
+            String uploadDir = config.getUploadDir();
+            uploadDir = ObjectUtils.defaultIfEmpty(uploadDir, "tmp/upload");
+            if (!uploadDir.endsWith("/")) {
+                uploadDir = uploadDir + "/";
+            }
+            this.directory = directory;
+            this.endPoint = endPoint;
+            this.nginxUrl = nginxUrl;
+            this.uploadDir = uploadDir;
+        } catch (Exception e) {
+            error("[Local] LocalStorage build failed: {}", e.getMessage());
+            throw new GlobalConfigException("请检查本地存储配置是否正确");
+        }
+    }
     public LocalStorageClient(FileProperties.LocalProperties config) {
         try {
             String directory = config.getDirectory();

@@ -1,4 +1,4 @@
-package com.minimalism.file;
+package com.minimalism.file.beans;
 
 import com.minimalism.file.properties.FileProperties;
 import lombok.val;
