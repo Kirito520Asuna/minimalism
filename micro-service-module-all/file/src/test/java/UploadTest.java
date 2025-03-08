@@ -53,7 +53,7 @@ public class UploadTest {
         }
         //JSONObject data = entries.getByPath("data", JSONObject.class);
         int chunkSize = (Integer) entries.getByPath("data.chunkSize");
-
+        int chunkNumber = (Integer) entries.getByPath("data.chunkNumber");
         int totalChunks = (Integer) entries.getByPath("data.totalChunks");
         Long fileId = Long.valueOf((Integer) entries.getByPath("data.fileId"));
         String identifier = (String) entries.getByPath("data.identifier");
@@ -62,18 +62,15 @@ public class UploadTest {
 
         List<InputStream> streamList = IoUtils.splitInputStream(inputStream, chunkSize);
 
-
         String uploadUrl = String.format("http://%s:13600/file/file/upload/chunk", host);
-        int chunkNumber = 1;
-        //totalChunks = streamList.size();
 
         for (InputStream input : streamList) {
             uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks, input);
             chunkNumber++;
         }
 
-        String mergeUrl = String.format("http://%s:13600/file/file/upload/merge/chunks", host);
-        merge(mergeUrl, fileName, identifier, totalChunks);
+        String mergeUrl = String.format("http://%s:13600/file/file/upload/merge", host);
+        merge(mergeUrl, fileName, identifier, totalChunks,fileId);
     }
 
     public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, InputStream inputStream) throws Exception {
@@ -100,12 +97,13 @@ public class UploadTest {
 
     }
 
-    public static void merge(String url, String fileName, String identifier, int totalChunks) {
+    public static void merge(String url, String fileName, String identifier, int totalChunks,Long fileId) {
         System.err.println("Merging chunks...");
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", fileName);
         params.put("identifier", identifier);
         params.put("totalChunks", totalChunks);
+        params.put("fileId", fileId);
 
         HttpRequest request = HttpUtil.createPost(url);
         request.form(params);
