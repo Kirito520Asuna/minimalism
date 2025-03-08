@@ -136,7 +136,7 @@ public class LocalStorageClient implements LocalClient {
             bucketFile.mkdirs();
         }
         String identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
-        String fileLocal = LocalOSSUtils.uploadSharding(bucketName, identifier, inputStream);
+        String fileLocal = LocalOSSUtils.uploadSharding(flieName, identifier, inputStream);
         Boolean aFalse = Boolean.FALSE;
         return buildFileInfo(flieName, FileUtil.getInputStream(fileLocal), fileLocal, Boolean.TRUE, aFalse, aFalse);
     }

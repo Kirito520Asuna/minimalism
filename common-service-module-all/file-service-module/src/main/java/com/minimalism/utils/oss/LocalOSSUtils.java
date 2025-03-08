@@ -90,8 +90,9 @@ public class LocalOSSUtils {
     public static String getMergeFilePath(String fileMainName) {
         return getMergeDir() + fileMainName;
     }
+
     public static String getChunkDirPath(String identifier) {
-        return getChunkDir() + identifier + "/" ;
+        return getChunkDir() + identifier + "/";
     }
 
     /*===========================================================================================================================================================================================================================================*/
@@ -141,7 +142,7 @@ public class LocalOSSUtils {
      */
     @SneakyThrows
     public static String uploadSharding(String fileName, String identifier, InputStream input) {
-        splitFileLocal(fileName, identifier, input);
+        splitFileLocal(identifier, input);
         String fileLocal = mergeFileLocal(fileName, identifier);
         return FileUtil.getAbsolutePath(fileLocal);
     }
@@ -166,7 +167,7 @@ public class LocalOSSUtils {
     @SneakyThrows
     public static void splitFileLocal(String chunkDir, String identifier, InputStream input) {
         if (StrUtil.isBlank(chunkDir)) {
-            splitFileLocal(identifier,input);
+            chunkDir = getChunkDir();
         }
         if (!chunkDir.endsWith("/")) {
             chunkDir = chunkDir + "/";
@@ -344,6 +345,7 @@ public class LocalOSSUtils {
 
     /**
      * 获取分块文件路径
+     *
      * @param identifier
      * @param totalChunks
      * @return
@@ -352,7 +354,7 @@ public class LocalOSSUtils {
         List<InputStream> streamList = CollUtil.newArrayList();
         List<FilePart> fileParts = getFileParts(identifier, null);
         streamList.addAll(fileParts.stream().map(filePart -> FileUtil.getInputStream(filePart.getLocalResource())).collect(Collectors.toList()));
-        if (!ObjectUtils.equals(totalChunks,streamList.size())){
+        if (!ObjectUtils.equals(totalChunks, streamList.size())) {
             throw new GlobalCustomException("文件分块数量不匹配");
         }
         return streamList;
