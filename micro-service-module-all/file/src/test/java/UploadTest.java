@@ -29,10 +29,10 @@ public class UploadTest {
 
     @SneakyThrows
     public static void uploadChunk() {
-        String host = "192.168.3.22";
+        String host = "127.0.0.1";
 
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        String path = "G:\\zip-all\\tbtool.7z";
+        String path = "G:\\zip-all\\【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip";
         String fileName = FileUtil.mainName(path) + "." + FileUtil.getSuffix(path);
 
         FileUpDto fileUpDto = new FileUpDto();

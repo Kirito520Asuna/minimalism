@@ -147,7 +147,10 @@ public class FileServiceImpl implements FileService {
             inputStream = FileUtil.getInputStream(path);
             FileInfo fileInfo = uploadMergeChunks(inputStream, fileMainName, identifier);
             if (fileId != null) {
-                fileInfoService.updateById(fileInfo.setFileId(fileId));
+                FileInfo fileInfoById = fileInfoService.getById(fileId);
+                fileInfoById.setUrl(fileInfo.getUrl())
+                        .setLocal(Boolean.TRUE);
+                fileInfoService.updateById(fileInfoById);
             }
             mergeOk(identifier, fileId);
         } finally {
