@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.utils.io.IoUtils;
+import com.minimalism.utils.object.ObjectUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
@@ -89,7 +90,7 @@ public interface IFileStorageClient extends AbstractBean {
      * @param img
      * @return
      */
-    default FileInfo buildFileInfo(String flieName, InputStream inputStream, String url, Boolean dir, Boolean img) {
+    default FileInfo buildFileInfo(String flieName, InputStream inputStream, String url, Boolean local,Boolean dir, Boolean img) {
         String mainName = FileUtil.mainName(flieName);
         String type = FileUtil.extName(flieName);
         long size = IoUtils.size(inputStream);
@@ -99,6 +100,7 @@ public interface IFileStorageClient extends AbstractBean {
                 .setDir(dir)
                 .setFileName(mainName)
                 .setImg(img)
+                .setLocal(ObjectUtils.defaultIfEmpty(local,Boolean.FALSE))
                 .setSuffix("." + type)
                 .setType(type)
                 .setName(mainName)

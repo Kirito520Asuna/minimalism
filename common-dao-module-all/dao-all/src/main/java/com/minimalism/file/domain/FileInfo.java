@@ -116,5 +116,7 @@ public class FileInfo extends BaseEntity implements Serializable {
 
     public static final String COL_IS_DIR = "is_dir";
 
+    public static final String COL_IS_LOCAL = "is_local";
+
     public static final String COL_PARENT_ID = "parent_id";
 }

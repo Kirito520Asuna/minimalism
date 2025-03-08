@@ -50,9 +50,9 @@ public class FileProperties {
 
         private String directory = "local";
 
-        private String endPoint = "http://127.0.0.1:80";
+        private String endPoint = "";
 
-        private String nginxUrl;
+        private String nginxUrl = "";
         private String uploadDir = "tmp/uploads";
 
         public String getUploadDir() {

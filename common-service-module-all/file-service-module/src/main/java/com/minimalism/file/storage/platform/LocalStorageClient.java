@@ -84,24 +84,23 @@ public class LocalStorageClient implements IFileStorageClient {
     @Override
     public FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
         IFileStorageClient.super.upload(bucketName, flieName, inputStream);
-        String path = uploadDir + "/" + bucketName + "/" + flieName;
-        path = path.replace("//", "/");
-
-        IoUtils.copy(inputStream, FileUtil.getOutputStream(FileUtil.newFile(path)));
-
-        String url = getUrl(bucketName, flieName);
+        String uploadUrl = LocalOSSUtils.upload(flieName, inputStream);
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, url, aFalse, aFalse);
+        return buildFileInfo(flieName, FileUtil.getInputStream(uploadUrl), uploadUrl, Boolean.TRUE, aFalse, aFalse);
     }
 
     @Override
     public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
         IFileStorageClient.super.uploadSharding(bucketName, flieName, inputStream);
+        String bucketPath = uploadDir + "/" + bucketName + "/";
+        File bucketFile = FileUtil.newFile(bucketPath);
+        if (!bucketFile.exists()) {
+            bucketFile.mkdirs();
+        }
         String identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
-        LocalOSSUtils.splitFileLocal(flieName,identifier,inputStream);
-        String fileLocal = LocalOSSUtils.mergeFileLocal(flieName, identifier);
+        String fileLocal = LocalOSSUtils.uploadSharding(bucketName, identifier, inputStream);
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, fileLocal, aFalse, aFalse);
+        return buildFileInfo(flieName, FileUtil.getInputStream(fileLocal), fileLocal, Boolean.TRUE, aFalse, aFalse);
     }
 
     @Override
@@ -126,12 +125,14 @@ public class LocalStorageClient implements IFileStorageClient {
         // 如果配置了nginxUrl则使用nginxUrl
         if (StrUtil.isNotBlank(nginxUrl)) {
             url = nginxUrl.endsWith("/") ? nginxUrl + bucketName + "/" + objectName : nginxUrl + "/" + bucketName + "/" + objectName;
+        } else if (StrUtil.isBlank(endPoint)) {
+            //表示直接使用服务器地址
+            url = "";
         } else {
             url = endPoint + "/" + LocalOSSUtils.getUploadDir() + "/" + bucketName + "/" + objectName;
         }
         url = url.replace("//", "/").replace(":/", "://");
         return url;
     }
-
 
 }

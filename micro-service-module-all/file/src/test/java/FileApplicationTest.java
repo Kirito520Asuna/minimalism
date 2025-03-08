@@ -22,8 +22,9 @@ public class FileApplicationTest {
         String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
         String path = "G:\\Linux\\sh\\docker.sh";
         InputStream inputStream = FileUtil.getInputStream(path);
-        LocalOSSUtils.splitFileLocal(fileName, identifier, inputStream);
-        LocalOSSUtils.mergeFileLocal(fileName, identifier);
+        LocalOSSUtils.uploadSharding(fileName, identifier, inputStream);
+        //LocalOSSUtils.splitFileLocal(fileName, identifier, inputStream);
+        //LocalOSSUtils.mergeFileLocal(fileName, identifier);
     }
 
     @SneakyThrows

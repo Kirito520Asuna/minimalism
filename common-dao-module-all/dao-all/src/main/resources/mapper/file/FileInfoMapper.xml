@@ -13,6 +13,7 @@
     <result column="size" jdbcType="BIGINT" property="size" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="is_dir" jdbcType="BOOLEAN" property="dir" />
+    <result column="is_local" jdbcType="BOOLEAN" property="local" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -22,8 +23,8 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    file_id, url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, parent_id, 
-    create_by, create_time, update_by, update_time, remark
+    file_id, url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, 
+    parent_id, create_by, create_time, update_by, update_time, remark
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated-->
@@ -67,6 +68,11 @@
       <trim prefix="is_dir = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.dir,jdbcType=BOOLEAN}
+        </foreach>
+      </trim>
+      <trim prefix="is_local = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.local,jdbcType=BOOLEAN}
         </foreach>
       </trim>
       <trim prefix="parent_id = case" suffix="end,">
@@ -165,6 +171,13 @@
           </if>
         </foreach>
       </trim>
+      <trim prefix="is_local = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.local != null">
+            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.local,jdbcType=BOOLEAN}
+          </if>
+        </foreach>
+      </trim>
       <trim prefix="parent_id = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           <if test="item.parentId != null">
@@ -216,29 +229,31 @@
   <insert id="batchInsert" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
-    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, parent_id, create_by, 
-      create_time, update_by, update_time, remark)
+    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
+      create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
         #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, 
-        #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.local,jdbcType=BOOLEAN}, 
+        #{item.parentId,jdbcType=BIGINT}, #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertOrUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
-    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, parent_id, create_by, 
-      create_time, update_by, update_time, remark)
+    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
+      create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
         #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, 
-        #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.local,jdbcType=BOOLEAN}, 
+        #{item.parentId,jdbcType=BIGINT}, #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
+        )
     </foreach>
     on duplicate key update 
     url=values(url),
@@ -249,6 +264,7 @@
     size=values(size),
     type=values(type),
     is_dir=values(is_dir),
+    is_local=values(is_local),
     parent_id=values(parent_id),
     create_by=values(create_by),
     create_time=values(create_time),
@@ -292,6 +308,9 @@
         <if test="item.dir != null">
           is_dir = #{item.dir,jdbcType=BOOLEAN},
         </if>
+        <if test="item.local != null">
+          is_local = #{item.local,jdbcType=BOOLEAN},
+        </if>
         <if test="item.parentId != null">
           parent_id = #{item.parentId,jdbcType=BIGINT},
         </if>
@@ -317,8 +336,8 @@
   <insert id="batchInsertSelectiveUseDefaultForNull" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
-    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, parent_id, create_by, 
-      create_time, update_by, update_time, remark)
+    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
+      create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (
@@ -388,6 +407,15 @@
       <choose>
         <when test="item.dir != null">
           #{item.dir,jdbcType=BOOLEAN},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.local != null">
+          #{item.local,jdbcType=BOOLEAN},
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -466,6 +494,7 @@
       `size`,
       `type`,
       is_dir,
+      is_local,
       parent_id,
       create_by,
       create_time,
@@ -486,6 +515,7 @@
       #{size,jdbcType=BIGINT},
       #{type,jdbcType=VARCHAR},
       #{dir,jdbcType=BOOLEAN},
+      #{local,jdbcType=BOOLEAN},
       #{parentId,jdbcType=BIGINT},
       #{createBy,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
@@ -506,6 +536,7 @@
       `size` = #{size,jdbcType=BIGINT},
       `type` = #{type,jdbcType=VARCHAR},
       is_dir = #{dir,jdbcType=BOOLEAN},
+      is_local = #{local,jdbcType=BOOLEAN},
       parent_id = #{parentId,jdbcType=BIGINT},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -544,6 +575,9 @@
       </if>
       <if test="dir != null">
         is_dir,
+      </if>
+      <if test="local != null">
+        is_local,
       </if>
       <if test="parentId != null">
         parent_id,
@@ -593,6 +627,9 @@
       <if test="dir != null">
         #{dir,jdbcType=BOOLEAN},
       </if>
+      <if test="local != null">
+        #{local,jdbcType=BOOLEAN},
+      </if>
       <if test="parentId != null">
         #{parentId,jdbcType=BIGINT},
       </if>
@@ -640,6 +677,9 @@
       </if>
       <if test="dir != null">
         is_dir = #{dir,jdbcType=BOOLEAN},
+      </if>
+      <if test="local != null">
+        is_local = #{local,jdbcType=BOOLEAN},
       </if>
       <if test="parentId != null">
         parent_id = #{parentId,jdbcType=BIGINT},

@@ -96,7 +96,7 @@ public class AliyunOssStorageClient implements IFileStorageClient {
         IFileStorageClient.super.upload(bucketName, flieName, inputStream);
         String url = AliyunOSSUtils.uploadOss(client, bucketName, flieName, inputStream);
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, url,aFalse,aFalse);
+        return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
     @SneakyThrows
@@ -106,7 +106,7 @@ public class AliyunOssStorageClient implements IFileStorageClient {
         String url = AliyunOSSUtils.uploadShardingOss(client, bucketName, flieName, inputStream);
 
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, url,aFalse,aFalse);
+        return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
 

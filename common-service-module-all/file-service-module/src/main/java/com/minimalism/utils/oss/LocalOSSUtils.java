@@ -2,6 +2,7 @@ package com.minimalism.utils.oss;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
@@ -86,6 +87,56 @@ public class LocalOSSUtils {
     /*===========================================================================================================================================================================================================================================*/
 
     /**
+     * 上传文件
+     *
+     * @param flieName
+     * @param inputStream
+     * @return
+     */
+    public static String upload(String flieName, InputStream inputStream) {
+        return upload(null, flieName, inputStream);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param bucketName
+     * @param flieName
+     * @param inputStream
+     */
+    @SneakyThrows
+    public static String upload(String bucketName, String flieName, InputStream inputStream) {
+        if (StrUtil.isBlank(bucketName)) {
+            bucketName = "";
+        }
+        String bucketPath = getUploadDir() + "/" + bucketName + "/";
+        bucketPath = bucketPath.replace("//", "/");
+
+        File bucketFile = FileUtil.newFile(bucketPath);
+        if (!bucketFile.exists()) {
+            bucketFile.mkdirs();
+        }
+        File file = FileUtil.newFile(bucketPath + flieName);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        IoUtils.copy(inputStream, FileUtil.getOutputStream(file));
+        return FileUtil.getAbsolutePath(file);
+    }
+
+    /**
+     * 分片上传
+     *
+     * @return
+     */
+    @SneakyThrows
+    public static String uploadSharding(String fileName, String identifier, InputStream input) {
+        splitFileLocal(fileName, identifier, input);
+        String fileLocal = mergeFileLocal(fileName, identifier);
+        return FileUtil.getAbsolutePath(fileLocal);
+    }
+
+    /**
      * 将指定文件拆分成若干个分块文件
      *
      * @param fileName
@@ -144,8 +195,8 @@ public class LocalOSSUtils {
      * @param identifier
      * @param input
      */
-    public static void splitChunkNumberFileLocal(int chunkNumber, String fileName, String identifier, InputStream input) {
-        splitChunkNumberFileLocal(getChunkDir(), chunkNumber, fileName, identifier, input);
+    public static String splitChunkNumberFileLocal(int chunkNumber, String fileName, String identifier, InputStream input) {
+        return splitChunkNumberFileLocal(getChunkDir(), chunkNumber, fileName, identifier, input);
     }
 
     /**
@@ -158,7 +209,7 @@ public class LocalOSSUtils {
      * @param input
      */
     @SneakyThrows
-    public static void splitChunkNumberFileLocal(String chunkDir, int chunkNumber, String fileName, String identifier, InputStream input) {
+    public static String splitChunkNumberFileLocal(String chunkDir, int chunkNumber, String fileName, String identifier, InputStream input) {
         // 创建分块存放目录：CHUNK_DIR + identifier
         String chunkDirPath = chunkDir + identifier;
         File chunkDirFile = FileUtil.newFile(chunkDirPath);
@@ -171,6 +222,7 @@ public class LocalOSSUtils {
         }
         BufferedOutputStream outputStream = FileUtil.getOutputStream(tempFile);
         IoUtils.copy(input, outputStream);
+        return FileUtil.getAbsolutePath(tempFile);
     }
 
     /**
@@ -181,7 +233,7 @@ public class LocalOSSUtils {
      * @return url
      */
     public static String mergeFileLocal(String fileName, String identifier) {
-       return mergeFileLocal(getChunkDir(), getMergeDir(), fileName, identifier);
+        return mergeFileLocal(getChunkDir(), getMergeDir(), fileName, identifier);
     }
 
     /**
