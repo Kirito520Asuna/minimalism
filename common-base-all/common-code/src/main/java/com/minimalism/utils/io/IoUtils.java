@@ -1,10 +1,13 @@
 package com.minimalism.utils.io;
 
 import cn.hutool.core.io.IoUtil;
+import com.minimalism.exception.GlobalCustomException;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,5 +88,26 @@ public class IoUtils extends IoUtil {
     @SneakyThrows
     public static ByteArrayInputStream mergeInputStream(List<InputStream> inputStreams) {
        return new ByteArrayInputStream(toByteArray(inputStreams));
+    }
+
+    /**
+     *
+     * @param list
+     * @return
+     */
+    @SneakyThrows
+    public static ByteArrayOutputStream merge(List<InputStream> list) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (ByteArrayOutputStream outputStream = out) {
+            for (InputStream chunk : list) {
+                try (InputStream inputStream = chunk) {
+                    IoUtils.copy(inputStream, outputStream);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new GlobalCustomException("合并错误！");
+        }
+        return out;
     }
 }

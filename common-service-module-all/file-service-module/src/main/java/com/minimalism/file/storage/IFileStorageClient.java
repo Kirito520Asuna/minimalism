@@ -10,6 +10,7 @@ import com.minimalism.utils.object.ObjectUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @Author yan
@@ -237,4 +238,27 @@ public interface IFileStorageClient extends AbstractBean {
         return url.replace("//", "/").replace(":/", "://");
     }
 
+    /**
+     * 获取 {@link List<InputStream>}
+     * @param identifier
+     * @param totalChunks
+     * @return
+     */
+   default List<InputStream> getInputStreams(String identifier, int totalChunks){
+        return getInputStreams(null,identifier, totalChunks);
+    }
+
+    /**
+     * 获取 {@link List<InputStream>}
+     * @param bucketName
+     * @param identifier
+     * @param totalChunks
+     * @return
+     */
+    default List<InputStream> getInputStreams(String bucketName,String identifier, int totalChunks){
+        if (StrUtil.isBlank(bucketName)) {
+            bucketName = getBucket();
+        }
+        return null;
+    }
 }

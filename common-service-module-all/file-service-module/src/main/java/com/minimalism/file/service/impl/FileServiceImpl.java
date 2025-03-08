@@ -12,8 +12,8 @@ import com.minimalism.file.service.FilePartService;
 import com.minimalism.file.service.FileService;
 import com.minimalism.file.storage.FileFactory;
 import com.minimalism.file.storage.IFileStorageClient;
-import com.minimalism.file.storage.IFileStorageProvider;
 import com.minimalism.file.storage.StorageType;
+import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
 import org.springframework.stereotype.Service;
@@ -69,17 +69,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId) {
         List<InputStream> list = getPartInputStreamList(identifier, fileId);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try (ByteArrayOutputStream outputStream = out) {
-            for (InputStream chunk : list) {
-                try (InputStream inputStream = chunk) {
-                    IoUtil.copy(inputStream, outputStream);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new GlobalCustomException("合并错误！");
-        }
+        ByteArrayOutputStream out = IoUtils.merge(list);
         return out;
     }
 
@@ -112,7 +102,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean uploadChunk(String path, InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId) {
+    public boolean uploadChunk(InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId) {
         IFileStorageClient client = FileFactory.getClient(StorageType.local);
         FilePart filePart = client.uploadShardingChunkNumber(chunkNumber, identifier, inputStream).setFileId(fileId);
         filePartService.save(filePart);
@@ -150,9 +140,20 @@ public class FileServiceImpl implements FileService {
         return true;
     }
 
+    @Override
+    public boolean uploadMergeChunks(String identifier, int totalChunks, String fileName) {
+        IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
+        client.getInputStreams(identifier, totalChunks);
+        for (int i = 1; i <= totalChunks; i++) {
+            String partPath = getPartPath(identifier, i);
+            BufferedInputStream inputStream = FileUtil.getInputStream(partPath);
+        }
+        return false;
+    }
+
     public void uploadMergeChunks(InputStream inputStream, String fileMainName) {
-        SpringUtil.getBean(IFileStorageProvider.class).getStorage()
-                .uploadSharding("file", fileMainName, inputStream);
+        SpringUtil.getBean(FileFactory.class).getClient(StorageType.local)
+                .uploadSharding("", fileMainName, inputStream);
     }
 
 }

@@ -19,6 +19,7 @@ import com.minimalism.file.service.FilePartService;
 import com.minimalism.file.service.FileService;
 import com.minimalism.result.Result;
 import com.minimalism.utils.bean.CustomBeanUtils;
+import com.minimalism.utils.io.IoUtils;
 import com.minimalism.vo.FileUploadVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -69,15 +70,14 @@ public class FileController implements AbstractBaseController {
     @Operation(summary = "分片上传")
     @SysLog
     @PostMapping("/upload/chunk")
-    public Result<String> uploadChunkV1(@RequestParam("file") MultipartFile file,
+    public Result<String> uploadChunkV1(@RequestPart("file") MultipartFile file,
                                         @RequestParam("chunkNumber") int chunkNumber,
                                         @RequestParam("totalChunks") int totalChunks,
                                         @RequestParam(value = "fileId", required = false) Long fileId,
                                         @RequestParam("identifier") String identifier) {
-        String path = fileService.getPartPath(identifier, chunkNumber);
         try {
             InputStream inputStream = file.getInputStream();
-            boolean uploadChunk = fileService.uploadChunk(path, inputStream, identifier, chunkNumber, totalChunks, fileId);
+            boolean uploadChunk = fileService.uploadChunk(inputStream, identifier, chunkNumber, totalChunks, fileId);
             if (!uploadChunk) {
                 throw new GlobalCustomException("Upload failed");
             }
@@ -96,6 +96,18 @@ public class FileController implements AbstractBaseController {
             @RequestParam("identifier") String identifier,
             @RequestParam(value = "fileId", required = false) Long fileId) {
         fileService.mergeChunks(identifier, fileId);
+        return ok();
+    }
+
+    @SneakyThrows
+    @Operation(summary = "(纯技术)分片合并")
+    @SysLog
+    @PostMapping("/upload/merge/chunks")
+    public Result<String> uploadMergeChunks(
+            @RequestParam("identifier") String identifier,
+            @RequestParam("totalChunks") int totalChunks,
+            @RequestParam("fileName") String fileName) {
+        fileService.uploadMergeChunks(identifier,totalChunks, fileName);
         return ok();
     }
 

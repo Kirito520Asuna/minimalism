@@ -1,17 +1,10 @@
 package com.minimalism.file.service;
 
-import cn.hutool.core.io.FileUtil;
-import com.minimalism.exception.GlobalCustomException;
-import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author yan
@@ -28,7 +21,9 @@ public interface FileService {
 
     String getMergePartPath(String identifier, String fileName, String suffix);
 
-    boolean uploadChunk(String path, InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId);
+    boolean uploadChunk(InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId);
 
     boolean mergeChunks(String identifier, Long fileId);
+
+    boolean uploadMergeChunks(String identifier, int totalChunks, String fileName);
 }

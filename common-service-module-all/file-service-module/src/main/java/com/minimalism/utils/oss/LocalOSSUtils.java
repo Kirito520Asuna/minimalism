@@ -1,9 +1,11 @@
 package com.minimalism.utils.oss;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.utils.io.IoUtils;
@@ -12,6 +14,7 @@ import lombok.SneakyThrows;
 import org.springframework.core.env.Environment;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -329,4 +332,19 @@ public class LocalOSSUtils {
         return fileParts;
     }
 
+    /**
+     * 获取分块文件路径
+     * @param identifier
+     * @param totalChunks
+     * @return
+     */
+    public static List<InputStream> getSplitFileLocal(String identifier, int totalChunks) {
+        List<InputStream> streamList = CollUtil.newArrayList();
+        List<FilePart> fileParts = getFileParts(identifier, null);
+        streamList.addAll(fileParts.stream().map(filePart -> FileUtil.getInputStream(filePart.getLocalResource())).collect(Collectors.toList()));
+        if (!ObjectUtils.equals(totalChunks,streamList.size())){
+            throw new GlobalCustomException("文件分块数量不匹配");
+        }
+        return streamList;
+    }
 }
