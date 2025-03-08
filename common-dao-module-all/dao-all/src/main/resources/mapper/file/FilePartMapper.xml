@@ -431,7 +431,7 @@
   </insert>
 
     <select id="getPartList" resultType="com.minimalism.vo.PartVo">
-        select url, local_resource localResource, is_local `local`,
+        select url, local_resource localResource, is_local `local`
         from file_part
         where
         part_code = #{identifier}
