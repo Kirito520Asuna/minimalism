@@ -58,7 +58,7 @@ public class FileController implements AbstractBaseController {
         fileInfoService.save(fileInfo);
 
         int chunkSize = 10 * 1024 * 1024; // 每个分片大小为100MB
-        chunkSize = 10485760;
+        //chunkSize = 10485760;
         Long size = fileInfo.getSize();
         Long fileId = fileInfo.getFileId();
         int totalChunks = (int) Math.ceil((double) size / chunkSize);
