@@ -18,9 +18,9 @@ import java.util.*;
 public class FileApplicationTest {
     @Test
     void test() {
-        String fileName = "docker.sh";
+        String fileName = "【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip";
         String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        String path = "G:\\Linux\\sh\\docker.sh";
+        String path = "G:\\zip-all\\【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip";
         InputStream inputStream = FileUtil.getInputStream(path);
         LocalOSSUtils.uploadSharding(fileName, identifier, inputStream);
         //LocalOSSUtils.splitFileLocal(fileName, identifier, inputStream);

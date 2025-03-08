@@ -19,6 +19,15 @@ import java.util.Map;
 public class FileFactory implements BeanFactoryAware, InitializingBean, AbstractBean {
     private ConfigurableListableBeanFactory beanFactory;
     private static List<IFileStorageClient> storages = CollUtil.newArrayList();
+    public static IFileStorageClient getClient(StorageType storageType) {
+        for (IFileStorageClient storage : storages) {
+            if (storage.support(storageType)) {
+                return storage;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;

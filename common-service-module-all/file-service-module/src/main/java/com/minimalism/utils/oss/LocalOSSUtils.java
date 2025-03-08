@@ -139,24 +139,22 @@ public class LocalOSSUtils {
     /**
      * 将指定文件拆分成若干个分块文件
      *
-     * @param fileName
      * @param identifier
      * @param input
      */
-    public static void splitFileLocal(String fileName, String identifier, InputStream input) {
-        splitFileLocal(getChunkDir(), fileName, identifier, input);
+    public static void splitFileLocal(String identifier, InputStream input) {
+        splitFileLocal(getChunkDir(), identifier, input);
     }
 
     /**
      * 将指定文件拆分成若干个分块文件
      *
      * @param chunkDir   分块文件存放目录
-     * @param fileName   原始文件名
      * @param identifier 唯一值
      * @param input      原始文件输入流
      */
     @SneakyThrows
-    public static void splitFileLocal(String chunkDir, String fileName, String identifier, InputStream input) {
+    public static void splitFileLocal(String chunkDir, String identifier, InputStream input) {
         if (!chunkDir.endsWith("/")) {
             chunkDir = chunkDir + "/";
         }
@@ -191,12 +189,11 @@ public class LocalOSSUtils {
      * 上传单个分片
      *
      * @param chunkNumber
-     * @param fileName
      * @param identifier
      * @param input
      */
-    public static String splitChunkNumberFileLocal(int chunkNumber, String fileName, String identifier, InputStream input) {
-        return splitChunkNumberFileLocal(getChunkDir(), chunkNumber, fileName, identifier, input);
+    public static String splitChunkNumberFileLocal(int chunkNumber, String identifier, InputStream input) {
+        return splitChunkNumberFileLocal(getChunkDir(), chunkNumber, identifier, input);
     }
 
     /**
@@ -204,12 +201,11 @@ public class LocalOSSUtils {
      *
      * @param chunkDir
      * @param chunkNumber
-     * @param fileName
      * @param identifier
      * @param input
      */
     @SneakyThrows
-    public static String splitChunkNumberFileLocal(String chunkDir, int chunkNumber, String fileName, String identifier, InputStream input) {
+    public static String splitChunkNumberFileLocal(String chunkDir, int chunkNumber, String identifier, InputStream input) {
         // 创建分块存放目录：CHUNK_DIR + identifier
         String chunkDirPath = chunkDir + identifier;
         File chunkDirFile = FileUtil.newFile(chunkDirPath);

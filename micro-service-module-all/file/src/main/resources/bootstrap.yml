@@ -25,6 +25,7 @@ logstash:
 
 file:
   properties:
+    t
     local:
       uploadDir: ../../tmp/uploads
 

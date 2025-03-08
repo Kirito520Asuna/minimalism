@@ -6,9 +6,11 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
+import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
+import com.minimalism.file.storage.clientAbs.LocalClient;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
@@ -33,7 +35,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocalStorageClient implements IFileStorageClient {
+public class LocalStorageClient implements LocalClient {
     private String directory;
     private String endPoint;
     private String nginxUrl;
@@ -83,7 +85,7 @@ public class LocalStorageClient implements IFileStorageClient {
 
     @Override
     public FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
-        IFileStorageClient.super.upload(bucketName, flieName, inputStream);
+        LocalClient.super.upload(bucketName, flieName, inputStream);
         String uploadUrl = LocalOSSUtils.upload(flieName, inputStream);
         Boolean aFalse = Boolean.FALSE;
         return buildFileInfo(flieName, FileUtil.getInputStream(uploadUrl), uploadUrl, Boolean.TRUE, aFalse, aFalse);
@@ -91,7 +93,7 @@ public class LocalStorageClient implements IFileStorageClient {
 
     @Override
     public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
-        IFileStorageClient.super.uploadSharding(bucketName, flieName, inputStream);
+        LocalClient.super.uploadSharding(bucketName, flieName, inputStream);
         String bucketPath = uploadDir + "/" + bucketName + "/";
         File bucketFile = FileUtil.newFile(bucketPath);
         if (!bucketFile.exists()) {
@@ -104,8 +106,15 @@ public class LocalStorageClient implements IFileStorageClient {
     }
 
     @Override
+    public FilePart uploadShardingChunkNumber(String bucketName, int chunkNumber, String identifier, InputStream inputStream) {
+        LocalClient.super.uploadShardingChunkNumber(bucketName, chunkNumber, identifier, inputStream);
+        String partFileLocalUrl = LocalOSSUtils.splitChunkNumberFileLocal(chunkNumber, identifier, inputStream);
+        return bulidFilePart(identifier, chunkNumber, partFileLocalUrl, Boolean.TRUE, FileUtil.getInputStream(partFileLocalUrl));
+    }
+
+    @Override
     public void delete(String bucketName, String objectName) {
-        IFileStorageClient.super.delete(bucketName, objectName);
+        LocalClient.super.delete(bucketName, objectName);
         if (StringUtils.isEmpty(objectName)) {
             throw new BusinessException("文件删除失败,文件路径为空");
         }
@@ -120,7 +129,7 @@ public class LocalStorageClient implements IFileStorageClient {
 
     @Override
     public String getUrl(String bucketName, String objectName) {
-        IFileStorageClient.super.getUrl(bucketName, objectName);
+        LocalClient.super.getUrl(bucketName, objectName);
         String url;
         // 如果配置了nginxUrl则使用nginxUrl
         if (StrUtil.isNotBlank(nginxUrl)) {

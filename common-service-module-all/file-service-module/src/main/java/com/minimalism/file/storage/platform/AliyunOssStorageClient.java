@@ -6,8 +6,8 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.minimalism.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.properties.FileProperties;
-import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
+import com.minimalism.file.storage.clientAbs.AliyunClient;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.oss.AliyunOSSUtils;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ import java.nio.charset.StandardCharsets;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AliyunOssStorageClient implements IFileStorageClient {
+public class AliyunOssStorageClient implements AliyunClient {
     private OSS client;
     private String endPoint;
     private String bucket;
@@ -93,7 +93,7 @@ public class AliyunOssStorageClient implements IFileStorageClient {
 
     @Override
     public FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
-        IFileStorageClient.super.upload(bucketName, flieName, inputStream);
+        AliyunClient.super.upload(bucketName, flieName, inputStream);
         String url = AliyunOSSUtils.uploadOss(client, bucketName, flieName, inputStream);
         Boolean aFalse = Boolean.FALSE;
         return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
@@ -102,7 +102,7 @@ public class AliyunOssStorageClient implements IFileStorageClient {
     @SneakyThrows
     @Override
     public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
-        IFileStorageClient.super.uploadSharding(bucketName, flieName, inputStream);
+        AliyunClient.super.uploadSharding(bucketName, flieName, inputStream);
         String url = AliyunOSSUtils.uploadShardingOss(client, bucketName, flieName, inputStream);
 
         Boolean aFalse = Boolean.FALSE;

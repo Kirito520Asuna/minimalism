@@ -5,11 +5,15 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FileInfo;
+import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.service.FileInfoService;
 import com.minimalism.file.service.FilePartService;
 import com.minimalism.file.service.FileService;
+import com.minimalism.file.storage.FileFactory;
+import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.IFileStorageProvider;
+import com.minimalism.file.storage.StorageType;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
 import org.springframework.stereotype.Service;
@@ -89,7 +93,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String getPartPath(String identifier, Integer chunkNumber) {
         FileProperties.LocalProperties local = SpringUtil.getBean(FileProperties.class).getLocal();
-        String uploadDir = ObjectUtils.defaultIfEmpty(local.getUploadDir(),"tmp/uploads/");
+        String uploadDir = ObjectUtils.defaultIfEmpty(local.getUploadDir(), "tmp/uploads/");
         // 使用HuTool保存分片文件
         String part = ".part";
         // 使用HuTool保存分片文件
@@ -100,16 +104,18 @@ public class FileServiceImpl implements FileService {
     @Override
     public String getMergePartPath(String identifier, String fileName, String suffix) {
         FileProperties.LocalProperties local = SpringUtil.getBean(FileProperties.class).getLocal();
-        String uploadDir = ObjectUtils.defaultIfEmpty(local.getUploadDir(),"tmp/uploads/");
+        String uploadDir = ObjectUtils.defaultIfEmpty(local.getUploadDir(), "tmp/uploads/");
         // 使用HuTool保存分片文件
         String path = uploadDir + identifier + "/" + fileName + suffix;
         return path;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean uploadChunk(String path, InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId) {
-        OutputStream outputStream = FileUtil.getOutputStream(FileUtil.newFile(path));
-        IoUtil.copy(inputStream, outputStream);
+        IFileStorageClient client = FileFactory.getClient(StorageType.local);
+        FilePart filePart = client.uploadShardingChunkNumber(chunkNumber, identifier, inputStream).setFileId(fileId);
+        filePartService.save(filePart);
         return true;
     }
 
@@ -128,13 +134,13 @@ public class FileServiceImpl implements FileService {
             String fileMainName = fileName + suffix;
             String path = getMergePartPath(identifier, fileName, suffix);
 
-            try{
+            try {
                 InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
                 OutputStream fileOutputStream = FileUtil.getOutputStream(FileUtil.newFile(path));
                 IoUtil.copy(inputStream, fileOutputStream);
                 inputStream = FileUtil.getInputStream(path);
                 uploadMergeChunks(inputStream, fileMainName);
-            }finally {
+            } finally {
                 FileUtil.del(path);
             }
         } else {

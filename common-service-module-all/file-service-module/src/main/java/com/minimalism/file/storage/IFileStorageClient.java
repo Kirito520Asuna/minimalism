@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.file.domain.FileInfo;
+import com.minimalism.file.domain.FilePart;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 
@@ -16,11 +17,22 @@ import java.io.InputStream;
  * @Description
  */
 public interface IFileStorageClient extends AbstractBean {
+    default boolean support(StorageType storageType) {
+        return false;
+    }
+
     default StorageType getType() {
         return StorageType.local;
     }
-    default String getBucket() {return null;}
-    default String getEndPoint() {return null;}
+
+    default String getBucket() {
+        return null;
+    }
+
+    default String getEndPoint() {
+        return null;
+    }
+
     /**
      * 判断存储桶是否在存在
      *
@@ -90,7 +102,7 @@ public interface IFileStorageClient extends AbstractBean {
      * @param img
      * @return
      */
-    default FileInfo buildFileInfo(String flieName, InputStream inputStream, String url, Boolean local,Boolean dir, Boolean img) {
+    default FileInfo buildFileInfo(String flieName, InputStream inputStream, String url, Boolean local, Boolean dir, Boolean img) {
         String mainName = FileUtil.mainName(flieName);
         String type = FileUtil.extName(flieName);
         long size = IoUtils.size(inputStream);
@@ -100,11 +112,33 @@ public interface IFileStorageClient extends AbstractBean {
                 .setDir(dir)
                 .setFileName(mainName)
                 .setImg(img)
-                .setLocal(ObjectUtils.defaultIfEmpty(local,Boolean.FALSE))
+                .setLocal(ObjectUtils.defaultIfEmpty(local, Boolean.FALSE))
                 .setSuffix("." + type)
                 .setType(type)
                 .setName(mainName)
                 .setSize(size);
+    }
+
+    /**
+     * 构建文件分片信息
+     *
+     * @param identifier
+     * @param chunkNumber
+     * @param url
+     * @param local
+     * @param inputStream
+     * @return
+     */
+    default FilePart bulidFilePart(String identifier, int chunkNumber, String url, Boolean local, InputStream inputStream) {
+        local = ObjectUtils.defaultIfEmpty(local, Boolean.FALSE);
+        return new FilePart()
+                .setUrl(local ? null : url)
+                .setMergeDelete(Boolean.FALSE)
+                .setLocalResource(local ? url : null)
+                .setPartSize(IoUtils.size(inputStream))
+                .setPartSort(chunkNumber)
+                .setPartCode(identifier)
+                .setLocal(local);
     }
 
     /**
@@ -151,7 +185,36 @@ public interface IFileStorageClient extends AbstractBean {
     }
 
     /**
+     * 上传单个分片文件
+     *
+     * @param chunkNumber
+     * @param identifier
+     * @param inputStream
+     * @return
+     */
+    default FilePart uploadShardingChunkNumber(int chunkNumber, String identifier, InputStream inputStream) {
+        return uploadShardingChunkNumber(null, chunkNumber, identifier, inputStream);
+    }
+
+    /**
+     * 上传单个分片文件
+     *
+     * @param bucketName
+     * @param chunkNumber
+     * @param identifier
+     * @param inputStream
+     * @return
+     */
+    default FilePart uploadShardingChunkNumber(String bucketName, int chunkNumber, String identifier, InputStream inputStream) {
+        if (StrUtil.isBlank(bucketName)) {
+            bucketName = getBucket();
+        }
+        return null;
+    }
+
+    /**
      * 获取url
+     *
      * @param objectName
      * @return
      */
@@ -161,6 +224,7 @@ public interface IFileStorageClient extends AbstractBean {
 
     /**
      * 获取url
+     *
      * @param bucketName
      * @param objectName
      * @return
