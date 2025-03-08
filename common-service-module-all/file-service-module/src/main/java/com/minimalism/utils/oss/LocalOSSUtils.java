@@ -41,7 +41,7 @@ public class LocalOSSUtils {
             uploadDir = uploadDir + "/";
         }
         File file = FileUtil.newFile(uploadDir);
-        if (!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
         return uploadDir;
@@ -50,7 +50,7 @@ public class LocalOSSUtils {
     public static String getChunkDir() {
         String chunk = getUploadDir() + "chunks/";
         File file = FileUtil.newFile(chunk);
-        if (!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
         return chunk;
@@ -59,7 +59,7 @@ public class LocalOSSUtils {
     public static String getMergeDir() {
         String merged = getUploadDir() + "merged/";
         File file = FileUtil.newFile(merged);
-        if (!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
         return merged;
@@ -114,6 +114,9 @@ public class LocalOSSUtils {
             while ((bytesRead = fis.read(buffer)) != -1) {
                 // 每个分块文件命名为 “chunkNumber.part”
                 File tempFile = FileUtil.newFile(chunkDirPath + "/" + chunkNumber + getPartSuffix());
+                if (!tempFile.exists()) {
+                    tempFile.createNewFile();
+                }
                 // 写入读取的字节到分块文件中
                 try (OutputStream os = new FileOutputStream(tempFile)) {
                     os.write(buffer, 0, bytesRead);
@@ -121,6 +124,41 @@ public class LocalOSSUtils {
                 chunkNumber++;
             }
         }
+    }
+
+    /**
+     * 上传单个分片
+     * @param chunkNumber
+     * @param fileName
+     * @param identifier
+     * @param input
+     */
+    public static void splitChunkNumberFileLocal( int chunkNumber, String fileName, String identifier, InputStream input) {
+        splitChunkNumberFileLocal(getChunkDir(), chunkNumber, fileName, identifier, input);
+    }
+
+    /**
+     * 上传单个分片
+     * @param chunkDir
+     * @param chunkNumber
+     * @param fileName
+     * @param identifier
+     * @param input
+     */
+    @SneakyThrows
+    public static void splitChunkNumberFileLocal(String chunkDir, int chunkNumber, String fileName, String identifier, InputStream input) {
+        // 创建分块存放目录：CHUNK_DIR + identifier
+        String chunkDirPath = chunkDir + identifier;
+        File chunkDirFile = FileUtil.newFile(chunkDirPath);
+        if (!chunkDirFile.exists()) {
+            chunkDirFile.mkdirs();
+        }
+        File tempFile = FileUtil.newFile(chunkDirPath + "/" + chunkNumber + getPartSuffix());
+        if (!tempFile.exists()) {
+            tempFile.createNewFile();
+        }
+        BufferedOutputStream outputStream = FileUtil.getOutputStream(tempFile);
+        IoUtils.copy(input,outputStream);
     }
 
     /**

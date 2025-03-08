@@ -26,7 +26,7 @@ create table `file_part`
 (
     `part_id`   bigint(20) not null auto_increment comment '编号',
     `part_code` varchar(50) not null comment 'code用于合并文件',
-    `file_id`   bigint(20) not null comment '文件编号',
+    `file_id`   bigint(20) default null comment '文件编号',
     `url`       varchar(255) default null comment '资源路径',
     `local_resource`       varchar(255) default null comment '本地资源路径',
     `is_local`   tinyint(1) default 0 comment '是否本地资源',
