@@ -165,6 +165,9 @@ public class LocalOSSUtils {
      */
     @SneakyThrows
     public static void splitFileLocal(String chunkDir, String identifier, InputStream input) {
+        if (StrUtil.isBlank(chunkDir)) {
+            splitFileLocal(identifier,input);
+        }
         if (!chunkDir.endsWith("/")) {
             chunkDir = chunkDir + "/";
         }
