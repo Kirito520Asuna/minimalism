@@ -53,7 +53,7 @@ public class LocalOSSUtils {
             FileProperties.LocalProperties local = fileProperties.getLocal();
             directory = local.getDirectory();
         } catch (Exception e) {
-            directory = SpringUtil.getBean(Environment.class).getProperty("file.properties.local.directory", String.class, "local");
+            directory = SpringUtil.getBean(Environment.class).getProperty("file.properties.local.directory");
         }
         return ObjectUtils.defaultIfBlank(directory, "local");
     }
