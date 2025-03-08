@@ -92,6 +92,13 @@ public class FileInfo extends BaseEntity implements Serializable {
     @Schema(description = "是否目录")
     private Boolean dir;
 
+    /**
+     * 是否本地资源
+     */
+    @TableField(value = "is_local")
+    @Schema(description = "是否本地资源")
+    private Boolean local;
+
     @TableField(value = "parent_id")
     @Schema(description = "")
     private Long parentId;
