@@ -2,6 +2,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.dto.FileUpDto;
@@ -47,6 +48,7 @@ public class UploadTest {
 
         String response = request.execute().body();
         JSONObject entries = JSONUtil.toBean(response, JSONObject.class);
+        System.err.println("start :" + JSONUtil.toJsonStr(entries, JSONConfig.create().setIgnoreNullValue(false)));
         Integer code = (Integer) entries.getByPath("code");
         if (!ObjectUtils.equals(Integer.valueOf(200), code)) {
             throw new RuntimeException(entries.getByPath("message").toString());
@@ -65,12 +67,13 @@ public class UploadTest {
         String uploadUrl = String.format("http://%s:13600/file/file/upload/chunk", host);
 
         for (InputStream input : streamList) {
+            System.err.println("uploadChunk chunkNumber:" + chunkNumber );
             uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks, input);
             chunkNumber++;
         }
 
         String mergeUrl = String.format("http://%s:13600/file/file/upload/merge", host);
-        merge(mergeUrl, fileName, identifier, totalChunks,fileId);
+        merge(mergeUrl, fileName, identifier, totalChunks, fileId);
     }
 
     public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, InputStream inputStream) throws Exception {
@@ -97,7 +100,7 @@ public class UploadTest {
 
     }
 
-    public static void merge(String url, String fileName, String identifier, int totalChunks,Long fileId) {
+    public static void merge(String url, String fileName, String identifier, int totalChunks, Long fileId) {
         System.err.println("Merging chunks...");
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", fileName);
