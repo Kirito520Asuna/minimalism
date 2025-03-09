@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.constant.Constants;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FilePart;
@@ -88,7 +89,7 @@ public class LocalOSSUtils {
     }
 
     public static String getPartSuffix() {
-        return ".part";
+        return  Constants.PART_SUFFIX;
     }
 
     public static String getMergeFilePath(String fileMainName) {

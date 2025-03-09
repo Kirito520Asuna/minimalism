@@ -1,11 +1,13 @@
 package com.minimalism.file.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.minimalism.constant.Constants;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FileInfo;
@@ -28,6 +30,7 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,55 +137,7 @@ public class FileServiceImpl implements FileService {
             long maxSize = 1024 * 1024 * 1024;
             if (fileInfoSize > maxSize) {
                 if (false) {
-                    //方案二
-                    //将分片合并 到不会oom的程度
-                    int count = filePartService.getCountByFileId(fileId);
-                    //如果分片数量大于1024个 则将分片数量减少到1024个
-                    int partSizeMax = 1024;
-                    int partCount = count / partSizeMax;
-                    if (partCount > partSizeMax) {
-                        //应该递归 todo：
-
-                        //临时抛出异常处理
-                        throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
-                    }
-                    for (int i = 1; i <= partCount; i++) {
-                        List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount);
-                        //合并 todo：
-                        OutputStream outputStream = IoUtils.merge(parts.stream().map(part -> {
-                            InputStream inputStream;
-                            if (part.getLocal()) {
-                                inputStream = FileUtil.getInputStream(part.getLocalResource());
-                            } else {
-                                try {
-                                    inputStream = new URL(part.getUrl()).openStream();
-                                } catch (IOException e) {
-                                    throw new GlobalCustomException("[FilePart]-[URL]-[mergeChunks]" + e.getMessage());
-                                }
-                            }
-                            return inputStream;
-                        }).collect(Collectors.toList()));
-
-                        //合并完成
-                        parts.stream().forEach(part -> {
-                            filePartService.removeById(part.getPartId());
-                            if (part.getLocal()) {
-                                FileUtil.del(part.getLocalResource());
-                            }
-                        });
-
-                        FilePart filePart = parts.stream().findFirst().get();
-
-                        if (filePart.getLocal()) {
-                            String partFileName = i + ".part";
-                            String localResource = filePart.getLocalResource();
-                            // 使用字符串操作获取父目录路径
-
-                            // 只支持win,mac,linux版本
-                            int lastIndexOf = localResource.lastIndexOf(OSType.getSeparator(filePart.getOsType()));
-                            String parentPathByString = localResource.substring(0, lastIndexOf + 1);
-                        }
-                    }
+                    mergeMore(fileId, path);
                 }
                 //方案一
                 FilePart filePart = new FilePart()
@@ -230,6 +185,70 @@ public class FileServiceImpl implements FileService {
             FileUtil.del(path);
         }
         return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void mergeMore(Long fileId, String path) throws IOException {
+        //方案二
+        //将分片合并 到不会oom的程度
+        int count = filePartService.getCountByFileId(fileId);
+        //如果分片数量大于1024个 则将分片数量减少到1024个
+        int partSizeMax = 1024;
+        int partCount = count / partSizeMax;
+        if (partCount > partSizeMax) {
+            //应该递归 todo：
+
+            //临时抛出异常处理
+            throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
+        }
+        List<FilePart> list = CollUtil.newArrayList();
+        for (int i = 1; i <= partCount; i++) {
+            List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount);
+            //合并 todo：
+            ByteArrayOutputStream outputStream = IoUtils.merge(parts.stream().map(part -> {
+                InputStream inputStream;
+                if (part.getLocal()) {
+                    inputStream = FileUtil.getInputStream(part.getLocalResource());
+                } else {
+                    try {
+                        inputStream = new URL(part.getUrl()).openStream();
+                    } catch (IOException e) {
+                        throw new GlobalCustomException("[FilePart]-[URL]-[mergeChunks]" + e.getMessage());
+                    }
+                }
+                return inputStream;
+            }).collect(Collectors.toList()));
+
+            //合并完成
+            parts.stream().forEach(part -> {
+                filePartService.removeById(part.getPartId());
+                if (part.getLocal()) {
+                    FileUtil.del(part.getLocalResource());
+                }
+            });
+
+            FilePart filePart = parts.stream().findFirst().get();
+
+            if (filePart.getLocal()) {
+                String partFileName = i + Constants.PART_SUFFIX;
+                String localResource = filePart.getLocalResource();
+                // 使用字符串操作获取父目录路径
+
+                // 只支持win,mac,linux版本
+                int lastIndexOf = localResource.lastIndexOf(OSType.getSeparator(filePart.getOsType()));
+                String parentPathByString = localResource.substring(0, lastIndexOf + 1);
+                String pathAll = parentPathByString + partFileName;
+                File file = FileUtil.newFile(pathAll);
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                
+                IoUtils.copy(new ByteArrayInputStream(outputStream.toByteArray()),FileUtil.getOutputStream(file));
+
+                IoUtils.size(FileUtil.getInputStream(path));
+                
+            }
+        }
     }
 
     public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {

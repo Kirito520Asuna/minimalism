@@ -131,4 +131,8 @@ public class Constants {
      */
     public static final String[] JOB_ERROR_STR = {"java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework", "org.apache", "com.ruoyi.common.core.utils.file"};
+    /**
+     * 分片文件后缀
+     */
+    public static final String PART_SUFFIX = ".part";
 }
