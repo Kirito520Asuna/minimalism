@@ -137,7 +137,9 @@ public class FileServiceImpl implements FileService {
             long maxSize = 1024 * 1024 * 1024;
             if (fileInfoSize > maxSize) {
                 if (false) {
-                    mergeMore(fileId, path);
+                    //方案二
+                    //将分片合并 到不会oom的程度
+                    mergeMore(fileId);
                 }
                 //方案一
                 FilePart filePart = new FilePart()
@@ -188,9 +190,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void mergeMore(Long fileId, String path) throws IOException {
-        //方案二
-        //将分片合并 到不会oom的程度
+    public void mergeMore(Long fileId) throws IOException {
         int count = filePartService.getCountByFileId(fileId);
         //如果分片数量大于1024个 则将分片数量减少到1024个
         int partSizeMax = 1024;
@@ -201,9 +201,11 @@ public class FileServiceImpl implements FileService {
             //临时抛出异常处理
             throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
         }
-        List<FilePart> list = CollUtil.newArrayList();
+        List<Long> excludePartIds = CollUtil.newArrayList();
         for (int i = 1; i <= partCount; i++) {
-            List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount);
+            List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount,
+                    excludePartIds
+            );
             //合并 todo：
             ByteArrayOutputStream outputStream = IoUtils.merge(parts.stream().map(part -> {
                 InputStream inputStream;
@@ -228,6 +230,9 @@ public class FileServiceImpl implements FileService {
             });
 
             FilePart filePart = parts.stream().findFirst().get();
+            info("{}" + Constants.PART_SUFFIX + "~" + Constants.PART_SUFFIX + "{}合并完成",
+                    FileUtil.mainName(filePart.getLocalResource()),
+                    FileUtil.mainName(parts.get(parts.size() - 1).getLocalResource()));
 
             if (filePart.getLocal()) {
                 String partFileName = i + Constants.PART_SUFFIX;
@@ -242,11 +247,13 @@ public class FileServiceImpl implements FileService {
                 if (!file.exists()) {
                     file.createNewFile();
                 }
-                
-                IoUtils.copy(new ByteArrayInputStream(outputStream.toByteArray()),FileUtil.getOutputStream(file));
 
-                IoUtils.size(FileUtil.getInputStream(path));
-                
+                IoUtils.copy(new ByteArrayInputStream(outputStream.toByteArray()), FileUtil.getOutputStream(file));
+                long size = IoUtils.size(FileUtil.getInputStream(pathAll));
+
+                filePart.setPartSize(size);
+                filePartService.updateById(filePart);
+                excludePartIds.add(filePart.getPartId());
             }
         }
     }
@@ -285,7 +292,7 @@ public class FileServiceImpl implements FileService {
         System.out.println("操作系统版本: " + osVersion);
 
         String s = "/develop/code/minimalism/tmp/uploads/local/chunks/c3ca3ed9-ea9b-4cc2-a451-164593e2b2721741455218943/16.part";
-
+        System.err.println(FileUtil.mainName(s));
         // 使用字符串操作获取父目录路径
         int i = s.lastIndexOf("/");
         String parentPathByString = s.substring(0, i + 1);

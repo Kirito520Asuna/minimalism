@@ -1,5 +1,6 @@
 package com.minimalism.file.service;
 
+import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.vo.PartVo;
 
 import java.io.ByteArrayOutputStream;
@@ -11,7 +12,7 @@ import java.util.List;
  * @Date 2025/3/6 15:15:12
  * @Description
  */
-public interface FileService {
+public interface FileService extends AbstractBean {
     List<PartVo> getPartList(String identifier, Long fileId);
     List<InputStream> getPartInputStreamList(String identifier, Long fileId);
     InputStream partToInputStream(PartVo partVo);

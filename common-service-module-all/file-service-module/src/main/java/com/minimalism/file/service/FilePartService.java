@@ -42,5 +42,5 @@ public interface FilePartService extends IService<FilePart> {
 
     int getCountByFileId(Long fileId);
 
-    List<FilePart> getPartsByFileIdFirstPartCount(Long fileId, int partCount);
+    List<FilePart> getPartsByFileIdFirstPartCount(Long fileId, int partCount,  List<Long> excludes);
 }
