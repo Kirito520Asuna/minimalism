@@ -133,7 +133,9 @@ public class LocalStorageClient implements LocalClient {
     @Override
     public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
         LocalClient.super.uploadSharding(bucketName, flieName, inputStream, identifier);
-
+        if (StrUtil.isBlank(bucketName)) {
+            bucketName = getBucket();
+        }
         if (StrUtil.isBlank(identifier)) {
             identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
         }
