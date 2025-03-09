@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,16 +137,49 @@ public class FileServiceImpl implements FileService {
                     //将分片合并 到不会oom的程度
                     int count = filePartService.getCountByFileId(fileId);
                     //如果分片数量大于1024个 则将分片数量减少到1024个
-                    int partCount = count / 1024;
+                    int partSizeMax = 1024;
+                    int partCount = count / partSizeMax;
+                    if (partCount > partSizeMax) {
+                        //应该递归 todo：
+
+                        //临时抛出异常处理
+                        throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
+                    }
                     for (int i = 1; i <= partCount; i++) {
                         List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount);
-                        //合并
+                        //合并 todo：
+                        OutputStream outputStream = IoUtils.merge(parts.stream().map(part -> {
+                            InputStream inputStream;
+                            if (part.getLocal()) {
+                                inputStream = FileUtil.getInputStream(part.getLocalResource());
+                            } else {
+                                try {
+                                    inputStream = new URL(part.getUrl()).openStream();
+                                } catch (IOException e) {
+                                    throw new GlobalCustomException("[FilePart]-[URL]-[mergeChunks]" + e.getMessage());
+                                }
+                            }
+                            return inputStream;
+                        }).collect(Collectors.toList()));
 
                         //合并完成
-                        parts.stream().forEach(part->{
+                        parts.stream().forEach(part -> {
                             filePartService.removeById(part.getPartId());
-                            FileUtil.del(part.getLocalResource());
+                            if (part.getLocal()) {
+                                FileUtil.del(part.getLocalResource());
+                            }
                         });
+
+                        FilePart filePart = parts.stream().findFirst().get();
+
+                        if (filePart.getLocal()) {
+                            String partFileName = i + ".part";
+                            String localResource = filePart.getLocalResource();
+                            // 使用字符串操作获取父目录路径
+                            // 只支持linux版本
+                            int lastIndexOf = localResource.lastIndexOf("/");
+                            String parentPathByString = localResource.substring(0, lastIndexOf + 1);
+                        }
                     }
                 }
                 //方案一
@@ -211,5 +245,38 @@ public class FileServiceImpl implements FileService {
         return false;
     }
 
+    public static void main(String[] args) {
+        //String s = "/develop/code/minimalism/tmp/uploads/local/chunks/c3ca3ed9-ea9b-4cc2-a451-164593e2b2721741455218943/16.part";
+        //int i = s.lastIndexOf("/");
+        //System.err.println(s.substring(0, i + 1));
+        //// 获取文件所在的文件夹路径
+        //String parent = FileUtil.getParent(s, 1);
+        //System.err.println(parent);
+        // 获取操作系统名称
+        String osName = System.getProperty("os.name");
+        // 获取操作系统架构
+        String osArch = System.getProperty("os.arch");
+        // 获取操作系统版本
+        String osVersion = System.getProperty("os.version");
+
+        System.out.println("操作系统名称: " + osName);
+        System.out.println("操作系统架构: " + osArch);
+        System.out.println("操作系统版本: " + osVersion);
+
+        String s = "/develop/code/minimalism/tmp/uploads/local/chunks/c3ca3ed9-ea9b-4cc2-a451-164593e2b2721741455218943/16.part";
+
+        // 使用字符串操作获取父目录路径
+        int i = s.lastIndexOf("/");
+        String parentPathByString = s.substring(0, i + 1);
+        System.err.println("字符串操作获取的父目录路径: " + parentPathByString);
+
+        // 使用 FileUtil.getParent() 获取父目录路径
+        String parentPathByFileUtil = FileUtil.getParent(s, 1);
+        System.err.println("FileUtil.getParent() 获取的父目录路径: " + parentPathByFileUtil);
+
+        // 标准化路径，将反斜杠替换为斜杠
+        String normalizedPath = parentPathByFileUtil.replace("\\", "/");
+        System.err.println("标准化后的父目录路径: " + normalizedPath);
+    }
 
 }
