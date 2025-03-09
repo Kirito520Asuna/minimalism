@@ -228,7 +228,7 @@ public class FileServiceImpl implements FileService {
             });
 
             FilePart filePart = parts.stream().findFirst().get();
-            info("{}" + Constants.PART_SUFFIX + "~" + Constants.PART_SUFFIX + "{}合并完成",
+            info("{}" + Constants.PART_SUFFIX + "~{}" + Constants.PART_SUFFIX + ",合并完成",
                     FileUtil.mainName(filePart.getLocalResource()),
                     FileUtil.mainName(parts.get(parts.size() - 1).getLocalResource()));
 
