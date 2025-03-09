@@ -22,16 +22,19 @@ public class FileFactory implements BeanFactoryAware, InitializingBean, Abstract
     private ConfigurableListableBeanFactory beanFactory;
     private static List<IFileStorageClient> storages = CollUtil.newArrayList();
     private static int index = 0;
-    public static IFileStorageClient getClient(StorageType storageType) {
 
-        if (index == 0){
+    private static void initStorages() {
+        if (index == 0) {
             Map<String, IFileStorageClient> beansOfType = SpringUtil.getBeansOfType(IFileStorageClient.class);
             beansOfType.forEach((key, value) -> {
                 storages.add(value);
             });
             index++;
         }
+    }
 
+    public static IFileStorageClient getClient(StorageType storageType) {
+        initStorages();
         for (IFileStorageClient storage : storages) {
             if (storage.support(storageType)) {
                 return storage;
@@ -40,17 +43,12 @@ public class FileFactory implements BeanFactoryAware, InitializingBean, Abstract
         throw new IllegalArgumentException();
     }
 
+
     @Override
     @PostConstruct
     public void init() {
         AbstractBean.super.init();
-        if (index == 0){
-            Map<String, IFileStorageClient> beansOfType = SpringUtil.getBeansOfType(IFileStorageClient.class);
-            beansOfType.forEach((key, value) -> {
-                storages.add(value);
-            });
-            index++;
-        }
+        initStorages();
     }
 
     @Override
