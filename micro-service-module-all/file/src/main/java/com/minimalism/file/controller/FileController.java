@@ -55,8 +55,8 @@ public class FileController implements AbstractBaseController {
     @Operation(summary = "分片上传 初始调用")
     @PostMapping("/upload/start")
     public Result<FileUploadVo> uploadStart(@RequestBody FileUpDto dto) {
-        long freeMemory = JVMUtils.freeMemory();
-        if (freeMemory < dto.getSize()) {
+        long maxMemory = JVMUtils.maxMemory();
+        if (maxMemory < dto.getSize()) {
             throw new GlobalCustomException("大文件上传不支持");
         }
 
@@ -64,7 +64,7 @@ public class FileController implements AbstractBaseController {
         CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
         fileInfoService.save(fileInfo);
 
-        int chunkSize = 10 * 1024 * 1024; // 每个分片大小为100MB
+        int chunkSize = 10 * 1024 * 1024; // 每个分片大小为10MB
         //chunkSize = 10485760;
         Long size = fileInfo.getSize();
         Long fileId = fileInfo.getFileId();
@@ -90,8 +90,8 @@ public class FileController implements AbstractBaseController {
                                         @RequestParam(value = "fileId", required = false) Long fileId,
                                         @RequestParam("identifier") String identifier) {
 
-        long freeMemory = JVMUtils.freeMemory();
-        if (freeMemory < totalFileSize) {
+        long maxMemory = JVMUtils.maxMemory();
+        if (maxMemory < totalFileSize) {
             throw new GlobalCustomException("大文件上传不支持");
         }
 
@@ -113,7 +113,7 @@ public class FileController implements AbstractBaseController {
     @SysLog
     @PostMapping("/upload/merge")
     @AviatorValids(values = {
-            @AviatorValid(expression = "!(arg1==null && (arg2==null||arg2==''))", errorMessage = "非法请求"),
+            @AviatorValid(expression = "!(arg2==null && (arg3==null||arg3==''))", errorMessage = "非法请求"),
     })
     public Result<String> mergeChunks(
             @RequestParam("identifier") String identifier,
@@ -121,8 +121,8 @@ public class FileController implements AbstractBaseController {
             @RequestParam(value = "fileId", required = false) Long fileId,
             @RequestParam(value = "fileName", required = false) String fileName) {
 
-        long freeMemory = JVMUtils.freeMemory();
-        if (freeMemory < totalFileSize) {
+        long maxMemory = JVMUtils.maxMemory();
+        if (maxMemory < totalFileSize) {
             throw new GlobalCustomException("大文件上传不支持");
         }
 
