@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
+import com.minimalism.abstractinterface.service.AbstractAuthorizationConfig;
 import com.minimalism.config.ApiConfig;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.constant.ExpressionConstants;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * @Date 2024/10/19 下午3:07:59
  * @Description
  */
-public interface AbstractShiroConfig {
+public interface AbstractShiroConfig extends AbstractAuthorizationConfig {
     //开启shiro权限注解
 
     default AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(WebSecurityManager webSecurityManager) {
@@ -131,7 +132,7 @@ public interface AbstractShiroConfig {
         Environment env = SpringUtil.getBean(Environment.class);
         Boolean openCorsFilter = ObjectUtils.defaultIfNull(env.getProperty(ExpressionConstants.corsFilte, Boolean.class), true);
 
-        if (openCorsFilter){
+        if (openCorsFilter) {
             CorsProperties cors = SpringUtil.getBean(CorsProperties.class);
             filters.put(cors.getClass().getName(), SpringUtil.getBean(CorsRequestFilter.class));
         }
@@ -157,7 +158,7 @@ public interface AbstractShiroConfig {
         Environment env = SpringUtil.getBean(Environment.class);
         Boolean openCorsFilter = ObjectUtils.defaultIfNull(env.getProperty("cors.filter", Boolean.class), true);
 
-        if (openCorsFilter){
+        if (openCorsFilter) {
             CorsProperties cors = SpringUtil.getBean(CorsProperties.class);
             String pattern = ObjectUtils.defaultIfEmpty(cors.getPattern(), "/**");
             filterMap.put(pattern, cors.getClass().getName());

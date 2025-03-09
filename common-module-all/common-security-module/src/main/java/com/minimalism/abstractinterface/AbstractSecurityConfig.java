@@ -1,6 +1,7 @@
 package com.minimalism.abstractinterface;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.abstractinterface.service.AbstractAuthorizationConfig;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.ApiFilter;
 import com.minimalism.filter.CorsRequestFilter;
@@ -15,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @Date 2024/10/28 下午12:44:53
  * @Description
  */
-public interface AbstractSecurityConfig {
+public interface AbstractSecurityConfig extends AbstractAuthorizationConfig {
     /**
      * @param http
      */
