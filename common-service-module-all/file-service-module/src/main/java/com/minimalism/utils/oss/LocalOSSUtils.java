@@ -96,7 +96,7 @@ public class LocalOSSUtils {
         String path = getMergeDir() + identifier + separator;
         path = path.replace(separator + separator, separator);
         File file = FileUtil.newFile(path);
-        if (!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
         return path + fileMainName;
@@ -276,7 +276,7 @@ public class LocalOSSUtils {
             chunkDir = chunkDir + separator;
         }
         if (!mergeDir.endsWith(separator)) {
-            mergeDir = mergeDir + separator;
+            mergeDir = mergeDir + separator + identifier + separator;
         }
         // 分块文件所在目录
         File chunkDirFile = FileUtil.newFile(chunkDir + identifier);
