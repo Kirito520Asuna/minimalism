@@ -16,7 +16,6 @@ import lombok.SneakyThrows;
 import org.springframework.core.env.Environment;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -89,15 +88,15 @@ public class LocalOSSUtils {
     }
 
     public static String getPartSuffix() {
-        return  Constants.PART_SUFFIX;
+        return Constants.PART_SUFFIX;
     }
 
-    public static String getMergeFilePath(String fileMainName) {
-        return getMergeDir() + fileMainName;
+    public static String getMergeFilePath(String identifier, String fileMainName) {
+        return getMergeDir() + identifier + OSType.getSeparator(null) + fileMainName;
     }
 
     public static String getChunkDirPath(String identifier) {
-        return getChunkDir() + identifier + "/";
+        return getChunkDir() + identifier + OSType.getSeparator(null);
     }
 
     /*===========================================================================================================================================================================================================================================*/

@@ -94,7 +94,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String getMergePartPath(String identifier, String fileName, String suffix) {
         // 使用HuTool保存分片文件
-        return FileFactory.getClient(StorageType.local).getMergeFilePath(fileName + suffix);
+        return FileFactory.getClient(StorageType.local).getMergeFilePath(identifier,fileName + suffix);
     }
 
     @Override

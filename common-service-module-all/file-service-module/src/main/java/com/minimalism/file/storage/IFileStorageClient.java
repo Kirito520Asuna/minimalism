@@ -279,11 +279,13 @@ public interface IFileStorageClient extends AbstractBean {
 
     /**
      * 获取本地合并文件路径
+     *
+     * @param identifier
      * @param fileMainName
      * @return
      */
-    default String getMergeFilePath(String fileMainName) {
-        return LocalOSSUtils.getMergeFilePath(fileMainName);
+    default String getMergeFilePath(String identifier,String fileMainName) {
+        return LocalOSSUtils.getMergeFilePath(identifier,fileMainName);
     }
 
     /**
