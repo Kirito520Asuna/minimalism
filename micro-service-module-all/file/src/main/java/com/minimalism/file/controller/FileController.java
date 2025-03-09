@@ -55,6 +55,11 @@ public class FileController implements AbstractBaseController {
     @Operation(summary = "分片上传 初始调用")
     @PostMapping("/upload/start")
     public Result<FileUploadVo> uploadStart(@RequestBody FileUpDto dto) {
+        long freeMemory = JVMUtils.freeMemory();
+        if (freeMemory < dto.getSize()) {
+            throw new GlobalCustomException("大文件上传不支持");
+        }
+
         FileInfo fileInfo = new FileInfo();
         CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
         fileInfoService.save(fileInfo);
@@ -64,10 +69,7 @@ public class FileController implements AbstractBaseController {
         Long size = fileInfo.getSize();
         Long fileId = fileInfo.getFileId();
         int totalChunks = (int) Math.ceil((double) size / chunkSize);
-        long freeMemory = JVMUtils.freeMemory();
-        if (freeMemory < size) {
-            throw new GlobalCustomException("大文件上传不支持");
-        }
+
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
         return ok(new FileUploadVo()
                 .setFileId(fileId)
