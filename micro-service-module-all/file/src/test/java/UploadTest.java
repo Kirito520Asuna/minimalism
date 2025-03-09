@@ -57,6 +57,7 @@ public class UploadTest {
         int chunkSize = (Integer) entries.getByPath("data.chunkSize");
         int chunkNumber = (Integer) entries.getByPath("data.chunkNumber");
         int totalChunks = (Integer) entries.getByPath("data.totalChunks");
+        Long totalFileSize = Long.valueOf((Integer) entries.getByPath("data.totalFileSize"));
         Long fileId = Long.valueOf((Integer) entries.getByPath("data.fileId"));
         String identifier = (String) entries.getByPath("data.identifier");
 
@@ -67,23 +68,16 @@ public class UploadTest {
         String uploadUrl = String.format("http://%s:13600/file/file/upload/chunk", host);
 
         for (InputStream input : streamList) {
-            System.err.println("uploadChunk chunkNumber:" + chunkNumber );
-            uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks, input);
+            System.err.println("uploadChunk chunkNumber:" + chunkNumber);
+            uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks,totalFileSize , input);
             chunkNumber++;
         }
 
         String mergeUrl = String.format("http://%s:13600/file/file/upload/merge", host);
-        merge(mergeUrl, fileName, identifier, totalChunks, fileId);
+        merge(mergeUrl, fileName, identifier, totalChunks, fileId,totalFileSize);
     }
 
-    public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, InputStream inputStream) throws Exception {
-
-        // 使用 Hutool 的 HttpRequest 发送 POST 请求
-        Map<String, Object> form = new HashMap<>();
-        //form.put("file", IoUtils.toByteArray(inputStream));
-        form.put("chunkNumber", chunkNumber);
-        form.put("totalChunks", totalChunks);
-        form.put("identifier", identifier);
+    public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, Long totalFileSize, InputStream inputStream) throws Exception {
         // 使用 Hutool 创建 POST 请求，上传 multipart 表单数据
         HttpResponse response = HttpRequest.post(url)
                 //.form(form)
@@ -91,6 +85,7 @@ public class UploadTest {
                 .form("chunkNumber", chunkNumber)
                 .form("totalChunks", totalChunks)
                 .form("identifier", identifier)
+                .form("totalFileSize", totalFileSize)
                 .form("fileId", fileId)
                 // 如果需要传 fileId 参数，可添加 .form("fileId", "12345")
                 .execute();
@@ -100,13 +95,14 @@ public class UploadTest {
 
     }
 
-    public static void merge(String url, String fileName, String identifier, int totalChunks, Long fileId) {
+    public static void merge(String url, String fileName, String identifier, int totalChunks, Long fileId,Long totalFileSize) {
         System.err.println("Merging chunks...");
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", fileName);
         params.put("identifier", identifier);
         params.put("totalChunks", totalChunks);
         params.put("fileId", fileId);
+        params.put("totalFileSize", totalFileSize);
 
         HttpRequest request = HttpUtil.createPost(url);
         request.form(params);

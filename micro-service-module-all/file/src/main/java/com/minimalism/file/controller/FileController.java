@@ -20,8 +20,10 @@ import com.minimalism.file.service.FileService;
 import com.minimalism.result.Result;
 import com.minimalism.utils.bean.CustomBeanUtils;
 import com.minimalism.utils.io.IoUtils;
+import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.vo.FileUploadVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,8 +64,16 @@ public class FileController implements AbstractBaseController {
         Long size = fileInfo.getSize();
         Long fileId = fileInfo.getFileId();
         int totalChunks = (int) Math.ceil((double) size / chunkSize);
+        long freeMemory = JVMUtils.freeMemory();
+        if (freeMemory < size) {
+            throw new GlobalCustomException("大文件上传不支持");
+        }
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        return ok(new FileUploadVo().setFileId(fileId).setChunkSize(chunkSize).setTotalChunks(totalChunks));
+        return ok(new FileUploadVo()
+                .setFileId(fileId)
+                .setTotalFileSize(size)
+                .setChunkSize(chunkSize)
+                .setTotalChunks(totalChunks));
     }
 
 
@@ -73,8 +83,16 @@ public class FileController implements AbstractBaseController {
     public Result<String> uploadChunkV1(@RequestPart("file") MultipartFile file,
                                         @RequestParam("chunkNumber") int chunkNumber,
                                         @RequestParam("totalChunks") int totalChunks,
+                                        @Parameter(description = "文件总大小")
+                                        @RequestParam("totalFileSize") long totalFileSize,
                                         @RequestParam(value = "fileId", required = false) Long fileId,
                                         @RequestParam("identifier") String identifier) {
+
+        long freeMemory = JVMUtils.freeMemory();
+        if (freeMemory < totalFileSize) {
+            throw new GlobalCustomException("大文件上传不支持");
+        }
+
         try {
             InputStream inputStream = file.getInputStream();
             boolean uploadChunk = fileService.uploadChunk(inputStream, identifier, chunkNumber, totalChunks, fileId);
@@ -97,8 +115,15 @@ public class FileController implements AbstractBaseController {
     })
     public Result<String> mergeChunks(
             @RequestParam("identifier") String identifier,
+            @RequestParam(value = "totalFileSize") Long totalFileSize,
             @RequestParam(value = "fileId", required = false) Long fileId,
             @RequestParam(value = "fileName", required = false) String fileName) {
+
+        long freeMemory = JVMUtils.freeMemory();
+        if (freeMemory < totalFileSize) {
+            throw new GlobalCustomException("大文件上传不支持");
+        }
+
         fileService.mergeChunks(identifier, fileId, fileName);
         return ok();
     }
