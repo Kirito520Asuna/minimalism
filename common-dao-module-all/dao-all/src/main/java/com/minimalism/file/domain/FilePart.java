@@ -92,6 +92,13 @@ public class FilePart implements Serializable {
     @Schema(description = "合并后是否删除分片")
     private Boolean mergeDelete;
 
+    /**
+     * 操作系统类型 linux,win,mac
+     */
+    @TableField(value = "os_type")
+    @Schema(description = "操作系统类型 linux,win,mac")
+    private String osType;
+
     private static final long serialVersionUID = 1L;
 
     public static final String COL_PART_ID = "part_id";
@@ -111,4 +118,6 @@ public class FilePart implements Serializable {
     public static final String COL_PART_SORT = "part_sort";
 
     public static final String COL_MERGE_DELETE = "merge_delete";
+
+    public static final String COL_OS_TYPE = "os_type";
 }
