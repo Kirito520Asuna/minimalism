@@ -122,4 +122,16 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
                 .eq(FilePart::getFileId, fileId);
         return update(wrapper);
     }
+
+    @Override
+    public int getCountByFileId(Long fileId) {
+        LambdaQueryWrapper<FilePart> wrapper = Wrappers.lambdaQuery(FilePart.class);
+        wrapper.select(FilePart::getPartId).eq(FilePart::getFileId, fileId).groupBy(FilePart::getFileId);
+        return count(wrapper);
+    }
+
+    @Override
+    public List<FilePart> getPartsByFileIdFirstPartCount(Long fileId, int partCount) {
+        return baseMapper.getPartsByFileIdFirstPartCount(fileId, partCount);
+    }
 }

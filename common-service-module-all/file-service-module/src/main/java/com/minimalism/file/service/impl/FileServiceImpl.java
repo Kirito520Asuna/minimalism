@@ -131,6 +131,24 @@ public class FileServiceImpl implements FileService {
              */
             long maxSize = 1024 * 1024 * 1024;
             if (fileInfoSize > maxSize) {
+                if (false) {
+                    //方案二
+                    //将分片合并 到不会oom的程度
+                    int count = filePartService.getCountByFileId(fileId);
+                    //如果分片数量大于1024个 则将分片数量减少到1024个
+                    int partCount = count / 1024;
+                    for (int i = 1; i <= partCount; i++) {
+                        List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount);
+                        //合并
+
+                        //合并完成
+                        parts.stream().forEach(part->{
+                            filePartService.removeById(part.getPartId());
+                            FileUtil.del(part.getLocalResource());
+                        });
+                    }
+                }
+                //方案一
                 FilePart filePart = new FilePart()
                         .setFileId(fileId)
                         .setPartCode(identifier)

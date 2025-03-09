@@ -39,4 +39,8 @@ public interface FilePartService extends IService<FilePart> {
     Long getOneFileIdByCode(String identifier);
 
     boolean updateByEntityFileId(FilePart filePart);
+
+    int getCountByFileId(Long fileId);
+
+    List<FilePart> getPartsByFileIdFirstPartCount(Long fileId, int partCount);
 }

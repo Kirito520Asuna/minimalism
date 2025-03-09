@@ -1,14 +1,16 @@
 package com.minimalism.file.service;
 
 import java.util.List;
+
 import com.minimalism.file.domain.FileInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
-    /**
+
+/**
  * @Author yan
  * @Date 2025/3/6 14:16:20
  * @Description
  */
-public interface FileInfoService extends IService<FileInfo>{
+public interface FileInfoService extends IService<FileInfo> {
 
 
     int updateBatch(List<FileInfo> list);
@@ -28,5 +30,6 @@ public interface FileInfoService extends IService<FileInfo>{
     int insertOnDuplicateUpdate(FileInfo record);
 
     int insertOnDuplicateUpdateSelective(FileInfo record);
+
 
 }

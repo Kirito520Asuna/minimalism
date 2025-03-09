@@ -1,5 +1,6 @@
 package com.minimalism.file.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,4 +55,6 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     public int insertOnDuplicateUpdateSelective(FileInfo record) {
         return baseMapper.insertOnDuplicateUpdateSelective(record);
     }
+
+
 }
