@@ -2,7 +2,10 @@ package com.minimalism.file.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
@@ -108,7 +111,6 @@ public class FileServiceImpl implements FileService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean mergeChunks(String identifier, Long fileId, String fileName) {
-        ByteArrayOutputStream outputStream = mergeOutputStream(identifier, fileId);
         if (fileId == null) {
             fileId = filePartService.getOneFileIdByCode(identifier);
         }
@@ -123,6 +125,22 @@ public class FileServiceImpl implements FileService {
             mainName = FileUtil.mainName(fileInfo.getFileName());
             suffix = fileInfo.getSuffix();
             path = getMergePartPath(identifier, "tmp_" + mainName, suffix);
+            long fileInfoSize = fileInfo.getSize();
+            /**
+             * 因为分片大小是1MB的 总大小 1GB 也就是说 超出1024个InputStream 会出现oom
+             */
+            long maxSize = 1024 * 1024 * 1024;
+            if (fileInfoSize > maxSize) {
+                FilePart filePart = new FilePart()
+                        .setFileId(fileId)
+                        .setPartCode(identifier)
+                        .setMergeDelete(Boolean.TRUE);
+                //先改需要删除的状态 然后定时任务去删除文件 和数据库中数据
+                filePartService.updateByEntityFileId(filePart);
+                fileInfoService.removeById(fileId);
+
+                throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
+            }
         } else {
             mainName = FileUtil.mainName(fileName);
             suffix = FileUtil.getSuffix(fileName);
@@ -141,6 +159,7 @@ public class FileServiceImpl implements FileService {
         }
 
         try {
+            ByteArrayOutputStream outputStream = mergeOutputStream(identifier, fileId);
             InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
             OutputStream fileOutputStream = FileUtil.getOutputStream(tmpFile);
             IoUtils.copy(inputStream, fileOutputStream);

@@ -2,18 +2,15 @@ package com.minimalism.file.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
-import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.service.FilePartService;
 import com.minimalism.vo.PartVo;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,9 +104,22 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
 
     @Override
     public Long getOneFileIdByCode(String identifier) {
-        PageHelper.startPage(1,1);
+        PageHelper.startPage(1, 1);
         LambdaQueryWrapper<FilePart> wrapper = Wrappers.lambdaQuery(FilePart.class).select(FilePart::getFileId)
-                .eq(FilePart::getPartCode, identifier);
+                .eq(FilePart::getPartCode, identifier).eq(FilePart::getMergeDelete,Boolean.FALSE);
         return Optional.ofNullable(getOne(wrapper)).orElseGet(FilePart::new).getFileId();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateByEntityFileId(FilePart filePart) {
+        String identifier = filePart.getPartCode();
+        Long fileId = filePart.getFileId();
+
+        LambdaUpdateWrapper<FilePart> wrapper = Wrappers.lambdaUpdate(FilePart.class);
+        wrapper.set(FilePart::getMergeDelete, filePart.getMergeDelete())
+                .eq(StrUtil.isNotBlank(identifier), FilePart::getPartCode, identifier)
+                .eq(FilePart::getFileId, fileId);
+        return update(wrapper);
     }
 }
