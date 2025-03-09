@@ -18,6 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -36,6 +37,7 @@ import java.util.UUID;
 @Data
 //@NoArgsConstructor
 @AllArgsConstructor
+@ConditionalOnBean(FileProperties.LocalProperties.class)
 public class LocalStorageClient implements LocalClient {
     private String directory;
     private String endPoint;

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,8 +32,9 @@ import java.nio.charset.StandardCharsets;
  */
 @Service
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
+@ConditionalOnBean(FileProperties.AliyunOssProperties.class)
 public class AliyunOssStorageClient implements AliyunClient {
     private OSS client;
     private String endPoint;
@@ -52,16 +54,17 @@ public class AliyunOssStorageClient implements AliyunClient {
             throw new GlobalConfigException("请检查阿里云OSS配置是否正确");
         }
     }
-/*    public AliyunOssStorageClient() {
+
+    public AliyunOssStorageClient() {
         FileProperties.AliyunOssProperties config;
         try {
             config = SpringUtil.getBean(FileProperties.AliyunOssProperties.class);
-        }catch (Exception e){
+        } catch (Exception e) {
             config = SpringUtil.getBean(FileProperties.AliyunOssProperties.class);
         }
 
         init(config);
-    }*/
+    }
 
 
     public AliyunOssStorageClient(FileProperties.AliyunOssProperties config) {
