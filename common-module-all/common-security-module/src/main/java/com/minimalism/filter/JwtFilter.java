@@ -1,6 +1,7 @@
 package com.minimalism.filter;
 
 import com.minimalism.abstractinterface.AbstractAuthorizationSecurity;
+import com.minimalism.abstractinterface.AuthorizationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,7 +24,7 @@ import java.time.ZoneId;
 //@Component
 //@Order(-1)
 @Slf4j
-public class JwtFilter extends OncePerRequestFilter implements AbstractAuthorizationSecurity {
+public class JwtFilter extends OncePerRequestFilter implements AuthorizationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         checkToken(request, response);

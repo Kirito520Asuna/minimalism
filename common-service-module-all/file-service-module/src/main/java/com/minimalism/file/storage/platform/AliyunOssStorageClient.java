@@ -31,7 +31,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Service
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class AliyunOssStorageClient implements AliyunClient {
     private OSS client;
@@ -52,7 +52,7 @@ public class AliyunOssStorageClient implements AliyunClient {
             throw new GlobalConfigException("请检查阿里云OSS配置是否正确");
         }
     }
-    public AliyunOssStorageClient() {
+/*    public AliyunOssStorageClient() {
         FileProperties.AliyunOssProperties config;
         try {
             config = SpringUtil.getBean(FileProperties.AliyunOssProperties.class);
@@ -61,7 +61,7 @@ public class AliyunOssStorageClient implements AliyunClient {
         }
 
         init(config);
-    }
+    }*/
 
 
     public AliyunOssStorageClient(FileProperties.AliyunOssProperties config) {

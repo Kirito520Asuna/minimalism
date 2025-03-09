@@ -3,10 +3,12 @@ package com.minimalism.service.impl;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.AbstractUserDetailsByShiroService;
 import com.minimalism.abstractinterface.service.AbstractLoginService;
+import com.minimalism.config.shiro.ShiroConfig;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.pojo.TokenInfo;
 import com.minimalism.pojo.UserInfo;
 import com.minimalism.pojo.shiro.UserBase;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 //@ConditionalOnExpression("${authorization.shiro.enable:false} && !${authorization.security.enable:true}")
-@ConditionalOnExpression(ExpressionConstants.authorizationShiroAllExpression)
+//@ConditionalOnExpression(ExpressionConstants.authorizationShiroAllExpression)
+@ConditionalOnBean(ShiroConfig.class)
 public class LoginServiceImpl implements AbstractLoginService {
 
     /**

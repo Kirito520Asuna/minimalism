@@ -2,11 +2,13 @@ package com.minimalism.interceptor;
 
 import com.minimalism.abstractinterface.AbstractInterceptor;
 import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.filter.ApiFilter;
 import com.minimalism.interceptor.Impl.DefaultApiInterceptor;
 import com.minimalism.interceptor.Impl.DefaultInterceptor;
 import com.minimalism.interceptor.Impl.DefaultLogInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -30,11 +32,13 @@ public class InterceptorBean implements AbstractBean {
         return new DefaultInterceptor();
     }
     @Bean
+    @ConditionalOnMissingBean(ApiFilter.class)
     //@ConditionalOnExpression("${common.jwt.openInterceptor:false}&&!${common.jwt.openFilter:true}")
     public AbstractApiInterceptor defaultApiInterceptor(){
         return new DefaultApiInterceptor();
     }
     @Bean
+    @ConditionalOnMissingBean(ApiFilter.class)
     //@ConditionalOnExpression("${common.jwt.openInterceptor:false}&&!${common.jwt.openFilter:true}")
     public AbstractLogInInterceptor defaultLogInterceptor(){
         return new DefaultLogInterceptor();
