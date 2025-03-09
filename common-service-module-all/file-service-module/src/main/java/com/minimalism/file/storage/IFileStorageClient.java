@@ -168,8 +168,8 @@ public interface IFileStorageClient extends AbstractBean {
         return null;
     }
 
-    default FileInfo uploadSharding(String flieName, InputStream inputStream) {
-        return uploadSharding(null, flieName, inputStream);
+    default FileInfo uploadSharding(String flieName, InputStream inputStream, String identifier) {
+        return uploadSharding(null, flieName, inputStream, identifier);
     }
 
     /**
@@ -179,7 +179,7 @@ public interface IFileStorageClient extends AbstractBean {
      * @param flieName
      * @param inputStream
      */
-    default FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
+    default FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
         if (StrUtil.isBlank(bucketName)) {
             bucketName = getBucket();
         }
@@ -274,7 +274,7 @@ public interface IFileStorageClient extends AbstractBean {
      * @return
      */
     default FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
-        return uploadSharding(fileMainName, inputStream);
+        return uploadSharding(fileMainName, inputStream, identifier);
     }
 
     /**
@@ -284,12 +284,13 @@ public interface IFileStorageClient extends AbstractBean {
      * @param fileMainName
      * @return
      */
-    default String getMergeFilePath(String identifier,String fileMainName) {
-        return LocalOSSUtils.getMergeFilePath(identifier,fileMainName);
+    default String getMergeFilePath(String identifier, String fileMainName) {
+        return LocalOSSUtils.getMergeFilePath(identifier, fileMainName);
     }
 
     /**
      * 获取本地分片文件目录路径
+     *
      * @param identifier
      * @return
      */

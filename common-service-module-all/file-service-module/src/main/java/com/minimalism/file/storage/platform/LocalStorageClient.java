@@ -3,6 +3,7 @@ package com.minimalism.file.storage.platform;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.enums.OSType;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
@@ -41,7 +42,7 @@ public class LocalStorageClient implements LocalClient {
     private String nginxUrl;
     private String uploadDir;
 
-    public LocalStorageClient(){
+    public LocalStorageClient() {
         FileProperties.LocalProperties config = SpringUtil.getBean(FileProperties.LocalProperties.class);
         try {
             String directory = config.getDirectory();
@@ -61,6 +62,7 @@ public class LocalStorageClient implements LocalClient {
             throw new GlobalConfigException("请检查本地存储配置是否正确");
         }
     }
+
     public LocalStorageClient(FileProperties.LocalProperties config) {
         try {
             String directory = config.getDirectory();
@@ -127,15 +129,20 @@ public class LocalStorageClient implements LocalClient {
     }
 
     @Override
-    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
-        LocalClient.super.uploadSharding(bucketName, flieName, inputStream);
-        String bucketPath = uploadDir + "/" + bucketName + "/";
-        bucketPath = bucketPath.replace("//", "/");
+    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
+        LocalClient.super.uploadSharding(bucketName, flieName, inputStream, identifier);
+
+        if (StrUtil.isBlank(identifier)) {
+            identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
+        }
+        String separator = OSType.getSeparator(null);
+        String bucketPath = uploadDir + separator + bucketName + separator + identifier + separator;
+        bucketPath = bucketPath.replace(separator + separator, separator);
         File bucketFile = FileUtil.newFile(bucketPath);
         if (!bucketFile.exists()) {
             bucketFile.mkdirs();
         }
-        String identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
+
         String fileLocal = LocalOSSUtils.uploadSharding(flieName, identifier, inputStream);
         Boolean aFalse = Boolean.FALSE;
         return buildFileInfo(flieName, FileUtil.getInputStream(fileLocal), fileLocal, Boolean.TRUE, aFalse, aFalse);

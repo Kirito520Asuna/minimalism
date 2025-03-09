@@ -104,8 +104,8 @@ public class AliyunOssStorageClient implements AliyunClient {
 
     @SneakyThrows
     @Override
-    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream) {
-        AliyunClient.super.uploadSharding(bucketName, flieName, inputStream);
+    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream,String identifier) {
+        AliyunClient.super.uploadSharding(bucketName, flieName, inputStream,identifier);
         String url = AliyunOSSUtils.uploadShardingOss(client, bucketName, flieName, inputStream);
 
         Boolean aFalse = Boolean.FALSE;
