@@ -94,7 +94,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String getMergePartPath(String identifier, String fileName, String suffix) {
         // 使用HuTool保存分片文件
-        return FileFactory.getClient(StorageType.local).getMergeFilePath(identifier,fileName + suffix);
+        return FileFactory.getClient(StorageType.local).getMergeFilePath(identifier, fileName + suffix);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class FileServiceImpl implements FileService {
         } else {
             mainName = FileUtil.mainName(fileName);
             suffix = FileUtil.getSuffix(fileName);
-            path = getMergePartPath(identifier, mainName, "." + FileUtil.getSuffix(fileName));
+            path = getMergePartPath(identifier, "tmp_" + mainName, "." + FileUtil.getSuffix(fileName));
         }
 
         if (!suffix.startsWith(".")) {
