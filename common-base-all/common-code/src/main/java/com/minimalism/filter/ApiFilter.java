@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.abstractinterface.service.AbstractApiFiler;
 import com.minimalism.pojo.http.CachedBodyHttpServletRequest;
 import com.minimalism.config.ApiConfig;
 import com.minimalism.exception.GlobalCustomException;
@@ -29,27 +30,16 @@ import java.util.stream.Collectors;
  * @Date 2023/5/12 0012 18:09
  * @Description
  */
-//@Component
 @Order(-2)
 @Slf4j
-public class ApiFilter extends OncePerRequestFilter implements AbstractApiSign {
+public class ApiFilter extends OncePerRequestFilter implements AbstractApiFiler {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         // 从包装器读取请求体
         CachedBodyHttpServletRequest cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(request);
-   /*     ServletInputStream requestInputStream = cachedBodyHttpServletRequest.getInputStream();
-        String json = null;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestInputStream))) {
-            json = reader.lines().collect(Collectors.joining("\n"));
-        }
-
-        log.info("请求体2: {}", json);*/
-
         checkApi(request, cachedBodyHttpServletRequest);
-
         //放行
         filterChain.doFilter(cachedBodyHttpServletRequest, response);
-
     }
 
 }
