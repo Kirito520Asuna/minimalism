@@ -1,12 +1,19 @@
 package com.minimalism.utils.oss;
 
+import cn.hutool.core.collection.CollUtil;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSErrorCode;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
 import com.minimalism.utils.io.IoUtils;
+import com.minimalism.utils.object.ObjectUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -36,13 +43,15 @@ public class AliyunOSSUtils {
 
     /**
      * Oss桶存在
+     *
      * @param ossClient
      * @param bucketName
      * @return
      */
-    public static boolean doesBucketExist(OSS ossClient, String bucketName){
+    public static boolean doesBucketExist(OSS ossClient, String bucketName) {
         return ossClient.doesBucketExist(bucketName);
     }
+
     /**
      * Oss创造桶
      *
@@ -53,7 +62,7 @@ public class AliyunOSSUtils {
     public static Bucket createBucketName(OSS ossClient, String bucketName) {
         Bucket bucket = null;
         //不存在就创造
-        if (!doesBucketExist(ossClient,bucketName)) {
+        if (!doesBucketExist(ossClient, bucketName)) {
             bucket = ossClient.createBucket(bucketName);
         }
         return bucket;
@@ -142,26 +151,6 @@ public class AliyunOSSUtils {
         return generateKey(ossClient, bucketName);
     }
 
-    /**
-     * 获取文件长度
-     *
-     * @param inputStream
-     * @return
-     * @throws IOException
-     */
-    @SneakyThrows
-    public static long getFileLength(InputStream inputStream) {
-        byte[] buffer = new byte[1024];
-        long length = 0;
-        int bytesRead;
-        // 防止流耗尽
-        byte[] bytes = IOUtils.toByteArray(inputStream);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        while ((bytesRead = byteArrayInputStream.read(buffer)) != -1) {
-            length += bytesRead;
-        }
-        return length;
-    }
 
     /**
      * 文件分片上传
@@ -182,7 +171,7 @@ public class AliyunOSSUtils {
             String uploadId = result.getUploadId();
             final long partSize = 1 * 1024 * 1024L;
             byte[] toByteArray = IOUtils.toByteArray(inputStream);//1 MB。
-            long fileLength = getFileLength(new ByteArrayInputStream(toByteArray));
+            long fileLength = IoUtils.getInputStreamLength(toByteArray);
             int partCount = (int) (fileLength / partSize);
             if (fileLength % partSize != 0) {
                 partCount++;
@@ -223,8 +212,7 @@ public class AliyunOSSUtils {
             partETags = supplyAsync.get();
 
             if (partETags != null) {
-                CompleteMultipartUploadRequest completeMultipartUploadRequest =
-                        new CompleteMultipartUploadRequest(bucketName, key, uploadId, partETags);
+                CompleteMultipartUploadRequest completeMultipartUploadRequest = new CompleteMultipartUploadRequest(bucketName, key, uploadId, partETags);
                 CompleteMultipartUploadResult completeMultipartUploadResult = ossClient.completeMultipartUpload(completeMultipartUploadRequest);
 
                 url = completeMultipartUploadResult.getLocation();
@@ -245,6 +233,147 @@ public class AliyunOSSUtils {
         }
 
     }
+
+    /**
+     * 上传文件
+     *
+     * @param oss
+     * @param bucketName
+     * @param flieName
+     * @param inputStream
+     * @return
+     */
+    public static String uploadShard(OSS oss, String bucketName, String flieName, InputStream inputStream) {
+        String url = null;
+        try {
+            UploadShardInfo uploadShardInfo = getUploadShardInfo(oss, bucketName, flieName, inputStream, null);
+
+            int partCount = uploadShardInfo.getPartCount();
+            long partSize = uploadShardInfo.getPartSize();
+            long bytesLength = uploadShardInfo.getBytesLength();
+            String uploadId = uploadShardInfo.getUploadId();
+            byte[] bytes = uploadShardInfo.getBytes();
+            String key = uploadShardInfo.getKey();
+
+            CompletableFuture<List<PartETag>> supplyAsync = CompletableFuture.supplyAsync(() -> {
+                List<PartETag> partETags = CollUtil.newArrayList();
+                try {
+                    for (int i = 0; i < partCount; i++) {
+                        long startSize = i * partSize;
+                        long currentPartSize = (i + 1 == partCount) ? (bytesLength - startSize) : partSize;
+                        UploadPartResult uploadPartResult = uploadPartCount(oss, bucketName, flieName, uploadId, bytes, i, startSize, currentPartSize);
+                        partETags.add(uploadPartResult.getPartETag());
+                    }
+                } catch (IOException e) {
+                    partETags = null;
+                }
+                return partETags;
+            });
+
+            supplyAsync.join();
+            List<PartETag> partETags = supplyAsync.get();
+
+            if (partETags != null) {
+                CompleteMultipartUploadRequest completeMultipartUploadRequest = new CompleteMultipartUploadRequest(bucketName, key, uploadId, partETags);
+                CompleteMultipartUploadResult completeMultipartUploadResult = oss.completeMultipartUpload(completeMultipartUploadRequest);
+
+                url = completeMultipartUploadResult.getLocation();
+            } else {
+                throw new Exception("分片上传失败");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            oss.shutdown();
+        }
+        return url;
+
+    }
+
+    /**
+     * 分片上传信息实体
+     */
+    @Data
+    @SuperBuilder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(chain = true)
+    static class UploadShardInfo {
+        private String key;
+        private String uploadId;
+        private int partCount;
+        private long partSize;
+        private byte[] bytes;
+        private long bytesLength;
+    }
+
+    /**
+     * 获取分片上传信息
+     *
+     * @param oss
+     * @param bucketName
+     * @param flieName
+     * @return
+     */
+    @SneakyThrows
+    public static UploadShardInfo getUploadShardInfo(OSS oss, String bucketName, String flieName, InputStream inputStream, Long partSize) {
+        String key = generateKey(oss, bucketName, flieName);
+        InitiateMultipartUploadRequest request = new InitiateMultipartUploadRequest(bucketName, key);
+        InitiateMultipartUploadResult result = oss.initiateMultipartUpload(request);
+        String uploadId = result.getUploadId();
+        partSize = ObjectUtils.defaultIfEmpty(partSize, 1 * 1024 * 1024L);
+        byte[] toByteArray = IOUtils.toByteArray(inputStream);//1 MB。
+
+        long bytesLength = IoUtils.getInputStreamLength(toByteArray);
+        int partCount = (int) (bytesLength / partSize);
+        if (bytesLength % partSize != 0) {
+            partCount++;
+        }
+
+        return UploadShardInfo.builder().uploadId(uploadId).partCount(partCount).partSize(partSize).bytesLength(bytesLength).key(key).bytes(toByteArray).build();
+    }
+
+
+    /**
+     * 分片上传
+     *
+     * @param oss
+     * @param bucketName
+     * @param key
+     * @param uploadId
+     * @param toByteArray
+     * @param partNumber
+     * @param startPos
+     * @param partSize
+     * @return
+     * @throws IOException
+     */
+    public static UploadPartResult uploadPartCount(OSS oss, String bucketName, String key, String uploadId, byte[] toByteArray, int partNumber, long startPos, long partSize) throws IOException {
+        UploadPartRequest uploadPartRequest = new UploadPartRequest();
+        uploadPartRequest.setBucketName(bucketName);
+        uploadPartRequest.setKey(key);
+        uploadPartRequest.setUploadId(uploadId);
+        // 设置上传的分片流。
+        // 以本地文件为例说明如何创建FIleInputstream，并通过InputStream.skip()方法跳过指定数据。
+        InputStream instream = new ByteArrayInputStream(toByteArray);
+        instream.skip(startPos);
+        uploadPartRequest.setInputStream(instream);
+        // 设置分片大小。除了最后一个分片没有大小限制，其他的分片最小为100 KB。
+        uploadPartRequest.setPartSize(partSize);
+        // 设置分片号。每一个上传的分片都有一个分片号，取值范围是1~10000，如果超出此范围，OSS将返回InvalidArgument错误码。
+        uploadPartRequest.setPartNumber(partNumber + 1);
+        // 每个分片不需要按顺序上传，甚至可以在不同客户端上传，OSS会按照分片号排序组成完整的文件。
+        UploadPartResult uploadPartResult = oss.uploadPart(uploadPartRequest);
+        return uploadPartResult;
+    }
+
+
 
     /**
      * 上传文件
@@ -293,6 +422,7 @@ public class AliyunOSSUtils {
         inputStream.close();
         return outputStream;
     }
+
     /**
      * 下载文件--获取流
      *
@@ -351,7 +481,7 @@ public class AliyunOSSUtils {
         String shardingOss = uploadShardingOss(oss, bucketName, flieName, inputStream);
         System.err.println(shardingOss);
         //int i = shardingOss.indexOf() + 1;
-        String s = prx + bucketName+"." + endpoint + "/";
+        String s = prx + bucketName + "." + endpoint + "/";
         flieName = shardingOss.split(s)[1];
         oss = createOss(accessKeyId, accessKeySecret, prx + endpoint);
         deleteOss(oss, bucketName, flieName);

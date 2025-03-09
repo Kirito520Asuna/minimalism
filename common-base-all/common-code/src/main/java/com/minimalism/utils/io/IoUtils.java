@@ -3,12 +3,13 @@ package com.minimalism.utils.io;
 import cn.hutool.core.io.IoUtil;
 import com.minimalism.exception.GlobalCustomException;
 import lombok.SneakyThrows;
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.io.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,36 +34,64 @@ public class IoUtils extends IoUtil {
     }
 
     @SneakyThrows
-    public static byte[] toByteArray(InputStream in) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
-        int bytesRead;
-        while ((bytesRead = in.read(buffer)) != -1) {
-            baos.write(buffer, 0, bytesRead);
-        }
-        return baos.toByteArray();
+    public static byte[] toByteArray(InputStream inputStream) {
+        return IOUtils.toByteArray(inputStream);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(InputStream input, int size) {
+        return IOUtils.toByteArray(input, size);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(InputStream input, long size) {
+        return IOUtils.toByteArray(input, size);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(Reader reader) {
+        return IOUtils.toByteArray(reader);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(Reader reader, Charset charset) {
+        return IOUtils.toByteArray(reader, charset);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(Reader reader, String charsetName) {
+        return IOUtils.toByteArray(reader, charsetName);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(String input) {
+        return IOUtils.toByteArray(input);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(URI uri) throws IOException {
+        return IOUtils.toByteArray(uri);
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(URL url) {
+        return IOUtils.toByteArray(url);
+
+    }
+
+    @SneakyThrows
+    public static byte[] toByteArray(URLConnection urlConn) {
+        return IOUtils.toByteArray(urlConn);
     }
 
     @SneakyThrows
     public static byte[] toByteArray(List<InputStream> inList) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        for (InputStream in : inList) {
-            try {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    baos.write(buffer, 0, bytesRead);
-                }
-            } finally {
-                // 确保每个流在读取后被关闭
-                close(in);
-            }
-        }
-        return baos.toByteArray();
+        return merge(inList).toByteArray();
     }
 
     /**
      * 将输入流按指定大小分割成多个输入流
+     *
      * @param in
      * @param chunkSize
      * @return
@@ -82,16 +111,18 @@ public class IoUtils extends IoUtil {
 
     /**
      * 合并多个输入流
+     *
      * @param inputStreams
      * @return
      */
     @SneakyThrows
     public static ByteArrayInputStream mergeInputStream(List<InputStream> inputStreams) {
-       return new ByteArrayInputStream(toByteArray(inputStreams));
+        return new ByteArrayInputStream(toByteArray(inputStreams));
     }
 
     /**
      * 内存不足会出现 java heap space 异常
+     *
      * @param list
      * @return
      */
@@ -101,9 +132,9 @@ public class IoUtils extends IoUtil {
         try (ByteArrayOutputStream outputStream = out) {
             for (InputStream chunk : list) {
                 try (InputStream inputStream = chunk) {
-                    IoUtils.copy(inputStream, outputStream);
-                }finally {
-                    IoUtil.close(chunk);
+                    copy(inputStream, outputStream);
+                } finally {
+                    close(chunk);
                 }
             }
         } catch (IOException e) {
@@ -111,5 +142,22 @@ public class IoUtils extends IoUtil {
             throw new GlobalCustomException("合并错误！");
         }
         return out;
+    }
+    @SneakyThrows
+    public static long getInputStreamLength(byte[] bytes) {
+        return getInputStreamLength(new ByteArrayInputStream(bytes));
+    }
+    @SneakyThrows
+    public static long getInputStreamLength(InputStream inputStream) {
+        byte[] buffer = new byte[1024];
+        long length = 0;
+        int bytesRead;
+        // 防止流耗尽
+        byte[] bytes = toByteArray(inputStream);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        while ((bytesRead = byteArrayInputStream.read(buffer)) != -1) {
+            length += bytesRead;
+        }
+        return length;
     }
 }
