@@ -2,17 +2,11 @@ package com.minimalism.file.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.constant.Constants;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
-import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.service.FileInfoService;
 import com.minimalism.file.service.FilePartService;
 import com.minimalism.file.service.FileService;
@@ -29,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,7 +84,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String getPartPath(String identifier, Integer chunkNumber) {
         // 使用HuTool保存分片文件
-        String part = ".part";
+        String part = Constants.PART_SUFFIX;
         // 使用HuTool保存分片文件
         return FileFactory.getClient(StorageType.local).getChunkDirPath(identifier) + chunkNumber + part;
     }
@@ -189,18 +181,14 @@ public class FileServiceImpl implements FileService {
         return true;
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void mergeMore(Long fileId) throws IOException {
         int count = filePartService.getCountByFileId(fileId);
         //如果分片数量大于1024个 则将分片数量减少到1024个
         int partSizeMax = 1024;
         int partCount = count / partSizeMax;
-        if (partCount > partSizeMax) {
-            //应该递归 todo：
 
-            //临时抛出异常处理
-            throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
-        }
         List<Long> excludePartIds = CollUtil.newArrayList();
         for (int i = 1; i <= partCount; i++) {
             List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount,
@@ -255,6 +243,13 @@ public class FileServiceImpl implements FileService {
                 filePartService.updateById(filePart);
                 excludePartIds.add(filePart.getPartId());
             }
+        }
+
+        if (partCount > partSizeMax) {
+            //应该递归 todo：
+            mergeMore(fileId);
+            //临时抛出异常处理
+            //throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
         }
     }
 
