@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
@@ -27,7 +28,8 @@ import java.util.stream.Collectors;
  */
 public class LocalOSSUtils {
     public static String getUploadDir() {
-        String uploadDir = "/";
+        String separator = OSType.getSeparator(null);
+        String uploadDir = separator;
         try {
             FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
             FileProperties.LocalProperties local = fileProperties.getLocal();
@@ -37,10 +39,10 @@ public class LocalOSSUtils {
         }
         //uploadDir = "tmp/uploads";
 
-        if (!uploadDir.endsWith("/")) {
-            uploadDir = uploadDir + "/";
+        if (!uploadDir.endsWith(separator)) {
+            uploadDir = uploadDir + separator;
         }
-        uploadDir = uploadDir + getBucket() + "/";
+        uploadDir = uploadDir + getBucket() + separator;
         File file = FileUtil.newFile(uploadDir);
         if (!file.exists()) {
             file.mkdirs();
@@ -61,7 +63,8 @@ public class LocalOSSUtils {
     }
 
     public static String getChunkDir() {
-        String chunk = getUploadDir() + "chunks/";
+        String separator = OSType.getSeparator(null);
+        String chunk = getUploadDir() + "chunks" + separator;
         File file = FileUtil.newFile(chunk);
         if (!file.exists()) {
             file.mkdirs();
@@ -70,7 +73,8 @@ public class LocalOSSUtils {
     }
 
     public static String getMergeDir() {
-        String merged = getUploadDir() + "merged/";
+        String separator = OSType.getSeparator(null);
+        String merged = getUploadDir() + "merged" + separator;
         File file = FileUtil.newFile(merged);
         if (!file.exists()) {
             file.mkdirs();
@@ -120,8 +124,9 @@ public class LocalOSSUtils {
         if (StrUtil.isBlank(bucketName)) {
             bucketName = "";
         }
-        String bucketPath = getUploadDir() + "/" + bucketName + "/";
-        bucketPath = bucketPath.replace("//", "/");
+        String separator = OSType.getSeparator(null);
+        String bucketPath = getUploadDir() + separator + bucketName + separator;
+        bucketPath = bucketPath.replace(separator + separator, separator);
 
         File bucketFile = FileUtil.newFile(bucketPath);
         if (!bucketFile.exists()) {
@@ -169,8 +174,9 @@ public class LocalOSSUtils {
         if (StrUtil.isBlank(chunkDir)) {
             chunkDir = getChunkDir();
         }
-        if (!chunkDir.endsWith("/")) {
-            chunkDir = chunkDir + "/";
+        String separator = OSType.getSeparator(null);
+        if (!chunkDir.endsWith(separator)) {
+            chunkDir = chunkDir + separator;
         }
         int chunkNumber = 1;
         // 创建分块存放目录：CHUNK_DIR + identifier
@@ -186,7 +192,7 @@ public class LocalOSSUtils {
             // 循环读取，直到返回 -1 表示读完
             while ((bytesRead = fis.read(buffer)) != -1) {
                 // 每个分块文件命名为 “chunkNumber.part”
-                File tempFile = FileUtil.newFile(chunkDirPath + "/" + chunkNumber + getPartSuffix());
+                File tempFile = FileUtil.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
                 if (!tempFile.exists()) {
                     tempFile.createNewFile();
                 }
@@ -226,7 +232,8 @@ public class LocalOSSUtils {
         if (!chunkDirFile.exists()) {
             chunkDirFile.mkdirs();
         }
-        File tempFile = FileUtil.newFile(chunkDirPath + "/" + chunkNumber + getPartSuffix());
+        String separator = OSType.getSeparator(null);
+        File tempFile = FileUtil.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
         if (!tempFile.exists()) {
             tempFile.createNewFile();
         }
@@ -257,11 +264,12 @@ public class LocalOSSUtils {
      */
     @SneakyThrows
     public static String mergeFileLocal(String chunkDir, String mergeDir, String fileName, String identifier) {
-        if (!chunkDir.endsWith("/")) {
-            chunkDir = chunkDir + "/";
+        String separator = OSType.getSeparator(null);
+        if (!chunkDir.endsWith(separator)) {
+            chunkDir = chunkDir + separator;
         }
-        if (!mergeDir.endsWith("/")) {
-            mergeDir = mergeDir + "/";
+        if (!mergeDir.endsWith(separator)) {
+            mergeDir = mergeDir + separator;
         }
         // 分块文件所在目录
         File chunkDirFile = FileUtil.newFile(chunkDir + identifier);
@@ -321,8 +329,9 @@ public class LocalOSSUtils {
      * @return
      */
     public static List<FilePart> getFileParts(String chunkDir, String identifier, Long fileId) {
-        if (!chunkDir.endsWith("/")) {
-            chunkDir = chunkDir + "/";
+        String separator = OSType.getSeparator(null);
+        if (!chunkDir.endsWith(separator)) {
+            chunkDir = chunkDir + separator;
         }
         // 分块文件所在目录
         File chunkDirFile = FileUtil.newFile(chunkDir + identifier);

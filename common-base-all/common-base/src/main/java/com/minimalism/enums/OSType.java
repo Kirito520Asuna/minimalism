@@ -1,5 +1,6 @@
 package com.minimalism.enums;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,30 +15,49 @@ public enum OSType {
     win("\\"), linux("/"), mac("/");
     private String separator;
 
-    private static String getOS() {
-        return System.getProperty("os.name").toLowerCase();
+    public static String getOS() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains(win.name())) {
+            os = win.name();
+        } else if (os.contains(mac.name())) {
+            os = mac.name();
+        } else if (os.contains(linux.name())) {
+            os = linux.name();
+        }
+        return os;
     }
 
-    public static boolean isWindows() {
-        return getOS().contains(win.name());
+    public static boolean isWindows(String os) {
+        if (StrUtil.isBlank(os)) {
+            os = getOS();
+        }
+        return os.contains(win.name());
     }
 
-    public static boolean isMac() {
-        return getOS().contains(mac.name());
+    public static boolean isMac(String os) {
+        if (StrUtil.isBlank(os)) {
+            os = getOS();
+        }
+        return os.contains(mac.name());
     }
 
-    public static boolean isLinux() {
-        String os = getOS();
+    public static boolean isLinux(String os) {
+        if (StrUtil.isBlank(os)) {
+            os = getOS();
+        }
         return os.contains(linux.name()) || os.contains("nix") || os.contains("nux") || os.contains("aix");
     }
 
-    public static String getSeparator() {
+    public static String getSeparator(String os) {
         String separator;
-        if (isWindows()) {
+        if (StrUtil.isBlank(os)) {
+            os = getOS();
+        }
+        if (isWindows(os)) {
             separator = win.getSeparator();
-        } else if (isMac()) {
+        } else if (isMac(os)) {
             separator = mac.getSeparator();
-        } else if (isLinux()) {
+        } else if (isLinux(os)) {
             separator = linux.getSeparator();
         } else {
             separator = linux.getSeparator();

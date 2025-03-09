@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
@@ -176,8 +177,9 @@ public class FileServiceImpl implements FileService {
                             String partFileName = i + ".part";
                             String localResource = filePart.getLocalResource();
                             // 使用字符串操作获取父目录路径
-                            // 只支持linux版本
-                            int lastIndexOf = localResource.lastIndexOf("/");
+
+                            // 只支持win,mac,linux版本
+                            int lastIndexOf = localResource.lastIndexOf(OSType.getSeparator(filePart.getOsType()));
                             String parentPathByString = localResource.substring(0, lastIndexOf + 1);
                         }
                     }
