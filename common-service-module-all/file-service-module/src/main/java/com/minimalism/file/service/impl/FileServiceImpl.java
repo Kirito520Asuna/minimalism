@@ -139,10 +139,10 @@ public class FileServiceImpl implements FileService {
                     fileInfoService.removeById(fileId);
 
                     throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
-                }else {
+                } else {
                     //方案二
                     //将分片合并 到不会oom的程度
-                    mergeMore(fileId,identifier);
+                    mergeMore(fileId, identifier);
                 }
             }
         } else {
@@ -185,13 +185,19 @@ public class FileServiceImpl implements FileService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void mergeMore(Long fileId, String identifier) throws IOException {
-        int count = filePartService.getCountByFileId(fileId,identifier);
-        if (count == 0){
+        int count = filePartService.getCountByFileId(fileId, identifier);
+        if (count == 0) {
             throw new GlobalCustomException("[FilePart]-[mergeMore]" + "分片数量为0");
         }
-        //如果分片数量大于1024个 则将分片数量减少到1024个
-        int partSizeMax = 1024;
-        int partCount = count / partSizeMax;
+
+        //如果分片数量大于100个 则将分片数量减少到100个
+        int maxPartSize = 100;
+        if (count < maxPartSize) {
+            return;
+        }
+        //每次合并的分片数量
+        int mergePartSize = 10;
+        int partCount = count % mergePartSize == 0 ? (count / mergePartSize) : (count / mergePartSize) + 1;
 
         List<Long> excludePartIds = CollUtil.newArrayList();
         for (int i = 1; i <= partCount; i++) {
@@ -249,7 +255,7 @@ public class FileServiceImpl implements FileService {
             }
         }
 
-        if (partCount > partSizeMax) {
+        if (partCount > mergePartSize) {
             //应该递归 todo：
             mergeMore(fileId, identifier);
             //临时抛出异常处理
