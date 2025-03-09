@@ -154,7 +154,6 @@ public class AliyunOSSUtils {
 
     /**
      * 文件分片上传
-     *
      * @param ossClient
      * @param bucketName
      * @param flieName
@@ -236,17 +235,17 @@ public class AliyunOSSUtils {
 
     /**
      * 上传文件
-     *
      * @param oss
      * @param bucketName
-     * @param flieName
+     * @param fileName
+     * @param filePartSize
      * @param inputStream
      * @return
      */
-    public static String uploadShard(OSS oss, String bucketName, String flieName, InputStream inputStream) {
+    public static String uploadShardingOss(OSS oss, String bucketName, String fileName, Long filePartSize, InputStream inputStream) {
         String url = null;
         try {
-            UploadShardInfo uploadShardInfo = getUploadShardInfo(oss, bucketName, flieName, inputStream, null);
+            UploadShardInfo uploadShardInfo = getUploadShardInfo(oss, bucketName, fileName, inputStream, filePartSize);
 
             int partCount = uploadShardInfo.getPartCount();
             long partSize = uploadShardInfo.getPartSize();
@@ -258,10 +257,10 @@ public class AliyunOSSUtils {
             CompletableFuture<List<PartETag>> supplyAsync = CompletableFuture.supplyAsync(() -> {
                 List<PartETag> partETags = CollUtil.newArrayList();
                 try {
-                    for (int i = 0; i < partCount; i++) {
-                        long startSize = i * partSize;
-                        long currentPartSize = (i + 1 == partCount) ? (bytesLength - startSize) : partSize;
-                        UploadPartResult uploadPartResult = uploadPartCount(oss, bucketName, flieName, uploadId, bytes, i, startSize, currentPartSize);
+                    for (int index = 0; index < partCount; index++) {
+                        long startSize = index * partSize;
+                        long currentPartSize = (index + 1 == partCount) ? (bytesLength - startSize) : partSize;
+                        UploadPartResult uploadPartResult = uploadPartCount(oss, bucketName, fileName, uploadId, bytes, index, startSize, currentPartSize);
                         partETags.add(uploadPartResult.getPartETag());
                     }
                 } catch (IOException e) {
@@ -269,14 +268,11 @@ public class AliyunOSSUtils {
                 }
                 return partETags;
             });
-
             supplyAsync.join();
             List<PartETag> partETags = supplyAsync.get();
-
             if (partETags != null) {
                 CompleteMultipartUploadRequest completeMultipartUploadRequest = new CompleteMultipartUploadRequest(bucketName, key, uploadId, partETags);
                 CompleteMultipartUploadResult completeMultipartUploadResult = oss.completeMultipartUpload(completeMultipartUploadRequest);
-
                 url = completeMultipartUploadResult.getLocation();
             } else {
                 throw new Exception("分片上传失败");
@@ -293,7 +289,6 @@ public class AliyunOSSUtils {
             oss.shutdown();
         }
         return url;
-
     }
 
     /**
@@ -372,7 +367,6 @@ public class AliyunOSSUtils {
         UploadPartResult uploadPartResult = oss.uploadPart(uploadPartRequest);
         return uploadPartResult;
     }
-
 
 
     /**
