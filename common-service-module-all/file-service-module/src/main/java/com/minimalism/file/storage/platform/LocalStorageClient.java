@@ -133,15 +133,14 @@ public class LocalStorageClient implements LocalClient {
     @Override
     public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
         LocalClient.super.uploadSharding(bucketName, flieName, inputStream, identifier);
-        if (StrUtil.isBlank(bucketName)) {
-            bucketName = getBucket();
-        }
+
         if (StrUtil.isBlank(identifier)) {
             identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
         }
-        String separator = OSType.getSeparator(null);
-        String bucketPath = uploadDir + separator + bucketName + separator + identifier + separator;
-        bucketPath = bucketPath.replace(separator + separator, separator);
+        String bucketPath = LocalOSSUtils.getMergeFilePath(identifier, StrUtil.EMPTY);
+        //String separator = OSType.getSeparator(null);
+        //String bucketPath = uploadDir + separator + bucketName + separator + identifier + separator;
+        //bucketPath = bucketPath.replace(separator + separator, separator);
         File bucketFile = FileUtil.newFile(bucketPath);
         if (!bucketFile.exists()) {
             bucketFile.mkdirs();

@@ -281,7 +281,8 @@ public class FileServiceImpl implements FileService {
 
     public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
         IFileStorageClient client = FileFactory.getClient(StorageType.local);
-        FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
+        //FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
+        FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier);
         return fileInfo.setLocal(Boolean.TRUE).setName(FileUtil.mainName(fileInfo.getFileName()));
     }
 

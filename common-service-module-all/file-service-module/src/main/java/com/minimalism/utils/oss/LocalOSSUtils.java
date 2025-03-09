@@ -276,8 +276,9 @@ public class LocalOSSUtils {
             chunkDir = chunkDir + separator;
         }
         if (!mergeDir.endsWith(separator)) {
-            mergeDir = mergeDir + separator + identifier + separator;
+            mergeDir = mergeDir + separator;
         }
+        mergeDir = mergeDir + identifier + separator;
         // 分块文件所在目录
         File chunkDirFile = FileUtil.newFile(chunkDir + identifier);
         File[] chunkFiles = chunkDirFile.listFiles();
