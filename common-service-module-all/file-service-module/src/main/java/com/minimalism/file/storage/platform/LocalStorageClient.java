@@ -50,8 +50,9 @@ public class LocalStorageClient implements LocalClient {
             String nginxUrl = config.getNginxUrl();
             String uploadDir = config.getUploadDir();
             uploadDir = ObjectUtils.defaultIfEmpty(uploadDir, "tmp/upload");
-            if (!uploadDir.endsWith("/")) {
-                uploadDir = uploadDir + "/";
+            String separator = OSType.getSeparator(null);
+            if (!uploadDir.endsWith(separator)) {
+                uploadDir = uploadDir + separator;
             }
             this.directory = directory;
             this.endPoint = endPoint;
@@ -70,8 +71,9 @@ public class LocalStorageClient implements LocalClient {
             String nginxUrl = config.getNginxUrl();
             String uploadDir = config.getUploadDir();
             uploadDir = ObjectUtils.defaultIfEmpty(uploadDir, "tmp/upload");
-            if (!uploadDir.endsWith("/")) {
-                uploadDir = uploadDir + "/";
+            String separator = OSType.getSeparator(null);
+            if (!uploadDir.endsWith(separator)) {
+                uploadDir = uploadDir + separator;
             }
             this.directory = directory;
             this.endPoint = endPoint;
