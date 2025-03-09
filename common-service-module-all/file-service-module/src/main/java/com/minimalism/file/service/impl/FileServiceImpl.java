@@ -184,6 +184,7 @@ public class FileServiceImpl implements FileService {
             mergeOk(identifier, fileId);
         } finally {
             FileUtil.del(path);
+            FileUtil.del(path.substring(0, path.lastIndexOf(OSType.getSeparator(null)) + 1));
         }
         return true;
     }
@@ -217,7 +218,7 @@ public class FileServiceImpl implements FileService {
             List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount,
                     excludePartIds
             );
-            if (CollUtil.isEmpty(parts)){
+            if (CollUtil.isEmpty(parts)) {
                 return;
             }
             //合并 todo：
