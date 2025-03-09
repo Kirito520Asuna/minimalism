@@ -38,5 +38,5 @@ public interface FilePartMapper extends BaseMapper<FilePart> {
 
     int deleteByFileId(@Param("identifier") String identifier, @Param("fileId") Long fileId);
 
-    List<FilePart> getPartsByFileIdFirstPartCount(@Param("fileId") Long fileId, @Param("partCount") int partCount);
+    List<FilePart> getPartsByFileIdFirstPartCount(@Param("fileId") Long fileId, @Param("partCount") int partCount, @Param("excludeIds") List<Long> excludeIds);
 }

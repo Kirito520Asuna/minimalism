@@ -131,7 +131,7 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
     }
 
     @Override
-    public List<FilePart> getPartsByFileIdFirstPartCount(Long fileId, int partCount, List<Long> excludes) {
-        return baseMapper.getPartsByFileIdFirstPartCount(fileId, partCount);
+    public List<FilePart> getPartsByFileIdFirstPartCount(Long fileId, int partCount, List<Long> excludeIds) {
+        return baseMapper.getPartsByFileIdFirstPartCount(fileId, partCount,excludeIds);
     }
 }
