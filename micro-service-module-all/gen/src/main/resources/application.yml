@@ -64,6 +64,5 @@ logging:
 #  annotation:
 #    enable: false
 common:
-  jwt:
-    openFilter: false
-    openInterceptor: true
+  openFilter: false
+  openInterceptor: true

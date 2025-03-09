@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 @Service
-//@ConditionalOnExpression("${common.jwt.openFilter:true}&&!${common.jwt.openInterceptor:false}")
 @ConditionalOnExpression(ExpressionConstants.filterAllExpression)
 public class DefaultSecurityConfigImpl implements AbstractSecurityConfig {
     @Override
@@ -22,7 +21,6 @@ public class DefaultSecurityConfigImpl implements AbstractSecurityConfig {
         AbstractSecurityConfig.super.addFilterBeforeList(http);
     }
     @Bean
-    //@ConditionalOnExpression("${common.jwt.openFilter:true}&&!${common.jwt.openInterceptor:false}")
     public JwtFilter jwtFilter() {
         return new JwtFilter();
     }

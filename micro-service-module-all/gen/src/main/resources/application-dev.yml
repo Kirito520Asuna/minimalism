@@ -11,8 +11,6 @@ spring:
         master:
           url: jdbc:mysql://192.168.3.22:3306/minimalism?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
 
-
 common:
-  jwt:
-    openFilter: true
-    openInterceptor: false
+  openFilter: true
+  openInterceptor: false

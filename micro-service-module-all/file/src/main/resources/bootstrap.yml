@@ -46,3 +46,7 @@ authorization:
     enable: true
   security:
     enable: false
+
+common:
+  openFilter: false
+  openInterceptor: true

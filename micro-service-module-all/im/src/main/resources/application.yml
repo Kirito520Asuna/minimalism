@@ -70,6 +70,5 @@ logging:
     com.baomidou.mybatisplus: debug
 
 common:
-    jwt:
-      openFilter: true
-      openInterceptor: false
+  openFilter: true
+  openInterceptor: false

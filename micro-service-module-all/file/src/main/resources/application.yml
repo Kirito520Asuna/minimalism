@@ -63,7 +63,3 @@ logging:
 #shiro:
 #  annotation:
 #    enable: false
-common:
-  jwt:
-    openFilter: false
-    openInterceptor: true

@@ -18,8 +18,8 @@ public class ExpressionConstants {
     public static final String suffix = "}";
     public static final String authorizationShiro = "authorization.shiro.enable";
     public static final String authorizationSecurity = "authorization.security.enable";
-    public static final String openFilter = "common.jwt.openFilter";
-    public static final String openInterceptor = "common.jwt.openInterceptor";
+    public static final String openFilter = "common.openFilter";
+    public static final String openInterceptor = "common.openInterceptor";
     public static final String prefixAndSuffix = "${%s}";
 
     public static String formatPrefixAndSuffix(Object key) {
