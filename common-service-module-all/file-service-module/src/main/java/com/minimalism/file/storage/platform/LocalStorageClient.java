@@ -43,8 +43,7 @@ public class LocalStorageClient implements LocalClient {
     private String nginxDir;
     private String uploadDir;
 
-    public LocalStorageClient() {
-        FileProperties.LocalProperties config = SpringUtil.getBean(FileProperties.LocalProperties.class);
+    public void init(FileProperties.LocalProperties config) {
         try {
             String directory = config.getDirectory();
             String endPoint = config.getEndPoint();
@@ -67,25 +66,13 @@ public class LocalStorageClient implements LocalClient {
         }
     }
 
+    public LocalStorageClient() {
+        FileProperties.LocalProperties config = SpringUtil.getBean(FileProperties.LocalProperties.class);
+        init(config);
+    }
+
     public LocalStorageClient(FileProperties.LocalProperties config) {
-        try {
-            String directory = config.getDirectory();
-            String endPoint = config.getEndPoint();
-            String nginxUrl = config.getNginxUrl();
-            String uploadDir = config.getUploadDir();
-            uploadDir = ObjectUtils.defaultIfEmpty(uploadDir, "tmp/upload");
-            String separator = OSType.getSeparator(null);
-            if (!uploadDir.endsWith(separator)) {
-                uploadDir = uploadDir + separator;
-            }
-            this.directory = directory;
-            this.endPoint = endPoint;
-            this.nginxUrl = nginxUrl;
-            this.uploadDir = uploadDir;
-        } catch (Exception e) {
-            error("[Local] LocalStorage build failed: {}", e.getMessage());
-            throw new GlobalConfigException("请检查本地存储配置是否正确");
-        }
+        init(config);
     }
 
     @Override

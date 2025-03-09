@@ -31,26 +31,41 @@ import java.nio.charset.StandardCharsets;
  */
 @Service
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 public class AliyunOssStorageClient implements AliyunClient {
     private OSS client;
     private String endPoint;
     private String bucket;
 
-    public AliyunOssStorageClient(FileProperties.AliyunOssProperties config) {
+    public void init(FileProperties.AliyunOssProperties config) {
         try {
             String accessKey = config.getAccessKey();
             String secretKey = config.getSecretKey();
             String endPoint = config.getEndpoint();
             String bucket = config.getBucket();
-            this.client = new OSSClientBuilder().build(endPoint, accessKey, secretKey);
+            this.client = AliyunOSSUtils.createOss(accessKey, secretKey, endPoint);
             this.endPoint = endPoint;
             this.bucket = bucket;
         } catch (Exception e) {
             error("[AliyunOSS] OSSClient build failed: {}", e.getMessage());
             throw new GlobalConfigException("请检查阿里云OSS配置是否正确");
         }
+    }
+    public AliyunOssStorageClient() {
+        FileProperties.AliyunOssProperties config;
+        try {
+            config = SpringUtil.getBean(FileProperties.AliyunOssProperties.class);
+        }catch (Exception e){
+            config = SpringUtil.getBean(FileProperties.AliyunOssProperties.class);
+        }
+
+        init(config);
+    }
+
+
+    public AliyunOssStorageClient(FileProperties.AliyunOssProperties config) {
+        init(config);
     }
 
     @Override
@@ -104,8 +119,8 @@ public class AliyunOssStorageClient implements AliyunClient {
 
     @SneakyThrows
     @Override
-    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream,String identifier) {
-        AliyunClient.super.uploadSharding(bucketName, flieName, inputStream,identifier);
+    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
+        AliyunClient.super.uploadSharding(bucketName, flieName, inputStream, identifier);
         String url = AliyunOSSUtils.uploadShardingOss(client, bucketName, flieName, inputStream);
 
         Boolean aFalse = Boolean.FALSE;
