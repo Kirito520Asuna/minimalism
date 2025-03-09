@@ -92,7 +92,14 @@ public class LocalOSSUtils {
     }
 
     public static String getMergeFilePath(String identifier, String fileMainName) {
-        return getMergeDir() + identifier + OSType.getSeparator(null) + fileMainName;
+        String separator = OSType.getSeparator(null);
+        String path = getMergeDir() + identifier + separator;
+        path = path.replace(separator + separator, separator);
+        File file = FileUtil.newFile(path);
+        if (!file.exists()){
+            file.mkdirs();
+        }
+        return path + fileMainName;
     }
 
     public static String getChunkDirPath(String identifier) {
