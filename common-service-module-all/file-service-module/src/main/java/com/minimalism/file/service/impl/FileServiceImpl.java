@@ -245,8 +245,9 @@ public class FileServiceImpl implements FileService {
 
             FilePart filePart = parts.stream().findFirst().get();
             info("{}" + Constants.PART_SUFFIX + "~{}" + Constants.PART_SUFFIX + ",合并完成",
-                    FileUtil.mainName(filePart.getLocalResource()),
-                    FileUtil.mainName(parts.get(parts.size() - 1).getLocalResource()));
+                    FileUtil.mainName(filePart.getLocal() ? filePart.getLocalResource() : filePart.getUrl()),
+                    FileUtil.mainName(parts.get(parts.size() - 1).getLocal() ?
+                            parts.get(parts.size() - 1).getLocalResource() : parts.get(parts.size() - 1).getUrl()));
 
             if (filePart.getLocal()) {
                 String partFileName = i + Constants.PART_SUFFIX;
