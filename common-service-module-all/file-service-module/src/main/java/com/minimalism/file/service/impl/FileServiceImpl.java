@@ -129,20 +129,21 @@ public class FileServiceImpl implements FileService {
             long maxSize = 1024 * 1024 * 1024;
             if (fileInfoSize > maxSize) {
                 if (false) {
+                    //方案一
+                    FilePart filePart = new FilePart()
+                            .setFileId(fileId)
+                            .setPartCode(identifier)
+                            .setMergeDelete(Boolean.TRUE);
+                    //先改需要删除的状态 然后定时任务去删除文件 和数据库中数据
+                    filePartService.updateByEntityFileId(filePart);
+                    fileInfoService.removeById(fileId);
+
+                    throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
+                }else {
                     //方案二
                     //将分片合并 到不会oom的程度
-                    mergeMore(fileId);
+                    mergeMore(fileId,identifier);
                 }
-                //方案一
-                FilePart filePart = new FilePart()
-                        .setFileId(fileId)
-                        .setPartCode(identifier)
-                        .setMergeDelete(Boolean.TRUE);
-                //先改需要删除的状态 然后定时任务去删除文件 和数据库中数据
-                filePartService.updateByEntityFileId(filePart);
-                fileInfoService.removeById(fileId);
-
-                throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
             }
         } else {
             mainName = FileUtil.mainName(fileName);
@@ -183,8 +184,11 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void mergeMore(Long fileId) throws IOException {
-        int count = filePartService.getCountByFileId(fileId);
+    public void mergeMore(Long fileId, String identifier) throws IOException {
+        int count = filePartService.getCountByFileId(fileId,identifier);
+        if (count == 0){
+            throw new GlobalCustomException("[FilePart]-[mergeMore]" + "分片数量为0");
+        }
         //如果分片数量大于1024个 则将分片数量减少到1024个
         int partSizeMax = 1024;
         int partCount = count / partSizeMax;
@@ -247,7 +251,7 @@ public class FileServiceImpl implements FileService {
 
         if (partCount > partSizeMax) {
             //应该递归 todo：
-            mergeMore(fileId);
+            mergeMore(fileId, identifier);
             //临时抛出异常处理
             //throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
         }

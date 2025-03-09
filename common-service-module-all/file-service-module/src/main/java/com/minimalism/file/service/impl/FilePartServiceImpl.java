@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.minimalism.file.service.FilePartService;
+import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
 import org.springframework.stereotype.Service;
 
@@ -124,9 +125,15 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
     }
 
     @Override
-    public int getCountByFileId(Long fileId) {
+    public int getCountByFileId(Long fileId, String identifier) {
+        if (ObjectUtils.isEmpty(fileId) && StrUtil.isBlank(identifier)) {
+            return 0;
+        }
         LambdaQueryWrapper<FilePart> wrapper = Wrappers.lambdaQuery(FilePart.class);
-        wrapper.select(FilePart::getPartId).eq(FilePart::getFileId, fileId).groupBy(FilePart::getFileId);
+        wrapper.select(FilePart::getPartId)
+                .eq(ObjectUtils.isNotEmpty(fileId),FilePart::getFileId, fileId)
+                .eq(StrUtil.isNotBlank(identifier),FilePart::getPartCode, identifier)
+                .groupBy(FilePart::getPartCode);
         return count(wrapper);
     }
 

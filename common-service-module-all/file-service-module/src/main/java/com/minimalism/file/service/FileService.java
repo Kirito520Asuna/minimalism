@@ -2,7 +2,6 @@ package com.minimalism.file.service;
 
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.vo.PartVo;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +27,7 @@ public interface FileService extends AbstractBean {
 
     boolean mergeChunks(String identifier, Long fileId, String fileName);
 
-    void mergeMore(Long fileId) throws IOException;
+    void mergeMore(Long fileId, String identifier) throws IOException;
 
     boolean uploadMergeChunks(String identifier, int totalChunks, String fileName);
 }
