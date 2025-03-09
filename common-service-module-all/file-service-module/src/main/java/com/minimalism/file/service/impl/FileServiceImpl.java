@@ -2,6 +2,7 @@ package com.minimalism.file.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.constant.Constants;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
@@ -14,6 +15,7 @@ import com.minimalism.file.storage.FileFactory;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.utils.io.IoUtils;
+import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
 import lombok.SneakyThrows;
@@ -123,20 +125,24 @@ public class FileServiceImpl implements FileService {
             suffix = fileInfo.getSuffix();
             path = getMergePartPath(identifier, "tmp_" + mainName, suffix);
             long fileInfoSize = fileInfo.getSize();
+
             /**
              * 因为分片大小是1MB的 总大小 1GB 也就是说 超出1024个InputStream 会出现oom
              */
             long maxSize = 1024 * 1024 * 1024;
             if (fileInfoSize > maxSize) {
-                if (false) {
+                long freeMemory = JVMUtils.freeMemory();
+                if (freeMemory < fileInfoSize) {
+                    //如果内存不够,直接移除文件
                     //方案一
-                    FilePart filePart = new FilePart()
-                            .setFileId(fileId)
-                            .setPartCode(identifier)
-                            .setMergeDelete(Boolean.TRUE);
-                    //先改需要删除的状态 然后定时任务去删除文件 和数据库中数据
-                    filePartService.updateByEntityFileId(filePart);
                     fileInfoService.removeById(fileId);
+                    List<FilePart> fileParts = filePartService.list(Wrappers.lambdaQuery(FilePart.class).eq(FilePart::getFileId, fileId));
+                    fileParts.stream().forEach(part -> {
+                        filePartService.removeById(part.getPartId());
+                        if (part.getLocal()) {
+                            FileUtil.del(part.getLocalResource());
+                        }
+                    });
 
                     throw new GlobalCustomException("文件过大，暂不支持大文件上传！");
                 } else {
@@ -182,6 +188,13 @@ public class FileServiceImpl implements FileService {
         return true;
     }
 
+    /**
+     * 合并分片
+     *
+     * @param fileId
+     * @param identifier
+     * @throws IOException
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void mergeMore(Long fileId, String identifier) throws IOException {

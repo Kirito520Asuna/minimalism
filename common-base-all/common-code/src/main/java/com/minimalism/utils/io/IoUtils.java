@@ -91,7 +91,7 @@ public class IoUtils extends IoUtil {
     }
 
     /**
-     *
+     * 内存不足会出现 java heap space 异常
      * @param list
      * @return
      */
