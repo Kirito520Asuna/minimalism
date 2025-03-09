@@ -1,6 +1,7 @@
 package com.minimalism.file.properties;
 
 
+import com.minimalism.enums.OSType;
 import com.minimalism.file.storage.StorageType;
 import lombok.Data;
 import lombok.Getter;
@@ -49,16 +50,15 @@ public class FileProperties {
 
     @Data
     public static class LocalProperties {
-
         private String directory = "local";
-
         private String endPoint = "";
-
         private String nginxUrl = "";
+        private String nginxDir = "";
         private String uploadDir = "tmp/uploads";
 
         public String getUploadDir() {
-            return uploadDir.endsWith("/") ? uploadDir : uploadDir + "/";
+            String separator = OSType.getSeparator(null);
+            return uploadDir.endsWith(separator) ? uploadDir : uploadDir + separator;
         }
     }
 

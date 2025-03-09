@@ -40,6 +40,7 @@ public class LocalStorageClient implements LocalClient {
     private String directory;
     private String endPoint;
     private String nginxUrl;
+    private String nginxDir;
     private String uploadDir;
 
     public LocalStorageClient() {
@@ -49,6 +50,7 @@ public class LocalStorageClient implements LocalClient {
             String endPoint = config.getEndPoint();
             String nginxUrl = config.getNginxUrl();
             String uploadDir = config.getUploadDir();
+            String nginxDir = config.getNginxDir();
             uploadDir = ObjectUtils.defaultIfEmpty(uploadDir, "tmp/upload");
             String separator = OSType.getSeparator(null);
             if (!uploadDir.endsWith(separator)) {
@@ -57,6 +59,7 @@ public class LocalStorageClient implements LocalClient {
             this.directory = directory;
             this.endPoint = endPoint;
             this.nginxUrl = nginxUrl;
+            this.nginxDir = nginxDir;
             this.uploadDir = uploadDir;
         } catch (Exception e) {
             error("[Local] LocalStorage build failed: {}", e.getMessage());
@@ -170,16 +173,17 @@ public class LocalStorageClient implements LocalClient {
     public String getUrl(String bucketName, String objectName) {
         LocalClient.super.getUrl(bucketName, objectName);
         String url;
+        String separator = OSType.getSeparator(null);
         // 如果配置了nginxUrl则使用nginxUrl
         if (StrUtil.isNotBlank(nginxUrl)) {
-            url = nginxUrl.endsWith("/") ? nginxUrl + bucketName + "/" + objectName : nginxUrl + "/" + bucketName + "/" + objectName;
+            url = nginxUrl.endsWith(separator) ? nginxUrl + bucketName + separator + objectName : nginxUrl + separator + bucketName + separator + objectName;
         } else if (StrUtil.isBlank(endPoint)) {
             //表示直接使用服务器地址
             url = "";
         } else {
-            url = endPoint + "/" + LocalOSSUtils.getUploadDir() + "/" + bucketName + "/" + objectName;
+            url = endPoint + separator + LocalOSSUtils.getUploadDir() + separator + bucketName + separator + objectName;
         }
-        url = url.replace("//", "/").replace(":/", "://");
+        url = url.replace(separator + separator, separator).replace(":" + separator, ":" + separator + separator);
         return url;
     }
 
