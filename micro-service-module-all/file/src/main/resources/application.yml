@@ -59,7 +59,8 @@ mybatis-plus:
 logging:
   level:
     com.minimalism: DEBUG
-    com.baomidou.mybatisplus: DEBUG
+#    com.baomidou.mybatisplus: DEBUG
+
 #shiro:
 #  annotation:
 #    enable: false

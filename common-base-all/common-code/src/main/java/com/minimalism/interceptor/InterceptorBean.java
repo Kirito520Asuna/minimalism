@@ -1,5 +1,6 @@
 package com.minimalism.interceptor;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.abstractinterface.service.AbstractApiFiler;
 import com.minimalism.abstractinterface.service.AbstractAuthFiler;
@@ -9,6 +10,7 @@ import com.minimalism.interceptor.Impl.DefaultLogInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,12 +19,16 @@ import org.springframework.stereotype.Component;
  * @Description
  */
 @Component
-@ConditionalOnExpression("${common.jwt.openInterceptor:false}&&!${common.jwt.openFilter:true}")
+//@ConditionalOnExpression("${common.openInterceptor:false}&&!${common.openFilter:true}")
+@ConditionalOnMissingBean({AbstractApiFiler.class,AbstractAuthFiler.class})
 public class InterceptorBean implements AbstractBean {
     @Override
     public void init() {
         AbstractBean.super.init();
-        info("common.jwt.openInterceptor:{} && !common.jwt.openFilter:{}",true,false);
+        Environment env = SpringUtil.getBean(Environment.class);
+        info("common.openInterceptor:{} && !common.openFilter:{}",
+                env.getProperty("common.openInterceptor",Boolean.class,true),
+                env.getProperty("common.openFilter",Boolean.class,false));
     }
 
     @Bean

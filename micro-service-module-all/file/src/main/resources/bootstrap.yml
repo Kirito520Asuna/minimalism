@@ -41,6 +41,7 @@ cors:
   allowedHeader: "*"
   allowCredentials: true
   maxAge: 360000
+
 authorization:
   shiro:
     enable: true
