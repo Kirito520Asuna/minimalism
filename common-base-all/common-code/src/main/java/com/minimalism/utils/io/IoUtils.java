@@ -102,6 +102,8 @@ public class IoUtils extends IoUtil {
             for (InputStream chunk : list) {
                 try (InputStream inputStream = chunk) {
                     IoUtils.copy(inputStream, outputStream);
+                }finally {
+                    IoUtil.close(chunk);
                 }
             }
         } catch (IOException e) {

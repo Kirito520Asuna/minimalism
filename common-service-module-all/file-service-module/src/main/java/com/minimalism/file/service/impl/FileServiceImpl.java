@@ -217,6 +217,9 @@ public class FileServiceImpl implements FileService {
             List<FilePart> parts = filePartService.getPartsByFileIdFirstPartCount(fileId, partCount,
                     excludePartIds
             );
+            if (CollUtil.isEmpty(parts)){
+                return;
+            }
             //合并 todo：
             ByteArrayOutputStream outputStream = IoUtils.merge(parts.stream().map(part -> {
                 InputStream inputStream;
@@ -233,12 +236,11 @@ public class FileServiceImpl implements FileService {
             }).collect(Collectors.toList()));
 
             //合并完成
-            parts.stream().forEach(part -> {
-                filePartService.removeById(part.getPartId());
-                if (part.getLocal()) {
-                    FileUtil.del(part.getLocalResource());
-                }
-            });
+            parts.stream().filter(FilePart::getLocal)
+                    .map(FilePart::getLocalResource)
+                    .forEach(FileUtil::del);
+
+            filePartService.removeByIds(parts.stream().map(FilePart::getPartId).collect(Collectors.toList()));
 
             FilePart filePart = parts.stream().findFirst().get();
             info("{}" + Constants.PART_SUFFIX + "~{}" + Constants.PART_SUFFIX + ",合并完成",
@@ -263,12 +265,12 @@ public class FileServiceImpl implements FileService {
                 long size = IoUtils.size(FileUtil.getInputStream(pathAll));
 
                 filePart.setPartSize(size);
-                filePartService.updateById(filePart);
+                filePartService.save(filePart.setPartId(null).setLocalResource(pathAll));
                 excludePartIds.add(filePart.getPartId());
             }
         }
 
-        if (partCount > mergePartSize) {
+        if (partCount > maxPartSize) {
             //应该递归 todo：
             mergeMore(fileId, identifier);
             //临时抛出异常处理
