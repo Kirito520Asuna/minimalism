@@ -36,9 +36,10 @@ create table `file_part`
     `part_size`      bigint       default 0 comment '分片大小',
     `part_sort`      int          default 0 comment '分片顺序',
     `merge_delete`   tinyint(1)   default 0 comment '合并后是否删除分片',
+    `os_type`        varchar(20)  default 'linux' comment '操作系统类型 linux,win,mac',
     primary key (`part_id`)
 ) engine = innodb
   auto_increment = 1 comment = '文件分片表';
-
-ALTER TABLE `file_part`
-    ADD COLUMN os_type VARCHAR(20) DEFAULT 'linux' comment '操作系统类型 linux,win,mac';
+#
+# ALTER TABLE `file_part`
+#     ADD COLUMN os_type VARCHAR(20) DEFAULT 'linux' comment '操作系统类型 linux,win,mac';
