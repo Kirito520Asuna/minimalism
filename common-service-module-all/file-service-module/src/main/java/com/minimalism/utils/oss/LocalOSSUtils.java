@@ -353,7 +353,7 @@ public class LocalOSSUtils {
     public static List<InputStream> getSplitFileLocal(String identifier, int totalChunks) {
         List<InputStream> streamList = CollUtil.newArrayList();
         List<FilePart> fileParts = getFileParts(identifier, null);
-        streamList.addAll(fileParts.stream().map(filePart -> FileUtil.getInputStream(filePart.getLocalResource())).collect(Collectors.toList()));
+        streamList.addAll(fileParts.stream().filter(FilePart::getLocal).map(filePart -> FileUtil.getInputStream(filePart.getLocalResource())).collect(Collectors.toList()));
         if (!ObjectUtils.equals(totalChunks, streamList.size())) {
             throw new GlobalCustomException("文件分块数量不匹配");
         }

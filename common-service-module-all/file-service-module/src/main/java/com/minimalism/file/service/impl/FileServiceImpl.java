@@ -178,10 +178,6 @@ public class FileServiceImpl implements FileService {
         return true;
     }
 
-    public static void main(String[] args) {
-        System.err.println(FileUtil.mainName("【不忘初心】Windows10_21H2_19044.1586_X64_可更新[纯净精简版][2.53G](2022.3(1).9).zip"));
-    }
-
     public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
         IFileStorageClient client = FileFactory.getClient(StorageType.local);
         FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
@@ -190,7 +186,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean uploadMergeChunks(String identifier, int totalChunks, String fileName) {
-        IFileStorageClient client = SpringUtil.getBean(FileFactory.class).getClient(StorageType.local);
+        IFileStorageClient client = FileFactory.getClient(StorageType.local);
         List<InputStream> inputStreams = client.getInputStreams(identifier, totalChunks);
         //client.
 
