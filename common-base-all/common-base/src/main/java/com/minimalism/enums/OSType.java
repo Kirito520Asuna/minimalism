@@ -64,4 +64,22 @@ public enum OSType {
         }
         return separator;
     }
+
+
+    public static boolean isWindows() {
+        return isWindows(null);
+    }
+
+    public static boolean isMac() {
+        return isMac(null);
+    }
+
+    public static boolean isLinux() {
+        return isLinux(null);
+    }
+
+    public static String getSeparator() {
+        return getSeparator(null);
+    }
+
 }

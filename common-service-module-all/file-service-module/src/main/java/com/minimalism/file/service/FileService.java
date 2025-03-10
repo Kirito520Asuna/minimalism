@@ -30,4 +30,33 @@ public interface FileService extends AbstractBean {
     void mergeMore(Long fileId, String identifier) throws IOException;
 
     boolean uploadMergeChunks(String identifier, int totalChunks, String fileName);
+
+    /**
+     * 获取文件字节
+     * uploadDir + folder +/+ identifier +/+ chunkNumber.part
+     * or
+     * uploadDir + folder +/+ identifier
+     * or
+     * uploadDir + fileName(优先)
+     * @param fileName 文件
+     * @param folder 文件夹
+     * @param identifier 文件唯一标识
+     * @param chunkNumber 分块编号
+     * @return
+     */
+    List<byte[]> getByteByLocal(String fileName,String folder,String identifier, Integer chunkNumber);
+
+    /**
+     * uploadDir + folder +/+ identifier +/+ chunkNumber.part
+     * or
+     * uploadDir + folder +/+ identifier
+     * or
+     * uploadDir + fileName(优先)
+     * @param fileName 文件
+     * @param folder 文件夹
+     * @param identifier 文件唯一标识
+     * @param chunkNumber 分块编号
+     * @return
+     */
+    boolean delByteByLocal(String fileName,String folder,String identifier, Integer chunkNumber);
 }

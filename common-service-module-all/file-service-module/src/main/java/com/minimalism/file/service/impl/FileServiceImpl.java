@@ -2,6 +2,7 @@ package com.minimalism.file.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.constant.Constants;
 import com.minimalism.enums.OSType;
@@ -17,6 +18,7 @@ import com.minimalism.file.storage.StorageType;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.utils.oss.LocalOSSUtils;
 import com.minimalism.vo.PartVo;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -296,38 +300,73 @@ public class FileServiceImpl implements FileService {
         return false;
     }
 
-    public static void main(String[] args) {
-        //String s = "/develop/code/minimalism/tmp/uploads/local/chunks/c3ca3ed9-ea9b-4cc2-a451-164593e2b2721741455218943/16.part";
-        //int i = s.lastIndexOf("/");
-        //System.err.println(s.substring(0, i + 1));
-        //// 获取文件所在的文件夹路径
-        //String parent = FileUtil.getParent(s, 1);
-        //System.err.println(parent);
-        // 获取操作系统名称
-        String osName = System.getProperty("os.name");
-        // 获取操作系统架构
-        String osArch = System.getProperty("os.arch");
-        // 获取操作系统版本
-        String osVersion = System.getProperty("os.version");
+    @Override
+    public List<byte[]> getByteByLocal(String fileName, String folder, String identifier, Integer chunkNumber) {
+        List<byte[]> list = CollUtil.newArrayList();
+        String uploadDir = LocalOSSUtils.getUploadDir();
 
-        System.out.println("操作系统名称: " + osName);
-        System.out.println("操作系统架构: " + osArch);
-        System.out.println("操作系统版本: " + osVersion);
+        boolean notBlank = StrUtil.isNotBlank(fileName);
 
-        String s = "/develop/code/minimalism/tmp/uploads/local/chunks/c3ca3ed9-ea9b-4cc2-a451-164593e2b2721741455218943/16.part";
-        System.err.println(FileUtil.mainName(s));
-        // 使用字符串操作获取父目录路径
-        int i = s.lastIndexOf("/");
-        String parentPathByString = s.substring(0, i + 1);
-        System.err.println("字符串操作获取的父目录路径: " + parentPathByString);
+        if (notBlank) {
+            File file = FileUtil.newFile(uploadDir + fileName);
+            if (!file.exists()) {
+                throw new GlobalCustomException("文件不存在");
+            }
+            byte[] bytes = IoUtils.toByteArray(FileUtil.getInputStream(file));
+            list.add(bytes);
+        }
 
-        // 使用 FileUtil.getParent() 获取父目录路径
-        String parentPathByFileUtil = FileUtil.getParent(s, 1);
-        System.err.println("FileUtil.getParent() 获取的父目录路径: " + parentPathByFileUtil);
+        boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
+        folder = uploadDir + folder + OSType.getSeparator();
+        if (isFile) {
+            //文件
+            fileName = folder + fileName;
+            File file = FileUtil.newFile(fileName);
+            if (!file.exists()) {
+                throw new GlobalCustomException("文件不存在");
+            }
+            byte[] bytes = IoUtils.toByteArray(FileUtil.getInputStream(file));
+            list.add(bytes);
+        } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
+            //文件夹
+            File file = FileUtil.newFile(folder);
+            if (!file.exists()) {
+                throw new GlobalCustomException("文件夹不存在");
+            }
+            Arrays.stream(file.listFiles()).map(FileUtil::getInputStream).map(IoUtils::toByteArray).forEach(list::add);
+        } else {
+            throw new GlobalCustomException("非法请求");
+        }
+        return list;
+    }
 
-        // 标准化路径，将反斜杠替换为斜杠
-        String normalizedPath = parentPathByFileUtil.replace("\\", "/");
-        System.err.println("标准化后的父目录路径: " + normalizedPath);
+    @Override
+    public boolean delByteByLocal(String fileName, String folder, String identifier, Integer chunkNumber) {
+
+        String uploadDir = LocalOSSUtils.getUploadDir();
+        boolean notBlank = StrUtil.isNotBlank(fileName);
+        if (notBlank) {
+            File file = FileUtil.newFile(uploadDir + fileName);
+            FileUtil.del(file);
+        }
+
+        boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
+        folder = uploadDir + folder + OSType.getSeparator();
+        if (isFile) {
+            //文件
+            fileName = folder + fileName;
+            File file = FileUtil.newFile(fileName);
+            FileUtil.del(file);
+        } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
+            //文件夹
+            File file = FileUtil.newFile(folder);
+            if (!file.exists()) {
+                return true;
+            }
+            FileUtil.del(file);
+        }
+
+        return true;
     }
 
 }
