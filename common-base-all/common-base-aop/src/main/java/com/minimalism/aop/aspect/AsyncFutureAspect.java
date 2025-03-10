@@ -24,24 +24,9 @@ public class AsyncFutureAspect implements AbstractAsyncFutureAspect {
      * @throws Throwable
      */
     @Override
-    @Around(value = "SysLog()")
+    @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         return AbstractAsyncFutureAspect.super.around(joinPoint);
     }
-
-
-    @SneakyThrows
-    public static void main(String[] args) {
-        leb:
-        for (int i = 0; i < 5; i++) {
-            for (int k = 0; k < 2; k++) {
-                System.out.println("i=" + i + " k=" + k);
-                if (k == 0) {
-                    break leb;
-                }
-            }
-        }
-    }
-
 
 }

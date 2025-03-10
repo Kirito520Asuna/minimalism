@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
+import com.minimalism.abstractinterface.aop.AbstractAop;
 import com.minimalism.abstractinterface.aop.AbstractSysLog;
 import com.minimalism.aop.security.AutoOperation;
 import com.minimalism.enums.AutoOperationEnum;
@@ -27,12 +28,13 @@ import java.util.Set;
  * @Date 2024/10/3 下午4:15:55
  * @Description
  */
-public interface AbstractAutoOperationAspect extends AbstractSysLog {
+public interface AbstractAutoOperationAspect extends AbstractAop {
     JSONConfig JSON_CONFIG = JSONConfig.create().setIgnoreNullValue(false);
+
 
     @Override
     @Pointcut(value = "@annotation(com.minimalism.aop.security.AutoOperation)")
-    default void SysLog() {
+    default void Aop() {
     }
 
     default void setArgs(Object[] args, int index, String argName, String value) {
@@ -106,7 +108,7 @@ public interface AbstractAutoOperationAspect extends AbstractSysLog {
     }
 
     @Override
-    @Around(value = "SysLog()")
+    @Around(value = "Aop()")
     default Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         // 注解鉴权
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -144,11 +146,13 @@ public interface AbstractAutoOperationAspect extends AbstractSysLog {
 
         try {
             // 执行原有逻辑
-            return AbstractSysLog.super.around(joinPoint);
+            return AbstractAop.super.around(joinPoint);
         } catch (Throwable e) {
             throw e;
         }
     }
+
+
 
     default String getOperator() {
         return null;

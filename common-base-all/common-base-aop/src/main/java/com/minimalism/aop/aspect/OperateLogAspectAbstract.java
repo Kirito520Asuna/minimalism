@@ -101,14 +101,8 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
     }
 
     @Override
-    @Pointcut("AbstractSysLogAspect.SysLog()")
-    public void SysLog() {
-//        sysLogAspect.SysLog();
-    }
-
-    @Override
-    public SysLog getAnnotationLog(JoinPoint joinPoint) {
-        return sysLogAspect.getAnnotationLog(joinPoint);
+    @Pointcut("AbstractSysLogAspect.Aop()")
+    public void Aop() {
     }
 
     @SneakyThrows
@@ -119,7 +113,7 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
         OperateLogInfo operateLog = getOperateLog(now);
         log.debug("|TRACE_ID:{}|", operateLog == null ? null : operateLog.getTraceId());
         try {
-            SysLog sysLog = getAnnotationLog(joinPoint);
+            SysLog sysLog = getAnnotation(joinPoint,SysLog.class);
             if (sysLog.flag() && sysLog.enableOperate()) {
                 // 接收到请求，记录请求内容
                 ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -159,7 +153,7 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
     }
 
     @Override
-    @Around(value = "SysLog()")
+    @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
 
         LocalDateTime now = DateUtils.longToLocalDateTime(System.currentTimeMillis());

@@ -78,7 +78,7 @@ public interface AbstractRedissonConfig {
      * @return
      */
     default RedissonClient initRedissonClient(RedisConfiguration configuration) {
-        log.info("init RedissonClient");
+        log.info("[init] RedissonClient");
         List<String> addresses = Arrays.asList(DEFAULT_REDIS);
         String redisPassword = null;
         Integer redisTimeout = null;
@@ -94,7 +94,7 @@ public interface AbstractRedissonConfig {
         return getRedissonClient(addresses, redisPassword, redisTimeout, redisMode);
     }
     default RedissonClient getRedissonClient(RedisConfiguration configuration){
-        log.info("By RedisProperties Init RedissonClient ...");
+        log.info("[init] [RedisProperties]  [RedissonClient]");
         Config config = new Config();
         BaseConfig baseConfig;
         RedisConfiguration.RedisMode redisModeEnum = configuration.getRedisModeEnum();
@@ -102,7 +102,7 @@ public interface AbstractRedissonConfig {
         try {
             redisProperties = configuration.getRedisProperties();
         }catch (NullPointerException e){
-            log.error("RedisProperties error ... ");
+            log.error("[error] RedisProperties  ... ");
             redisProperties = SpringUtil.getBean(RedisProperties.class);
         }
 

@@ -80,12 +80,12 @@ public class AbstractSysLogAspect implements AbstractSysLog {
 
     @Override
     @Pointcut(value = "@annotation(com.minimalism.aop.log.SysLog)")
-    public void SysLog() {
+    public void Aop() {
     }
 
 
     @Override
-    @Around(value = "SysLog()")
+    @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         //获取是否有注解
         SysLog sysLog = getAnnotationLog(joinPoint);

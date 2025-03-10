@@ -3,6 +3,7 @@ package com.minimalism.aop.aspect;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
+import com.minimalism.abstractinterface.aop.AbstractAop;
 import com.minimalism.abstractinterface.aop.AbstractSysLog;
 import com.minimalism.aop.aviator.*;
 import com.minimalism.exception.GlobalCustomException;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  * @Date 2024/11/12 下午3:09:40
  * @Description
  */
-public interface AbstractAviatorValidAspect extends AbstractSysLog {
+public interface AbstractAviatorValidAspect extends AbstractAop {
     /**
      *
      */
@@ -34,7 +35,7 @@ public interface AbstractAviatorValidAspect extends AbstractSysLog {
             + " || @annotation(com.minimalism.aop.aviator.AviatorNotBlank) "
             + " || @annotation(com.minimalism.aop.aviator.Aviator) "
     )
-    default void SysLog() {
+    default void Aop() {
     }
 
     default void check(ProceedingJoinPoint joinPoint) throws Exception {

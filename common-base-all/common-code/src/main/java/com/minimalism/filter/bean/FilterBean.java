@@ -73,7 +73,8 @@ public class FilterBean implements AbstractBean {
     }
 
     @Bean
-    @ConditionalOnExpression(ExpressionConstants.corsFilterExpression)
+    //@ConditionalOnExpression(ExpressionConstants.corsFilterExpression)
+    @ConditionalOnBean(CorsProperties.class)
     public CorsRequestFilter corsRequestFilter() {
         return new CorsRequestFilter();
     }

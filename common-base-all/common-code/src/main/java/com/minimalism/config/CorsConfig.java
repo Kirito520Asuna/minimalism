@@ -1,5 +1,6 @@
 package com.minimalism.config;
 
+import com.minimalism.abstractinterface.bean.AbstractBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -11,12 +12,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Description
  */
 @Configuration @Slf4j
-public class CorsConfig implements WebMvcConfigurer {
+public class CorsConfig implements WebMvcConfigurer, AbstractBean {
     static final String[] ORIGINS = new String[]{"GET", "POST", "PUT", "DELETE","OPTIONS"};
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        log.info("CorsConfig init ...");
         registry.addMapping("/**") // 所有的当前站点的请求地址，都支持跨域访问。
                 //.allowedOrigins("*") // 所有的外部域都可跨域访问。 如果是localhost则很难配置，因为在跨域请求的时候，外部域的解析可能是localhost、127.0.0.1、主机名
                 .allowedOriginPatterns("*") // 所有的外部域都可跨域访问。 如果是localhost则很难配置，因为在跨域请求的时候，外部域的解析可能是localhost、127.0.0.1、主机名

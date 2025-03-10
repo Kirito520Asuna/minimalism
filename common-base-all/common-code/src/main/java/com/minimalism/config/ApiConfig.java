@@ -13,11 +13,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import com.google.common.io.ByteSource;
+import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.exception.GlobalCustomException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,9 +49,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Configuration
-@Data
+@Data @NoArgsConstructor
 @AllArgsConstructor
-public class ApiConfig {
+public class ApiConfig implements AbstractBean {
     public static JSONConfig JSON_CONFIG = JSONConfig.create().setIgnoreNullValue(false);
     @Resource
     @Lazy
@@ -88,10 +86,6 @@ public class ApiConfig {
             signMultipleEnable = false;
         }
         return signMultipleEnable;
-    }
-
-    public ApiConfig() {
-        log.info("ApiConfig init");
     }
 
     public String getApiPath() {

@@ -24,7 +24,7 @@ public class AviatorValidAspect implements AbstractAviatorValidAspect {
      * @throws Throwable
      */
     @Override
-    @Around(value = "SysLog()")
+    @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         check(joinPoint);
         return AbstractAviatorValidAspect.super.around(joinPoint);

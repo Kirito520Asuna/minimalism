@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,9 +24,10 @@ import java.io.IOException;
  */
 public interface AbstractExceptionHandler extends AbstractBean {
 
-    default String getActive(){
-        String active = SpringUtil.getBean(Environment.class).getProperty("spring.profiles.active",String.class,"dev");
-        return active;
+    @Override
+    @PostConstruct
+    default void init() {
+        debug("[init]-[ExceptionHandler] {}",getClass().getName());
     }
 
     @ExceptionHandler(IOException.class)
@@ -56,7 +58,7 @@ public interface AbstractExceptionHandler extends AbstractBean {
             code = exception.getCode();
             message = exception.getMessage();
         } else {
-            message = ObjectUtil.equals("prod", getActive()) ? errMessage : e.getMessage();
+            message = isProd() ? errMessage : e.getMessage();
         }
         result.setCode(code);
         result.setMessage(message);

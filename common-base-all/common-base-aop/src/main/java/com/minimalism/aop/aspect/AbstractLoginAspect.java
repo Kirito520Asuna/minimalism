@@ -1,5 +1,6 @@
 package com.minimalism.aop.aspect;
 
+import com.minimalism.abstractinterface.aop.AbstractAop;
 import com.minimalism.abstractinterface.aop.AbstractSysLog;
 import com.minimalism.aop.security.Login;
 import com.minimalism.enums.ApiCode;
@@ -20,20 +21,20 @@ import java.lang.reflect.Method;
  * @Description
  */
 
-public interface AbstractLoginAspect extends AbstractSysLog {
+public interface AbstractLoginAspect extends AbstractAop {
     @Override
     @Pointcut(value = "@annotation(com.minimalism.aop.security.Login)")
-    default void SysLog() {}
+    default void Aop() {}
 
     @Override
-    @Around(value = "SysLog()")
+    @Around(value = "Aop()")
     default Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         // 注解鉴权
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         checkMethodAnnotation(signature.getMethod());
         try {
             // 执行原有逻辑
-            return AbstractSysLog.super.around(joinPoint);
+            return AbstractAop.super.around(joinPoint);
         } catch (Throwable e){
             throw e;
         }

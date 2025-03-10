@@ -3,12 +3,14 @@ package com.minimalism.properties;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.constant.CorsConstants;
+import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.constant.PropertiesConstants;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Configuration;
 @NoArgsConstructor
 @Data @RefreshScope
 @AllArgsConstructor
+@ConditionalOnExpression(ExpressionConstants.corsFilterExpression)
 @ConfigurationProperties(prefix = PropertiesConstants.CORS_PREFIX)
 public class CorsProperties {
     private String pattern;

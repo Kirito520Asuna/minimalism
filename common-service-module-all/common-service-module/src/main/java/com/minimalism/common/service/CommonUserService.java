@@ -9,4 +9,9 @@ import com.minimalism.abstractinterface.bean.AbstractBean;
  */
 public interface CommonUserService extends AbstractBean {
     String getUserId();
+
+    @Override
+    default void init() {
+        debug("[Common]-[Auth]-[init] {}",getClass().getName());
+    }
 }

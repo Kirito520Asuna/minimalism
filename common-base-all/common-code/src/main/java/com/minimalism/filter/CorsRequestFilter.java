@@ -27,6 +27,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsRequestFilter extends OncePerRequestFilter implements AbstractBean {
+    @Override
+    public void init() {
+        debug("[Filter]-[Cors]-[init] {}", getClass().getName());
+    }
 
     /**
      * @param request
@@ -37,7 +41,7 @@ public class CorsRequestFilter extends OncePerRequestFilter implements AbstractB
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        Map<String,Object> headerMap = Maps.newLinkedHashMap();
+        Map<String, Object> headerMap = Maps.newLinkedHashMap();
 
         CorsProperties cors = SpringUtil.getBean(CorsProperties.class);
         String allowedOrigin = cors.getAllowedOrigin();
@@ -101,17 +105,17 @@ public class CorsRequestFilter extends OncePerRequestFilter implements AbstractB
             headerMap.put(accessControlAllowHeaders, allowHeaders); //
         }
 
-        if (ObjectUtils.isNotEmpty(headerMap)){
+        if (ObjectUtils.isNotEmpty(headerMap)) {
             for (Map.Entry<String, Object> entry : headerMap.entrySet()) {
                 response.setHeader(entry.getKey(), String.valueOf(entry.getValue()));
             }
         }
-        log.info("headerMap: {}", headerMap);
-        if (StrUtil.equalsIgnoreCase("OPTIONS",request.getMethod())) {
-            log.info("OPTIONS ....");
+        info("headerMap: {}", headerMap);
+        if (StrUtil.equalsIgnoreCase("OPTIONS", request.getMethod())) {
+            info("OPTIONS ....");
             response.setStatus(HttpServletResponse.SC_OK);
-        }else {
-            log.info("not OPTIONS ....");
+        } else {
+            info("not OPTIONS ....");
             chain.doFilter(request, response);
         }
     }

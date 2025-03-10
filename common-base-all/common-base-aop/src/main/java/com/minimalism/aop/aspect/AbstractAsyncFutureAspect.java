@@ -3,6 +3,7 @@ package com.minimalism.aop.aspect;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.abstractinterface.aop.AbstractAop;
 import com.minimalism.abstractinterface.aop.AbstractSysLog;
 import com.minimalism.aop.async.AsyncFuture;
 import com.minimalism.utils.object.ObjectUtils;
@@ -19,10 +20,10 @@ import java.util.concurrent.atomic.AtomicReference;
  * @Date 2024/11/3 上午10:48:52
  * @Description
  */
-public interface AbstractAsyncFutureAspect extends AbstractSysLog {
+public interface AbstractAsyncFutureAspect extends AbstractAop {
     @Override
     @Pointcut(value = "@annotation(com.minimalism.aop.async.AsyncFuture)")
-    default void SysLog() {
+    default void Aop() {
     }
 
     @Nullable
@@ -30,7 +31,7 @@ public interface AbstractAsyncFutureAspect extends AbstractSysLog {
         T t = null;
         Object futureObj = null;
         try {
-            futureObj = AbstractSysLog.super.around(joinPoint);
+            futureObj = AbstractAop.super.around(joinPoint);
         } catch (Throwable e) {
             throwable.set(e);
         } finally {
@@ -45,7 +46,7 @@ public interface AbstractAsyncFutureAspect extends AbstractSysLog {
     default Object asyncAround(ProceedingJoinPoint joinPoint, AtomicReference<Throwable> throwable) {
         Object futureObj = null;
         try {
-            futureObj = AbstractSysLog.super.around(joinPoint);
+            futureObj = AbstractAop.super.around(joinPoint);
         } catch (Throwable e) {
             throwable.set(e);
         } finally {
@@ -95,17 +96,14 @@ public interface AbstractAsyncFutureAspect extends AbstractSysLog {
                         getLogger().error("create executorBean fail e:{}", e1);
                     }
                 }
-                //getLogger().info("use executor {}", executorBean);
                 future = CompletableFuture.supplyAsync((() -> asyncAround(joinPoint, throwable)), executorBean);
             } else {
-                //getLogger().info("use default executor");
                 future = CompletableFuture.supplyAsync(() -> asyncAround(joinPoint, throwable));
             }
             future.join();
             o = future.get();
         } else {
-            //getLogger().info("asyncFuture:isNotEmpty:{}", ObjectUtil.isNotEmpty(asyncFuture));
-            o = AbstractSysLog.super.around(joinPoint);
+            o = AbstractAop.super.around(joinPoint);
         }
 
         if (ObjectUtil.isNotEmpty(throwable.get())) {
@@ -149,7 +147,7 @@ public interface AbstractAsyncFutureAspect extends AbstractSysLog {
             future.join();
             o = future.get();
         } else {
-            o = AbstractSysLog.super.around(joinPoint);
+            o = AbstractAop.super.around(joinPoint);
         }
 
         if (ObjectUtil.isNotEmpty(throwable.get())) {

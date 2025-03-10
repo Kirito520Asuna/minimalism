@@ -11,6 +11,7 @@ import com.minimalism.enums.RequestMethod;
 import com.minimalism.pojo.OperateLogInfo;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +36,12 @@ public interface AbstractOperateLogService extends AbstractBean {
      */
     List<String> getBodyMethod = Stream.
             of(RequestMethod.POST.name(), RequestMethod.PUT.name()).collect(Collectors.toList());
+
+    @Override
+    @PostConstruct
+    default void init() {
+        debug("[init]-[Service]-[OperateLog] {}", getAClass().getName());
+    }
 
     //=====================同步=====================
     default void createOperateLog(Map<String, Object> operateLogMap) {

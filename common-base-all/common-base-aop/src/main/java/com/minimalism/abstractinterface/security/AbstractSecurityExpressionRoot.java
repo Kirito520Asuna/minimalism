@@ -8,6 +8,7 @@ import com.minimalism.constant.Roles;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.core.env.Environment;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,12 @@ import java.util.stream.Collectors;
  * @Description
  */
 public interface AbstractSecurityExpressionRoot extends AbstractBean {
+    @Override
+    @PostConstruct
+    default void init() {
+        debug("[init]-[SecurityExpressionRoot] {}", getAClass().getName());
+    }
+
     /**
      * @param key
      * @return
