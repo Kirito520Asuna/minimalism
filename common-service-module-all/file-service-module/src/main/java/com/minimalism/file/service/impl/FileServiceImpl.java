@@ -3,13 +3,11 @@ package com.minimalism.file.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Maps;
 import com.minimalism.config.OSConfig;
 import com.minimalism.constant.Constants;
-import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FileInfo;
@@ -21,7 +19,6 @@ import com.minimalism.file.storage.FileFactory;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.result.Result;
-import com.minimalism.utils.NacosUtils;
 import com.minimalism.utils.http.OkHttpUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
@@ -31,7 +28,6 @@ import com.minimalism.vo.PartVo;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -70,15 +66,15 @@ public class FileServiceImpl implements FileService {
                     index = path.indexOf(uploadDir) + uploadDir.length();
                 }
                 int endIndex = path.indexOf(FileUtil.getName(path));
-                String floder = path.substring(index, endIndex);
-                String instanceId = LocalOSSUtils.getRedisInstanceId(floder);
+                String folder = path.substring(index, endIndex);
+                String instanceId = LocalOSSUtils.getRedisInstanceId(folder);
                 if (!ObjectUtils.equals(instanceId, FileUploadConfig.instanceId)) {
                     String url = FileUploadConfig.getUrlByte(instanceId);
 
                     Integer chunkNumber = Integer.valueOf(FileUtil.mainName(path));
                     String identifier = partVo.getIdentifier();
-                    if (floder.contains(identifier)) {
-                        floder = floder.replace(identifier, "");
+                    if (folder.contains(identifier)) {
+                        folder = folder.replace(identifier, "");
                     }
                     //String identifier,
                     //String folder,
@@ -86,7 +82,7 @@ public class FileServiceImpl implements FileService {
                     //Integer chunkNumber
                     Map<String, Object> params = Maps.newLinkedHashMap();
                     params.put("identifier", identifier);
-                    params.put("floder", floder);
+                    params.put("folder", folder);
                     params.put("chunkNumber", chunkNumber);
                     //params.put("identifier", identifier);
                     String json = OkHttpUtils.get(url, params);
