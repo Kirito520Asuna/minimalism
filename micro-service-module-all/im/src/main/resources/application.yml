@@ -71,4 +71,3 @@ logging:
 
 common:
   openFilter: true
-  openInterceptor: false

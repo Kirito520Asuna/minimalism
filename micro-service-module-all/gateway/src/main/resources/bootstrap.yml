@@ -63,6 +63,7 @@ cors:
     web-filter: true
     distinct-headers-filter: true
     https-to-http-filter: true
+  enabled: false
   config: false
   filter: false
   pattern: "/**"

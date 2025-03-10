@@ -43,3 +43,7 @@ logstash:
   maxHistory: 30
   totalSizeCap: 10MB
 
+cors:
+  gateway:
+    enabled: false
+  enabled: true

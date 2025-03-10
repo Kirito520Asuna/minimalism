@@ -26,6 +26,9 @@ logstash:
 captcha:
   enabled: true
 cors:
+  gateway:
+    enabled: false
+  enabled: true
   config: false
   filter: true
   pattern: "/**"
