@@ -113,26 +113,26 @@
             <artifactId>framework-redis</artifactId>
             <version>${revision}</version>
         </dependency>
-        <!--shiro-->
-        <dependency>
-            <groupId>com.minimalism</groupId>
-            <artifactId>common-shiro-module</artifactId>
-            <version>${revision}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.minimalism</groupId>
-                    <artifactId>common-code</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-webmvc</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.minimalism</groupId>
-                    <artifactId>framework-redis</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        &lt;!&ndash;shiro&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.minimalism</groupId>-->
+<!--            <artifactId>common-shiro-module</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.minimalism</groupId>-->
+<!--                    <artifactId>common-code</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework</groupId>-->
+<!--                    <artifactId>spring-webmvc</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.minimalism</groupId>-->
+<!--                    <artifactId>framework-redis</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.minimalism</groupId>

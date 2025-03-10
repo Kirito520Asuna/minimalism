@@ -23,11 +23,7 @@ import org.springframework.stereotype.Component;
 public class InterceptorBean implements AbstractBean {
     @Override
     public void init() {
-        AbstractBean.super.init();
-        Environment env = SpringUtil.getBean(Environment.class);
-        info("common.openInterceptor:{} && !common.openFilter:{}",
-                env.getProperty("common.openInterceptor",Boolean.class,true),
-                env.getProperty("common.openFilter",Boolean.class,false));
+        debug("[Bean]-[Interceptor]-[init] {}",getClass().getName());
     }
 
     @Bean

@@ -28,8 +28,7 @@ import org.springframework.web.filter.CorsFilter;
 public class FilterBean implements AbstractBean {
     @Override
     public void init() {
-        AbstractBean.super.init();
-        info("common.openFilter:{}",true);
+      debug("[Bean]-[Filter]-[init] {}",getClass().getName());
     }
 
     //@Bean
