@@ -8,7 +8,6 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.config.OSConfig;
 import com.minimalism.constant.Constants;
 import com.minimalism.constant.file.FileConstant;
-import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FilePart;
@@ -36,27 +35,39 @@ public class LocalOSSUtils {
     // 本地存储当前实例的文件地址（线程安全）
     public static final Set<String> FILE_NAME_LIST = ConcurrentHashMap.newKeySet();
 
-    public static void putRedisFile(File file) {
-        putRedisFile(FileUtil.getAbsolutePath(file));
+    public static String getRedisInstanceId(File file) {
+        return getRedisInstanceId(FileUtil.getAbsolutePath(file));
     }
-    public static void putRedisFile(String filePath) {
+
+    public static String getRedisInstanceId(String filePath) {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         String instanceId = (String) redisTemplate
                 .opsForHash().get(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
+        return instanceId;
+    }
+
+    public static void putRedisFile(File file) {
+        putRedisFile(FileUtil.getAbsolutePath(file));
+    }
+
+    public static void putRedisFile(String filePath) {
+        String instanceId = getRedisInstanceId(filePath);
         if (!ObjectUtils.equals(FileUploadConfig.instanceId, instanceId)) {
+            RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, filePath, FileUploadConfig.instanceId);
             redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.instanceId, filePath);
             FILE_NAME_LIST.add(filePath);
         }
     }
+
     public static void delRedisFile(File file) {
         putRedisFile(FileUtil.getAbsolutePath(file));
     }
+
     public static void delRedisFile(String filePath) {
-        RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-        String instanceId = (String) redisTemplate
-                .opsForHash().get(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
+        String instanceId = getRedisInstanceId(filePath);
         if (ObjectUtils.equals(FileUploadConfig.instanceId, instanceId)) {
+            RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
             redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.instanceId, filePath);
             FILE_NAME_LIST.remove(filePath);
@@ -113,7 +124,7 @@ public class LocalOSSUtils {
     }
 
     public static String getMergeDir() {
-        String separator =  OSConfig.separator;
+        String separator = OSConfig.separator;
         String merged = getUploadDir() + "merged" + separator;
         File file = FileUtil.newFile(merged);
         if (!file.exists()) {
@@ -132,7 +143,7 @@ public class LocalOSSUtils {
     }
 
     public static String getMergeFilePath(String identifier, String fileMainName) {
-        String separator =  OSConfig.separator;
+        String separator = OSConfig.separator;
         String path = getMergeDir() + identifier + separator;
         path = path.replace(separator + separator, separator);
         File file = FileUtil.newFile(path);
@@ -143,7 +154,7 @@ public class LocalOSSUtils {
     }
 
     public static String getChunkDirPath(String identifier) {
-        return getChunkDir() + identifier +  OSConfig.separator;
+        return getChunkDir() + identifier + OSConfig.separator;
     }
 
     /*===========================================================================================================================================================================================================================================*/
