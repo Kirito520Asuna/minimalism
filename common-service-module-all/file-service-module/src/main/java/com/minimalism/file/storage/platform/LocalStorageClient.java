@@ -3,6 +3,8 @@ package com.minimalism.file.storage.platform;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.http.useragent.OS;
+import com.minimalism.config.OSConfig;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalConfigException;
@@ -53,7 +55,7 @@ public class LocalStorageClient implements LocalClient {
             String uploadDir = config.getUploadDir();
             String nginxDir = config.getNginxDir();
             uploadDir = ObjectUtils.defaultIfEmpty(uploadDir, "tmp/upload");
-            String separator = OSType.getSeparator(null);
+            String separator = OSConfig.separator;
             if (!uploadDir.endsWith(separator)) {
                 uploadDir = uploadDir + separator;
             }
@@ -162,7 +164,7 @@ public class LocalStorageClient implements LocalClient {
     public String getUrl(String bucketName, String objectName) {
         LocalClient.super.getUrl(bucketName, objectName);
         String url;
-        String separator = OSType.getSeparator(null);
+        String separator = OSConfig.separator;
         // 如果配置了nginxUrl则使用nginxUrl
         if (StrUtil.isNotBlank(nginxUrl)) {
             url = nginxUrl.endsWith(separator) ? nginxUrl + bucketName + separator + objectName : nginxUrl + separator + bucketName + separator + objectName;

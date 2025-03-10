@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.config.OSConfig;
 import com.minimalism.constant.Constants;
 import com.minimalism.constant.file.FileConstant;
 import com.minimalism.enums.OSType;
@@ -68,7 +69,7 @@ public class LocalOSSUtils {
      * @return
      */
     public static String getUploadDir() {
-        String separator = OSType.getSeparator();
+        String separator = OSConfig.getSeparator();
         String uploadDir = separator;
         try {
             FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
@@ -102,7 +103,7 @@ public class LocalOSSUtils {
     }
 
     public static String getChunkDir() {
-        String separator = OSType.getSeparator();
+        String separator = OSConfig.separator;
         String chunk = getUploadDir() + "chunks" + separator;
         File file = FileUtil.newFile(chunk);
         if (!file.exists()) {
@@ -112,7 +113,7 @@ public class LocalOSSUtils {
     }
 
     public static String getMergeDir() {
-        String separator = OSType.getSeparator(null);
+        String separator =  OSConfig.separator;
         String merged = getUploadDir() + "merged" + separator;
         File file = FileUtil.newFile(merged);
         if (!file.exists()) {
@@ -131,7 +132,7 @@ public class LocalOSSUtils {
     }
 
     public static String getMergeFilePath(String identifier, String fileMainName) {
-        String separator = OSType.getSeparator(null);
+        String separator =  OSConfig.separator;
         String path = getMergeDir() + identifier + separator;
         path = path.replace(separator + separator, separator);
         File file = FileUtil.newFile(path);
@@ -142,7 +143,7 @@ public class LocalOSSUtils {
     }
 
     public static String getChunkDirPath(String identifier) {
-        return getChunkDir() + identifier + OSType.getSeparator(null);
+        return getChunkDir() + identifier +  OSConfig.separator;
     }
 
     /*===========================================================================================================================================================================================================================================*/
@@ -170,7 +171,7 @@ public class LocalOSSUtils {
         if (StrUtil.isBlank(bucketName)) {
             bucketName = "";
         }
-        String separator = OSType.getSeparator();
+        String separator = OSConfig.separator;
         String bucketPath = getUploadDir() + separator + bucketName + separator;
         bucketPath = bucketPath.replace(separator + separator, separator);
 
@@ -223,7 +224,7 @@ public class LocalOSSUtils {
         if (StrUtil.isBlank(chunkDir)) {
             chunkDir = getChunkDir();
         }
-        String separator = OSType.getSeparator();
+        String separator = OSConfig.separator;
         if (!chunkDir.endsWith(separator)) {
             chunkDir = chunkDir + separator;
         }
@@ -282,7 +283,7 @@ public class LocalOSSUtils {
         if (!chunkDirFile.exists()) {
             chunkDirFile.mkdirs();
         }
-        String separator = OSType.getSeparator();
+        String separator = OSConfig.separator;
         File tempFile = FileUtil.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
         if (!tempFile.exists()) {
             tempFile.createNewFile();
@@ -315,7 +316,7 @@ public class LocalOSSUtils {
      */
     @SneakyThrows
     public static String mergeFileLocal(String chunkDir, String mergeDir, String fileName, String identifier) {
-        String separator = OSType.getSeparator();
+        String separator = OSConfig.separator;
         if (!chunkDir.endsWith(separator)) {
             chunkDir = chunkDir + separator;
         }
@@ -386,7 +387,7 @@ public class LocalOSSUtils {
      * @return
      */
     public static List<FilePart> getFileParts(String chunkDir, String identifier, Long fileId) {
-        String separator = OSType.getSeparator(null);
+        String separator = OSConfig.separator;
         if (!chunkDir.endsWith(separator)) {
             chunkDir = chunkDir + separator;
         }

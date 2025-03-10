@@ -147,7 +147,7 @@ public class FileController implements AbstractBaseController {
 
     @SysLog
     @Operation(summary = "获取本服务器文件字节")
-    @GetMapping("/fetch/byte/local")
+    @GetMapping("${file.byte.get:/fetch/byte/local}")
     public Result<List<byte[]>> fetchByteByLocal(@RequestParam(required = false) String identifier,
                                                  @RequestParam(required = false) String folder,
                                                  @RequestParam(required = false) String fileName,
@@ -160,7 +160,7 @@ public class FileController implements AbstractBaseController {
 
     @SysLog
     @Operation(summary = "移除本服务器文件")
-    @GetMapping("/del/file/local")
+    @DeleteMapping("${file.byte.del:/del/file/local}")
     public Result<String> delFileLocal(@RequestParam(required = false) String identifier,
                                        @RequestParam(required = false) String folder,
                                        @RequestParam(required = false) String fileName,

@@ -29,6 +29,10 @@ file:
     local:
       uploadDir: ../../tmp/uploads
 
+  byte:
+    get: /fetch/byte/local
+    del: /del/file/local
+
 cors:
   gateway:
     enabled: false

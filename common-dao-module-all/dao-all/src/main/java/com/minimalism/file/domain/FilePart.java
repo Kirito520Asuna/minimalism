@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.minimalism.enums.OSType;
+import com.minimalism.config.OSConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -98,7 +100,7 @@ public class FilePart implements Serializable {
      */
     @TableField(value = "os_type")
     @Schema(description = "操作系统类型 linux,win,mac")
-    private String osType = OSType.getOS();
+    private String osType = OSConfig.os;
 
     private static final long serialVersionUID = 1L;
 

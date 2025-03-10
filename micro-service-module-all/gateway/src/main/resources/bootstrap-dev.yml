@@ -13,11 +13,11 @@ springfox:
 spring:
   cloud:
     nacos:
-      server-addr: 192.168.200.128:8848
+      server-addr: 192.168.3.22:8848
     gateway:
       discovery:
         #docker启动时远程调用失败  需要将docker所在服务器地址设置一下
-        ip: ${LOCAL_IP_ADDRESS:192.168.200.128}
+        ip: ${LOCAL_IP_ADDRESS:192.168.3.22}
         locator:
           # 服务名小写转换
           lower-case-service-id: true

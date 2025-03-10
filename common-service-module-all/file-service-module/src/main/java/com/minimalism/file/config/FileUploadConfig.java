@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 public class FileUploadConfig implements AbstractBean {
-    public static String instanceId = NacosUtils.getInstanceId();
+    public static String instanceId;
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {
@@ -53,7 +53,7 @@ public class FileUploadConfig implements AbstractBean {
     public void init() {
         AbstractBean.super.init();
         List<String> fileNameList = LocalOSSUtils.getFileNameList();
-        //String instanceId = NacosUtils.getInstanceId();
+        instanceId = NacosUtils.getInstanceId();
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, instanceId, fileNameList);
         LocalOSSUtils.FILE_NAME_LIST.addAll(fileNameList);

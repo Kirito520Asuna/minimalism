@@ -2,6 +2,7 @@ package com.minimalism.file.properties;
 
 
 import com.minimalism.abstractinterface.service.properties.BeanProperties;
+import com.minimalism.config.OSConfig;
 import com.minimalism.enums.OSType;
 import com.minimalism.file.storage.StorageType;
 import lombok.Data;
@@ -58,7 +59,7 @@ public class FileProperties implements BeanProperties {
         private String uploadDir = "tmp/uploads";
 
         public String getUploadDir() {
-            String separator = OSType.getSeparator(null);
+            String separator = OSConfig.separator;
             return uploadDir.endsWith(separator) ? uploadDir : uploadDir + separator;
         }
     }

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.minimalism.config.OSConfig;
 import com.minimalism.constant.Constants;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
@@ -259,7 +260,7 @@ public class FileServiceImpl implements FileService {
                 // 使用字符串操作获取父目录路径
 
                 // 只支持win,mac,linux版本
-                int lastIndexOf = localResource.lastIndexOf(OSType.getSeparator(filePart.getOsType()));
+                int lastIndexOf = localResource.lastIndexOf(OSConfig.getSeparator(filePart.getOsType()));
                 String parentPathByString = localResource.substring(0, lastIndexOf + 1);
                 String pathAll = parentPathByString + partFileName;
                 File file = FileUtil.newFile(pathAll);
@@ -317,7 +318,7 @@ public class FileServiceImpl implements FileService {
         }
 
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
-        folder = uploadDir + folder + OSType.getSeparator();
+        folder = uploadDir + folder + OSConfig.separator;
         if (isFile) {
             //文件
             fileName = folder + fileName;
@@ -350,7 +351,7 @@ public class FileServiceImpl implements FileService {
             FileUtil.del(file);
         }
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
-        folder = uploadDir + folder + OSType.getSeparator();
+        folder = uploadDir + folder + OSConfig.separator;
         if (isFile) {
             //文件
             fileName = folder + fileName;
