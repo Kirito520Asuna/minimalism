@@ -1,11 +1,11 @@
 package com.minimalism.common.service.impl;
 
+import com.minimalism.abstractinterface.service.config.AbstractAuthShiroConfig;
 import com.minimalism.common.service.CommonUserService;
-import com.minimalism.config.shiro.ShiroConfig;
-import com.minimalism.constant.ExpressionConstants;
+import com.minimalism.config.security.SecurityConfig;
 import com.minimalism.utils.shiro.SecurityContextUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 //@ConditionalOnExpression(ExpressionConstants.authorizationShiroAllExpression)
-@ConditionalOnBean(ShiroConfig.class)
+@ConditionalOnBean(AbstractAuthShiroConfig.class)
+//@ConditionalOnMissingBean(AbstractAuthShiroConfig.class)
 public class ShiroUserServiceImpl implements CommonUserService {
     @Override
     public String getUserId() {

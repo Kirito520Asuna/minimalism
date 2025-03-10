@@ -19,8 +19,6 @@ public interface SysUserRoleService extends IService<SysUserRole>{
 
     int batchInsertSelectiveUseDefaultForNull(List<SysUserRole> list);
 
-    int deleteByPrimaryKeyIn(List<Long> list);
-
     int insertOrUpdate(SysUserRole record);
 
     int insertOrUpdateSelective(SysUserRole record);

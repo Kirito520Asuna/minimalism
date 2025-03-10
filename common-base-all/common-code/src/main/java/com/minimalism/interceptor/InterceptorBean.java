@@ -2,12 +2,11 @@ package com.minimalism.interceptor;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
-import com.minimalism.abstractinterface.service.AbstractApiFiler;
-import com.minimalism.abstractinterface.service.AbstractAuthFiler;
+import com.minimalism.abstractinterface.service.filter.AbstractApiFiler;
+import com.minimalism.abstractinterface.service.filter.AbstractAuthFiler;
 import com.minimalism.interceptor.Impl.DefaultApiInterceptor;
 import com.minimalism.interceptor.Impl.DefaultInterceptor;
 import com.minimalism.interceptor.Impl.DefaultLogInterceptor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;

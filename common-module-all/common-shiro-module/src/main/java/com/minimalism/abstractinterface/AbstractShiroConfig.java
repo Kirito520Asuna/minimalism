@@ -4,7 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.service.AbstractAuthorizationConfig;
+import com.minimalism.abstractinterface.service.config.AbstractAuthShiroConfig;
+import com.minimalism.abstractinterface.service.config.AbstractAuthorizationConfig;
 import com.minimalism.config.ApiConfig;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.constant.ExpressionConstants;
@@ -43,7 +44,7 @@ import java.util.stream.Collectors;
  * @Date 2024/10/19 下午3:07:59
  * @Description
  */
-public interface AbstractShiroConfig extends AbstractAuthorizationConfig {
+public interface AbstractShiroConfig extends AbstractAuthShiroConfig {
     //开启shiro权限注解
 
     default AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(WebSecurityManager webSecurityManager) {

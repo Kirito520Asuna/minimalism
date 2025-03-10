@@ -31,6 +31,11 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig implements AbstractBean, AbstractShiroConfig {
+    @Override
+    public void init() {
+        debug("[init] {}",getClass().getName());
+    }
+
     @Value("${shiro.encodePassword:false}")
     private Boolean enableEncodePassword;
     public static boolean getEnableEncodePassword() {

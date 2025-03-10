@@ -4,6 +4,7 @@ package com.minimalism.config.security;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.AbstractSecurityConfig;
+import com.minimalism.abstractinterface.service.config.AbstractAuthSecurityConfig;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.service.AbstractUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 //开启权限校验
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements AbstractAuthSecurityConfig {
+    @Override
+    public void init() {
+        debug("[init] {}",getClass().getName());
+    }
 
     /**
      * 密码加密存储

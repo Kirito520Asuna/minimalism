@@ -1,6 +1,6 @@
 package com.minimalism.abstractinterface;
 
-import com.minimalism.abstractinterface.service.AbstractAuthFiler;
+import com.minimalism.abstractinterface.service.filter.AbstractAuthFiler;
 
 /**
  * @Author yan

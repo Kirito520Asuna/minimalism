@@ -1,9 +1,8 @@
 package com.minimalism.interceptor.config;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.service.AbstractApiFiler;
-import com.minimalism.abstractinterface.service.AbstractAuthFiler;
+import com.minimalism.abstractinterface.service.filter.AbstractApiFiler;
+import com.minimalism.abstractinterface.service.filter.AbstractAuthFiler;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.interceptor.AbstractWebConfigurerAdapter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

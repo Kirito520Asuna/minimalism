@@ -39,11 +39,6 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
     }
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int deleteByPrimaryKeyIn(List<Long> list) {
-        return baseMapper.deleteByPrimaryKeyIn(list);
-    }
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public int insertOrUpdate(SysUserRole record) {
         return baseMapper.insertOrUpdate(record);
     }

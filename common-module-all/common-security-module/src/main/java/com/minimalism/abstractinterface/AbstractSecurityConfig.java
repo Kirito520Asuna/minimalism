@@ -1,7 +1,7 @@
 package com.minimalism.abstractinterface;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.service.AbstractAuthorizationConfig;
+import com.minimalism.abstractinterface.service.config.AbstractAuthorizationConfig;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.ApiFilter;
 import com.minimalism.filter.CorsRequestFilter;
