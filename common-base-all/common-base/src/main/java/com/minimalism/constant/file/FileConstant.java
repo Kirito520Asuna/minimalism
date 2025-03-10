@@ -7,4 +7,5 @@ package com.minimalism.constant.file;
  */
 public interface FileConstant {
     String FILE_REDIS_MAPPER = "REDIS_FILE_MAPPER";
+    String REDIS_FILE_INSTANCE_ID = "REDIS_FILE_INSTANCE_ID";
 }

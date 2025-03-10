@@ -6,19 +6,24 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.constant.Constants;
+import com.minimalism.constant.file.FileConstant;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.SneakyThrows;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -27,8 +32,43 @@ import java.util.stream.Collectors;
  * @Description
  */
 public class LocalOSSUtils {
+    // 本地存储当前实例的文件地址（线程安全）
+    public static final Set<String> FILE_NAME_LIST = ConcurrentHashMap.newKeySet();
+
+    public static void putRedisFile(File file) {
+        putRedisFile(FileUtil.getAbsolutePath(file));
+    }
+    public static void putRedisFile(String filePath) {
+        RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
+        String instanceId = (String) redisTemplate
+                .opsForHash().get(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
+        if (!ObjectUtils.equals(FileUploadConfig.instanceId, instanceId)) {
+            redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, filePath, FileUploadConfig.instanceId);
+            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.instanceId, filePath);
+            FILE_NAME_LIST.add(filePath);
+        }
+    }
+    public static void delRedisFile(File file) {
+        putRedisFile(FileUtil.getAbsolutePath(file));
+    }
+    public static void delRedisFile(String filePath) {
+        RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
+        String instanceId = (String) redisTemplate
+                .opsForHash().get(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
+        if (ObjectUtils.equals(FileUploadConfig.instanceId, instanceId)) {
+            redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
+            redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.instanceId, filePath);
+            FILE_NAME_LIST.remove(filePath);
+        }
+    }
+
+    /**
+     * 获取上传目录
+     *
+     * @return
+     */
     public static String getUploadDir() {
-        String separator = OSType.getSeparator(null);
+        String separator = OSType.getSeparator();
         String uploadDir = separator;
         try {
             FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
@@ -37,8 +77,6 @@ public class LocalOSSUtils {
         } catch (Exception e) {
             uploadDir = SpringUtil.getBean(Environment.class).getProperty("file.properties.local.uploadDir", String.class, "tmp/uploads");
         }
-        //uploadDir = "tmp/uploads";
-
         if (!uploadDir.endsWith(separator)) {
             uploadDir = uploadDir + separator;
         }
@@ -49,6 +87,7 @@ public class LocalOSSUtils {
         }
         return uploadDir;
     }
+
 
     public static String getBucket() {
         String directory;
@@ -63,7 +102,7 @@ public class LocalOSSUtils {
     }
 
     public static String getChunkDir() {
-        String separator = OSType.getSeparator(null);
+        String separator = OSType.getSeparator();
         String chunk = getUploadDir() + "chunks" + separator;
         File file = FileUtil.newFile(chunk);
         if (!file.exists()) {
@@ -131,7 +170,7 @@ public class LocalOSSUtils {
         if (StrUtil.isBlank(bucketName)) {
             bucketName = "";
         }
-        String separator = OSType.getSeparator(null);
+        String separator = OSType.getSeparator();
         String bucketPath = getUploadDir() + separator + bucketName + separator;
         bucketPath = bucketPath.replace(separator + separator, separator);
 
@@ -139,11 +178,13 @@ public class LocalOSSUtils {
         if (!bucketFile.exists()) {
             bucketFile.mkdirs();
         }
+        putRedisFile(bucketPath);
         File file = FileUtil.newFile(bucketPath + flieName);
         if (!file.exists()) {
             file.createNewFile();
         }
         IoUtils.copy(inputStream, FileUtil.getOutputStream(file));
+        putRedisFile(file);
         return FileUtil.getAbsolutePath(file);
     }
 
@@ -156,6 +197,7 @@ public class LocalOSSUtils {
     public static String uploadSharding(String fileName, String identifier, InputStream input) {
         splitFileLocal(identifier, input);
         String fileLocal = mergeFileLocal(fileName, identifier);
+        putRedisFile(fileLocal);
         return FileUtil.getAbsolutePath(fileLocal);
     }
 
@@ -181,7 +223,7 @@ public class LocalOSSUtils {
         if (StrUtil.isBlank(chunkDir)) {
             chunkDir = getChunkDir();
         }
-        String separator = OSType.getSeparator(null);
+        String separator = OSType.getSeparator();
         if (!chunkDir.endsWith(separator)) {
             chunkDir = chunkDir + separator;
         }
@@ -192,7 +234,7 @@ public class LocalOSSUtils {
         if (!chunkDirFile.exists()) {
             chunkDirFile.mkdirs();
         }
-
+        putRedisFile(chunkDirFile);
         try (InputStream fis = input) {
             byte[] buffer = new byte[getChunkSize()];
             int bytesRead;
@@ -203,6 +245,7 @@ public class LocalOSSUtils {
                 if (!tempFile.exists()) {
                     tempFile.createNewFile();
                 }
+                putRedisFile(tempFile);
                 // 写入读取的字节到分块文件中
                 try (OutputStream os = new FileOutputStream(tempFile)) {
                     os.write(buffer, 0, bytesRead);
@@ -239,13 +282,14 @@ public class LocalOSSUtils {
         if (!chunkDirFile.exists()) {
             chunkDirFile.mkdirs();
         }
-        String separator = OSType.getSeparator(null);
+        String separator = OSType.getSeparator();
         File tempFile = FileUtil.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
         if (!tempFile.exists()) {
             tempFile.createNewFile();
         }
         BufferedOutputStream outputStream = FileUtil.getOutputStream(tempFile);
         IoUtils.copy(input, outputStream);
+        putRedisFile(tempFile);
         return FileUtil.getAbsolutePath(tempFile);
     }
 
@@ -271,7 +315,7 @@ public class LocalOSSUtils {
      */
     @SneakyThrows
     public static String mergeFileLocal(String chunkDir, String mergeDir, String fileName, String identifier) {
-        String separator = OSType.getSeparator(null);
+        String separator = OSType.getSeparator();
         if (!chunkDir.endsWith(separator)) {
             chunkDir = chunkDir + separator;
         }
@@ -297,13 +341,13 @@ public class LocalOSSUtils {
             mergeDirFile.mkdirs();
         }
         // 合并后完整文件路径：MERGE_DIR + 原始文件名
-        File mergedFile = FileUtil.newFile(mergeDir + fileName);
+        String mergeFile = mergeDir + fileName;
+        File mergedFile = FileUtil.newFile(mergeFile);
         // 如果目标文件已存在，则先删除
         if (mergedFile.exists()) {
             mergedFile.delete();
         }
         mergedFile.createNewFile();
-
         // 依次将每个分块文件的内容复制到合并后的文件中
         try (OutputStream outputStream = new FileOutputStream(mergedFile)) {
             for (File chunk : sortedChunks) {
@@ -313,7 +357,12 @@ public class LocalOSSUtils {
             }
         }
         sortedChunks.add(chunkDirFile);
-        sortedChunks.stream().forEach(FileUtil::del);
+        sortedChunks.stream().forEach(file -> {
+            String path = FileUtil.getAbsolutePath(file);
+            FileUtil.del(path);
+            delRedisFile(path);
+        });
+        putRedisFile(mergedFile);
         return FileUtil.getAbsolutePath(mergedFile);
     }
 
@@ -379,6 +428,7 @@ public class LocalOSSUtils {
 
     /**
      * 获取 UploadDir文件夹下文件路径  mergeDir,chunkDir 文件夹下文件夹路径
+     *
      * @return
      */
     public static List<String> getFileNameList() {

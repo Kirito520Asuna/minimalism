@@ -56,6 +56,10 @@ public class FileUploadConfig implements AbstractBean {
         //String instanceId = NacosUtils.getInstanceId();
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, instanceId, fileNameList);
+        LocalOSSUtils.FILE_NAME_LIST.addAll(fileNameList);
+        fileNameList.stream().forEach(fileName -> {
+            redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, fileName, instanceId);
+        });
     }
 
 
@@ -63,5 +67,8 @@ public class FileUploadConfig implements AbstractBean {
     public void destroy() {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, instanceId);
+        LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
+            redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, fileName);
+        });
     }
 }

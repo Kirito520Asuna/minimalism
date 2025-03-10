@@ -1,6 +1,7 @@
 package com.minimalism.utils;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
@@ -8,6 +9,7 @@ import com.alibaba.cloud.nacos.discovery.NacosDiscoveryClient;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -122,4 +124,5 @@ public class NacosUtils {
     public static boolean existInstanceId(String serviceId, String instanceId) {
         return getInstanceIds(null, serviceId).contains(instanceId);
     }
+
 }
