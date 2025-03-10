@@ -27,7 +27,7 @@ public class NacosUtils {
      */
     public static String getUrl(String serviceId, String instanceId, String prefix, String path) {
         String urlFormat = "http://%s:%s/" + prefix + "/" + path;
-        urlFormat = urlFormat.replace("//", "/").replace(":/", "://");
+        urlFormat = urlFormat.replace("//", "/").replace("//", "/").replace(":/", "://");
         String url = null;
         NacosDiscoveryClient discoveryClient = SpringUtil.getBean(NacosDiscoveryClient.class);
 
