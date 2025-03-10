@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +20,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Accessors(chain = true)
 @Configuration
-@Data @RefreshScope
+@Data
+@RefreshScope
 @NoArgsConstructor
 @AllArgsConstructor
+@ConditionalOnExpression("${" + PropertiesConstants.CORS_GATEWAY_ENABLED + ":false}")
 @ConfigurationProperties(prefix = PropertiesConstants.CORS_GATEWAY_PREFIX)
 public class CorsGatewayProperties implements BeanProperties {
     @JsonProperty(PropertiesConstants.CORS_GATEWAY_DEFAULT_FILTER)

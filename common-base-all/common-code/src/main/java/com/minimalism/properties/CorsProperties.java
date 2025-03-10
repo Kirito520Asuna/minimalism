@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 @NoArgsConstructor
 @Data @RefreshScope
 @AllArgsConstructor
-@ConditionalOnExpression(ExpressionConstants.corsFilterExpression)
+@ConditionalOnExpression("${" + PropertiesConstants.CORS_ENABLED + ":true}")
 @ConfigurationProperties(prefix = PropertiesConstants.CORS_PREFIX)
 public class CorsProperties implements BeanProperties {
     private String pattern;

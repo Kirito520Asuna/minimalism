@@ -29,9 +29,10 @@ file:
     local:
       uploadDir: ../../tmp/uploads
 
-captcha:
-  enabled: true
 cors:
+  gateway:
+    enabled: false
+  enabled: true
   config: false
   filter: true
   pattern: "/**"
@@ -49,5 +50,4 @@ authorization:
     enable: false
 
 common:
-  openFilter: false
-  openInterceptor: true
+  openFilter: true

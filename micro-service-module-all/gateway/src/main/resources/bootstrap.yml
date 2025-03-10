@@ -51,15 +51,14 @@ knife4j:
     enable-dynamic-parameter: true
 #===========================================================================
 common:
-  jwt:
-    openInterceptor: false
-    openFilter: false
+  openFilter: false
 #===========================================================================
 captcha:
   enabled: false
 #===========================================================================
 cors:
   gateway:
+    enabled: true
     default-filter: false
     web-filter: true
     distinct-headers-filter: true

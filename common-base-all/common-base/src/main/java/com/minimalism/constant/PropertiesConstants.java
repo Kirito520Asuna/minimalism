@@ -7,7 +7,9 @@ package com.minimalism.constant;
  */
 public class PropertiesConstants {
     public static final String CORS_PREFIX = "cors";
+    public static final String CORS_ENABLED = "cors.enabled";
     public static final String CORS_GATEWAY_PREFIX = "cors.gateway";
+    public static final String CORS_GATEWAY_ENABLED = "cors.gateway.enabled";
     public static final String CORS_GATEWAY_DEFAULT_FILTER = "default-filter";
     public static final String CORS_GATEWAY_WEB_FILTER = "web-filter";
     public static final String CORS_GATEWAY_DISTINCT_HEADERS_FILTER = "distinct-headers-filter";
