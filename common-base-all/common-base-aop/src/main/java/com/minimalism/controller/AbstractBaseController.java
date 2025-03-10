@@ -4,6 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @Date 2024/10/29 下午5:59:24
  * @Description
  */
+@RestController
 public interface AbstractBaseController extends AbstractBean {
     default <T> Result<T> ok() {
         return Result.ok();
