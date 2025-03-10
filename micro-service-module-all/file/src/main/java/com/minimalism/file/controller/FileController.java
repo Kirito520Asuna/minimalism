@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.aop.aviator.Aviator;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -143,4 +145,30 @@ public class FileController implements AbstractBaseController {
         return ok();
     }
 
+    @SysLog
+    @Operation(summary = "获取本服务器文件字节")
+    @GetMapping("/fetch/byte/local")
+    public Result<List<byte[]>> fetchByteByLocal(@RequestParam(required = false) String identifier,
+                                                 @RequestParam(required = false) String folder,
+                                                 @RequestParam(required = false) String fileName,
+                                                 @RequestParam(required = false) Integer chunkNumber) {
+        if (StrUtil.isBlank(fileName) && (StrUtil.isBlank(folder) || StrUtil.isBlank(identifier))) {
+            throw new GlobalCustomException("非法请求");
+        }
+        return ok(fileService.getByteByLocal(fileName, folder, identifier, chunkNumber));
+    }
+
+    @SysLog
+    @Operation(summary = "移除本服务器文件")
+    @GetMapping("/del/file/local")
+    public Result<String> delFileLocal(@RequestParam(required = false) String identifier,
+                                       @RequestParam(required = false) String folder,
+                                       @RequestParam(required = false) String fileName,
+                                       @RequestParam(required = false) Integer chunkNumber) {
+        if (StrUtil.isBlank(fileName) && (StrUtil.isBlank(folder) || StrUtil.isBlank(identifier))) {
+            throw new GlobalCustomException("非法请求");
+        }
+        fileService.delByteByLocal(fileName, folder, identifier, chunkNumber);
+        return ok();
+    }
 }

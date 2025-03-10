@@ -349,7 +349,6 @@ public class FileServiceImpl implements FileService {
             File file = FileUtil.newFile(uploadDir + fileName);
             FileUtil.del(file);
         }
-
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
         folder = uploadDir + folder + OSType.getSeparator();
         if (isFile) {
@@ -360,12 +359,8 @@ public class FileServiceImpl implements FileService {
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             //文件夹
             File file = FileUtil.newFile(folder);
-            if (!file.exists()) {
-                return true;
-            }
             FileUtil.del(file);
         }
-
         return true;
     }
 
