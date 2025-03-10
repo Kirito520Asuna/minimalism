@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 @Configuration
 public class FileUploadConfig implements AbstractBean {
     public static String instanceId;
+    public static String getPathKey = "file.byte.get";
+    public static String delPathKey = "file.byte.del";
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {
@@ -63,12 +65,38 @@ public class FileUploadConfig implements AbstractBean {
     }
 
 
-    @Override @PreDestroy
+    @Override
+    @PreDestroy
     public void destroy() {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, instanceId);
         LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
             redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, fileName);
         });
+    }
+
+    /**
+     * 获取其他服务器文件字节 的url
+     * @param instanceId
+     * @return
+     */
+    public static String getUrlByte(String instanceId) {
+        return getUrl(instanceId, FileUploadConfig.getPathKey);
+    }
+
+    /**
+     * 获取其他服务器文件删除的url
+     * @param instanceId
+     * @return
+     */
+    public static String getUrlDel(String instanceId) {
+        return getUrl(instanceId, FileUploadConfig.delPathKey);
+    }
+
+    public static String getUrl(String instanceId, String path) {
+        Environment environment = SpringUtil.getBean(Environment.class);
+        String prefix = environment.getProperty("server.servlet.context-path", "");
+        String serviceId = environment.getProperty("spring.application.name", "");
+        return NacosUtils.getUrl(serviceId, instanceId, prefix, path);
     }
 }
