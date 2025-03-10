@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @Configuration
 public class FileUploadConfig implements AbstractBean {
     public static String instanceId;
+    public static String fileControllerPath = "/file";
     public static String getPathKey = "file.byte.get";
     public static String delPathKey = "file.byte.del";
 
@@ -77,6 +78,7 @@ public class FileUploadConfig implements AbstractBean {
 
     /**
      * 获取其他服务器文件字节 的url
+     *
      * @param instanceId
      * @return
      */
@@ -86,6 +88,7 @@ public class FileUploadConfig implements AbstractBean {
 
     /**
      * 获取其他服务器文件删除的url
+     *
      * @param instanceId
      * @return
      */
@@ -97,6 +100,7 @@ public class FileUploadConfig implements AbstractBean {
         Environment environment = SpringUtil.getBean(Environment.class);
         String prefix = environment.getProperty("server.servlet.context-path", "");
         String serviceId = environment.getProperty("spring.application.name", "");
+        prefix = prefix + fileControllerPath;
         return NacosUtils.getUrl(serviceId, instanceId, prefix, path);
     }
 }
