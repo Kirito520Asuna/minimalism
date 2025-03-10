@@ -20,6 +20,11 @@
         <aliyun-sdk-oss.version>3.10.2</aliyun-sdk-oss.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-nacos</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <!--阿里云oss-->
         <dependency>
             <groupId>com.aliyun.oss</groupId>

@@ -2,6 +2,7 @@ package com.minimalism.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 
@@ -37,4 +38,10 @@ public class NacosUtils {
         }
         return url;
     }
+
+    public static String getInstanceId() {
+        NacosDiscoveryProperties nacosDiscoveryProperties = SpringUtil.getBean(NacosDiscoveryProperties.class);
+        return nacosDiscoveryProperties.getIp() + ":" + nacosDiscoveryProperties.getPort();
+    }
+
 }

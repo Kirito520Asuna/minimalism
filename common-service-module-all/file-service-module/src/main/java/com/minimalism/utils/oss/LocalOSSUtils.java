@@ -376,4 +376,29 @@ public class LocalOSSUtils {
         }
         return streamList;
     }
+
+    /**
+     * 获取 UploadDir文件夹下文件路径  mergeDir,chunkDir 文件夹下文件夹路径
+     * @return
+     */
+    public static List<String> getFileNameList() {
+        String uploadDir = getUploadDir();
+        String mergeDir = getMergeDir();
+        String chunkDir = getChunkDir();
+
+        List<String> fileNameList = Arrays.stream(FileUtil.newFile(uploadDir).listFiles()).filter(File::isFile)
+                .map(FileUtil::getName).map(name -> uploadDir + name).collect(Collectors.toList());
+
+        List<String> mergeDirList = Arrays.stream(FileUtil.newFile(mergeDir).listFiles()).filter(File::isDirectory)
+                .map(FileUtil::getName).map(name -> mergeDir + name).collect(Collectors.toList());
+
+        List<String> chunkDirList = Arrays.stream(FileUtil.newFile(chunkDir).listFiles()).filter(File::isDirectory)
+                .map(FileUtil::getName).map(name -> chunkDir + name).collect(Collectors.toList());
+
+        List<String> list = CollUtil.newArrayList(fileNameList);
+        list.addAll(mergeDirList);
+        list.addAll(chunkDirList);
+        return fileNameList;
+    }
+
 }
