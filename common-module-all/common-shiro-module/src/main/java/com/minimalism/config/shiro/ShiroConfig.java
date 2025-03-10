@@ -6,6 +6,7 @@ import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.CorsRequestFilter;
 import com.minimalism.filter.JwtAuthFilter;
+import com.minimalism.filter.bean.FilterBean;
 import com.minimalism.interceptor.Impl.LogInterceptor;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authz.Authorizer;
@@ -15,6 +16,7 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -31,34 +33,42 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig implements AbstractBean, AbstractShiroConfig {
-    @Override
-    public void init() {
-        debug("[init] {}",getClass().getName());
-    }
+    //@Override
+    //public void init() {
+    //    debug("[init] {}", getClass().getName());
+    //}
 
     @Value("${shiro.encodePassword:false}")
     private Boolean enableEncodePassword;
+
     public static boolean getEnableEncodePassword() {
         Boolean encodePassword = SpringUtil.getBean(ShiroConfig.class).enableEncodePassword;
         encodePassword = encodePassword == null ? false : encodePassword;
         return encodePassword;
     }
+
     @Bean
     //@ConditionalOnExpression("${common.jwt.openFilter:true}&&!${common.jwt.openInterceptor:false}")
-    @ConditionalOnExpression(ExpressionConstants.filterExpression)
+    //@ConditionalOnExpression(ExpressionConstants.filterExpression)
+    @ConditionalOnBean(FilterBean.class)
     public JwtAuthFilter jwtAuthFilter() {
         return new JwtAuthFilter();
     }
-    @Bean @Primary
+
+    @Bean
+    @Primary
     @ConditionalOnExpression(ExpressionConstants.corsFilterExpression)
     public CorsRequestFilter corsRequestFilter() {
         return new CorsRequestFilter();
     }
+
     @Bean
     public Authorizer authorizer() {
         return AbstractShiroConfig.super.authorizer(realm());
     }
-    @Bean @Primary
+
+    @Bean
+    @Primary
     @Override
     public SessionManager sessionManager() {
         return AbstractShiroConfig.super.sessionManager();

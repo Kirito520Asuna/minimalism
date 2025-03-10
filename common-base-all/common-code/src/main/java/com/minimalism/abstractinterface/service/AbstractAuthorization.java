@@ -26,6 +26,11 @@ import java.util.Map;
  * @Description
  */
 public interface AbstractAuthorization extends AbstractBean {
+    @Override
+    default void init() {
+        debug("[Bean]-[Authorization]-[init] {}", getClass().getName());
+    }
+
     /**
      * 获取token
      *

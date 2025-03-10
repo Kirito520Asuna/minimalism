@@ -6,4 +6,8 @@ package com.minimalism.abstractinterface.service.config;
  * @Description
  */
 public interface AbstractAuthShiroConfig extends AbstractAuthorizationConfig {
+    @Override
+    default void init() {
+        debug("[Bean]-[AuthShiro]-[init] {}",getClass().getName());
+    }
 }

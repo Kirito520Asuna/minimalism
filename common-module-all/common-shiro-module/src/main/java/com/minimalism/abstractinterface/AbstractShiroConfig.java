@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
  * @Description
  */
 public interface AbstractShiroConfig extends AbstractAuthShiroConfig {
+
     //开启shiro权限注解
 
     default AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(WebSecurityManager webSecurityManager) {

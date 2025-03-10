@@ -8,4 +8,9 @@ import com.minimalism.abstractinterface.service.filter.AbstractAuthFiler;
  * @Description
  */
 public interface AuthorizationFilter extends AbstractAuthFiler, AbstractAuthorizationSecurity {
+    @Override
+    default void init() {
+        AbstractAuthFiler.super.init();
+    }
+
 }

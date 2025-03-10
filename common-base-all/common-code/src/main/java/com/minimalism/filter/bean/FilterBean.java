@@ -10,6 +10,7 @@ import com.minimalism.filter.CorsRequestFilter;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;
 import org.slf4j.Logger;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
@@ -78,7 +79,8 @@ public class FilterBean implements AbstractBean {
     }
 
     @Bean
-    @ConditionalOnExpression(ExpressionConstants.filterExpression)
+    //@ConditionalOnExpression(ExpressionConstants.filterExpression)
+    @ConditionalOnBean(FilterBean.class)
     public ApiFilter apiFilter() {
         return new ApiFilter();
     }
