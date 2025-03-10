@@ -3,11 +3,15 @@ package com.minimalism.file.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.google.common.collect.Maps;
 import com.minimalism.config.OSConfig;
 import com.minimalism.constant.Constants;
 import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.service.FileInfoService;
@@ -16,6 +20,9 @@ import com.minimalism.file.service.FileService;
 import com.minimalism.file.storage.FileFactory;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
+import com.minimalism.result.Result;
+import com.minimalism.utils.NacosUtils;
+import com.minimalism.utils.http.OkHttpUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.utils.object.ObjectUtils;
@@ -24,13 +31,12 @@ import com.minimalism.vo.PartVo;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,7 +62,46 @@ public class FileServiceImpl implements FileService {
         InputStream inputStream = null;
         Boolean local = partVo.getLocal();
         if (ObjectUtils.defaultIfEmpty(local, Boolean.FALSE)) {
-            inputStream = FileUtil.getInputStream(partVo.getLocalResource());
+            String path = partVo.getLocalResource();
+            if (FileUtil.newFile(path).isFile()) {
+                String uploadDir = LocalOSSUtils.getUploadDir();
+                int index = 0;
+                if (path.startsWith(uploadDir)) {
+                    index = path.indexOf(uploadDir) + uploadDir.length();
+                }
+                int endIndex = path.indexOf(FileUtil.getName(path));
+                String floder = path.substring(index, endIndex);
+                String instanceId = LocalOSSUtils.getRedisInstanceId(floder);
+                if (!ObjectUtils.equals(instanceId, FileUploadConfig.instanceId)) {
+                    String url = FileUploadConfig.getUrlByte(instanceId);
+
+                    Integer chunkNumber = Integer.valueOf(FileUtil.mainName(path));
+                    String identifier = partVo.getIdentifier();
+                    if (floder.contains(identifier)) {
+                        floder = floder.replace(identifier, "");
+                    }
+                    //String identifier,
+                    //String folder,
+                    //String fileName,
+                    //Integer chunkNumber
+                    Map<String, Object> params = Maps.newLinkedHashMap();
+                    params.put("identifier", identifier);
+                    params.put("floder", floder);
+                    params.put("chunkNumber", chunkNumber);
+                    //params.put("identifier", identifier);
+                    String json = OkHttpUtils.get(url, params);
+                    Result<List<byte[]>> result = JSONUtil.toBean(json, Result.class);
+
+                    if (!result.validateOk()) {
+                        error("获取分片失败,error:{}", result.getMessage());
+                        throw new GlobalCustomException(result.getMessage());
+                    }
+                    byte[] bytes = IoUtils.toByteArray(result.getData().stream().map(ByteArrayInputStream::new).collect(Collectors.toList()));
+                    inputStream = new ByteArrayInputStream(bytes);
+                } else {
+                    inputStream = FileUtil.getInputStream(path);
+                }
+            }
         } else {
             try {
                 inputStream = new URL(partVo.getUrl()).openStream();
@@ -69,8 +114,11 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<InputStream> getPartInputStreamList(String identifier, Long fileId) {
-        List<PartVo> partList = getPartList(identifier, fileId);
-        List<InputStream> inputStreamList = partList.stream().map(this::partToInputStream).collect(Collectors.toList());
+        List<PartVo> partList = getPartList(identifier, fileId).stream().map(o -> o.setIdentifier(identifier)).collect(Collectors.toList());
+        List<InputStream> inputStreamList = partList.stream()
+                .map(this::partToInputStream).collect(Collectors.toList());
+        //移除其他实例服务器 todo
+        // xxx
         return inputStreamList;
     }
 
@@ -185,6 +233,7 @@ public class FileServiceImpl implements FileService {
                 fileInfoById.setUrl(fileInfo.getUrl())
                         .setLocal(Boolean.TRUE);
                 fileInfoService.updateById(fileInfoById);
+                LocalOSSUtils.putRedisFile(fileInfo.getUrl());
             }
             mergeOk(identifier, fileId);
         } finally {
