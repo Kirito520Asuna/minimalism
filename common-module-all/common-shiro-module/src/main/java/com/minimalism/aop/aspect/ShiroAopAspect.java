@@ -22,7 +22,7 @@ import java.util.List;
 public class ShiroAopAspect implements AbstractShiroAopAspect {
     @Override
     @Pointcut(value = "ShiroPermissionsAspect.SysLog()||ShiroRolesAspect.SysLog()")
-    public void SysLog() {
+    public void Aop() {
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ShiroAopAspect implements AbstractShiroAopAspect {
         return SecurityContextUtil.getPermissions();
     }
 
-    @Around(value = "SysLog()")
+    @Around(value = "Aop()")
     @Override
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         hasRolesPermissions(joinPoint);

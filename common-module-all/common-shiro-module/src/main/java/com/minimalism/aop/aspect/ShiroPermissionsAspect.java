@@ -17,6 +17,6 @@ import org.springframework.stereotype.Component;
 public class ShiroPermissionsAspect implements AbstractShiroAopAspect {
     @Pointcut(value = "@annotation(com.minimalism.aop.shiro.ShiroPermissions)")
     @Override
-    public void SysLog() {
+    public void Aop() {
     }
 }
