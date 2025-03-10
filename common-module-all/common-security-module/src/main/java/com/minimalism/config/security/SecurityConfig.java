@@ -29,10 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //开启权限校验
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements AbstractAuthSecurityConfig {
-    @Override
-    public void init() {
-        debug("[init] {}",getClass().getName());
-    }
 
     /**
      * 密码加密存储
