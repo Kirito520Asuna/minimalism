@@ -1,6 +1,7 @@
 package com.minimalism.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.user.domain.SysMenu;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,7 +15,7 @@ import java.util.Map;
  * @Description
  */
 @Mapper
-public interface SysMenuDao extends BaseMapper<SysMenu> {
+public interface SysMenuDao extends MpMapper<SysMenu> {
     int updateBatch(List<SysMenu> list);
 
     int updateBatchSelective(List<SysMenu> list);

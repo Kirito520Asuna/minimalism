@@ -1,6 +1,7 @@
 package com.minimalism.gen.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.gen.domain.GenTable;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +14,7 @@ import java.util.List;
  * @Description
  */
 @Mapper
-public interface GenTableMapper extends BaseMapper<GenTable> {
+public interface GenTableMapper extends MpMapper<GenTable> {
     /**
      * 查询业务列表
      *

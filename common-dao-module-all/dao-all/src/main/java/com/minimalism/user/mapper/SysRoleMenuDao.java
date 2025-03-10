@@ -1,6 +1,7 @@
 package com.minimalism.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.user.domain.SysRoleMenu;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,12 +14,11 @@ import java.util.List;
  * @Description
  */
 @Mapper
-public interface SysRoleMenuDao extends BaseMapper<SysRoleMenu> {
+public interface SysRoleMenuDao extends MpMapper<SysRoleMenu> {
     int updateBatch(List<SysRoleMenu> list);
     int updateBatchSelective(List<SysRoleMenu> list);
     int batchInsert(@Param("list") List<SysRoleMenu> list);
     int batchInsertSelectiveUseDefaultForNull(@Param("list") List<SysRoleMenu> list);
     int insertOrUpdate(SysRoleMenu record);
     int insertOrUpdateSelective(SysRoleMenu record);
-    int deleteByPrimaryKeyIn(List<Long> list);
 }

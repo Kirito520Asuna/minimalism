@@ -1,6 +1,7 @@
 package com.minimalism.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.enums.im.ChatType;
 import com.minimalism.user.domain.SysUser;
 import com.minimalism.vo.user.UserVo;
@@ -15,7 +16,7 @@ import java.util.List;
  * @Description
  */
 @Mapper
-public interface SysUserDao extends BaseMapper<SysUser> {
+public interface SysUserDao extends MpMapper<SysUser> {
     int updateBatch(List<SysUser> list);
 
     int updateBatchSelective(List<SysUser> list);

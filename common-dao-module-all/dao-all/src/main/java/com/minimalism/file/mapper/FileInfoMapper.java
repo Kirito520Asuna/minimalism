@@ -1,6 +1,7 @@
 package com.minimalism.file.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.file.domain.FileInfo;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import org.apache.ibatis.annotations.Param;
  * @Description
  */
 @Mapper
-public interface FileInfoMapper extends BaseMapper<FileInfo> {
+public interface FileInfoMapper extends MpMapper<FileInfo> {
     int updateBatch(@Param("list") List<FileInfo> list);
 
     int updateBatchUseMultiQuery(@Param("list") List<FileInfo> list);

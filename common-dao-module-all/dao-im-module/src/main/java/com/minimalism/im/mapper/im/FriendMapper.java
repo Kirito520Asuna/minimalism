@@ -2,6 +2,7 @@ package com.minimalism.im.mapper.im;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.im.domain.im.Friend;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,5 +12,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @Description
  */
 @Mapper
-public interface FriendMapper extends BaseMapper<Friend> {
+public interface FriendMapper extends MpMapper<Friend> {
 }

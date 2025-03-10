@@ -1,6 +1,7 @@
 package com.minimalism.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.user.domain.SysRole;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +14,7 @@ import java.util.List;
  * @Description
  */
 @Mapper
-public interface SysRoleDao extends BaseMapper<SysRole> {
+public interface SysRoleDao extends MpMapper<SysRole> {
     int updateBatch(List<SysRole> list);
 
     int updateBatchSelective(List<SysRole> list);
