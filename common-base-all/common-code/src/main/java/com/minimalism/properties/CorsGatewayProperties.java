@@ -1,6 +1,7 @@
 package com.minimalism.properties;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.minimalism.abstractinterface.service.properties.BeanProperties;
 import com.minimalism.constant.PropertiesConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @NoArgsConstructor
 @AllArgsConstructor
 @ConfigurationProperties(prefix = PropertiesConstants.CORS_GATEWAY_PREFIX)
-public class CorsGatewayProperties {
+public class CorsGatewayProperties implements BeanProperties {
     @JsonProperty(PropertiesConstants.CORS_GATEWAY_DEFAULT_FILTER)
     private Boolean defaultFilter = false;
     @JsonProperty(PropertiesConstants.CORS_GATEWAY_WEB_FILTER)

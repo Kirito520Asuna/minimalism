@@ -18,6 +18,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class IStorageFactory implements IFileStorageProvider, AbstractBean {
     @Override
+    public void init() {
+        debug("[init]-[Factory] {}",getAClass().getName());
+    }
+
+    @Override
     public IFileStorageClient getStorage() {
         FileProperties fileProperties = SpringUtil.getBean(FileProperties.class);
         StorageType type = fileProperties.getType();

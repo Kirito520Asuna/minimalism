@@ -1,6 +1,7 @@
 package com.minimalism.file.properties;
 
 
+import com.minimalism.abstractinterface.service.properties.BeanProperties;
 import com.minimalism.enums.OSType;
 import com.minimalism.file.storage.StorageType;
 import lombok.Data;
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @ConfigurationProperties(prefix = "file.properties")
 @Configuration
-public class FileProperties {
+public class FileProperties implements BeanProperties {
 
     /**
      * 上传类型-默认local

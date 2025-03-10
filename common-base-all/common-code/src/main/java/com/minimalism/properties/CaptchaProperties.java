@@ -1,5 +1,6 @@
 package com.minimalism.properties;
 
+import com.minimalism.abstractinterface.service.properties.BeanProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration @NoArgsConstructor
 @RefreshScope @Data @AllArgsConstructor
 @ConfigurationProperties(prefix = "captcha")
-public class CaptchaProperties {
+public class CaptchaProperties implements BeanProperties {
     /**
      * 验证码开关
      */

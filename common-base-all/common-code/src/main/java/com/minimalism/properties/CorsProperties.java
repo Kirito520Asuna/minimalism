@@ -2,6 +2,7 @@ package com.minimalism.properties;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.abstractinterface.service.properties.BeanProperties;
 import com.minimalism.constant.CorsConstants;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.constant.PropertiesConstants;
@@ -28,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 @ConditionalOnExpression(ExpressionConstants.corsFilterExpression)
 @ConfigurationProperties(prefix = PropertiesConstants.CORS_PREFIX)
-public class CorsProperties {
+public class CorsProperties implements BeanProperties {
     private String pattern;
     private String allowedOrigin;
     private String allowedOriginPattern;

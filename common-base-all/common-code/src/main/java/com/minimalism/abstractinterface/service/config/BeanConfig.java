@@ -6,13 +6,14 @@ import javax.annotation.PostConstruct;
 
 /**
  * @Author yan
- * @Date 2025/3/10 4:04:43
+ * @Date 2025/3/10 20:04:00
  * @Description
  */
-public interface AbstractAuthorizationConfig extends BeanConfig {
+public interface BeanConfig extends AbstractBean {
+
     @Override
     @PostConstruct
     default void init() {
-        debug("[Bean]-[Auth]-[config]-[init] {}",getClass().getName());
+        debug("[init]-[BeanConfig] {}", getAClass().getName());
     }
 }

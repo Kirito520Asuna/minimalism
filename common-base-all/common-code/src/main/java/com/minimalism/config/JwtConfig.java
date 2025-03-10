@@ -1,9 +1,7 @@
 package com.minimalism.config;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.service.config.BeanConfig;
 import com.minimalism.constant.ExpressionConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +27,7 @@ import javax.annotation.PostConstruct;
 @AllArgsConstructor
 //@ConstructorBinding
 //@ConfigurationProperties(prefix = "common.token")
-public class JwtConfig implements AbstractBean {
+public class JwtConfig implements BeanConfig {
     /**
      * 默认token名称
      */
@@ -62,9 +60,8 @@ public class JwtConfig implements AbstractBean {
     @Override
     @PostConstruct
     public void init() {
-        AbstractBean.super.init();
+        debug("[init]-[Config]-[Jwt] {}", getClass().getName());
         Environment env = SpringUtil.getBean(Environment.class);
-
         Boolean openFilter = env.getProperty("common.openFilter", Boolean.class, true);
         this.openInterceptor = !openFilter;
     }
