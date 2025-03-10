@@ -1,6 +1,7 @@
-package com.minimalism.abstractinterface.service;
+package com.minimalism.abstractinterface.service.impl;
 
 import com.minimalism.abstractinterface.handler.AbstractEntityHandler;
+import com.minimalism.abstractinterface.service.MpUserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @ConditionalOnBean(AbstractEntityHandler.class)
-public class MpUserServiceImpl implements MpUserService{
+public class MpUserServiceImpl implements MpUserService {
 }

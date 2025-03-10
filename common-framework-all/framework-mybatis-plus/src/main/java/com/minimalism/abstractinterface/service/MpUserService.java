@@ -5,7 +5,7 @@ package com.minimalism.abstractinterface.service;
  * @Date 2025/3/6 23:23:53
  * @Description
  */
-public interface MpUserService {
+public interface MpUserService  {
     default String getUserId() {
         return null;
     }
