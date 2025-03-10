@@ -26,9 +26,10 @@ public class NacosUtils {
      * @return
      */
     public static String getUrl(String serviceId, String instanceId, String prefix, String path) {
-        String urlFormat = "http://%s:%s" + prefix + path;
+        String urlFormat = "http://%s:%s/" + prefix + "/" + path;
+        urlFormat = urlFormat.replace("//", "/").replace(":/", "://");
         String url = null;
-        DiscoveryClient discoveryClient = SpringUtil.getBean(DiscoveryClient.class);
+        NacosDiscoveryClient discoveryClient = SpringUtil.getBean(NacosDiscoveryClient.class);
 
         List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceId);
         ServiceInstance serviceInstance = serviceInstances.stream()
@@ -38,6 +39,8 @@ public class NacosUtils {
             String host = serviceInstance.getHost();
             int port = serviceInstance.getPort();
             url = String.format(urlFormat, host, port);
+        } else {
+            throw new RuntimeException("服务未找到,请检查服务名是否正确或实例是否在线,服务名:" + serviceId + ",实例id:" + instanceId);
         }
         return url;
     }
