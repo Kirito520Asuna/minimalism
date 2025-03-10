@@ -24,14 +24,12 @@ import org.springframework.web.filter.CorsFilter;
  * @Description
  */
 @Component
-//@ConditionalOnExpression("${common.openFilter:true}&&!${common.openInterceptor:false}")
-@ConditionalOnExpression(ExpressionConstants.filterAllExpression)
+@ConditionalOnExpression(ExpressionConstants.filterExpression)
 public class FilterBean implements AbstractBean {
     @Override
     public void init() {
         AbstractBean.super.init();
-        getLogger().info("common.openFilter:{} && !common.openInterceptor:{}",true,false);
-
+        info("common.openFilter:{}",true);
     }
 
     //@Bean
@@ -81,7 +79,7 @@ public class FilterBean implements AbstractBean {
     }
 
     @Bean
-    @ConditionalOnExpression(ExpressionConstants.filterAllExpression)
+    @ConditionalOnExpression(ExpressionConstants.filterExpression)
     public ApiFilter apiFilter() {
         return new ApiFilter();
     }

@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,7 +30,7 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @Configuration
-@Slf4j
+@Slf4j @ConditionalOnBean(SwaggerConfiguration.class)
 public class SwaggerConfig implements AbstractSwagger {
     @Lazy
     @Resource

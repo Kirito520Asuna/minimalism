@@ -1,6 +1,7 @@
 package com.minimalism.service.impl;
 
 import com.minimalism.service.ElasticsearchService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,11 @@ import javax.annotation.Resource;
  * @Description
  */
 @Service
+@ConditionalOnBean(ElasticsearchRestTemplate.class)
 public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Resource
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
+
     @Override
     public ElasticsearchRestTemplate getElasticsearchRestTemplate() {
         return elasticsearchRestTemplate;

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.minimalism.abstractinterface.config.AbstractRedissonConfig;
 import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
 @Configuration
 @EnableAspectJAutoProxy
 @EnableCaching // 开启Spring Redis Cache，使用注解驱动缓存机制
+@ConditionalOnBean(RedisConfiguration.class)
 public class RedissonConfig implements AbstractRedissonConfig {
 
     @Resource

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 @Service
-@ConditionalOnExpression(ExpressionConstants.filterAllExpression)
+@ConditionalOnExpression(ExpressionConstants.filterExpression)
 public class DefaultSecurityConfigImpl implements AbstractSecurityConfig {
     @Override
     public void addFilterBeforeList(HttpSecurity http) {

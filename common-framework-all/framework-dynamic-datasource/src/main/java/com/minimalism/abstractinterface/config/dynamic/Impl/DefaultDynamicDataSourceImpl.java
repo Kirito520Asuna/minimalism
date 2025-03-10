@@ -1,6 +1,9 @@
 package com.minimalism.abstractinterface.config.dynamic.Impl;
 
 import com.minimalism.abstractinterface.config.dynamic.AbstractDynamicDataSource;
+import com.minimalism.config.dynamic.DynamicDataSourceConfig;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,5 +12,6 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 @Service
+@ConditionalOnBean(DynamicDataSourceConfig.class)
 public class DefaultDynamicDataSourceImpl implements AbstractDynamicDataSource {
 }

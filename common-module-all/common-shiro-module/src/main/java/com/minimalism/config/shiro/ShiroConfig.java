@@ -40,7 +40,7 @@ public class ShiroConfig implements AbstractBean, AbstractShiroConfig {
     }
     @Bean
     //@ConditionalOnExpression("${common.jwt.openFilter:true}&&!${common.jwt.openInterceptor:false}")
-    @ConditionalOnExpression(ExpressionConstants.filterAllExpression)
+    @ConditionalOnExpression(ExpressionConstants.filterExpression)
     public JwtAuthFilter jwtAuthFilter() {
         return new JwtAuthFilter();
     }

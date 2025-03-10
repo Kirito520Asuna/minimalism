@@ -23,7 +23,8 @@ import javax.annotation.PostConstruct;
  */
 @Slf4j
 @Configuration
-@Data @RefreshScope
+@Data
+@RefreshScope
 @NoArgsConstructor
 @AllArgsConstructor
 //@ConstructorBinding
@@ -45,24 +46,18 @@ public class JwtConfig implements AbstractBean {
      * 是否开启双token
      */
     @Value("${common.jwt.enableTwoToken:false}")
-    //@JsonProperty("enableTwoToken")
     private Boolean enableTwoToken = false;
     /**
      * 单token通过后 再次验证过期时间时长 以便于刷新token(分钟为单位)
      */
     @Value("${common.jwt.refreshOneToken:5}")
-    //@JsonProperty("refreshOneToken")
     private Long refreshOneTokenLong = 5l;
     @Value("${common.jwt.path:/jwt/**}")
-    //@JsonProperty("path")
     private String jwtPath = "/jwt/**";
 
-    //@Value("${common.jwt.openFilter:true}")
     @Value(ExpressionConstants.filterExpression)
-    //@JsonProperty("openFilter")
     private Boolean openFilter = true;
-    //@JsonProperty("openInterceptor")
-    private Boolean openInterceptor = false;
+    private Boolean openInterceptor = !openFilter;
 
     @Override
     @PostConstruct
@@ -70,16 +65,9 @@ public class JwtConfig implements AbstractBean {
         AbstractBean.super.init();
         Environment env = SpringUtil.getBean(Environment.class);
 
-        Boolean openInterceptor = env.getProperty("common.jwt.openInterceptor", Boolean.class);
-        Boolean openFilter = env.getProperty("common.jwt.openFilter", Boolean.class);
-        openInterceptor = ObjectUtil.defaultIfNull(openInterceptor, false)
-                && !ObjectUtil.defaultIfNull(openFilter, true);
-        this.openInterceptor = openInterceptor;
+        Boolean openFilter = env.getProperty("common.openFilter", Boolean.class, true);
+        this.openInterceptor = !openFilter;
     }
 
-    //public Boolean getOpenInterceptor() {
-    //    openInterceptor = ObjectUtil.defaultIfNull(openInterceptor, false)
-    //            && !ObjectUtil.defaultIfNull(openFilter, true);
-    //    return openInterceptor;
-    //}
+
 }

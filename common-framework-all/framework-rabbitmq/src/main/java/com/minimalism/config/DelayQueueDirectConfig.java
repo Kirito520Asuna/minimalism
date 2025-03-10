@@ -5,6 +5,7 @@ import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date 2023/7/31 0031 14:59
  * @Description 死信队列配置
  */
+@ConditionalOnBean(RabbitConfig.class)
 @Configuration
 public class DelayQueueDirectConfig implements AbstractRabbitMq {
     @Bean
