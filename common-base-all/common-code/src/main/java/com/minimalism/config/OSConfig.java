@@ -13,8 +13,8 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 public class OSConfig {
-    public static String os;
-    public static String separator;
+    public static String os = getOS();
+    public static String separator = getSeparator(os);
 
     @PostConstruct
     void init() {
