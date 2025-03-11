@@ -39,7 +39,15 @@ public class MybatisPlusConfig implements AbstractMybatisPlusConfig {
         return AbstractMybatisPlusConfig.super.mybatisPlusInterceptor();
     }
 
-
+    /**
+     * 防止全表更新与删除插件
+     * @return
+     */
+    @Bean
+    @Override
+    public MybatisPlusInterceptor blockAttackInnerInterceptor() {
+        return AbstractMybatisPlusConfig.super.blockAttackInnerInterceptor();
+    }
 
     /**
      * 乐观锁支持
