@@ -1,38 +1,29 @@
 package com.minimalism.file.config;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
-import com.alibaba.cloud.nacos.discovery.NacosDiscoveryClient;
-import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.file.FileConstant;
-import com.minimalism.file.properties.FileProperties;
-import com.minimalism.file.storage.clientAbs.LocalClient;
 import com.minimalism.utils.NacosUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.unit.DataSize;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.servlet.MultipartConfigElement;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author yan
@@ -40,15 +31,17 @@ import java.util.stream.Collectors;
  * @Description
  */
 @AutoConfigureAfter(NacosDiscoveryProperties.class)
-@Configuration
+@Configuration @ConditionalOnBean(RedisTemplate.class)
 public class FileUploadConfig implements AbstractBean {
     public static String instanceId;
     public static String fileControllerPath = "/file";
     public static String getPathKey = "file.byte.get";
     public static String delPathKey = "file.byte.del";
 
+    @Resource
+    private RedisTemplate redisTemplate;
     public static String getInstanceId() {
-        if (StrUtil.isBlank(instanceId)||instanceId.endsWith("-1")){
+        if (StrUtil.isBlank(instanceId) || instanceId.endsWith("-1")) {
             instanceId = NacosUtils.getInstanceId();
         }
         return instanceId;
@@ -72,23 +65,31 @@ public class FileUploadConfig implements AbstractBean {
     public void init() {
         AbstractBean.super.init();
         List<String> fileNameList = LocalOSSUtils.getFileNameList();
-        instanceId = NacosUtils.getInstanceId();
+        this.instanceId = NacosUtils.getInstanceId();
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-        redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, getInstanceId(), fileNameList);
+        String instanceId = getInstanceId();
         LocalOSSUtils.FILE_NAME_LIST.addAll(fileNameList);
-        fileNameList.stream().forEach(fileName -> {
-            redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, fileName, getInstanceId());
+        LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
+            if (FileUtil.isFile(fileName)) {
+                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_FILE, fileName, instanceId);
+            } else if (FileUtil.isDirectory(fileName)) {
+                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_DIR + instanceId, fileName, "DIR");
+                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_INSTANCE_ID, fileName, instanceId);
+            }
         });
     }
-
-
     @Override
     @PreDestroy
     public void destroy() {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-        redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, getInstanceId());
+        //redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_DIR + getInstanceId());
         LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
-            redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, fileName);
+            if (FileUtil.isFile(fileName)) {
+                redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_FILE, fileName);
+            } else if (FileUtil.isDirectory(fileName)) {
+                redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_DIR + instanceId, fileName);
+                redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_INSTANCE_ID, fileName);
+            }
         });
         AbstractBean.super.destroy();
     }

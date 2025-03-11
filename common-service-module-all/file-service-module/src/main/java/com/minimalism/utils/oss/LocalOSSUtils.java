@@ -39,7 +39,7 @@ public class LocalOSSUtils {
     public static String getRedisInstanceId(String filePath) {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         String instanceId = (String) redisTemplate
-                .opsForHash().get(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
+                .opsForHash().get(FileConstant.FILE_REDIS_FILE, filePath);
         return instanceId;
     }
 
@@ -49,15 +49,20 @@ public class LocalOSSUtils {
 
     public static void putRedisFile(String filePath) {
         String instanceId = getRedisInstanceId(filePath);
-        if (!ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
+        String currentInstanceId = FileUploadConfig.getInstanceId();
+        if (!ObjectUtils.equals(currentInstanceId, instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-            redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, filePath, FileUploadConfig.getInstanceId());
+            if (FileUtil.isDirectory(filePath)) {
+                if (!filePath.endsWith(OSConfig.separator)) {
+                    filePath = filePath + OSConfig.separator;
+                }
+                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_DIR + currentInstanceId, filePath, "DIR");
+                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_INSTANCE_ID, filePath, currentInstanceId);
+            }
 
-            List<String> list = (ArrayList) redisTemplate.opsForHash().get(FileConstant.FILE_REDIS_MAPPER, instanceId);
-            list.add(filePath);
-            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, instanceId, list);
-
-            //redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), filePath);
+            if (FileUtil.isFile(filePath)) {
+                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_FILE, filePath, instanceId);
+            }
             FILE_NAME_LIST.add(filePath);
         }
     }
@@ -68,13 +73,17 @@ public class LocalOSSUtils {
 
     public static void delRedisFile(String filePath) {
         String instanceId = getRedisInstanceId(filePath);
-        if (ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
+        String currentInstanceId = FileUploadConfig.getInstanceId();
+        if (ObjectUtils.equals(currentInstanceId, instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-            redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
+            if (FileUtil.isDirectory(filePath)) {
+                redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_DIR + currentInstanceId, filePath);
+                redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_INSTANCE_ID, filePath);
+            }
 
-            List<String> list = (ArrayList) redisTemplate.opsForHash().get(FileConstant.FILE_REDIS_MAPPER, instanceId);
-            list.remove(filePath);
-            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, instanceId, list);
+            if (FileUtil.isFile(filePath)) {
+                redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_FILE, filePath);
+            }
             FILE_NAME_LIST.remove(filePath);
         }
     }
@@ -154,7 +163,7 @@ public class LocalOSSUtils {
     public static String getMergeFilePath(String identifier, String fileMainName) {
         String separator = OSConfig.separator;
         String path = getMergeDir() + identifier + separator;
-        path = path.replace(separator + separator, separator);
+        path = path.replace(separator + separator, separator).replace(separator + separator, separator);
         File file = FileUtil.newFile(path);
         if (!file.exists()) {
             file.mkdirs();
@@ -163,7 +172,9 @@ public class LocalOSSUtils {
     }
 
     public static String getChunkDirPath(String identifier) {
-        return getChunkDir() + identifier + OSConfig.separator;
+        String separator = OSConfig.separator;
+        String chunkDir = getChunkDir() + identifier + separator;
+        return chunkDir.replace(separator + separator, separator).replace(separator + separator, separator);
     }
 
     /*===========================================================================================================================================================================================================================================*/
@@ -193,7 +204,7 @@ public class LocalOSSUtils {
         }
         String separator = OSConfig.separator;
         String bucketPath = getUploadDir() + separator + bucketName + separator;
-        bucketPath = bucketPath.replace(separator + separator, separator);
+        bucketPath = bucketPath.replace(separator + separator, separator).replace(separator + separator, separator);
 
         File bucketFile = FileUtil.newFile(bucketPath);
         if (!bucketFile.exists()) {
@@ -448,28 +459,76 @@ public class LocalOSSUtils {
     }
 
     /**
+     * 判断是否是文件夹
+     *
+     * @param separator
+     * @param path
+     * @return
+     */
+    private static String isDir(String separator, String path) {
+        if (FileUtil.isDirectory(path)) {
+            if (!path.endsWith(separator)) {
+                path = path + separator;
+            }
+        }
+        return path;
+    }
+
+    /**
      * 获取 UploadDir文件夹下文件路径  mergeDir,chunkDir 文件夹下文件夹路径
      *
      * @return
      */
     public static List<String> getFileNameList() {
+        String separator = OSConfig.separator;
         String uploadDir = getUploadDir();
         String mergeDir = getMergeDir();
         String chunkDir = getChunkDir();
 
-        List<String> fileNameList = Arrays.stream(FileUtil.newFile(uploadDir).listFiles()).filter(File::isFile)
-                .map(FileUtil::getName).map(name -> uploadDir + name).collect(Collectors.toList());
+        List<String> fileNameList = Arrays.stream(FileUtil.newFile(uploadDir).listFiles())
+                .map(FileUtil::getAbsolutePath)
+                .map(path -> isDir(separator, path))
+                .filter(ObjectUtils::isNotEmpty)
+                .collect(Collectors.toList());
 
-        List<String> mergeDirList = Arrays.stream(FileUtil.newFile(mergeDir).listFiles()).filter(File::isDirectory)
-                .map(FileUtil::getName).map(name -> mergeDir + name).collect(Collectors.toList());
+        List<String> mergeDirList = Arrays.stream(FileUtil.newFile(mergeDir).listFiles())
+                .map(FileUtil::getAbsolutePath)
+                .map(path -> isDir(separator, path))
+                .filter(ObjectUtils::isNotEmpty)
+                .collect(Collectors.toList());
 
-        List<String> chunkDirList = Arrays.stream(FileUtil.newFile(chunkDir).listFiles()).filter(File::isDirectory)
-                .map(FileUtil::getName).map(name -> chunkDir + name).collect(Collectors.toList());
+        List<String> chunkDirList = Arrays.stream(FileUtil.newFile(chunkDir).listFiles())
+                .map(FileUtil::getAbsolutePath)
+                .map(path -> isDir(separator, path))
+                .filter(ObjectUtils::isNotEmpty)
+                .collect(Collectors.toList());
 
-        List<String> list = CollUtil.newArrayList(fileNameList);
+        List<String> fileList = CollUtil.newArrayList();
+        mergeDirList.stream().filter(FileUtil::isDirectory).forEach(path ->
+                fileList.addAll(
+                        Arrays.stream(FileUtil.newFile(path).listFiles())
+                                .filter(FileUtil::isFile)
+                                .map(FileUtil::getAbsolutePath)
+                                .filter(ObjectUtils::isNotEmpty)
+                                .collect(Collectors.toList()))
+        );
+
+        chunkDirList.stream().filter(FileUtil::isDirectory).forEach(path ->
+                fileList.addAll(
+                        Arrays.stream(FileUtil.newFile(path).listFiles())
+                                .filter(FileUtil::isFile)
+                                .map(FileUtil::getAbsolutePath)
+                                .filter(ObjectUtils::isNotEmpty)
+                                .collect(Collectors.toList()))
+        );
+
+        Set<String> list = CollUtil.newHashSet(fileNameList);
         list.addAll(mergeDirList);
         list.addAll(chunkDirList);
-        return fileNameList;
+        list.addAll(fileList);
+        list.removeAll(CollUtil.newArrayList(uploadDir, mergeDir, chunkDir));
+        return CollUtil.newArrayList(list);
     }
+
 
 }
