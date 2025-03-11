@@ -97,7 +97,11 @@ public class LocalOSSUtils {
         if (!file.exists()) {
             file.mkdirs();
         }
-        return FileUtil.getAbsolutePath(file);
+        String absolutePath = FileUtil.getAbsolutePath(file);
+        if (!absolutePath.endsWith(separator)){
+            absolutePath = absolutePath + separator;
+        }
+        return absolutePath;
     }
 
 
