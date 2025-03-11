@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class ShiroAopAspect implements AbstractShiroAopAspect {
     @Override
-    @Pointcut(value = "ShiroPermissionsAspect.SysLog()||ShiroRolesAspect.SysLog()")
+    @Pointcut(value = "ShiroPermissionsAspect.Aop()||ShiroRolesAspect.Aop()")
     public void Aop() {
     }
 

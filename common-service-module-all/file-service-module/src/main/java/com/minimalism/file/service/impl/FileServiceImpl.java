@@ -236,6 +236,7 @@ public class FileServiceImpl implements FileService {
                         filePartService.removeById(part.getPartId());
                         if (part.getLocal()) {
                             FileUtil.del(part.getLocalResource());
+                            String instanceId = FileUploadConfig.instanceId;
                         }
                     });
 

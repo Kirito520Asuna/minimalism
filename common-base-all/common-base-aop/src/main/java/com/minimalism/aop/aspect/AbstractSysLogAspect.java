@@ -78,10 +78,6 @@ public class AbstractSysLogAspect implements AbstractSysLog {
         return null;
     }
 
-    @Override
-    @Pointcut(value = "@annotation(com.minimalism.aop.log.SysLog)")
-    public void Aop() {
-    }
 
 
     @Override

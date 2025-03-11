@@ -1,6 +1,7 @@
 spring:
   redis:
     host: 192.168.3.22
+    database: 3
   cloud:
     nacos:
       discovery:
