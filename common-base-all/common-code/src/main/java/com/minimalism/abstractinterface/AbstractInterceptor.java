@@ -26,19 +26,19 @@ public interface AbstractInterceptor extends HandlerInterceptor, AbstractBean {
         //可以考虑让客户端传入链路ID，但需保证一定的复杂度唯一性；如果没使用默认UUID自动生成
         String tid = StrUtil.isEmpty(request.getHeader(TRACE_ID)) ? ThreadMdcUtil.generateTraceId() : request.getHeader(TRACE_ID);
         MDC.put(TRACE_ID, tid);
-        getLogger().info("preHandle by {}", getClass().getSimpleName());
+        getLogger().info("preHandle by {}",getAClassName());
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     @Override
     default void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) {
         MDC.remove(TRACE_ID);
-        getLogger().info("afterCompletion by {}", getClass().getSimpleName());
+        getLogger().info("afterCompletion by {}",getAClassName());
     }
 
     @Override
     default void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        getLogger().info("postHandle by {}", getClass().getSimpleName());
+        getLogger().info("postHandle by {}", getAClassName());
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 }

@@ -4,6 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
+import com.alibaba.cloud.nacos.discovery.NacosDiscoveryClient;
+import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.file.FileConstant;
 import com.minimalism.file.properties.FileProperties;
@@ -11,6 +14,10 @@ import com.minimalism.file.storage.clientAbs.LocalClient;
 import com.minimalism.utils.NacosUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +39,7 @@ import java.util.stream.Collectors;
  * @Date 2025/3/9 1:57:11
  * @Description
  */
+@AutoConfigureAfter(NacosDiscoveryProperties.class)
 @Configuration
 public class FileUploadConfig implements AbstractBean {
     public static String instanceId;

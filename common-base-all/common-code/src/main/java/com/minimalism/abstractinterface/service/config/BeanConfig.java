@@ -14,6 +14,6 @@ public interface BeanConfig extends AbstractBean {
     @Override
     @PostConstruct
     default void init() {
-        debug("[init]-[BeanConfig] {}", getAClass().getName());
+        debug("[init]-[BeanConfig]::[{}]",getAClassName());
     }
 }

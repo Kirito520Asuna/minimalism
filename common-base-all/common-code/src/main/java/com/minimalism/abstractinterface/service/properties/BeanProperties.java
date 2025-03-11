@@ -13,6 +13,6 @@ public interface BeanProperties extends AbstractBean {
     @Override
     @PostConstruct
     default void init() {
-        debug("[init]-[Properties]-[Config] {}",getClass().getName());
+        debug("[init]-[Properties]-[Config]::[{}]",getAClassName());
     }
 }

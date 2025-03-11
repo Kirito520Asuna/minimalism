@@ -13,6 +13,6 @@ public interface AbstractAuthorizationConfig extends BeanConfig {
     @Override
     @PostConstruct
     default void init() {
-        debug("[Bean]-[Auth]-[config]-[init] {}",getClass().getName());
+        debug("[Bean]-[Auth]-[config]-[init]::[{}]",getAClassName());
     }
 }

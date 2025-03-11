@@ -10,6 +10,6 @@ import com.minimalism.abstractinterface.service.AbstractAuthorization;
 public interface AbstractAuthFiler extends AbstractAuthorization {
     @Override
     default void init() {
-        debug("[Bean]-[Authorization]-[Filter]-[init] {}",getClass().getName());
+        debug("[Bean]-[Authorization]-[Filter]-[init]::[{}]",getAClassName());
     }
 }
