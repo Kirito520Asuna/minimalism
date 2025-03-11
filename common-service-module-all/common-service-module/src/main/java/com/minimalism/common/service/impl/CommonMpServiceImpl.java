@@ -2,9 +2,10 @@ package com.minimalism.common.service.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.handler.AbstractEntityHandler;
 import com.minimalism.abstractinterface.service.MpUserService;
 import com.minimalism.common.service.CommonUserService;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @Date 2025/3/7 0:36:20
  * @Description
  */
-@Primary
+@ConditionalOnBean(AbstractEntityHandler.class)
 @Service
 public class CommonMpServiceImpl implements MpUserService, AbstractBean {
     @Override
