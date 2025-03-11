@@ -61,7 +61,7 @@ public interface AbstractBean {
         LogBean logBean = getLogBean();
         if (!isProd()) {
 
-            logBean.getLogger().info("[init]::[{}]", getAClassName());
+            logBean.getLogger().info("[init]::[{}]: ", getAClassName());
         }
     }
 

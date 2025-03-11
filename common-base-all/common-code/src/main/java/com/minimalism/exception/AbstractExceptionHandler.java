@@ -27,7 +27,7 @@ public interface AbstractExceptionHandler extends AbstractBean {
     @Override
     @PostConstruct
     default void init() {
-        debug("[init]-[ExceptionHandler] {}",getClass().getName());
+        debug("[init]-[ExceptionHandler]::[{}]: ",getAClassName());
     }
 
     @ExceptionHandler(IOException.class)

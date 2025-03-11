@@ -33,7 +33,7 @@ public interface AbstractAop extends AbstractBean {
     @Override
     @PostConstruct
     default void init() {
-        debug("[init]-[Aop]::[{}]", getAClassName());
+        debug("[init]-[Aop]::[{}]: ", getAClassName());
     }
 
     @SneakyThrows

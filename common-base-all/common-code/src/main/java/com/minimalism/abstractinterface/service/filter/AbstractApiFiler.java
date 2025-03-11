@@ -13,6 +13,6 @@ public interface AbstractApiFiler extends AbstractApiSign {
     @Override
     @PostConstruct
     default void init() {
-        debug("[Bean]-[ApiFiler]-[init]::[{}]",getAClassName());
+        debug("[Bean]-[ApiFiler]-[init]::[{}]: ",getAClassName());
     }
 }

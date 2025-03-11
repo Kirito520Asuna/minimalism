@@ -58,11 +58,7 @@ public class NacosUtils {
     public static String getInstanceId() {
         //NacosDiscoveryClient bean = SpringUtil.getBean(NacosDiscoveryClient.class);
         NacosDiscoveryProperties nacosDiscoveryProperties = SpringUtil.getBean(NacosDiscoveryProperties.class);
-        int port = nacosDiscoveryProperties.getPort();
-        if (port == -1) {
-            port = SpringUtil.getBean(Environment.class).getProperty("server.port", Integer.class, 8080);
-        }
-        return nacosDiscoveryProperties.getIp() + ":" + port;
+        return nacosDiscoveryProperties.getIp() + ":" + nacosDiscoveryProperties.getPort();
     }
 
     /**

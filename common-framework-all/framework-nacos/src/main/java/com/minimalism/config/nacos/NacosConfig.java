@@ -25,7 +25,7 @@ public class NacosConfig {
             properties.setPort(port);
         }
 
-        log.debug("[init]-[Bean]::[{}]-[{}]", StrUtil.subBefore(getClass().getName(),"$",false), properties.getClass().getName());
+        log.debug("[init]-[Bean]::[{}]-[{}]: ", StrUtil.subBefore(getClass().getName(),"$",false), properties.getClass().getName());
         return properties;
     }
 }

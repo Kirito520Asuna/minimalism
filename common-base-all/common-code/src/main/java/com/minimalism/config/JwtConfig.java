@@ -60,7 +60,7 @@ public class JwtConfig implements BeanConfig {
     @Override
     @PostConstruct
     public void init() {
-        debug("[init]-[Config]-[Jwt] {}", getClass().getName());
+        debug("[init]-[Config]-[Jwt]::[{}]: ", getAClassName());
         Environment env = SpringUtil.getBean(Environment.class);
         Boolean openFilter = env.getProperty("common.openFilter", Boolean.class, true);
         this.openInterceptor = !openFilter;
