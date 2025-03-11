@@ -396,7 +396,10 @@ public class FileServiceImpl implements FileService {
         boolean notBlank = StrUtil.isNotBlank(fileName);
 
         if (notBlank) {
-            File file = FileUtil.newFile(uploadDir + fileName);
+            if (!fileName.startsWith(uploadDir)) {
+                fileName = uploadDir + fileName;
+            }
+            File file = FileUtil.newFile(fileName);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件不存在");
             }
@@ -405,10 +408,17 @@ public class FileServiceImpl implements FileService {
         }
 
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
-        folder = uploadDir + folder + OSConfig.separator;
+        if (!folder.startsWith(uploadDir)){
+            folder = uploadDir + folder + OSConfig.separator;
+        }
+        String separator = OSConfig.separator;
+        String two = separator + separator;
+        folder = (folder).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            fileName = folder + fileName;
+            if (!fileName.startsWith(folder)){
+                fileName = folder + fileName;
+            }
             File file = FileUtil.newFile(fileName);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件不存在");
@@ -434,14 +444,24 @@ public class FileServiceImpl implements FileService {
         String uploadDir = LocalOSSUtils.getUploadDir();
         boolean notBlank = StrUtil.isNotBlank(fileName);
         if (notBlank) {
-            File file = FileUtil.newFile(uploadDir + fileName);
+            if (!fileName.startsWith(uploadDir)) {
+                fileName = uploadDir + fileName;
+            }
+            File file = FileUtil.newFile(fileName);
             FileUtil.del(file);
         }
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
-        folder = uploadDir + folder + OSConfig.separator;
+        if (!folder.startsWith(uploadDir)) {
+            folder = uploadDir + folder;
+        }
+        String separator = OSConfig.separator;
+        String two = separator + separator;
+        folder = (folder + separator).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            fileName = folder + fileName;
+            if (!fileName.startsWith(folder)){
+                fileName = folder + fileName;
+            }
             File file = FileUtil.newFile(fileName);
             FileUtil.del(file);
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
