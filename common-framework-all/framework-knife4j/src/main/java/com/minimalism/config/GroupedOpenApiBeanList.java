@@ -1,5 +1,6 @@
 package com.minimalism.config;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -19,24 +20,27 @@ import javax.annotation.PostConstruct;
 public class GroupedOpenApiBeanList {
     @PostConstruct
     public void init(){
-        log.debug("[init]-[GroupedOpenApiBeanList] {}",getClass().getName());
+        log.debug("[init]-[GroupedOpenApiBeanList]::[{}]", StrUtil.subBefore(getClass().getName(),"$",false));
     }
     @Bean
     @ConditionalOnExpression("${springdoc.open.default-group-configs.api:true}")
     public GroupedOpenApi api(){
-        log.debug("[init]-[GroupedOpenApi] {}","api");
-       return SwaggerConfig.beanBuildApiGroupedOpenApi();
+        GroupedOpenApi openApi = SwaggerConfig.beanBuildApiGroupedOpenApi();
+        log.debug("[init]-[GroupedOpenApi]::[{}]", "Api");
+        return openApi;
     }
     @Bean
     @ConditionalOnExpression("${springdoc.open.default-group-configs.jwt:true}")
     public GroupedOpenApi jwt(){
-        log.debug("[init]-[GroupedOpenApi] {}","jwt");
-        return SwaggerConfig.beanBuildJwtGroupedOpenApi();
+        GroupedOpenApi openApi = SwaggerConfig.beanBuildJwtGroupedOpenApi();
+        log.debug("[init]-[GroupedOpenApi]::[{}]", "Jwt");
+        return openApi;
     }
     @Bean
     @ConditionalOnExpression("${springdoc.open.default-group-configs.other:true}")
     public GroupedOpenApi other(){
-        log.debug("[init]-[GroupedOpenApi] {}","other");
-        return SwaggerConfig.beanBuildOtherGroupedOpenApi();
+        GroupedOpenApi openApi = SwaggerConfig.beanBuildOtherGroupedOpenApi();
+        log.debug("[init]-[GroupedOpenApi]::[{}]", "Other");
+        return openApi;
     }
 }

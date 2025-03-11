@@ -23,7 +23,7 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
     @Override
     @PostConstruct
     default void init() {
-        debug("[init]-[SecurityExpressionRoot] {}", getAClass().getName());
+        debug("[init]-[SecurityExpressionRoot]::[{}]", getAClassName());
     }
 
     /**

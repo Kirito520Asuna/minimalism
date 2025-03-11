@@ -61,7 +61,7 @@ public interface AbstractBean {
         LogBean logBean = getLogBean();
         if (!isProd()) {
 
-            logBean.getLogger().info("[init]--[{}]", getAClassName());
+            logBean.getLogger().info("[init]::[{}]", getAClassName());
         }
     }
 
@@ -72,7 +72,7 @@ public interface AbstractBean {
     default void destroy() {
         LogBean logBean = getLogBean();
         if (!isProd()) {
-            logBean.getLogger().info("[destroy]--[{}]", getAClassName());
+            logBean.getLogger().info("[destroy]::[{}]", getAClassName());
         }
     }
 
