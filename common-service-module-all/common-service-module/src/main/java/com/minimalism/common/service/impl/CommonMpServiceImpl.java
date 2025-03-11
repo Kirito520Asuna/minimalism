@@ -6,6 +6,7 @@ import com.minimalism.abstractinterface.handler.AbstractEntityHandler;
 import com.minimalism.abstractinterface.service.MpUserService;
 import com.minimalism.common.service.CommonUserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 @ConditionalOnBean(AbstractEntityHandler.class)
-@Service
+@Service @Primary
 public class CommonMpServiceImpl implements MpUserService, AbstractBean {
     @Override
     public String getUserId() {
