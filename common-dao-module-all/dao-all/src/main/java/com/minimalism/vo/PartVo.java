@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.InputStream;
+
 /**
  * @Author yan
  * @Date 2025/3/6 15:32:25
@@ -23,4 +25,8 @@ public class PartVo {
     private String identifier;
     @Schema(description = "是否本地资源")
     private Boolean local = Boolean.FALSE;
+    @Schema(description = "输入流")
+    private InputStream inputStream;
+    @Schema(description = "服务器实例id")
+    private  String instanceId;
 }

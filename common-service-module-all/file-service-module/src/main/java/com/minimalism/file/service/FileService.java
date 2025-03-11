@@ -16,7 +16,7 @@ import java.util.List;
 public interface FileService extends AbstractBean {
     List<PartVo> getPartList(String identifier, Long fileId);
     List<InputStream> getPartInputStreamList(String identifier, Long fileId);
-    InputStream partToInputStream(PartVo partVo);
+    PartVo partToInputStream(PartVo partVo);
     ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId);
     boolean mergeOk(String identifier, Long fileId);
     String getPartPath(String identifier, Integer chunkNumber);

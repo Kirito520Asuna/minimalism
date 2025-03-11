@@ -74,6 +74,7 @@ public class FileUploadConfig implements AbstractBean {
         LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
             redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, fileName);
         });
+        AbstractBean.super.destroy();
     }
 
     /**

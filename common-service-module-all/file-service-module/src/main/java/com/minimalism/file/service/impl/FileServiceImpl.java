@@ -54,9 +54,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public InputStream partToInputStream(PartVo partVo) {
+    public PartVo partToInputStream(PartVo partVo) {
         InputStream inputStream = null;
         Boolean local = partVo.getLocal();
+        String instanceId = null;
         if (ObjectUtils.defaultIfEmpty(local, Boolean.FALSE)) {
             String path = partVo.getLocalResource();
             if (FileUtil.newFile(path).isFile()) {
@@ -67,15 +68,15 @@ public class FileServiceImpl implements FileService {
                 }
                 int endIndex = path.indexOf(FileUtil.getName(path));
                 String folder = path.substring(index, endIndex);
-                String instanceId = LocalOSSUtils.getRedisInstanceId(folder);
+                String identifier = partVo.getIdentifier();
+                if (folder.contains(identifier)) {
+                    folder = folder.replace(identifier, "");
+                }
+                instanceId = LocalOSSUtils.getRedisInstanceId(folder);
                 if (!ObjectUtils.equals(instanceId, FileUploadConfig.instanceId)) {
                     String url = FileUploadConfig.getUrlByte(instanceId);
 
                     Integer chunkNumber = Integer.valueOf(FileUtil.mainName(path));
-                    String identifier = partVo.getIdentifier();
-                    if (folder.contains(identifier)) {
-                        folder = folder.replace(identifier, "");
-                    }
                     //String identifier,
                     //String folder,
                     //String fileName,
@@ -105,23 +106,64 @@ public class FileServiceImpl implements FileService {
                 throw new GlobalCustomException(e.getMessage());
             }
         }
-        return inputStream;
+        partVo.setInputStream(inputStream).setInstanceId(instanceId);
+        return partVo;
     }
 
     @Override
     public List<InputStream> getPartInputStreamList(String identifier, Long fileId) {
         List<PartVo> partList = getPartList(identifier, fileId).stream().map(o -> o.setIdentifier(identifier)).collect(Collectors.toList());
         List<InputStream> inputStreamList = partList.stream()
-                .map(this::partToInputStream).collect(Collectors.toList());
-        //移除其他实例服务器 todo
-        // xxx
+                .map(this::partToInputStream).map(PartVo::getInputStream)
+                .collect(Collectors.toList());
+
         return inputStreamList;
     }
 
     @Override
     public ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId) {
-        List<InputStream> list = getPartInputStreamList(identifier, fileId);
-        ByteArrayOutputStream out = IoUtils.merge(list);
+
+        List<PartVo> partList = getPartList(identifier, fileId).stream().map(o -> o.setIdentifier(identifier)).collect(Collectors.toList());
+        List<PartVo> list = partList.stream()
+                .map(this::partToInputStream).collect(Collectors.toList());
+        ByteArrayOutputStream out = IoUtils.merge(list.stream().map(PartVo::getInputStream).collect(Collectors.toList()));
+        //移除其他实例服务器 todo
+        // xxx
+
+        String uploadDir = LocalOSSUtils.getUploadDir();
+
+
+        list.stream().filter(PartVo::getLocal).forEach(part -> {
+
+            String instanceId = part.getInstanceId();
+            String localResource = part.getLocalResource();
+
+            int index = 0;
+            if (localResource.startsWith(uploadDir)) {
+                index = localResource.indexOf(uploadDir) + uploadDir.length();
+            }
+            int endIndex = localResource.indexOf(FileUtil.getName(localResource));
+            String folder = localResource.substring(index, endIndex);
+
+            if (folder.contains(identifier)) {
+                folder = folder.replace(identifier, "");
+            }
+            Integer chunkNumber = null;
+            if (FileUtil.newFile(localResource).isFile()) {
+                chunkNumber = Integer.valueOf(FileUtil.mainName(localResource));
+            }
+            String url = FileUploadConfig.getUrlDel(instanceId);
+            Map<String, Object> params = Maps.newLinkedHashMap();
+            params.put("identifier", identifier);
+            params.put("folder", folder);
+            params.put("chunkNumber", chunkNumber);
+            String json = OkHttpUtils.delete(url, StrUtil.EMPTY_JSON);
+            Result result = JSONUtil.toBean(json, Result.class);
+            if (!result.validateOk()) {
+                error("删除分片失败,error:{}", result.getMessage());
+            }
+
+        });
         return out;
     }
 
