@@ -30,8 +30,5 @@ public class EntityHandler implements AbstractEntityHandler {
         this.strictInsertFill(metaObject, "updateBy", () -> userId, String.class);
     }
 
-    // 定义一个名为 getUserId 的方法
-    public String getUserId() {
-        return SpringUtil.getBean(MpUserService.class).getUserId();
-    }
+
 }
