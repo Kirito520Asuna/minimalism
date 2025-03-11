@@ -92,12 +92,12 @@ public class LocalOSSUtils {
         if (!uploadDir.endsWith(separator)) {
             uploadDir = uploadDir + separator;
         }
-        uploadDir = uploadDir + getBucket() + separator;
+        uploadDir = (uploadDir + getBucket() + separator).replace(separator + separator, separator).replace(separator + separator, separator);
         File file = FileUtil.newFile(uploadDir);
         if (!file.exists()) {
             file.mkdirs();
         }
-        return uploadDir;
+        return FileUtil.getAbsolutePath(file);
     }
 
 

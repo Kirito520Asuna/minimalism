@@ -161,6 +161,9 @@ public class FileServiceImpl implements FileService {
             Result result = JSONUtil.toBean(json, Result.class);
             if (!result.validateOk()) {
                 error("删除分片失败,error:{}", result.getMessage());
+                filePartService.update(Wrappers.lambdaUpdate(FilePart.class)
+                        .set(FilePart::getMergeDelete, Boolean.TRUE)
+                        .eq(FilePart::getPartCode, identifier));
             }
 
         });

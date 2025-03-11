@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @Date 2025/3/7 19:57:48
  * @Description
  */
-@Component
+@Component @Deprecated
 @RequiredArgsConstructor
 public class IStorageFactory implements IFileStorageProvider, AbstractBean {
     @Override
