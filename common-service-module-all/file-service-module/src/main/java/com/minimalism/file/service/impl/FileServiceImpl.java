@@ -161,6 +161,7 @@ public class FileServiceImpl implements FileService {
             Result result = JSONUtil.toBean(json, Result.class);
             if (!result.validateOk()) {
                 error("删除分片失败,error:{}", result.getMessage());
+                //使用定时任务兜底
                 filePartService.update(Wrappers.lambdaUpdate(FilePart.class)
                         .set(FilePart::getMergeDelete, Boolean.TRUE)
                         .eq(FilePart::getPartCode, identifier));
@@ -411,7 +412,7 @@ public class FileServiceImpl implements FileService {
         }
 
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
-        if (!folder.startsWith(uploadDir)){
+        if (!folder.startsWith(uploadDir)) {
             folder = uploadDir + folder + OSConfig.separator;
         }
         String separator = OSConfig.separator;
@@ -419,7 +420,7 @@ public class FileServiceImpl implements FileService {
         folder = (folder).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            if (!fileName.startsWith(folder)){
+            if (!fileName.startsWith(folder)) {
                 fileName = folder + fileName;
             }
             File file = FileUtil.newFile(fileName);
@@ -462,7 +463,7 @@ public class FileServiceImpl implements FileService {
         folder = (folder + separator).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            if (!fileName.startsWith(folder)){
+            if (!fileName.startsWith(folder)) {
                 fileName = folder + fileName;
             }
             File file = FileUtil.newFile(fileName);
