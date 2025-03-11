@@ -55,7 +55,7 @@ public class LocalOSSUtils {
         if (!ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, filePath, FileUploadConfig.getInstanceId());
-            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), CollUtil.newArrayList(filePath));
+            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER + FileUploadConfig.getInstanceId(), filePath, String.class);
             FILE_NAME_LIST.add(filePath);
         }
     }
@@ -69,7 +69,7 @@ public class LocalOSSUtils {
         if (ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
-            redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), CollUtil.newArrayList(filePath));
+            redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER + instanceId, filePath, String.class);
             FILE_NAME_LIST.remove(filePath);
         }
     }
@@ -98,7 +98,7 @@ public class LocalOSSUtils {
             file.mkdirs();
         }
         String absolutePath = FileUtil.getAbsolutePath(file);
-        if (!absolutePath.endsWith(separator)){
+        if (!absolutePath.endsWith(separator)) {
             absolutePath = absolutePath + separator;
         }
         return absolutePath;
