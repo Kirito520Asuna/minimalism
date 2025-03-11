@@ -23,8 +23,8 @@ public class WebSocketConfig {
     }
 
     // 注册到Nacos
-    @Bean
+/*    @Bean
     public NacosDiscoveryProperties nacosProperties() {
         return new NacosDiscoveryProperties();
-    }
+    }*/
 }

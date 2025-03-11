@@ -1,5 +1,6 @@
 package com.minimalism.abstractinterface.bean;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.minimalism.utils.object.ObjectUtils;
@@ -48,6 +49,10 @@ public interface AbstractBean {
         return getLogBean().getAClass();
     }
 
+    default String getAClassName() {
+        return StrUtil.subBefore(getAClass().getName(), "$", false);
+    }
+
     /**
      * 初始化
      */
@@ -55,7 +60,8 @@ public interface AbstractBean {
     default void init() {
         LogBean logBean = getLogBean();
         if (!isProd()) {
-            logBean.getLogger().info("[init] {} ", logBean.getAClass().getSimpleName());
+
+            logBean.getLogger().info("[init]--[{}]", getAClassName());
         }
     }
 
@@ -66,7 +72,7 @@ public interface AbstractBean {
     default void destroy() {
         LogBean logBean = getLogBean();
         if (!isProd()) {
-            logBean.getLogger().info("[destroy] {} ...", logBean.getAClass().getSimpleName());
+            logBean.getLogger().info("[destroy]--[{}]", getAClassName());
         }
     }
 

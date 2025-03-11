@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.cloud.nacos.discovery.NacosDiscoveryClient;
+import com.alibaba.cloud.nacos.registry.NacosServiceRegistry;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.env.Environment;
@@ -55,6 +56,7 @@ public class NacosUtils {
      */
 
     public static String getInstanceId() {
+        //NacosDiscoveryClient bean = SpringUtil.getBean(NacosDiscoveryClient.class);
         NacosDiscoveryProperties nacosDiscoveryProperties = SpringUtil.getBean(NacosDiscoveryProperties.class);
         int port = nacosDiscoveryProperties.getPort();
         if (port == -1) {
