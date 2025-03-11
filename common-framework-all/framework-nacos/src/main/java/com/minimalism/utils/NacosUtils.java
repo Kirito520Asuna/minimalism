@@ -8,6 +8,7 @@ import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.cloud.nacos.discovery.NacosDiscoveryClient;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,7 +56,11 @@ public class NacosUtils {
 
     public static String getInstanceId() {
         NacosDiscoveryProperties nacosDiscoveryProperties = SpringUtil.getBean(NacosDiscoveryProperties.class);
-        return nacosDiscoveryProperties.getIp() + ":" + nacosDiscoveryProperties.getPort();
+        int port = nacosDiscoveryProperties.getPort();
+        if (port == -1) {
+            port = SpringUtil.getBean(Environment.class).getProperty("server.port", Integer.class, 8080);
+        }
+        return nacosDiscoveryProperties.getIp() + ":" + port;
     }
 
     /**

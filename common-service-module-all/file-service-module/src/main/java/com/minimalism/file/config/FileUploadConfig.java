@@ -2,6 +2,7 @@ package com.minimalism.file.config;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.file.FileConstant;
@@ -38,6 +39,13 @@ public class FileUploadConfig implements AbstractBean {
     public static String getPathKey = "file.byte.get";
     public static String delPathKey = "file.byte.del";
 
+    public static String getInstanceId() {
+        if (StrUtil.isBlank(instanceId)||instanceId.endsWith("-1")){
+            instanceId = NacosUtils.getInstanceId();
+        }
+        return instanceId;
+    }
+
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         Environment env = SpringUtil.getBean(Environment.class);
@@ -58,10 +66,10 @@ public class FileUploadConfig implements AbstractBean {
         List<String> fileNameList = LocalOSSUtils.getFileNameList();
         instanceId = NacosUtils.getInstanceId();
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-        redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, instanceId, fileNameList);
+        redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, getInstanceId(), fileNameList);
         LocalOSSUtils.FILE_NAME_LIST.addAll(fileNameList);
         fileNameList.stream().forEach(fileName -> {
-            redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, fileName, instanceId);
+            redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, fileName, getInstanceId());
         });
     }
 
@@ -70,7 +78,7 @@ public class FileUploadConfig implements AbstractBean {
     @PreDestroy
     public void destroy() {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-        redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, instanceId);
+        redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, getInstanceId());
         LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
             redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, fileName);
         });

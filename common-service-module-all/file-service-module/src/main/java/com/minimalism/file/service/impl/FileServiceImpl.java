@@ -73,7 +73,7 @@ public class FileServiceImpl implements FileService {
                     folder = folder.replace(identifier, "");
                 }
                 instanceId = LocalOSSUtils.getRedisInstanceId(folder);
-                if (!ObjectUtils.equals(instanceId, FileUploadConfig.instanceId)) {
+                if (!ObjectUtils.equals(instanceId, FileUploadConfig.getInstanceId())) {
                     String url = FileUploadConfig.getUrlByte(instanceId);
 
                     Integer chunkNumber = Integer.valueOf(FileUtil.mainName(path));
@@ -236,7 +236,7 @@ public class FileServiceImpl implements FileService {
                         filePartService.removeById(part.getPartId());
                         if (part.getLocal()) {
                             FileUtil.del(part.getLocalResource());
-                            String instanceId = FileUploadConfig.instanceId;
+                            String instanceId = FileUploadConfig.getInstanceId();
                         }
                     });
 
