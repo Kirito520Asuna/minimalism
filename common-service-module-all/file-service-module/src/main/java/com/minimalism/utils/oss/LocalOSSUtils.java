@@ -55,7 +55,7 @@ public class LocalOSSUtils {
         if (!ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, filePath, FileUploadConfig.getInstanceId());
-            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), filePath);
+            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), CollUtil.newArrayList(filePath));
             FILE_NAME_LIST.add(filePath);
         }
     }
@@ -69,7 +69,7 @@ public class LocalOSSUtils {
         if (ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
-            redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), filePath);
+            redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), CollUtil.newArrayList(filePath));
             FILE_NAME_LIST.remove(filePath);
         }
     }
