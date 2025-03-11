@@ -19,10 +19,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -55,13 +52,18 @@ public class LocalOSSUtils {
         if (!ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().put(FileConstant.REDIS_FILE_INSTANCE_ID, filePath, FileUploadConfig.getInstanceId());
-            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER + FileUploadConfig.getInstanceId(), filePath, String.class);
+
+            List<String> list = (ArrayList) redisTemplate.opsForHash().get(FileConstant.FILE_REDIS_MAPPER, instanceId);
+            list.add(filePath);
+            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, instanceId, list);
+
+            //redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, FileUploadConfig.getInstanceId(), filePath);
             FILE_NAME_LIST.add(filePath);
         }
     }
 
     public static void delRedisFile(File file) {
-        putRedisFile(FileUtil.getAbsolutePath(file));
+        delRedisFile(FileUtil.getAbsolutePath(file));
     }
 
     public static void delRedisFile(String filePath) {
@@ -69,7 +71,10 @@ public class LocalOSSUtils {
         if (ObjectUtils.equals(FileUploadConfig.getInstanceId(), instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
             redisTemplate.opsForHash().delete(FileConstant.REDIS_FILE_INSTANCE_ID, filePath);
-            redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_MAPPER + instanceId, filePath, String.class);
+
+            List<String> list = (ArrayList) redisTemplate.opsForHash().get(FileConstant.FILE_REDIS_MAPPER, instanceId);
+            list.remove(filePath);
+            redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_MAPPER, instanceId, list);
             FILE_NAME_LIST.remove(filePath);
         }
     }
