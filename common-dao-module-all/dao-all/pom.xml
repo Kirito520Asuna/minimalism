@@ -46,10 +46,10 @@
                     <groupId>com.baomidou</groupId>
                     <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
                 </exclusion>
-                <exclusion>
+        <!--        <exclusion>
                     <groupId>com.github.pagehelper</groupId>
                     <artifactId>pagehelper-spring-boot-starter</artifactId>
-                </exclusion>
+                </exclusion>-->
                 <exclusion>
                     <groupId>com.alibaba</groupId>
                     <artifactId>fastjson</artifactId>
@@ -83,12 +83,12 @@
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>${dynamic-datasource.version}</version>
         </dependency>
-        <!--分页插件-->
+ <!--       &lt;!&ndash;分页插件&ndash;&gt;
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>${pagehelper-spring-boot-starter.version}</version>
-        </dependency>
+        </dependency>-->
         <!--fastjson-->
         <dependency>
             <groupId>com.alibaba</groupId>
