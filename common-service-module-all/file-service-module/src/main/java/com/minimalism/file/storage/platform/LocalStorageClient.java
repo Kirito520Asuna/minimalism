@@ -35,11 +35,10 @@ import java.util.UUID;
  * @Date 2025/3/7 20:44:58
  * @Description
  */
-@Service
+
 @Data
 //@NoArgsConstructor
 @AllArgsConstructor
-@ConditionalOnBean(FileProperties.LocalProperties.class)
 public class LocalStorageClient implements LocalClient {
     private String directory;
     private String endPoint;

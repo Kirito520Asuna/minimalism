@@ -30,11 +30,8 @@ import java.nio.charset.StandardCharsets;
  * @Date 2025/3/7 19:24:20
  * @Description
  */
-@Service
 @Data
-//@NoArgsConstructor
 @AllArgsConstructor
-@ConditionalOnBean(FileProperties.AliyunOssProperties.class)
 public class AliyunOssStorageClient implements AliyunClient {
     private OSS client;
     private String endPoint;
