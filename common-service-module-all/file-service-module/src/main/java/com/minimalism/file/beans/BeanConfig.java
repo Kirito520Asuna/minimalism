@@ -26,16 +26,6 @@ public class BeanConfig implements AbstractBean {
         return new FileProperties.LocalProperties();
     }
 
-    //@Bean
-    //public NacosDiscoveryProperties nacosDiscoveryProperties() {
-    //    NacosDiscoveryProperties nacosDiscoveryProperties = new NacosDiscoveryProperties();
-    //    int port = nacosDiscoveryProperties.getPort();
-    //    if (port == -1) {
-    //        port = SpringUtil.getBean(Environment.class).getProperty("server.port", Integer.class, 8080);
-    //        nacosDiscoveryProperties.setPort(port);
-    //    }
-    //    return nacosDiscoveryProperties;
-    //}
     @Bean
     @ConditionalOnBean(FileProperties.LocalProperties.class)
     public LocalClient localClient() {
