@@ -1,12 +1,12 @@
 package com.minimalism.file.config;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.file.FileConstant;
 import com.minimalism.utils.NacosUtils;
+import com.minimalism.utils.file.FileUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -70,9 +70,9 @@ public class FileUploadConfig implements AbstractBean {
         String instanceId = getInstanceId();
         LocalOSSUtils.FILE_NAME_LIST.addAll(fileNameList);
         LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
-            if (FileUtil.isFile(fileName)) {
+            if (FileUtils.isFile(fileName)) {
                 redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_FILE, fileName, instanceId);
-            } else if (FileUtil.isDirectory(fileName)) {
+            } else if (FileUtils.isDirectory(fileName)) {
                 redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_DIR + instanceId, fileName, "DIR");
                 redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_INSTANCE_ID, fileName, instanceId);
             }
@@ -84,9 +84,9 @@ public class FileUploadConfig implements AbstractBean {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         //redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_DIR + getInstanceId());
         LocalOSSUtils.FILE_NAME_LIST.stream().forEach(fileName -> {
-            if (FileUtil.isFile(fileName)) {
+            if (FileUtils.isFile(fileName)) {
                 redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_FILE, fileName);
-            } else if (FileUtil.isDirectory(fileName)) {
+            } else if (FileUtils.isDirectory(fileName)) {
                 redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_DIR + instanceId, fileName);
                 redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_INSTANCE_ID, fileName);
             }

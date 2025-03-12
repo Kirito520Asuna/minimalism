@@ -1,7 +1,6 @@
 package com.minimalism.file.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -19,6 +18,7 @@ import com.minimalism.file.storage.FileFactory;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.result.Result;
+import com.minimalism.utils.file.FileUtils;
 import com.minimalism.utils.http.OkHttpUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
@@ -60,13 +60,13 @@ public class FileServiceImpl implements FileService {
         String instanceId = null;
         if (ObjectUtils.defaultIfEmpty(local, Boolean.FALSE)) {
             String path = partVo.getLocalResource();
-            if (FileUtil.newFile(path).isFile()) {
+            if (FileUtils.isFile(path)) {
                 String uploadDir = LocalOSSUtils.getUploadDir();
                 int index = 0;
                 if (path.startsWith(uploadDir)) {
                     index = path.indexOf(uploadDir) + uploadDir.length();
                 }
-                int endIndex = path.indexOf(FileUtil.getName(path));
+                int endIndex = path.indexOf(FileUtils.getName(path));
                 String folder = path.substring(index, endIndex);
                 String identifier = partVo.getIdentifier();
                 if (folder.contains(identifier)) {
@@ -76,11 +76,11 @@ public class FileServiceImpl implements FileService {
                 instanceId = LocalOSSUtils.getRedisInstanceId(path);
                 String cuInstanceId = FileUploadConfig.getInstanceId();
                 if (ObjectUtils.equals(instanceId, cuInstanceId)) {
-                    inputStream = FileUtil.getInputStream(path);
+                    inputStream = FileUtils.getInputStream(path);
                 } else {
                     String url = FileUploadConfig.getUrlByte(instanceId);
 
-                    Integer chunkNumber = Integer.valueOf(FileUtil.mainName(path));
+                    Integer chunkNumber = Integer.valueOf(FileUtils.mainName(path));
                     //String identifier,
                     //String folder,
                     //String fileName,
@@ -141,7 +141,7 @@ public class FileServiceImpl implements FileService {
             String localResource = part.getLocalResource();
 
             if (ObjectUtils.equals(instanceId, cuInstanceId)) {
-                FileUtil.del(localResource);
+                FileUtils.del(localResource);
                 LocalOSSUtils.delRedisFile(localResource);
                 filePartService.remove(Wrappers.lambdaQuery(FilePart.class)
                         .eq(FilePart::getPartCode, identifier)
@@ -151,15 +151,15 @@ public class FileServiceImpl implements FileService {
                 if (localResource.startsWith(uploadDir)) {
                     index = localResource.indexOf(uploadDir) + uploadDir.length();
                 }
-                int endIndex = localResource.indexOf(FileUtil.getName(localResource));
+                int endIndex = localResource.indexOf(FileUtils.getName(localResource));
                 String folder = localResource.substring(index, endIndex);
 
                 if (folder.contains(identifier)) {
                     folder = StrUtil.subBefore(folder, identifier, true);
                 }
                 Integer chunkNumber = null;
-                if (FileUtil.isFile(localResource)) {
-                    chunkNumber = Integer.valueOf(FileUtil.mainName(localResource));
+                if (FileUtils.isFile(localResource)) {
+                    chunkNumber = Integer.valueOf(FileUtils.mainName(localResource));
                 }
                 String url = FileUploadConfig.getUrlDel(instanceId);
                 Map<String, Object> params = Maps.newLinkedHashMap();
@@ -225,7 +225,7 @@ public class FileServiceImpl implements FileService {
 
         if (fileId != null) {
             FileInfo fileInfo = fileInfoService.getById(fileId);
-            mainName = FileUtil.mainName(fileInfo.getFileName());
+            mainName = FileUtils.mainName(fileInfo.getFileName());
             suffix = fileInfo.getSuffix();
             path = getMergePartPath(identifier, "tmp_" + mainName, suffix);
             long fileInfoSize = fileInfo.getSize();
@@ -244,7 +244,7 @@ public class FileServiceImpl implements FileService {
                     fileParts.stream().forEach(part -> {
                         filePartService.removeById(part.getPartId());
                         if (part.getLocal()) {
-                            FileUtil.del(part.getLocalResource());
+                            FileUtils.del(part.getLocalResource());
                             String instanceId = FileUploadConfig.getInstanceId();
                         }
                     });
@@ -257,9 +257,9 @@ public class FileServiceImpl implements FileService {
                 }
             }
         } else {
-            mainName = FileUtil.mainName(fileName);
-            suffix = FileUtil.getSuffix(fileName);
-            path = getMergePartPath(identifier, "tmp_" + mainName, "." + FileUtil.getSuffix(fileName));
+            mainName = FileUtils.mainName(fileName);
+            suffix = FileUtils.getSuffix(fileName);
+            path = getMergePartPath(identifier, "tmp_" + mainName, "." + FileUtils.getSuffix(fileName));
         }
 
         if (!suffix.startsWith(".")) {
@@ -268,7 +268,7 @@ public class FileServiceImpl implements FileService {
 
         fileMainName = mainName + suffix;
         //生成临时文件
-        File tmpFile = FileUtil.newFile(path);
+        File tmpFile = FileUtils.newFile(path);
         if (!tmpFile.exists()) {
             tmpFile.createNewFile();
         }
@@ -276,9 +276,9 @@ public class FileServiceImpl implements FileService {
         try {
             ByteArrayOutputStream outputStream = mergeOutputStream(identifier, fileId);
             InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            OutputStream fileOutputStream = FileUtil.getOutputStream(tmpFile);
+            OutputStream fileOutputStream = FileUtils.getOutputStream(tmpFile);
             IoUtils.copy(inputStream, fileOutputStream);
-            inputStream = FileUtil.getInputStream(path);
+            inputStream = FileUtils.getInputStream(path);
             FileInfo fileInfo = uploadMergeChunks(inputStream, fileMainName, identifier);
             if (fileId != null) {
                 //FileInfo fileInfoById = fileInfoService.getById(fileId);
@@ -292,8 +292,8 @@ public class FileServiceImpl implements FileService {
             }
             mergeOk(identifier, fileId);
         } finally {
-            FileUtil.del(path);
-            //FileUtil.del(path.substring(0, path.lastIndexOf(OSType.getSeparator(null)) + 1));
+            FileUtils.del(path);
+            //FileUtils.del(path.substring(0, path.lastIndexOf(OSType.getSeparator(null)) + 1));
         }
         return true;
     }
@@ -334,7 +334,7 @@ public class FileServiceImpl implements FileService {
             ByteArrayOutputStream outputStream = IoUtils.merge(parts.stream().map(part -> {
                 InputStream inputStream;
                 if (part.getLocal()) {
-                    inputStream = FileUtil.getInputStream(part.getLocalResource());
+                    inputStream = FileUtils.getInputStream(part.getLocalResource());
                 } else {
                     try {
                         inputStream = new URL(part.getUrl()).openStream();
@@ -348,14 +348,14 @@ public class FileServiceImpl implements FileService {
             //合并完成
             parts.stream().filter(FilePart::getLocal)
                     .map(FilePart::getLocalResource)
-                    .forEach(FileUtil::del);
+                    .forEach(FileUtils::del);
 
             filePartService.removeByIds(parts.stream().map(FilePart::getPartId).collect(Collectors.toList()));
 
             FilePart filePart = parts.stream().findFirst().get();
             info("{}" + Constants.PART_SUFFIX + "~{}" + Constants.PART_SUFFIX + ",合并完成",
-                    FileUtil.mainName(filePart.getLocal() ? filePart.getLocalResource() : filePart.getUrl()),
-                    FileUtil.mainName(parts.get(parts.size() - 1).getLocal() ?
+                    FileUtils.mainName(filePart.getLocal() ? filePart.getLocalResource() : filePart.getUrl()),
+                    FileUtils.mainName(parts.get(parts.size() - 1).getLocal() ?
                             parts.get(parts.size() - 1).getLocalResource() : parts.get(parts.size() - 1).getUrl()));
 
             if (filePart.getLocal()) {
@@ -367,13 +367,13 @@ public class FileServiceImpl implements FileService {
                 int lastIndexOf = localResource.lastIndexOf(OSConfig.getSeparator(filePart.getOsType()));
                 String parentPathByString = localResource.substring(0, lastIndexOf + 1);
                 String pathAll = parentPathByString + partFileName;
-                File file = FileUtil.newFile(pathAll);
+                File file = FileUtils.newFile(pathAll);
                 if (!file.exists()) {
                     file.createNewFile();
                 }
 
-                IoUtils.copy(new ByteArrayInputStream(outputStream.toByteArray()), FileUtil.getOutputStream(file));
-                long size = IoUtils.size(FileUtil.getInputStream(pathAll));
+                IoUtils.copy(new ByteArrayInputStream(outputStream.toByteArray()), FileUtils.getOutputStream(file));
+                long size = IoUtils.size(FileUtils.getInputStream(pathAll));
 
                 filePart.setPartSize(size);
                 filePartService.save(filePart.setPartId(null).setLocalResource(pathAll));
@@ -393,7 +393,7 @@ public class FileServiceImpl implements FileService {
         IFileStorageClient client = FileFactory.getClient(StorageType.local);
         //FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
         FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier);
-        return fileInfo.setLocal(Boolean.TRUE).setName(FileUtil.mainName(fileInfo.getFileName()));
+        return fileInfo.setLocal(Boolean.TRUE).setName(FileUtils.mainName(fileInfo.getFileName()));
     }
 
     @Override
@@ -416,11 +416,11 @@ public class FileServiceImpl implements FileService {
             if (!fileName.startsWith(uploadDir)) {
                 fileName = uploadDir + fileName;
             }
-            File file = FileUtil.newFile(fileName);
+            File file = FileUtils.newFile(fileName);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件不存在");
             }
-            byte[] bytes = IoUtils.toByteArray(FileUtil.getInputStream(file));
+            byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
             list.add(bytes);
         }
 
@@ -436,19 +436,19 @@ public class FileServiceImpl implements FileService {
             if (!fileName.startsWith(folder)) {
                 fileName = folder + fileName;
             }
-            File file = FileUtil.newFile(fileName);
+            File file = FileUtils.newFile(fileName);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件不存在");
             }
-            byte[] bytes = IoUtils.toByteArray(FileUtil.getInputStream(file));
+            byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
             list.add(bytes);
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             //文件夹
-            File file = FileUtil.newFile(folder);
+            File file = FileUtils.newFile(folder);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件夹不存在");
             }
-            Arrays.stream(file.listFiles()).map(FileUtil::getInputStream).map(IoUtils::toByteArray).forEach(list::add);
+            Arrays.stream(file.listFiles()).map(FileUtils::getInputStream).map(IoUtils::toByteArray).forEach(list::add);
         } else {
             throw new GlobalCustomException("非法请求");
         }
@@ -464,8 +464,8 @@ public class FileServiceImpl implements FileService {
             if (!fileName.startsWith(uploadDir)) {
                 fileName = uploadDir + fileName;
             }
-            File file = FileUtil.newFile(fileName);
-            FileUtil.del(file);
+            File file = FileUtils.newFile(fileName);
+            FileUtils.del(file);
             LocalOSSUtils.delRedisFile(fileName);
         }
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
@@ -480,13 +480,13 @@ public class FileServiceImpl implements FileService {
             if (!fileName.startsWith(folder)) {
                 fileName = folder + fileName;
             }
-            File file = FileUtil.newFile(fileName);
-            FileUtil.del(file);
+            File file = FileUtils.newFile(fileName);
+            FileUtils.del(file);
             LocalOSSUtils.delRedisFile(fileName);
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             //文件夹
-            File file = FileUtil.newFile(folder);
-            FileUtil.del(file);
+            File file = FileUtils.newFile(folder);
+            FileUtils.del(file);
             LocalOSSUtils.delRedisFile(folder);
         } else {
             throw new GlobalCustomException("非法操作");

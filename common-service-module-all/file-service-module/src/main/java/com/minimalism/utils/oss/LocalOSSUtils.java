@@ -1,7 +1,6 @@
 package com.minimalism.utils.oss;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -12,6 +11,7 @@ import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
+import com.minimalism.utils.file.FileUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.SneakyThrows;
@@ -33,16 +33,16 @@ public class LocalOSSUtils {
     public static final Set<String> FILE_NAME_LIST = ConcurrentHashMap.newKeySet();
 
     public static String getRedisInstanceId(File file) {
-        return getRedisInstanceId(FileUtil.getAbsolutePath(file));
+        return getRedisInstanceId(FileUtils.getAbsolutePath(file));
     }
 
     public static String getRedisInstanceId(String filePath) {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         String instanceId = null;
-        if (FileUtil.isDirectory(filePath)){
+        if (FileUtils.isDirectory(filePath)){
             instanceId = (String) redisTemplate
                     .opsForHash().get(FileConstant.FILE_REDIS_INSTANCE_ID, filePath);
-        }else if (FileUtil.isFile(filePath)){
+        }else if (FileUtils.isFile(filePath)){
             instanceId = (String) redisTemplate
                     .opsForHash().get(FileConstant.FILE_REDIS_FILE, filePath);
         }
@@ -50,7 +50,7 @@ public class LocalOSSUtils {
     }
 
     public static void putRedisFile(File file) {
-        putRedisFile(FileUtil.getAbsolutePath(file));
+        putRedisFile(FileUtils.getAbsolutePath(file));
     }
 
     public static void putRedisFile(String filePath) {
@@ -58,7 +58,7 @@ public class LocalOSSUtils {
         String currentInstanceId = FileUploadConfig.getInstanceId();
         if (!ObjectUtils.equals(currentInstanceId, instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-            if (FileUtil.isDirectory(filePath)) {
+            if (FileUtils.isDirectory(filePath)) {
                 if (!filePath.endsWith(OSConfig.separator)) {
                     filePath = filePath + OSConfig.separator;
                 }
@@ -66,7 +66,7 @@ public class LocalOSSUtils {
                 redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_INSTANCE_ID, filePath, currentInstanceId);
             }
 
-            if (FileUtil.isFile(filePath)) {
+            if (FileUtils.isFile(filePath)) {
                 redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_FILE, filePath, currentInstanceId);
             }
             FILE_NAME_LIST.add(filePath);
@@ -74,7 +74,7 @@ public class LocalOSSUtils {
     }
 
     public static void delRedisFile(File file) {
-        delRedisFile(FileUtil.getAbsolutePath(file));
+        delRedisFile(FileUtils.getAbsolutePath(file));
     }
 
     public static void delRedisFile(String filePath) {
@@ -82,13 +82,13 @@ public class LocalOSSUtils {
         String currentInstanceId = FileUploadConfig.getInstanceId();
         if (ObjectUtils.equals(currentInstanceId, instanceId)) {
             RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-            if (FileUtil.isDirectory(filePath)) {
+            if (FileUtils.isDirectory(filePath)) {
                 redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_DIR + currentInstanceId, filePath);
                 redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_INSTANCE_ID, filePath);
             }
 
-            if (FileUtil.isFile(filePath)) {
-                String dir = StrUtil.subBefore(filePath, FileUtil.getName(filePath), true);
+            if (FileUtils.isFile(filePath)) {
+                String dir = StrUtil.subBefore(filePath, FileUtils.getName(filePath), true);
                 instanceId = (String) redisTemplate.opsForHash().get(FileConstant.FILE_REDIS_INSTANCE_ID, dir);
                 if (ObjectUtils.isNotEmpty(instanceId)) {
                     redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_INSTANCE_ID, dir);
@@ -119,11 +119,11 @@ public class LocalOSSUtils {
             uploadDir = uploadDir + separator;
         }
         uploadDir = (uploadDir + getBucket() + separator).replace(separator + separator, separator).replace(separator + separator, separator);
-        File file = FileUtil.newFile(uploadDir);
+        File file = FileUtils.newFile(uploadDir);
         if (!file.exists()) {
             file.mkdirs();
         }
-        String absolutePath = FileUtil.getAbsolutePath(file);
+        String absolutePath = FileUtils.getAbsolutePath(file);
         if (!absolutePath.endsWith(separator)) {
             absolutePath = absolutePath + separator;
         }
@@ -146,7 +146,7 @@ public class LocalOSSUtils {
     public static String getChunkDir() {
         String separator = OSConfig.separator;
         String chunk = getUploadDir() + "chunks" + separator;
-        File file = FileUtil.newFile(chunk);
+        File file = FileUtils.newFile(chunk);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -156,7 +156,7 @@ public class LocalOSSUtils {
     public static String getMergeDir() {
         String separator = OSConfig.separator;
         String merged = getUploadDir() + "merged" + separator;
-        File file = FileUtil.newFile(merged);
+        File file = FileUtils.newFile(merged);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -176,7 +176,7 @@ public class LocalOSSUtils {
         String separator = OSConfig.separator;
         String path = getMergeDir() + identifier + separator;
         path = path.replace(separator + separator, separator).replace(separator + separator, separator);
-        File file = FileUtil.newFile(path);
+        File file = FileUtils.newFile(path);
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -218,18 +218,18 @@ public class LocalOSSUtils {
         String bucketPath = getUploadDir() + separator + bucketName + separator;
         bucketPath = bucketPath.replace(separator + separator, separator).replace(separator + separator, separator);
 
-        File bucketFile = FileUtil.newFile(bucketPath);
+        File bucketFile = FileUtils.newFile(bucketPath);
         if (!bucketFile.exists()) {
             bucketFile.mkdirs();
         }
         putRedisFile(bucketPath);
-        File file = FileUtil.newFile(bucketPath + flieName);
+        File file = FileUtils.newFile(bucketPath + flieName);
         if (!file.exists()) {
             file.createNewFile();
         }
-        IoUtils.copy(inputStream, FileUtil.getOutputStream(file));
+        IoUtils.copy(inputStream, FileUtils.getOutputStream(file));
         putRedisFile(file);
-        return FileUtil.getAbsolutePath(file);
+        return FileUtils.getAbsolutePath(file);
     }
 
     /**
@@ -242,7 +242,7 @@ public class LocalOSSUtils {
         splitFileLocal(identifier, input);
         String fileLocal = mergeFileLocal(fileName, identifier);
         putRedisFile(fileLocal);
-        return FileUtil.getAbsolutePath(fileLocal);
+        return FileUtils.getAbsolutePath(fileLocal);
     }
 
     /**
@@ -274,7 +274,7 @@ public class LocalOSSUtils {
         int chunkNumber = 1;
         // 创建分块存放目录：CHUNK_DIR + identifier
         String chunkDirPath = chunkDir + identifier;
-        File chunkDirFile = FileUtil.newFile(chunkDirPath);
+        File chunkDirFile = FileUtils.newFile(chunkDirPath);
         if (!chunkDirFile.exists()) {
             chunkDirFile.mkdirs();
         }
@@ -285,7 +285,7 @@ public class LocalOSSUtils {
             // 循环读取，直到返回 -1 表示读完
             while ((bytesRead = fis.read(buffer)) != -1) {
                 // 每个分块文件命名为 “chunkNumber.part”
-                File tempFile = FileUtil.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
+                File tempFile = FileUtils.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
                 if (!tempFile.exists()) {
                     tempFile.createNewFile();
                 }
@@ -322,19 +322,19 @@ public class LocalOSSUtils {
     public static String splitChunkNumberFileLocal(String chunkDir, int chunkNumber, String identifier, InputStream input) {
         // 创建分块存放目录：CHUNK_DIR + identifier
         String chunkDirPath = chunkDir + identifier;
-        File chunkDirFile = FileUtil.newFile(chunkDirPath);
+        File chunkDirFile = FileUtils.newFile(chunkDirPath);
         if (!chunkDirFile.exists()) {
             chunkDirFile.mkdirs();
         }
         String separator = OSConfig.separator;
-        File tempFile = FileUtil.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
+        File tempFile = FileUtils.newFile(chunkDirPath + separator + chunkNumber + getPartSuffix());
         if (!tempFile.exists()) {
             tempFile.createNewFile();
         }
-        BufferedOutputStream outputStream = FileUtil.getOutputStream(tempFile);
+        BufferedOutputStream outputStream = FileUtils.getOutputStream(tempFile);
         IoUtils.copy(input, outputStream);
         putRedisFile(tempFile);
-        return FileUtil.getAbsolutePath(tempFile);
+        return FileUtils.getAbsolutePath(tempFile);
     }
 
     /**
@@ -368,7 +368,7 @@ public class LocalOSSUtils {
         }
         mergeDir = mergeDir + identifier + separator;
         // 分块文件所在目录
-        File chunkDirFile = FileUtil.newFile(chunkDir + identifier);
+        File chunkDirFile = FileUtils.newFile(chunkDir + identifier);
         File[] chunkFiles = chunkDirFile.listFiles();
         if (chunkFiles == null || chunkFiles.length == 0) {
             throw new RuntimeException("No chunk files found for merging");
@@ -376,17 +376,17 @@ public class LocalOSSUtils {
 
         // 按分块编号排序（假设分块文件名为 "1.part", "2.part", …）
         List<File> sortedChunks = Arrays.stream(chunkFiles)
-                .sorted(Comparator.comparingInt(f -> Integer.parseInt(FileUtil.mainName(f))))
+                .sorted(Comparator.comparingInt(f -> Integer.parseInt(FileUtils.mainName(f))))
                 .collect(Collectors.toList());
 
         // 创建合并后文件存放目录
-        File mergeDirFile = FileUtil.newFile(mergeDir);
+        File mergeDirFile = FileUtils.newFile(mergeDir);
         if (!mergeDirFile.exists()) {
             mergeDirFile.mkdirs();
         }
         // 合并后完整文件路径：MERGE_DIR + 原始文件名
         String mergeFile = mergeDir + fileName;
-        File mergedFile = FileUtil.newFile(mergeFile);
+        File mergedFile = FileUtils.newFile(mergeFile);
         // 如果目标文件已存在，则先删除
         if (mergedFile.exists()) {
             mergedFile.delete();
@@ -402,12 +402,12 @@ public class LocalOSSUtils {
         }
         sortedChunks.add(chunkDirFile);
         sortedChunks.stream().forEach(file -> {
-            String path = FileUtil.getAbsolutePath(file);
-            FileUtil.del(path);
+            String path = FileUtils.getAbsolutePath(file);
+            FileUtils.del(path);
             delRedisFile(path);
         });
         putRedisFile(mergedFile);
-        return FileUtil.getAbsolutePath(mergedFile);
+        return FileUtils.getAbsolutePath(mergedFile);
     }
 
     /**
@@ -435,20 +435,20 @@ public class LocalOSSUtils {
             chunkDir = chunkDir + separator;
         }
         // 分块文件所在目录
-        File chunkDirFile = FileUtil.newFile(chunkDir + identifier);
+        File chunkDirFile = FileUtils.newFile(chunkDir + identifier);
         File[] chunkFiles = chunkDirFile.listFiles();
         if (chunkFiles == null || chunkFiles.length == 0) {
             throw new RuntimeException("No chunk files found ");
         }
         // 按分块编号排序（假设分块文件名为 "1.part", "2.part", …）
-        List<FilePart> fileParts = Arrays.stream(chunkFiles).filter(file -> ("." + FileUtil.getSuffix(file)).endsWith(getPartSuffix())).map(file ->
+        List<FilePart> fileParts = Arrays.stream(chunkFiles).filter(file -> ("." + FileUtils.getSuffix(file)).endsWith(getPartSuffix())).map(file ->
                 new FilePart()
                         .setFileId(fileId)
                         .setLocal(Boolean.TRUE)
-                        .setLocalResource(FileUtil.getAbsolutePath(file))
+                        .setLocalResource(FileUtils.getAbsolutePath(file))
                         .setPartCode(identifier)
-                        .setPartSort(Integer.parseInt(FileUtil.mainName(file)))
-                        .setPartSize(IoUtils.size(FileUtil.getInputStream(file)))
+                        .setPartSort(Integer.parseInt(FileUtils.mainName(file)))
+                        .setPartSize(IoUtils.size(FileUtils.getInputStream(file)))
         ).sorted(Comparator.comparingInt(FilePart::getPartSort)).collect(Collectors.toList());
         return fileParts;
     }
@@ -463,7 +463,7 @@ public class LocalOSSUtils {
     public static List<InputStream> getSplitFileLocal(String identifier, int totalChunks) {
         List<InputStream> streamList = CollUtil.newArrayList();
         List<FilePart> fileParts = getFileParts(identifier, null);
-        streamList.addAll(fileParts.stream().filter(FilePart::getLocal).map(filePart -> FileUtil.getInputStream(filePart.getLocalResource())).collect(Collectors.toList()));
+        streamList.addAll(fileParts.stream().filter(FilePart::getLocal).map(filePart -> FileUtils.getInputStream(filePart.getLocalResource())).collect(Collectors.toList()));
         if (!ObjectUtils.equals(totalChunks, streamList.size())) {
             throw new GlobalCustomException("文件分块数量不匹配");
         }
@@ -478,7 +478,7 @@ public class LocalOSSUtils {
      * @return
      */
     private static String isDir(String separator, String path) {
-        if (FileUtil.isDirectory(path)) {
+        if (FileUtils.isDirectory(path)) {
             if (!path.endsWith(separator)) {
                 path = path + separator;
             }
@@ -497,39 +497,39 @@ public class LocalOSSUtils {
         String mergeDir = getMergeDir();
         String chunkDir = getChunkDir();
 
-        List<String> fileNameList = Arrays.stream(FileUtil.newFile(uploadDir).listFiles())
-                .map(FileUtil::getAbsolutePath)
+        List<String> fileNameList = Arrays.stream(FileUtils.newFile(uploadDir).listFiles())
+                .map(FileUtils::getAbsolutePath)
                 .map(path -> isDir(separator, path))
                 .filter(ObjectUtils::isNotEmpty)
                 .collect(Collectors.toList());
 
-        List<String> mergeDirList = Arrays.stream(FileUtil.newFile(mergeDir).listFiles())
-                .map(FileUtil::getAbsolutePath)
+        List<String> mergeDirList = Arrays.stream(FileUtils.newFile(mergeDir).listFiles())
+                .map(FileUtils::getAbsolutePath)
                 .map(path -> isDir(separator, path))
                 .filter(ObjectUtils::isNotEmpty)
                 .collect(Collectors.toList());
 
-        List<String> chunkDirList = Arrays.stream(FileUtil.newFile(chunkDir).listFiles())
-                .map(FileUtil::getAbsolutePath)
+        List<String> chunkDirList = Arrays.stream(FileUtils.newFile(chunkDir).listFiles())
+                .map(FileUtils::getAbsolutePath)
                 .map(path -> isDir(separator, path))
                 .filter(ObjectUtils::isNotEmpty)
                 .collect(Collectors.toList());
 
         List<String> fileList = CollUtil.newArrayList();
-        mergeDirList.stream().filter(FileUtil::isDirectory).forEach(path ->
+        mergeDirList.stream().filter(FileUtils::isDirectory).forEach(path ->
                 fileList.addAll(
-                        Arrays.stream(FileUtil.newFile(path).listFiles())
-                                .filter(FileUtil::isFile)
-                                .map(FileUtil::getAbsolutePath)
+                        Arrays.stream(FileUtils.newFile(path).listFiles())
+                                .filter(FileUtils::isFile)
+                                .map(FileUtils::getAbsolutePath)
                                 .filter(ObjectUtils::isNotEmpty)
                                 .collect(Collectors.toList()))
         );
 
-        chunkDirList.stream().filter(FileUtil::isDirectory).forEach(path ->
+        chunkDirList.stream().filter(FileUtils::isDirectory).forEach(path ->
                 fileList.addAll(
-                        Arrays.stream(FileUtil.newFile(path).listFiles())
-                                .filter(FileUtil::isFile)
-                                .map(FileUtil::getAbsolutePath)
+                        Arrays.stream(FileUtils.newFile(path).listFiles())
+                                .filter(FileUtils::isFile)
+                                .map(FileUtils::getAbsolutePath)
                                 .filter(ObjectUtils::isNotEmpty)
                                 .collect(Collectors.toList()))
         );
