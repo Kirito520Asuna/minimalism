@@ -498,12 +498,28 @@ public class FileServiceImpl implements FileService {
         folder = (folder + separator).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            if (!fileName.startsWith(folder)) {
-                fileName = folder + fileName;
+            if ((!notBlank) || !fileName.startsWith(folder)) {
+                fileName = folder + (notBlank ? fileName : StrUtil.EMPTY);
             }
+            if (!fileName.endsWith(separator)) {
+                fileName = fileName + separator;
+            }
+
+            if (StrUtil.isNotBlank(identifier)) {
+                fileName = fileName + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
+            }
+            fileName = fileName.replace(two, separator).replace(two, separator);
             File file = FileUtils.newFile(fileName);
             FileUtils.del(file);
             LocalOSSUtils.delRedisFile(fileName);
+
+            String dir = FileUtils.getName(fileName);
+            FileUtils.newFile(StrUtil.subBefore(fileName, dir, true));
+            List<File> files = FileUtils.loopFiles(fileName);
+            if (files.size() == 0) {
+                FileUtils.del(dir);
+                LocalOSSUtils.delRedisFile(dir);
+            }
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             //文件夹
             File file = FileUtils.newFile(folder);
