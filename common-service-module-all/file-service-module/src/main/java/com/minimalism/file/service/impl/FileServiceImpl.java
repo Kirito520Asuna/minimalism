@@ -434,7 +434,7 @@ public class FileServiceImpl implements FileService {
         folder = (folder).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            if (!fileName.startsWith(folder)) {
+            if ((!notBlank) || !fileName.startsWith(folder)) {
                 fileName = folder + fileName;
             }
             File file = FileUtils.newFile(fileName);
