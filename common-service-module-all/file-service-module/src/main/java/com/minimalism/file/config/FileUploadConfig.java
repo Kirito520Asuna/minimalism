@@ -101,7 +101,7 @@ public class FileUploadConfig implements AbstractBean {
      * @return
      */
     public static String getUrlByte(String instanceId) {
-        return getUrl(instanceId, FileUploadConfig.getPathKey);
+        return getUrl(instanceId, SpringUtil.getBean(Environment.class).getProperty(getPathKey));
     }
 
     /**
@@ -111,7 +111,7 @@ public class FileUploadConfig implements AbstractBean {
      * @return
      */
     public static String getUrlDel(String instanceId) {
-        return getUrl(instanceId, FileUploadConfig.delPathKey);
+        return getUrl(instanceId, SpringUtil.getBean(Environment.class).getProperty(delPathKey));
     }
 
     public static String getUrl(String instanceId, String path) {

@@ -38,8 +38,14 @@ public class LocalOSSUtils {
 
     public static String getRedisInstanceId(String filePath) {
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-        String instanceId = (String) redisTemplate
-                .opsForHash().get(FileConstant.FILE_REDIS_FILE, filePath);
+        String instanceId = null;
+        if (FileUtil.isDirectory(filePath)){
+            instanceId = (String) redisTemplate
+                    .opsForHash().get(FileConstant.FILE_REDIS_INSTANCE_ID, filePath);
+        }else if (FileUtil.isFile(filePath)){
+            instanceId = (String) redisTemplate
+                    .opsForHash().get(FileConstant.FILE_REDIS_FILE, filePath);
+        }
         return instanceId;
     }
 
@@ -61,7 +67,7 @@ public class LocalOSSUtils {
             }
 
             if (FileUtil.isFile(filePath)) {
-                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_FILE, filePath, instanceId);
+                redisTemplate.opsForHash().put(FileConstant.FILE_REDIS_FILE, filePath, currentInstanceId);
             }
             FILE_NAME_LIST.add(filePath);
         }

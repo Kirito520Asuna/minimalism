@@ -70,10 +70,14 @@ public class FileServiceImpl implements FileService {
                 String folder = path.substring(index, endIndex);
                 String identifier = partVo.getIdentifier();
                 if (folder.contains(identifier)) {
-                    folder = folder.replace(identifier, "");
+                    String separator = OSConfig.separator;
+                    folder = StrUtil.subBefore(folder, identifier, true);
                 }
-                instanceId = LocalOSSUtils.getRedisInstanceId(folder);
-                if (!ObjectUtils.equals(instanceId, FileUploadConfig.getInstanceId())) {
+                instanceId = LocalOSSUtils.getRedisInstanceId(path);
+                String cuInstanceId = FileUploadConfig.getInstanceId();
+                if (ObjectUtils.equals(instanceId, cuInstanceId)) {
+                    inputStream = FileUtil.getInputStream(path);
+                } else {
                     String url = FileUploadConfig.getUrlByte(instanceId);
 
                     Integer chunkNumber = Integer.valueOf(FileUtil.mainName(path));
@@ -95,8 +99,6 @@ public class FileServiceImpl implements FileService {
                     }
                     byte[] bytes = IoUtils.toByteArray(result.getData().stream().map(ByteArrayInputStream::new).collect(Collectors.toList()));
                     inputStream = new ByteArrayInputStream(bytes);
-                } else {
-                    inputStream = FileUtil.getInputStream(path);
                 }
             }
         } else {
@@ -131,42 +133,49 @@ public class FileServiceImpl implements FileService {
         // xxx
 
         String uploadDir = LocalOSSUtils.getUploadDir();
-
+        String cuInstanceId = FileUploadConfig.getInstanceId();
 
         list.stream().filter(PartVo::getLocal).forEach(part -> {
 
             String instanceId = part.getInstanceId();
             String localResource = part.getLocalResource();
 
-            int index = 0;
-            if (localResource.startsWith(uploadDir)) {
-                index = localResource.indexOf(uploadDir) + uploadDir.length();
-            }
-            int endIndex = localResource.indexOf(FileUtil.getName(localResource));
-            String folder = localResource.substring(index, endIndex);
+            if (ObjectUtils.equals(instanceId, cuInstanceId)) {
+                FileUtil.del(localResource);
+                LocalOSSUtils.delRedisFile(localResource);
+                filePartService.remove(Wrappers.lambdaQuery(FilePart.class)
+                        .eq(FilePart::getPartCode, identifier)
+                        .eq(FilePart::getLocalResource, localResource));
+            } else {
+                int index = 0;
+                if (localResource.startsWith(uploadDir)) {
+                    index = localResource.indexOf(uploadDir) + uploadDir.length();
+                }
+                int endIndex = localResource.indexOf(FileUtil.getName(localResource));
+                String folder = localResource.substring(index, endIndex);
 
-            if (folder.contains(identifier)) {
-                folder = folder.replace(identifier, "");
+                if (folder.contains(identifier)) {
+                    folder = StrUtil.subBefore(folder, identifier, true);
+                }
+                Integer chunkNumber = null;
+                if (FileUtil.isFile(localResource)) {
+                    chunkNumber = Integer.valueOf(FileUtil.mainName(localResource));
+                }
+                String url = FileUploadConfig.getUrlDel(instanceId);
+                Map<String, Object> params = Maps.newLinkedHashMap();
+                params.put("identifier", identifier);
+                params.put("folder", folder);
+                params.put("chunkNumber", chunkNumber);
+                String json = OkHttpUtils.delete(url, StrUtil.EMPTY_JSON);
+                Result result = JSONUtil.toBean(json, Result.class);
+                if (!result.validateOk()) {
+                    error("删除分片失败,error:{}", result.getMessage());
+                    //使用定时任务兜底
+                    filePartService.update(Wrappers.lambdaUpdate(FilePart.class)
+                            .set(FilePart::getMergeDelete, Boolean.TRUE)
+                            .eq(FilePart::getPartCode, identifier));
+                }
             }
-            Integer chunkNumber = null;
-            if (FileUtil.newFile(localResource).isFile()) {
-                chunkNumber = Integer.valueOf(FileUtil.mainName(localResource));
-            }
-            String url = FileUploadConfig.getUrlDel(instanceId);
-            Map<String, Object> params = Maps.newLinkedHashMap();
-            params.put("identifier", identifier);
-            params.put("folder", folder);
-            params.put("chunkNumber", chunkNumber);
-            String json = OkHttpUtils.delete(url, StrUtil.EMPTY_JSON);
-            Result result = JSONUtil.toBean(json, Result.class);
-            if (!result.validateOk()) {
-                error("删除分片失败,error:{}", result.getMessage());
-                //使用定时任务兜底
-                filePartService.update(Wrappers.lambdaUpdate(FilePart.class)
-                        .set(FilePart::getMergeDelete, Boolean.TRUE)
-                        .eq(FilePart::getPartCode, identifier));
-            }
-
         });
         return out;
     }
@@ -272,10 +281,13 @@ public class FileServiceImpl implements FileService {
             inputStream = FileUtil.getInputStream(path);
             FileInfo fileInfo = uploadMergeChunks(inputStream, fileMainName, identifier);
             if (fileId != null) {
-                FileInfo fileInfoById = fileInfoService.getById(fileId);
-                fileInfoById.setUrl(fileInfo.getUrl())
-                        .setLocal(Boolean.TRUE);
-                fileInfoService.updateById(fileInfoById);
+                //FileInfo fileInfoById = fileInfoService.getById(fileId);
+                //fileInfoById.setUrl(fileInfo.getUrl())
+                //        .setLocal(fileInfo.getLocal());
+                fileInfoService.update(Wrappers.lambdaUpdate(FileInfo.class)
+                        .set(FileInfo::getUrl, fileInfo.getUrl())
+                        .set(FileInfo::getLocal, fileInfo.getLocal())
+                        .eq(FileInfo::getFileId, fileId));
                 LocalOSSUtils.putRedisFile(fileInfo.getUrl());
             }
             mergeOk(identifier, fileId);
