@@ -1,6 +1,7 @@
 package com.minimalism.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.minimalism.enums.OSType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,8 @@ import java.io.InputStream;
  * @Date 2025/3/6 15:32:25
  * @Description
  */
-@Data @Accessors(chain = true)
+@Data
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class PartVo {
@@ -33,5 +35,7 @@ public class PartVo {
     @Schema(description = "输入流")
     private InputStream inputStream;
     @Schema(description = "服务器实例id")
-    private  String instanceId;
+    private String instanceId;
+    @Schema(description = "系统")
+    private OSType osType;
 }

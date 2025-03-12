@@ -509,7 +509,7 @@
   </insert>
 
     <select id="getPartList" resultType="com.minimalism.vo.PartVo">
-        select url, local_resource localResource, is_local `local`,upload_dir uploadDir
+        select url, local_resource localResource, is_local `local`,upload_dir uploadDir,os_type osType
         from file_part
         where
         part_code = #{identifier}
