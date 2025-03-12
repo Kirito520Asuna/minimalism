@@ -422,6 +422,7 @@ public class FileServiceImpl implements FileService {
             }
             byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
             list.add(bytes);
+            return list;
         }
 
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
