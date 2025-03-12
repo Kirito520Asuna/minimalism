@@ -8,6 +8,7 @@ import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.domain.Message;
 import com.minimalism.enums.MessageType;
+import com.minimalism.message.listener.RedisMessageListener;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -119,8 +120,7 @@ public interface MessageService extends AbstractBean {
      */
     default void sendCrossInstanceMessage(String targetInstanceId, Message msg) {
         info("sendCrossInstanceMessage-->targetInstanceId:{},msg:{}", targetInstanceId, msg);
-        SpringUtil.getBean(RedisTemplate.class)
-                .convertAndSend(WebSocket.WS_MSG + targetInstanceId, msg);
+        RedisMessageListener.sendRedisMessage(targetInstanceId, msg);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.minimalism.config;
 
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.google.common.collect.Maps;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.message.listener.RedisMessageListener;
@@ -32,8 +33,7 @@ public class RedisMessageConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
-        Map<String, Class<? extends MessageListener>> listeners = new HashMap<>();
-        listeners.put(WebSocket.WS_MSG + "*", RedisMessageListener.class);
+        Map<String, Class<? extends MessageListener>> listeners = Maps.newLinkedHashMap(RedisMessageListener.getListeners());
 
         listeners.entrySet().forEach(entry -> {
             String pattern = entry.getKey();
@@ -43,21 +43,5 @@ public class RedisMessageConfig {
         });
 
         return container;
-    }
-
-    private static void extracted(RedisMessageListenerContainer container) {
-        // 订阅所有 ws:msg:* 频道
-        MessageListener listener = new MessageListener() {
-            @Override
-            public void onMessage(Message message, byte[] pattern) {
-                String channel = new String(message.getChannel());
-                String msg = new String(message.getBody());
-                SpringUtil.getBean(MessageService.class).handleRedisMessage(msg);
-            }
-        };
-
-
-        RedisMessageListener listenerContainer = SpringUtil.getBean(RedisMessageListener.class);
-        container.addMessageListener(listenerContainer, new PatternTopic(WebSocket.WS_MSG + "*"));
     }
 }
