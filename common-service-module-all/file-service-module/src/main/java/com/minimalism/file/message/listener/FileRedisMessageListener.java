@@ -1,9 +1,11 @@
 package com.minimalism.file.message.listener;
 
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Maps;
 import com.minimalism.constant.file.FileConstant;
 import com.minimalism.file.config.FileUploadConfig;
+import com.minimalism.file.service.FileService;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,11 +25,20 @@ public class FileRedisMessageListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String channel = new String(message.getChannel());
         String msg = new String(message.getBody());
+        if (JSONUtil.isTypeJSON(msg)) {
+            String fileName = null;
+            String folder = null;
+            String identifier = null;
+            Integer chunkNumber = null;
+            SpringUtil.getBean(FileService.class).delByteByLocal(fileName, folder, identifier, chunkNumber);
+        }
     }
+
     public static void sendRedisMessage(String message) {
         RedisTemplate bean = SpringUtil.getBean(RedisTemplate.class);
         bean.convertAndSend(FileConstant.FILE_REDIS_MSG + FileUploadConfig.getInstanceId(), message);
     }
+
     public static Map<String, Class<? extends MessageListener>> getListeners() {
         Map<String, Class<? extends MessageListener>> listeners = Maps.newLinkedHashMap();
         listeners.put(FileConstant.FILE_REDIS_MSG + "*", FileRedisMessageListener.class);

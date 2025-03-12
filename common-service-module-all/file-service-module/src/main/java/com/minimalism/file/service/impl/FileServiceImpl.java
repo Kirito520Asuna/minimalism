@@ -454,6 +454,7 @@ public class FileServiceImpl implements FileService {
             }
             File file = FileUtil.newFile(fileName);
             FileUtil.del(file);
+            LocalOSSUtils.delRedisFile(fileName);
         }
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
         if (!folder.startsWith(uploadDir)) {
@@ -469,10 +470,14 @@ public class FileServiceImpl implements FileService {
             }
             File file = FileUtil.newFile(fileName);
             FileUtil.del(file);
+            LocalOSSUtils.delRedisFile(fileName);
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             //文件夹
             File file = FileUtil.newFile(folder);
             FileUtil.del(file);
+            LocalOSSUtils.delRedisFile(folder);
+        } else {
+            throw new GlobalCustomException("非法操作");
         }
         return true;
     }

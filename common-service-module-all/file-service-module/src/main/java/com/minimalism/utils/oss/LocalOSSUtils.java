@@ -82,6 +82,12 @@ public class LocalOSSUtils {
             }
 
             if (FileUtil.isFile(filePath)) {
+                String dir = StrUtil.subBefore(filePath, FileUtil.getName(filePath), true);
+                instanceId = (String) redisTemplate.opsForHash().get(FileConstant.FILE_REDIS_INSTANCE_ID, dir);
+                if (ObjectUtils.isNotEmpty(instanceId)) {
+                    redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_INSTANCE_ID, dir);
+                    redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_DIR + instanceId, dir);
+                }
                 redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_FILE, filePath);
             }
             FILE_NAME_LIST.remove(filePath);
