@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,14 +92,25 @@ public class FileServiceImpl implements FileService {
                     params.put("chunkNumber", chunkNumber);
                     //params.put("identifier", identifier);
                     String json = OkHttpUtils.get(url, params);
-                    Result<List<byte[]>> result = JSONUtil.toBean(json, Result.class);
+                    Result<List<String>> result = JSONUtil.toBean(json, Result.class);
 
                     if (!result.validateOk()) {
                         error("获取分片失败,error:{}", result.getMessage());
                         throw new GlobalCustomException(result.getMessage());
                     }
-                    byte[] bytes = IoUtils.toByteArray(result.getData().stream().map(ByteArrayInputStream::new).collect(Collectors.toList()));
-                    inputStream = new ByteArrayInputStream(bytes);
+                    List<String> data = result.getData();
+                    if (CollUtil.isEmpty(data)) {
+                        String err = "文件不存在";
+                        error("获取分片失败,error:{}", err);
+                        throw new GlobalCustomException(result.getMessage());
+                    }else if (data.size() == 1) {
+                        // 将 data 数组中的 Base64 编码字符串转换为 byte[]
+                        inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data.get(0)));
+                    }else {
+                        // 将 data 数组中的 Base64 编码字符串转换为 byte[]
+                        byte[] bytes = IoUtils.toByteArray(data.stream().map(str -> Base64.getDecoder().decode(str)).map(ByteArrayInputStream::new).collect(Collectors.toList()));
+                        inputStream = new ByteArrayInputStream(bytes);
+                    }
                 }
             }
         } else {

@@ -30,14 +30,15 @@ public class NacosUtils {
      * @return
      */
     public static String getUrl(String serviceId, String instanceId, String prefix, String path) {
-        String urlFormat = "http://%s:%s/" + prefix + "/" + path;
+        String instanceIdFormat = "%s:%s";
+        String urlFormat = "http://" + instanceIdFormat + "/" + prefix + "/" + path;
         urlFormat = urlFormat.replace("//", "/").replace("//", "/").replace(":/", "://");
         String url = null;
         NacosDiscoveryClient discoveryClient = SpringUtil.getBean(NacosDiscoveryClient.class);
 
         List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceId);
         ServiceInstance serviceInstance = serviceInstances.stream()
-                .filter(instance -> ObjectUtil.isNotEmpty(instanceId) || ObjectUtil.equals(instanceId, instance.getInstanceId()))
+                .filter(instance -> ObjectUtil.isNotEmpty(instanceId) && ObjectUtil.equals(instanceId, String.format(instanceIdFormat, instance.getHost(), instance.getPort())))
                 .findFirst().orElse(null);
         if (serviceInstance != null) {
             String host = serviceInstance.getHost();
