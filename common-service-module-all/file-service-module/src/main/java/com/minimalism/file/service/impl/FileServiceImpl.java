@@ -435,8 +435,9 @@ public class FileServiceImpl implements FileService {
         if (isFile) {
             //文件
             if ((!notBlank) || !fileName.startsWith(folder)) {
-                fileName = folder + fileName;
+                fileName = folder + (notBlank ? fileName : StrUtil.EMPTY);
             }
+            fileName = fileName.endsWith(OSConfig.separator) ? fileName + chunkNumber + Constants.PART_SUFFIX : fileName + OSConfig.separator + chunkNumber + Constants.PART_SUFFIX;
             File file = FileUtils.newFile(fileName);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件不存在");
