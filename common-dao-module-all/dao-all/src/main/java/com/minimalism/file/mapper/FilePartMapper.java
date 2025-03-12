@@ -1,7 +1,6 @@
 package com.minimalism.file.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.minimalism.abstractinterface.mapper.MpMapper;
 import com.minimalism.file.domain.FilePart;
 
 import java.util.List;
@@ -12,11 +11,11 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * @Author yan
- * @Date 2025/3/6 15:27:40
+ * @Date 2025/3/12 22:58:05
  * @Description
  */
 @Mapper
-public interface FilePartMapper extends MpMapper<FilePart> {
+public interface FilePartMapper extends BaseMapper<FilePart> {
     int updateBatch(@Param("list") List<FilePart> list);
 
     int updateBatchUseMultiQuery(@Param("list") List<FilePart> list);

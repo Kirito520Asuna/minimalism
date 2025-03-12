@@ -4,11 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.minimalism.config.OSConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @Author yan
- * @Date 2025/3/6 15:27:40
+ * @Date 2025/3/12 22:58:05
  * @Description
  */
 
@@ -100,7 +97,14 @@ public class FilePart implements Serializable {
      */
     @TableField(value = "os_type")
     @Schema(description = "操作系统类型 linux,win,mac")
-    private String osType = OSConfig.os;
+    private String osType;
+
+    /**
+     * 上传目录
+     */
+    @TableField(value = "upload_dir")
+    @Schema(description = "上传目录")
+    private String uploadDir;
 
     private static final long serialVersionUID = 1L;
 
@@ -123,4 +127,6 @@ public class FilePart implements Serializable {
     public static final String COL_MERGE_DELETE = "merge_delete";
 
     public static final String COL_OS_TYPE = "os_type";
+
+    public static final String COL_UPLOAD_DIR = "upload_dir";
 }

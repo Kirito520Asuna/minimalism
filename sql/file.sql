@@ -32,6 +32,7 @@ create table `file_part`
     `url`            varchar(255) default null comment '资源路径',
     `local_resource` varchar(255) default null comment '本地资源路径',
     `is_local`       tinyint(1)   default 0 comment '是否本地资源',
+    `upload_dir`     varchar(255) default null comment '上传目录',
 
     `part_size`      bigint       default 0 comment '分片大小',
     `part_sort`      int          default 0 comment '分片顺序',
@@ -43,3 +44,6 @@ create table `file_part`
 #
 # ALTER TABLE `file_part`
 #     ADD COLUMN os_type VARCHAR(20) DEFAULT 'linux' comment '操作系统类型 linux,win,mac';
+
+ ALTER TABLE `file_part`
+         ADD COLUMN  `upload_dir` VARCHAR(255) DEFAULT null comment '上传目录';
