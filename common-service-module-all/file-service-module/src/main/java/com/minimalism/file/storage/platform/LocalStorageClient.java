@@ -145,6 +145,15 @@ public class LocalStorageClient implements LocalClient {
     }
 
     @Override
+    public FilePart bulidFilePart(String identifier, int chunkNumber, String url, Boolean local, InputStream inputStream) {
+        FilePart filePart = LocalClient.super.bulidFilePart(identifier, chunkNumber, url, local, inputStream);
+        if (filePart.getLocal()){
+            filePart.setUploadDir(LocalOSSUtils.getUploadDir());
+        }
+        return filePart;
+    }
+
+    @Override
     public FilePart uploadShardingChunkNumber(String bucketName, int chunkNumber, String identifier, InputStream inputStream) {
         LocalClient.super.uploadShardingChunkNumber(bucketName, chunkNumber, identifier, inputStream);
         String partFileLocalUrl = LocalOSSUtils.splitChunkNumberFileLocal(chunkNumber, identifier, inputStream);
