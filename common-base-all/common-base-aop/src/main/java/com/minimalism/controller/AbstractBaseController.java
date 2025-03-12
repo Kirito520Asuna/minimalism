@@ -34,9 +34,4 @@ public interface AbstractBaseController extends AbstractBean {
     default <T> Result<ResultPage<T>> listToPage(List<T> list) {
         return ok(ResultPage.listToPage(list));
     }
-
-    default <T> T getBean(Class<T> clazz) {
-        return SpringUtil.getBean(clazz);
-    }
-
 }

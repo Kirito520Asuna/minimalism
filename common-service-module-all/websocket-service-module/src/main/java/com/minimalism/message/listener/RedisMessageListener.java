@@ -6,6 +6,8 @@ import com.minimalism.constant.file.FileConstant;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.service.MessageService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +20,8 @@ import java.util.Map;
  * @Date 2025/2/5 13:12:46
  * @Description
  */
-@Component
+@Configuration
+@ConditionalOnBean(RedisTemplate.class)
 public class RedisMessageListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {

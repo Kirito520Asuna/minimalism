@@ -38,6 +38,9 @@ public interface AbstractBean {
                 .setLogger(LoggerFactory.getLogger(this.getClass()));
         return logBean;
     }
+    default <T> T getBean(Class<T> clazz) {
+        return SpringUtil.getBean(clazz);
+    }
 
     @JsonIgnore
     default Logger getLogger() {

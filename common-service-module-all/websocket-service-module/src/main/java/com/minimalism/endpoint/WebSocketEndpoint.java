@@ -7,6 +7,7 @@ import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.domain.Message;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;
+import com.minimalism.utils.NacosUtils;
 import com.minimalism.utils.bean.CustomBeanUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -37,8 +38,7 @@ public class WebSocketEndpoint implements AbstractBean {
     // 静态依赖注入
     @Resource
     private RedisTemplate<String, String> redisTemplate = getRedisTemplate();
-    @Resource
-    private NacosDiscoveryProperties nacosDiscoveryProperties = getNacosDiscoveryProperties();
+
 
     // 当前实例ID（格式：ip:port）
 
@@ -59,16 +59,10 @@ public class WebSocketEndpoint implements AbstractBean {
     }
 
     public static String getInstanceId() {
-        NacosDiscoveryProperties nacosDiscoveryProperties = getNacosDiscoveryProperties();
-        return nacosDiscoveryProperties.getIp() + ":" + nacosDiscoveryProperties.getPort();
+        return NacosUtils.getInstanceId();
     }
-
     public static RedisTemplate getRedisTemplate() {
         return SpringUtil.getBean(RedisTemplate.class);
-    }
-
-    public static NacosDiscoveryProperties getNacosDiscoveryProperties() {
-        return SpringUtil.getBean(NacosDiscoveryProperties.class);
     }
 
     // --- WebSocket事件处理 ---
