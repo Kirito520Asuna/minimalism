@@ -20,11 +20,12 @@
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="upload_dir" jdbcType="VARCHAR" property="uploadDir" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
     file_id, url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, 
-    parent_id, create_by, create_time, update_by, update_time, remark
+    parent_id, create_by, create_time, update_by, update_time, remark, upload_dir
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated-->
@@ -103,6 +104,11 @@
       <trim prefix="remark = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.remark,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="upload_dir = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.uploadDir,jdbcType=VARCHAR}
         </foreach>
       </trim>
     </trim>
@@ -220,6 +226,13 @@
           </if>
         </foreach>
       </trim>
+      <trim prefix="upload_dir = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.uploadDir != null">
+            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.uploadDir,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
     </trim>
     where file_id in
     <foreach close=")" collection="list" item="item" open="(" separator=", ">
@@ -230,30 +243,30 @@
     <!--@mbg.generated-->
     insert into file_info
     (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
-      create_by, create_time, update_by, update_time, remark)
+      create_by, create_time, update_by, update_time, remark, upload_dir)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
         #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
         #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.local,jdbcType=BOOLEAN}, 
         #{item.parentId,jdbcType=BIGINT}, #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}, 
+        #{item.uploadDir,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertOrUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
     (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
-      create_by, create_time, update_by, update_time, remark)
+      create_by, create_time, update_by, update_time, remark, upload_dir)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
         #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
         #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.local,jdbcType=BOOLEAN}, 
         #{item.parentId,jdbcType=BIGINT}, #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}, 
+        #{item.uploadDir,jdbcType=VARCHAR})
     </foreach>
     on duplicate key update 
     url=values(url),
@@ -270,7 +283,8 @@
     create_time=values(create_time),
     update_by=values(update_by),
     update_time=values(update_time),
-    remark=values(remark)
+    remark=values(remark),
+    upload_dir=values(upload_dir)
   </insert>
   <delete id="deleteByPrimaryKeyIn">
     <!--@mbg.generated-->
@@ -329,6 +343,9 @@
         <if test="item.remark != null">
           remark = #{item.remark,jdbcType=VARCHAR},
         </if>
+        <if test="item.uploadDir != null">
+          upload_dir = #{item.uploadDir,jdbcType=VARCHAR},
+        </if>
       </set>
       where file_id = #{item.fileId,jdbcType=BIGINT}
     </foreach>
@@ -337,7 +354,7 @@
     <!--@mbg.generated-->
     insert into file_info
     (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
-      create_by, create_time, update_by, update_time, remark)
+      create_by, create_time, update_by, update_time, remark, upload_dir)
     values
     <foreach collection="list" item="item" separator=",">
       (
@@ -469,7 +486,16 @@
       </choose>
       <choose>
         <when test="item.remark != null">
-          #{item.remark,jdbcType=VARCHAR}
+          #{item.remark,jdbcType=VARCHAR},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.uploadDir != null">
+          #{item.uploadDir,jdbcType=VARCHAR}
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -501,6 +527,7 @@
       update_by,
       update_time,
       remark,
+      upload_dir,
     </trim>
     values
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -522,6 +549,7 @@
       #{updateBy,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP},
       #{remark,jdbcType=VARCHAR},
+      #{uploadDir,jdbcType=VARCHAR},
     </trim>
     on duplicate key update 
     <trim suffixOverrides=",">
@@ -543,6 +571,7 @@
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
+      upload_dir = #{uploadDir,jdbcType=VARCHAR},
     </trim>
   </insert>
   <insert id="insertOnDuplicateUpdateSelective" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
@@ -597,6 +626,9 @@
       <if test="remark != null">
         remark,
       </if>
+      <if test="uploadDir != null">
+        upload_dir,
+      </if>
     </trim>
     values
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -648,6 +680,9 @@
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="uploadDir != null">
+        #{uploadDir,jdbcType=VARCHAR},
+      </if>
     </trim>
     on duplicate key update 
     <trim suffixOverrides=",">
@@ -698,6 +733,9 @@
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadDir != null">
+        upload_dir = #{uploadDir,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

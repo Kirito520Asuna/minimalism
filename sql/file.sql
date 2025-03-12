@@ -12,6 +12,7 @@ create table `file_info`
     `type`        varchar(10)  default null COMMENT '文件展示类型，非后缀名',
     `is_dir`      tinyint(1)   default null COMMENT '是否目录',
     `is_local`    tinyint(1)   default 0 comment '是否本地资源',
+    `upload_dir`     varchar(255) default null comment '上传目录',
     `parent_id`   bigint       default null,
 
     `create_by`   varchar(64)  default '' comment '创建者',

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.minimalism.pojo.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @Author yan
- * @Date 2025/3/6 15:28:04
+ * @Date 2025/3/12 23:24:55
  * @Description
  */
 
@@ -23,8 +24,9 @@ import lombok.experimental.SuperBuilder;
  * 文件信息表
  */
 @Schema(description = "文件信息表")
-@Data @SuperBuilder
+@Data
 @Accessors(chain = true)
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "file_info")
@@ -103,6 +105,13 @@ public class FileInfo extends BaseEntity implements Serializable {
     @Schema(description = "")
     private Long parentId;
 
+    /**
+     * 上传目录
+     */
+    @TableField(value = "upload_dir")
+    @Schema(description = "上传目录")
+    private String uploadDir;
+
     private static final long serialVersionUID = 1L;
 
     public static final String COL_FILE_ID = "file_id";
@@ -126,4 +135,5 @@ public class FileInfo extends BaseEntity implements Serializable {
     public static final String COL_IS_LOCAL = "is_local";
 
     public static final String COL_PARENT_ID = "parent_id";
+    public static final String COL_UPLOAD_DIR = "upload_dir";
 }

@@ -22,6 +22,7 @@ import com.minimalism.result.Result;
 import com.minimalism.utils.bean.CustomBeanUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
+import com.minimalism.utils.oss.LocalOSSUtils;
 import com.minimalism.vo.FileUploadVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -64,7 +65,8 @@ public class FileController implements AbstractBaseController {
 
         FileInfo fileInfo = new FileInfo();
         CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
-        fileInfo.setName(FileUtil.mainName(fileInfo.getFileName()));
+        fileInfo.setName(FileUtil.mainName(fileInfo.getFileName()))
+                .setUploadDir(LocalOSSUtils.getUploadDir());
         fileInfoService.save(fileInfo);
 
         int chunkSize = 10 * 1024 * 1024; // 每个分片大小为10MB

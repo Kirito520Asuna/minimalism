@@ -1,5 +1,6 @@
 package com.minimalism.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +21,11 @@ public class PartVo {
     @Schema(description = "url")
     private String url;
     @Schema(description = "本地资源")
+    @JsonIgnore
     private String localResource;
+    @Schema(description = "服务器所在上传文件夹")
+    @JsonIgnore
+    private String uploadDir;
     @Schema(description = "文件唯一值")
     private String identifier;
     @Schema(description = "是否本地资源")

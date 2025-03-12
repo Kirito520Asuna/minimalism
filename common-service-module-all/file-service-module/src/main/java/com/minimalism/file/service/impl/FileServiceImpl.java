@@ -61,7 +61,7 @@ public class FileServiceImpl implements FileService {
         if (ObjectUtils.defaultIfEmpty(local, Boolean.FALSE)) {
             String path = partVo.getLocalResource();
             if (FileUtils.isFile(path)) {
-                String uploadDir = LocalOSSUtils.getUploadDir();
+                String uploadDir = partVo.getUploadDir();
                 int index = 0;
                 if (path.startsWith(uploadDir)) {
                     index = path.indexOf(uploadDir) + uploadDir.length();
