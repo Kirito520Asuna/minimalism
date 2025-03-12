@@ -144,11 +144,11 @@ public class FileServiceImpl implements FileService {
         //移除其他实例服务器 todo
         // xxx
 
-        String uploadDir = LocalOSSUtils.getUploadDir();
+        //String uploadDir = LocalOSSUtils.getUploadDir();
         String cuInstanceId = FileUploadConfig.getInstanceId();
 
         list.stream().filter(PartVo::getLocal).forEach(part -> {
-
+            String uploadDir = part.getUploadDir();
             String instanceId = part.getInstanceId();
             String localResource = part.getLocalResource();
 
@@ -178,7 +178,7 @@ public class FileServiceImpl implements FileService {
                 params.put("identifier", identifier);
                 params.put("folder", folder);
                 params.put("chunkNumber", chunkNumber);
-                String json = OkHttpUtils.delete(url, StrUtil.EMPTY_JSON);
+                String json = OkHttpUtils.delete(url, params);
                 Result result = JSONUtil.toBean(json, Result.class);
                 if (!result.validateOk()) {
                     error("删除分片失败,error:{}", result.getMessage());
