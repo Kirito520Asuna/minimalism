@@ -7,6 +7,7 @@ import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.file.FileConstant;
 import com.minimalism.utils.NacosUtils;
 import com.minimalism.utils.file.FileUtils;
+import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -121,4 +122,8 @@ public class FileUploadConfig implements AbstractBean {
         prefix = prefix + fileControllerPath;
         return NacosUtils.getUrl(serviceId, instanceId, prefix, path);
     }
+
+   public static boolean isCurrentInstance(String instanceId){
+        return ObjectUtils.equals(instanceId, FileUploadConfig.instanceId);
+   }
 }
