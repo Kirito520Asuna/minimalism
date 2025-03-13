@@ -232,7 +232,7 @@ public class HttpUtils {
         sendMap.put("headers", headers);
         sendMap.put("params", params);
         sendMap.put("body", body);
-        log.info("[SendHttp]::[START]==>[info]:[{}]<==[END]",sendMap);
+        log.info("[SendHttp]::[START]==>[info]:[{}]<==[END]",JSONUtil.toJsonStr(sendMap));
         url = urlJoin(url, params);
         log.info("[SendHttp]::[splicingTogether]==>url:{}<==[END]",url);
         Request.Builder builder = addHeader(new Request.Builder(), headers).url(url);
