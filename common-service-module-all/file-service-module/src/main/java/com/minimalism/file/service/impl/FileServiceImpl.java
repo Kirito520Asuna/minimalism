@@ -91,6 +91,7 @@ public class FileServiceImpl implements FileService {
                         throw new GlobalCustomException(e.getMessage());
                     } catch (GlobalCustomException e) {
                         error("获取分片失败,error:{}", e.getMessage());
+                        throw e;
                     }
                 }
             }
