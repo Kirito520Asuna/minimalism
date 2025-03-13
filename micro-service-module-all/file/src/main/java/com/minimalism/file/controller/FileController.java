@@ -14,6 +14,7 @@ import com.minimalism.aop.log.SysLog;
 import com.minimalism.controller.AbstractBaseController;
 import com.minimalism.dto.FileUpDto;
 import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.service.FileInfoService;
 import com.minimalism.file.service.FilePartService;
@@ -69,7 +70,7 @@ public class FileController implements AbstractBaseController {
                 .setUploadDir(LocalOSSUtils.getUploadDir());
         fileInfoService.save(fileInfo);
 
-        int chunkSize = 10 * 1024 * 1024; // 每个分片大小为10MB
+        int chunkSize = FileUploadConfig.maxChunkSize; // 每个分片大小为10MB
         //chunkSize = 10485760;
         Long size = fileInfo.getSize();
         Long fileId = fileInfo.getFileId();
@@ -101,6 +102,7 @@ public class FileController implements AbstractBaseController {
         }
 
         try {
+            long fileSize = file.getSize();
             InputStream inputStream = file.getInputStream();
             boolean uploadChunk = fileService.uploadChunk(inputStream, identifier, chunkNumber, totalChunks, fileId);
             if (!uploadChunk) {
