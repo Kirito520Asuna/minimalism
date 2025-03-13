@@ -430,13 +430,16 @@ public class FileServiceImpl implements FileService {
             if (!fileName.startsWith(uploadDir)) {
                 filePath = uploadDir + fileName;
             }
-            File file = FileUtils.newFile(filePath);
-            if (!file.exists()) {
-                throw new GlobalCustomException("文件不存在");
+            String instanceId = LocalOSSUtils.getRedisInstanceId(filePath);
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
+                File file = FileUtils.newFile(filePath);
+                if (!file.exists()) {
+                    throw new GlobalCustomException("文件不存在");
+                }
+                byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
+                list.add(bytes);
+                return list;
             }
-            byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
-            list.add(bytes);
-            return list;
         }
 
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
@@ -447,28 +450,34 @@ public class FileServiceImpl implements FileService {
         String two = separator + separator;
         fileDir = (fileDir).replace(two, separator).replace(two, separator);
         if (isFile) {
-            //文件
-            filePath = fileDir;
-            if (!filePath.endsWith(separator)) {
-                filePath = filePath + separator;
+            String instanceId = LocalOSSUtils.getRedisInstanceId(filePath);
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
+                //文件
+                filePath = fileDir;
+                if (!filePath.endsWith(separator)) {
+                    filePath = filePath + separator;
+                }
+                if (StrUtil.isNotBlank(identifier)) {
+                    filePath = filePath + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
+                }
+                filePath = filePath.replace(two, separator).replace(two, separator);
+                File file = FileUtils.newFile(filePath);
+                if (!file.exists()) {
+                    throw new GlobalCustomException("文件不存在");
+                }
+                byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
+                list.add(bytes);
             }
-            if (StrUtil.isNotBlank(identifier)) {
-                filePath = filePath + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
-            }
-            filePath = filePath.replace(two, separator).replace(two, separator);
-            File file = FileUtils.newFile(filePath);
-            if (!file.exists()) {
-                throw new GlobalCustomException("文件不存在");
-            }
-            byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
-            list.add(bytes);
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
-            //文件夹
-            File file = FileUtils.newFile(fileDir);
-            if (!file.exists()) {
-                throw new GlobalCustomException("文件夹不存在");
+            String instanceId = LocalOSSUtils.getRedisInstanceId(fileDir);
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
+                //文件夹
+                File file = FileUtils.newFile(fileDir);
+                if (!file.exists()) {
+                    throw new GlobalCustomException("文件夹不存在");
+                }
+                Arrays.stream(file.listFiles()).map(FileUtils::getInputStream).map(IoUtils::toByteArray).forEach(list::add);
             }
-            Arrays.stream(file.listFiles()).map(FileUtils::getInputStream).map(IoUtils::toByteArray).forEach(list::add);
         } else {
             throw new GlobalCustomException("非法请求");
         }
