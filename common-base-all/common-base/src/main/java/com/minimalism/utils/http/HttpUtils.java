@@ -3,6 +3,7 @@ package com.minimalism.utils.http;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
+import com.google.common.collect.Maps;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -225,9 +226,15 @@ public class HttpUtils {
      */
     @SneakyThrows
     public static String sendHttpRequest(HttpMethod httpMethod, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
-        log.info("sendHttpRequest START==> \nurl:{}\nheaders:{}\nparams:{}\nbody:{}\n <== END",url,headers,params,body);
+        Map<String, Object> sendMap = Maps.newLinkedHashMap();
+        sendMap.put("httpMethod", httpMethod);
+        sendMap.put("url", url);
+        sendMap.put("headers", headers);
+        sendMap.put("params", params);
+        sendMap.put("body", body);
+        log.info("[SendHttp]::[START]==>[info]:[{}]<==[END]",sendMap);
         url = urlJoin(url, params);
-        log.info("sendHttpRequest splicingTogether==> \nurl :{}\n <== END",url);
+        log.info("[SendHttp]::[splicingTogether]==>url:{}<==[END]",url);
         Request.Builder builder = addHeader(new Request.Builder(), headers).url(url);
         if (ObjectUtils.equals(HttpMethod.GET, httpMethod)) {
             builder.get();
@@ -250,8 +257,10 @@ public class HttpUtils {
         Request request = builder.build();
         OkHttpClient client = new OkHttpClient();
         Response response = client.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            log.error("Error: code={},message={}", response.code(), response.message());
+        if (response.isSuccessful()) {
+            log.info("[SendHttp]::[Success]");
+        }else {
+            log.error("[SendHttp]::[Error]:[code={},message={}]", response.code(), response.message());
         }
         String responseData = response.body().string();
         return responseData;
