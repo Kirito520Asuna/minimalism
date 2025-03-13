@@ -19,6 +19,7 @@ import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.result.Result;
 import com.minimalism.utils.file.FileUtils;
+import com.minimalism.utils.http.FileHelper;
 import com.minimalism.utils.http.OkHttpUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
@@ -438,10 +439,12 @@ public class FileServiceImpl implements FileService {
                 }
                 byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
                 list.add(bytes);
-                return list;
+            } else {
+                info("文件不在本机，正在获取...");
+                list.addAll(FileHelper.getBytesByRemote(instanceId, fileName, folder, identifier, chunkNumber));
             }
+            return list;
         }
-
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
         String separator = OSConfig.separator;
         if (!fileDir.startsWith(uploadDir)) {
@@ -467,6 +470,9 @@ public class FileServiceImpl implements FileService {
                 }
                 byte[] bytes = IoUtils.toByteArray(FileUtils.getInputStream(file));
                 list.add(bytes);
+            } else {
+                info("文件不在本机，正在获取...");
+                list.addAll(FileHelper.getBytesByRemote(instanceId, fileName, folder, identifier, chunkNumber));
             }
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             String instanceId = LocalOSSUtils.getRedisInstanceId(fileDir);
@@ -477,6 +483,9 @@ public class FileServiceImpl implements FileService {
                     throw new GlobalCustomException("文件夹不存在");
                 }
                 Arrays.stream(file.listFiles()).map(FileUtils::getInputStream).map(IoUtils::toByteArray).forEach(list::add);
+            } else {
+                info("文件不在本机，正在获取...");
+                list.addAll(FileHelper.getBytesByRemote(instanceId, fileName, folder, identifier, chunkNumber));
             }
         } else {
             throw new GlobalCustomException("非法请求");
@@ -486,7 +495,6 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean delByteByLocal(String fileName, String folder, String identifier, Integer chunkNumber) {
-
         String uploadDir = LocalOSSUtils.getUploadDir();
         boolean notBlank = StrUtil.isNotBlank(fileName);
         String filePath = fileName;
@@ -495,9 +503,14 @@ public class FileServiceImpl implements FileService {
             if (!fileName.startsWith(uploadDir)) {
                 filePath = uploadDir + fileName;
             }
-            File file = FileUtils.newFile(filePath);
-            FileUtils.del(file);
-            LocalOSSUtils.delRedisFile(filePath);
+            String instanceId = LocalOSSUtils.getRedisInstanceId(filePath);
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
+                FileUtils.del(filePath);
+                LocalOSSUtils.delRedisFile(filePath);
+            } else {
+                info("文件不在本机，正在删除...");
+                FileHelper.delBytesByRemote(instanceId, fileName, folder, identifier, chunkNumber);
+            }
         }
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
         String separator = OSConfig.separator;
@@ -512,26 +525,37 @@ public class FileServiceImpl implements FileService {
             if (!filePath.endsWith(separator)) {
                 filePath = filePath + separator;
             }
-
             if (StrUtil.isNotBlank(identifier)) {
                 filePath = filePath + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
             }
             filePath = filePath.replace(two, separator).replace(two, separator);
-            File file = FileUtils.newFile(filePath);
-            FileUtils.del(file);
-            LocalOSSUtils.delRedisFile(filePath);
+            String instanceId = LocalOSSUtils.getRedisInstanceId(filePath);
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
+                File file = FileUtils.newFile(filePath);
+                FileUtils.del(file);
+                LocalOSSUtils.delRedisFile(filePath);
 
-            String dir = FileUtils.getName(filePath);
-            dir = StrUtil.subBefore(filePath, dir, true);
-            List<File> files = FileUtils.loopFiles(dir);
-            if (files.size() == 0) {
-                FileUtils.del(dir);
-                LocalOSSUtils.delRedisFile(dir);
+                String dir = FileUtils.getName(filePath);
+                dir = StrUtil.subBefore(filePath, dir, true);
+                List<File> files = FileUtils.loopFiles(dir);
+                if (files.size() == 0) {
+                    FileUtils.del(dir);
+                    LocalOSSUtils.delRedisFile(dir);
+                }
+            } else {
+                info("文件不在本机，正在删除...");
+                FileHelper.delBytesByRemote(instanceId, fileName, folder, identifier, chunkNumber);
             }
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
-            //文件夹
-            FileUtils.del(fileDir);
-            LocalOSSUtils.delRedisFile(fileDir);
+            String instanceId = LocalOSSUtils.getRedisInstanceId(fileDir);
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
+                //文件夹
+                FileUtils.del(fileDir);
+                LocalOSSUtils.delRedisFile(fileDir);
+            } else {
+                info("文件不在本机，正在删除...");
+                FileHelper.delBytesByRemote(instanceId, fileName, folder, identifier, chunkNumber);
+            }
         } else {
             throw new GlobalCustomException("非法操作");
         }
