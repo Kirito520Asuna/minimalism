@@ -2,6 +2,7 @@ package com.minimalism.file.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Maps;
@@ -12,6 +13,7 @@ import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
+import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.service.FileInfoService;
 import com.minimalism.file.service.FilePartService;
 import com.minimalism.file.service.FileService;
@@ -50,12 +52,6 @@ public class FileServiceImpl implements FileService {
     private FilePartService filePartService;
     @Resource
     private FileInfoService fileInfoService;
-
-    @Override
-    public List<PartVo> getPartList(String identifier, Long fileId) {
-        return filePartService.getPartList(identifier, fileId);
-    }
-
     @Override
     public PartVo partToInputStream(PartVo partVo) {
         InputStream inputStream = null;
@@ -73,12 +69,11 @@ public class FileServiceImpl implements FileService {
                 String folder = path.substring(index, endIndex);
                 String identifier = partVo.getIdentifier();
                 if (folder.contains(identifier)) {
-                    String separator = OSConfig.separator;
+                    //String separator = OSConfig.separator;
                     folder = StrUtil.subBefore(folder, identifier, true);
                 }
                 instanceId = LocalOSSUtils.getRedisInstanceId(path);
-                String cuInstanceId = FileUploadConfig.getInstanceId();
-                if (ObjectUtils.equals(instanceId, cuInstanceId)) {
+                if (FileUploadConfig.isCurrentInstance(instanceId)) {
                     inputStream = FileUtils.getInputStream(path);
                 } else {
                     Integer chunkNumber = Integer.valueOf(FileUtils.mainName(path));
@@ -107,6 +102,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public List<PartVo> getPartList(String identifier, Long fileId) {
+        return filePartService.getPartList(identifier, fileId);
+    }
+
+    @Override
     public List<InputStream> getPartInputStreamList(String identifier, Long fileId) {
         List<PartVo> partList = getPartList(identifier, fileId).stream().map(o -> o.setIdentifier(identifier)).collect(Collectors.toList());
         List<InputStream> inputStreamList = partList.stream()
@@ -114,61 +114,6 @@ public class FileServiceImpl implements FileService {
                 .collect(Collectors.toList());
 
         return inputStreamList;
-    }
-
-    @Override
-    public ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId) {
-
-        List<PartVo> partList = getPartList(identifier, fileId).stream().map(o -> o.setIdentifier(identifier)).collect(Collectors.toList());
-        List<PartVo> list = partList.stream()
-                .map(this::partToInputStream).collect(Collectors.toList());
-        ByteArrayOutputStream out = IoUtils.merge(list.stream().map(PartVo::getInputStream).collect(Collectors.toList()));
-        //移除其他实例服务器
-        list.stream().filter(PartVo::getLocal).forEach(part -> {
-            String uploadDir = part.getUploadDir();
-            String instanceId = part.getInstanceId();
-            String localResource = part.getLocalResource();
-
-            if (FileUploadConfig.isCurrentInstance(instanceId)) {
-                FileUtils.del(localResource);
-                LocalOSSUtils.delRedisFile(localResource);
-                filePartService.remove(Wrappers.lambdaQuery(FilePart.class)
-                        .eq(FilePart::getPartCode, identifier)
-                        .eq(FilePart::getLocalResource, localResource));
-            } else {
-                int index = 0;
-                if (localResource.startsWith(uploadDir)) {
-                    index = localResource.indexOf(uploadDir) + uploadDir.length();
-                }
-                int endIndex = localResource.indexOf(FileUtils.getName(localResource));
-                String folder = localResource.substring(index, endIndex);
-
-                if (folder.contains(identifier)) {
-                    folder = StrUtil.subBefore(folder, identifier, true);
-                }
-                Integer chunkNumber = null;
-                if (FileUtils.isFile(localResource)) {
-                    chunkNumber = Integer.valueOf(FileUtils.mainName(localResource));
-                }
-                try {
-                    FileHelper.delBytesByRemote(instanceId, identifier, folder, identifier, chunkNumber);
-                } catch (GlobalCustomException e) {
-                    error("删除分片失败,error:{}", e.getMessage());
-                    //使用定时任务兜底
-                    filePartService.update(Wrappers.lambdaUpdate(FilePart.class)
-                            .set(FilePart::getMergeDelete, Boolean.TRUE)
-                            .eq(FilePart::getPartCode, identifier));
-                }
-            }
-        });
-        return out;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean mergeOk(String identifier, Long fileId) {
-        filePartService.removePart(identifier, fileId);
-        return false;
     }
 
     @Override
@@ -188,12 +133,34 @@ public class FileServiceImpl implements FileService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean uploadChunk(InputStream inputStream, String identifier, int chunkNumber, int totalChunks, Long fileId) {
-        IFileStorageClient client = FileFactory.getClient(StorageType.local);
+        //上传到云端
+        StorageType type = SpringUtil.getBean(FileProperties.class).getType();
+        IFileStorageClient client = FileFactory.getClient(type);
         FilePart filePart = client.uploadShardingChunkNumber(chunkNumber, identifier, inputStream).setFileId(fileId);
         filePartService.save(filePart);
         return true;
     }
 
+
+    public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
+        //上传到云端
+        StorageType storageType = SpringUtil.getBean(FileProperties.class).getType();
+        IFileStorageClient client = FileFactory.getClient(storageType);
+        //FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
+        FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier);
+        return fileInfo.setLocal(Boolean.TRUE).setName(FileUtils.mainName(fileInfo.getFileName()));
+    }
+
+    @Override
+    public boolean uploadMergeChunks(String identifier, int totalChunks, String fileName) {
+        //上传到云端
+        StorageType storageType = SpringUtil.getBean(FileProperties.class).getType();
+        IFileStorageClient client = FileFactory.getClient(storageType);
+        List<InputStream> inputStreams = client.getInputStreams(identifier, totalChunks);
+        //client.
+
+        return false;
+    }
     @SneakyThrows
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -281,6 +248,7 @@ public class FileServiceImpl implements FileService {
         }
         return true;
     }
+
 
     /**
      * 合并分片
@@ -373,22 +341,61 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
-        IFileStorageClient client = FileFactory.getClient(StorageType.local);
-        //FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
-        FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier);
-        return fileInfo.setLocal(Boolean.TRUE).setName(FileUtils.mainName(fileInfo.getFileName()));
+    @Override
+    public ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId) {
+
+        List<PartVo> partList = getPartList(identifier, fileId).stream().map(o -> o.setIdentifier(identifier)).collect(Collectors.toList());
+        List<PartVo> list = partList.stream()
+                .map(this::partToInputStream).collect(Collectors.toList());
+        ByteArrayOutputStream out = IoUtils.merge(list.stream().map(PartVo::getInputStream).collect(Collectors.toList()));
+        //移除其他实例服务器
+        list.stream().filter(PartVo::getLocal).forEach(part -> {
+            String uploadDir = part.getUploadDir();
+            String instanceId = part.getInstanceId();
+            String localResource = part.getLocalResource();
+
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
+                FileUtils.del(localResource);
+                LocalOSSUtils.delRedisFile(localResource);
+                filePartService.remove(Wrappers.lambdaQuery(FilePart.class)
+                        .eq(FilePart::getPartCode, identifier)
+                        .eq(FilePart::getLocalResource, localResource));
+            } else {
+                int index = 0;
+                if (localResource.startsWith(uploadDir)) {
+                    index = localResource.indexOf(uploadDir) + uploadDir.length();
+                }
+                int endIndex = localResource.indexOf(FileUtils.getName(localResource));
+                String folder = localResource.substring(index, endIndex);
+
+                if (folder.contains(identifier)) {
+                    folder = StrUtil.subBefore(folder, identifier, true);
+                }
+                Integer chunkNumber = null;
+                if (FileUtils.isFile(localResource)) {
+                    chunkNumber = Integer.valueOf(FileUtils.mainName(localResource));
+                }
+                try {
+                    FileHelper.delBytesByRemote(instanceId, identifier, folder, identifier, chunkNumber);
+                } catch (GlobalCustomException e) {
+                    error("删除分片失败,error:{}", e.getMessage());
+                    //使用定时任务兜底
+                    filePartService.update(Wrappers.lambdaUpdate(FilePart.class)
+                            .set(FilePart::getMergeDelete, Boolean.TRUE)
+                            .eq(FilePart::getPartCode, identifier));
+                }
+            }
+        });
+        return out;
     }
+
 
     @Override
-    public boolean uploadMergeChunks(String identifier, int totalChunks, String fileName) {
-        IFileStorageClient client = FileFactory.getClient(StorageType.local);
-        List<InputStream> inputStreams = client.getInputStreams(identifier, totalChunks);
-        //client.
-
+    @Transactional(rollbackFor = Exception.class)
+    public boolean mergeOk(String identifier, Long fileId) {
+        filePartService.removePart(identifier, fileId);
         return false;
     }
-
     @Override
     public List<byte[]> getByteByLocal(String fileName, String folder, String identifier, Integer chunkNumber) {
         List<byte[]> list = CollUtil.newArrayList();
