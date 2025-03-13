@@ -103,10 +103,10 @@ public class FileServiceImpl implements FileService {
                         String err = "文件不存在";
                         error("获取分片失败,error:{}", err);
                         throw new GlobalCustomException(result.getMessage());
-                    }else if (data.size() == 1) {
+                    } else if (data.size() == 1) {
                         // 将 data 数组中的 Base64 编码字符串转换为 byte[]
                         inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data.get(0)));
-                    }else {
+                    } else {
                         // 将 data 数组中的 Base64 编码字符串转换为 byte[]
                         byte[] bytes = IoUtils.toByteArray(data.stream().map(str -> Base64.getDecoder().decode(str)).map(ByteArrayInputStream::new).collect(Collectors.toList()));
                         inputStream = new ByteArrayInputStream(bytes);
@@ -421,14 +421,16 @@ public class FileServiceImpl implements FileService {
     public List<byte[]> getByteByLocal(String fileName, String folder, String identifier, Integer chunkNumber) {
         List<byte[]> list = CollUtil.newArrayList();
         String uploadDir = LocalOSSUtils.getUploadDir();
+        String filePath = fileName;
+        String fileDir = folder;
 
         boolean notBlank = StrUtil.isNotBlank(fileName);
 
         if (notBlank) {
             if (!fileName.startsWith(uploadDir)) {
-                fileName = uploadDir + fileName;
+                filePath = uploadDir + fileName;
             }
-            File file = FileUtils.newFile(fileName);
+            File file = FileUtils.newFile(filePath);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件不存在");
             }
@@ -438,26 +440,23 @@ public class FileServiceImpl implements FileService {
         }
 
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
-        if (!folder.startsWith(uploadDir)) {
-            folder = uploadDir + folder + OSConfig.separator;
-        }
         String separator = OSConfig.separator;
+        if (!fileDir.startsWith(uploadDir)) {
+            fileDir = uploadDir + fileDir + separator;
+        }
         String two = separator + separator;
-        folder = (folder).replace(two, separator).replace(two, separator);
+        fileDir = (fileDir).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            if ((!notBlank) || !fileName.startsWith(folder)) {
-                fileName = folder + (notBlank ? fileName : StrUtil.EMPTY);
+            filePath = fileDir;
+            if (!filePath.endsWith(separator)) {
+                filePath = filePath + separator;
             }
-            if (!fileName.endsWith(separator)) {
-                fileName = fileName + separator;
-            }
-
             if (StrUtil.isNotBlank(identifier)) {
-                fileName = fileName + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
+                filePath = filePath + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
             }
-            fileName = fileName.replace(two, separator).replace(two, separator);
-            File file = FileUtils.newFile(fileName);
+            filePath = filePath.replace(two, separator).replace(two, separator);
+            File file = FileUtils.newFile(filePath);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件不存在");
             }
@@ -465,7 +464,7 @@ public class FileServiceImpl implements FileService {
             list.add(bytes);
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             //文件夹
-            File file = FileUtils.newFile(folder);
+            File file = FileUtils.newFile(fileDir);
             if (!file.exists()) {
                 throw new GlobalCustomException("文件夹不存在");
             }
@@ -481,50 +480,49 @@ public class FileServiceImpl implements FileService {
 
         String uploadDir = LocalOSSUtils.getUploadDir();
         boolean notBlank = StrUtil.isNotBlank(fileName);
+        String filePath = fileName;
+        String fileDir = folder;
         if (notBlank) {
             if (!fileName.startsWith(uploadDir)) {
-                fileName = uploadDir + fileName;
+                filePath = uploadDir + fileName;
             }
-            File file = FileUtils.newFile(fileName);
+            File file = FileUtils.newFile(filePath);
             FileUtils.del(file);
-            LocalOSSUtils.delRedisFile(fileName);
+            LocalOSSUtils.delRedisFile(filePath);
         }
         boolean isFile = (!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isNotEmpty(chunkNumber);
-        if (!folder.startsWith(uploadDir)) {
-            folder = uploadDir + folder;
-        }
         String separator = OSConfig.separator;
+        if (!fileDir.startsWith(uploadDir)) {
+            fileDir = uploadDir + fileDir + separator;
+        }
         String two = separator + separator;
-        folder = (folder + separator).replace(two, separator).replace(two, separator);
+        fileDir = (fileDir + separator).replace(two, separator).replace(two, separator);
         if (isFile) {
             //文件
-            if ((!notBlank) || !fileName.startsWith(folder)) {
-                fileName = folder + (notBlank ? fileName : StrUtil.EMPTY);
-            }
-            if (!fileName.endsWith(separator)) {
-                fileName = fileName + separator;
+            filePath = fileDir;
+            if (!filePath.endsWith(separator)) {
+                filePath = filePath + separator;
             }
 
             if (StrUtil.isNotBlank(identifier)) {
-                fileName = fileName + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
+                filePath = filePath + identifier + separator + chunkNumber + Constants.PART_SUFFIX;
             }
-            fileName = fileName.replace(two, separator).replace(two, separator);
-            File file = FileUtils.newFile(fileName);
+            filePath = filePath.replace(two, separator).replace(two, separator);
+            File file = FileUtils.newFile(filePath);
             FileUtils.del(file);
-            LocalOSSUtils.delRedisFile(fileName);
+            LocalOSSUtils.delRedisFile(filePath);
 
-            String dir = FileUtils.getName(fileName);
-            FileUtils.newFile(StrUtil.subBefore(fileName, dir, true));
-            List<File> files = FileUtils.loopFiles(fileName);
+            String dir = FileUtils.getName(filePath);
+            dir = StrUtil.subBefore(filePath, dir, true);
+            List<File> files = FileUtils.loopFiles(dir);
             if (files.size() == 0) {
                 FileUtils.del(dir);
                 LocalOSSUtils.delRedisFile(dir);
             }
         } else if ((!notBlank) && StrUtil.isNotBlank(folder) && ObjectUtils.isEmpty(chunkNumber)) {
             //文件夹
-            File file = FileUtils.newFile(folder);
-            FileUtils.del(file);
-            LocalOSSUtils.delRedisFile(folder);
+            FileUtils.del(fileDir);
+            LocalOSSUtils.delRedisFile(fileDir);
         } else {
             throw new GlobalCustomException("非法操作");
         }
