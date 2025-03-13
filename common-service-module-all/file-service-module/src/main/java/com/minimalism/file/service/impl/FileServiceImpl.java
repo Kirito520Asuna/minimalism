@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Maps;
 import com.minimalism.config.OSConfig;
 import com.minimalism.constant.Constants;
+import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FileInfo;
@@ -80,37 +81,16 @@ public class FileServiceImpl implements FileService {
                 if (ObjectUtils.equals(instanceId, cuInstanceId)) {
                     inputStream = FileUtils.getInputStream(path);
                 } else {
-                    String url = FileUploadConfig.getUrlByte(instanceId);
-
                     Integer chunkNumber = Integer.valueOf(FileUtils.mainName(path));
-                    //String identifier,
-                    //String folder,
-                    //String fileName,
-                    //Integer chunkNumber
-                    Map<String, Object> params = Maps.newLinkedHashMap();
-                    params.put("identifier", identifier);
-                    params.put("folder", folder);
-                    params.put("chunkNumber", chunkNumber);
-                    //params.put("identifier", identifier);
-                    String json = OkHttpUtils.get(url, params);
-                    Result<List<String>> result = JSONUtil.toBean(json, Result.class);
-
-                    if (!result.validateOk()) {
-                        error("获取分片失败,error:{}", result.getMessage());
-                        throw new GlobalCustomException(result.getMessage());
-                    }
-                    List<String> data = result.getData();
-                    if (CollUtil.isEmpty(data)) {
-                        String err = "文件不存在";
-                        error("获取分片失败,error:{}", err);
-                        throw new GlobalCustomException(result.getMessage());
-                    } else if (data.size() == 1) {
-                        // 将 data 数组中的 Base64 编码字符串转换为 byte[]
-                        inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data.get(0)));
-                    } else {
-                        // 将 data 数组中的 Base64 编码字符串转换为 byte[]
-                        byte[] bytes = IoUtils.toByteArray(data.stream().map(str -> Base64.getDecoder().decode(str)).map(ByteArrayInputStream::new).collect(Collectors.toList()));
+                    try {
+                        List<byte[]> bytesByRemote = FileHelper.getBytesByRemote(instanceId, null, folder, identifier, chunkNumber);
+                        byte[] bytes = IoUtils.toByteArray(bytesByRemote.stream().map(ByteArrayInputStream::new).collect(Collectors.toList()));
                         inputStream = new ByteArrayInputStream(bytes);
+                    } catch (BusinessException e) {
+                        error("获取分片失败,文件不存在,error:{}", e.getMessage());
+                        throw new GlobalCustomException(e.getMessage());
+                    } catch (GlobalCustomException e) {
+                        error("获取分片失败,error:{}", e.getMessage());
                     }
                 }
             }
@@ -142,18 +122,13 @@ public class FileServiceImpl implements FileService {
         List<PartVo> list = partList.stream()
                 .map(this::partToInputStream).collect(Collectors.toList());
         ByteArrayOutputStream out = IoUtils.merge(list.stream().map(PartVo::getInputStream).collect(Collectors.toList()));
-        //移除其他实例服务器 todo
-        // xxx
-
-        //String uploadDir = LocalOSSUtils.getUploadDir();
-        String cuInstanceId = FileUploadConfig.getInstanceId();
-
+        //移除其他实例服务器
         list.stream().filter(PartVo::getLocal).forEach(part -> {
             String uploadDir = part.getUploadDir();
             String instanceId = part.getInstanceId();
             String localResource = part.getLocalResource();
 
-            if (ObjectUtils.equals(instanceId, cuInstanceId)) {
+            if (FileUploadConfig.isCurrentInstance(instanceId)) {
                 FileUtils.del(localResource);
                 LocalOSSUtils.delRedisFile(localResource);
                 filePartService.remove(Wrappers.lambdaQuery(FilePart.class)
@@ -174,15 +149,10 @@ public class FileServiceImpl implements FileService {
                 if (FileUtils.isFile(localResource)) {
                     chunkNumber = Integer.valueOf(FileUtils.mainName(localResource));
                 }
-                String url = FileUploadConfig.getUrlDel(instanceId);
-                Map<String, Object> params = Maps.newLinkedHashMap();
-                params.put("identifier", identifier);
-                params.put("folder", folder);
-                params.put("chunkNumber", chunkNumber);
-                String json = OkHttpUtils.delete(url, params);
-                Result result = JSONUtil.toBean(json, Result.class);
-                if (!result.validateOk()) {
-                    error("删除分片失败,error:{}", result.getMessage());
+                try {
+                    FileHelper.delBytesByRemote(instanceId, identifier, folder, identifier, chunkNumber);
+                } catch (GlobalCustomException e) {
+                    error("删除分片失败,error:{}", e.getMessage());
                     //使用定时任务兜底
                     filePartService.update(Wrappers.lambdaUpdate(FilePart.class)
                             .set(FilePart::getMergeDelete, Boolean.TRUE)

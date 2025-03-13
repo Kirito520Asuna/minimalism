@@ -2,6 +2,7 @@ package com.minimalism.utils.http;
 
 import cn.hutool.core.collection.CollUtil;
 import com.google.common.collect.Maps;
+import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.exception.FileException;
@@ -41,7 +42,7 @@ public class FileHelper {
                 Base64.Decoder decoder = Base64.getDecoder();
                 bytes = resultData.stream().map(decoder::decode).collect(Collectors.toList());
             }else {
-                throw new FileException("文件不存在");
+                throw new BusinessException("文件不存在");
             }
         }else {
             throw new FileException("系统繁忙");
