@@ -59,10 +59,11 @@ public class FileController implements AbstractBaseController {
     @Operation(summary = "分片上传 初始调用")
     @PostMapping("/upload/start")
     public Result<FileUploadVo> uploadStart(@RequestBody FileUpDto dto) {
-        long maxMemory = JVMUtils.maxMemory();
-        if (maxMemory < dto.getSize()) {
-            throw new GlobalCustomException("大文件上传不支持");
-        }
+        //long maxMemory = JVMUtils.maxMemory();
+        //if (maxMemory < dto.getSize()) {
+        //    throw new GlobalCustomException("大文件上传不支持");
+        //}
+        //允许大文件分片上传
 
         FileInfo fileInfo = new FileInfo();
         CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
@@ -96,10 +97,11 @@ public class FileController implements AbstractBaseController {
                                         @RequestParam(value = "fileId", required = false) Long fileId,
                                         @RequestParam("identifier") String identifier) {
 
-        long maxMemory = JVMUtils.maxMemory();
-        if (maxMemory < totalFileSize) {
-            throw new GlobalCustomException("大文件上传不支持");
-        }
+        //long maxMemory = JVMUtils.maxMemory();
+        //if (maxMemory < totalFileSize) {
+        //    throw new GlobalCustomException("大文件上传不支持");
+        //}
+        //允许大文件分片上传
 
         try {
             long fileSize = file.getSize();
@@ -116,7 +118,7 @@ public class FileController implements AbstractBaseController {
     }
 
     @SneakyThrows
-    @Operation(summary = "分片合并")
+    @Operation(summary = "分片合并(禁止大文件合并 解决方案客户端获取字节数组自行合并)")
     @SysLog
     @PostMapping("/upload/merge")
     @AviatorValids(values = {
@@ -130,6 +132,7 @@ public class FileController implements AbstractBaseController {
 
         long maxMemory = JVMUtils.maxMemory();
         if (maxMemory < totalFileSize) {
+            //禁止大文件分片合并
             throw new GlobalCustomException("大文件上传不支持");
         }
 
