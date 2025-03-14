@@ -15,13 +15,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Spring-Boot Version BOM -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
+                <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
-                <type>pom</type>
                 <scope>import</scope>
-                <optional>true</optional><!--不传递-->
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
