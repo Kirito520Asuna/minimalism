@@ -97,16 +97,16 @@ public interface IFileStorageClient extends AbstractBean {
     /**
      * 构建文件信息
      *
-     * @param flieName
+     * @param fileName
      * @param inputStream
      * @param url
      * @param dir
      * @param img
      * @return
      */
-    default FileInfo buildFileInfo(String flieName, InputStream inputStream, String url, Boolean local, Boolean dir, Boolean img) {
-        String mainName = FileUtil.mainName(flieName);
-        String type = FileUtil.extName(flieName);
+    default FileInfo buildFileInfo(String fileName, InputStream inputStream, String url, Boolean local, Boolean dir, Boolean img) {
+        String mainName = FileUtil.mainName(fileName);
+        String type = FileUtil.extName(fileName);
         long size = IoUtils.size(inputStream);
 
         return new FileInfo()
@@ -146,11 +146,11 @@ public interface IFileStorageClient extends AbstractBean {
     /**
      * 上传文件
      *
-     * @param flieName
+     * @param fileName
      * @param inputStream
      */
-    default FileInfo upload(String flieName, InputStream inputStream) {
-        return upload(null, flieName, inputStream);
+    default FileInfo upload(String fileName, InputStream inputStream) {
+        return upload(null, fileName, inputStream);
     }
 
 
@@ -158,28 +158,28 @@ public interface IFileStorageClient extends AbstractBean {
      * 上传文件
      *
      * @param bucketName  桶名称
-     * @param flieName    文件名称
+     * @param fileName    文件名称
      * @param inputStream
      */
-    default FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
+    default FileInfo upload(String bucketName, String fileName, InputStream inputStream) {
         if (StrUtil.isBlank(bucketName)) {
             bucketName = getBucket();
         }
         return null;
     }
 
-    default FileInfo uploadSharding(String flieName, InputStream inputStream, String identifier) {
-        return uploadSharding(null, flieName, inputStream, identifier);
+    default FileInfo uploadSharding(String fileName, InputStream inputStream, String identifier) {
+        return uploadSharding(null, fileName, inputStream, identifier);
     }
 
     /**
      * 上传文件 分片
      *
      * @param bucketName
-     * @param flieName
+     * @param fileName
      * @param inputStream
      */
-    default FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
+    default FileInfo uploadSharding(String bucketName, String fileName, InputStream inputStream, String identifier) {
         if (StrUtil.isBlank(bucketName)) {
             bucketName = getBucket();
         }

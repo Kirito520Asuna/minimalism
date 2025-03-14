@@ -110,21 +110,21 @@ public class AliyunOssStorageClient implements AliyunClient {
     }
 
     @Override
-    public FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
-        AliyunClient.super.upload(bucketName, flieName, inputStream);
-        String url = AliyunOSSUtils.uploadOss(client, bucketName, flieName, inputStream);
+    public FileInfo upload(String bucketName, String fileName, InputStream inputStream) {
+        AliyunClient.super.upload(bucketName, fileName, inputStream);
+        String url = AliyunOSSUtils.uploadOss(client, bucketName, fileName, inputStream);
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
+        return buildFileInfo(fileName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
     @SneakyThrows
     @Override
-    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
-        AliyunClient.super.uploadSharding(bucketName, flieName, inputStream, identifier);
-        String url = AliyunOSSUtils.uploadShardingOss(client, bucketName, flieName, inputStream);
+    public FileInfo uploadSharding(String bucketName, String fileName, InputStream inputStream, String identifier) {
+        AliyunClient.super.uploadSharding(bucketName, fileName, inputStream, identifier);
+        String url = AliyunOSSUtils.uploadShardingOss(client, bucketName, fileName, inputStream);
 
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
+        return buildFileInfo(fileName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
 }

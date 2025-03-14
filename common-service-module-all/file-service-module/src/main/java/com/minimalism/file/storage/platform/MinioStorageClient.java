@@ -1,6 +1,9 @@
 package com.minimalism.file.storage.platform;
 
 import cn.hutool.core.util.StrUtil;
+import com.minimalism.config.OSConfig;
+import com.minimalism.constant.Constants;
+import com.minimalism.enums.OSType;
 import com.minimalism.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
@@ -10,7 +13,10 @@ import com.minimalism.file.storage.clientAbs.AliyunClient;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.oss.AliyunOSSUtils;
 import com.minimalism.utils.oss.MinioOSSUtils;
+import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
+import io.minio.Result;
+import io.minio.messages.Item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -58,10 +64,12 @@ public class MinioStorageClient implements com.minimalism.file.storage.clientAbs
     public MinioStorageClient(FileProperties.MinioProperties config) {
         init(config);
     }
+
     @Override
     public StorageType getType() {
         return StorageType.minio;
     }
+
     @Override
     public boolean bucketExists(String bucket) {
         return MinioOSSUtils.doesBucketExist(minioClient, bucket);
@@ -76,6 +84,7 @@ public class MinioStorageClient implements com.minimalism.file.storage.clientAbs
     public void delete(String bucketName, String objectName) {
         MinioOSSUtils.deleteMinio(minioClient, bucketName, objectName);
     }
+
     @SneakyThrows
     @Override
     public void download(String bucketName, String objectName, HttpServletResponse response) {
@@ -95,33 +104,65 @@ public class MinioStorageClient implements com.minimalism.file.storage.clientAbs
     }
 
     @Override
-    public FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
-        com.minimalism.file.storage.clientAbs.MinioClient.super.upload(bucketName, flieName, inputStream);
-        String url = MinioOSSUtils.uploadMinio(minioClient, bucketName, flieName, inputStream);
+    public FileInfo upload(String bucketName, String fileName, InputStream inputStream) {
+        com.minimalism.file.storage.clientAbs.MinioClient.super.upload(bucketName, fileName, inputStream);
+        if (StrUtil.isBlank(bucketName)) {
+            bucketName = getBucket();
+        }
+        String url = MinioOSSUtils.uploadMinio(minioClient, bucketName, fileName, inputStream);
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
+        return buildFileInfo(fileName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
     @SneakyThrows
     @Override
-    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
-        com.minimalism.file.storage.clientAbs.MinioClient.super.uploadSharding(bucketName, flieName, inputStream, identifier);
-        String url = MinioOSSUtils.uploadShardingOss(minioClient, bucketName, flieName, inputStream);
+    public FileInfo uploadSharding(String bucketName, String fileName, InputStream inputStream, String identifier) {
+        com.minimalism.file.storage.clientAbs.MinioClient.super.uploadSharding(bucketName, fileName, inputStream, identifier);
+        if (StrUtil.isBlank(bucketName)) {
+            bucketName = getBucket();
+        }
+        String url = MinioOSSUtils.uploadShardingOss(minioClient, bucketName, fileName, inputStream);
 
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, inputStream, url, aFalse, aFalse, aFalse);
+        return buildFileInfo(fileName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
     @Override
     public FilePart uploadShardingChunkNumber(String bucketName, int chunkNumber, String identifier, InputStream inputStream) {
-        //todo
-        throw new UnsupportedOperationException("Minio暂不支持单个分片上传");
+        String separator = OSConfig.getSeparator(OSType.linux.name());
+        String fileName = identifier + separator + chunkNumber + Constants.PART_SUFFIX;
+        FileInfo fileInfo = uploadSharding(bucketName, fileName, inputStream, identifier);
+        String url = fileInfo.getUrl();
+        return FilePart.builder()
+                .fileId(fileInfo.getFileId())
+                .partSize(fileInfo.getSize())
+                .url(url)
+                .partSort(chunkNumber)
+                .partCode(identifier)
+                .local(Boolean.FALSE)
+                .build();
     }
 
     @Override
     public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
-        //todo
-        throw new UnsupportedOperationException("Minio暂不支持单独操作分片合并上传");
+        if (identifier.endsWith("/")) {
+            identifier = identifier + "/";
+        }
+        Iterable<Result<Item>> results = minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(getBucket())
+                        .prefix(identifier)  // 注意：必须以“/”结尾
+                        .recursive(false)     // 非递归只查询该文件夹下的内容
+                        .build());
+        for (Result<Item> result : results) {
+            try {
+                Item item = result.get();
+                System.out.println("文件名：" + item.objectName() + ", 大小：" + item.size());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
 

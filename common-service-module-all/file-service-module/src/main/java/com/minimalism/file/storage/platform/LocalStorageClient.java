@@ -116,19 +116,19 @@ public class LocalStorageClient implements LocalClient {
     }
 
     @Override
-    public FileInfo upload(String bucketName, String flieName, InputStream inputStream) {
-        LocalClient.super.upload(bucketName, flieName, inputStream);
-        String uploadUrl = LocalOSSUtils.upload(flieName, inputStream);
+    public FileInfo upload(String bucketName, String fileName, InputStream inputStream) {
+        LocalClient.super.upload(bucketName, fileName, inputStream);
+        String uploadUrl = LocalOSSUtils.upload(fileName, inputStream);
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, FileUtil.getInputStream(uploadUrl), uploadUrl, Boolean.TRUE, aFalse, aFalse);
+        return buildFileInfo(fileName, FileUtil.getInputStream(uploadUrl), uploadUrl, Boolean.TRUE, aFalse, aFalse);
     }
 
     @Override
-    public FileInfo uploadSharding(String bucketName, String flieName, InputStream inputStream, String identifier) {
-        LocalClient.super.uploadSharding(bucketName, flieName, inputStream, identifier);
+    public FileInfo uploadSharding(String bucketName, String fileName, InputStream inputStream, String identifier) {
+        LocalClient.super.uploadSharding(bucketName, fileName, inputStream, identifier);
 
         if (StrUtil.isBlank(identifier)) {
-            identifier = UUID.randomUUID().toString().replace("-", "") + "_" + flieName;
+            identifier = UUID.randomUUID().toString().replace("-", "") + "_" + fileName;
         }
         String bucketPath = LocalOSSUtils.getMergeFilePath(identifier, StrUtil.EMPTY);
         //String separator = OSType.getSeparator(null);
@@ -139,9 +139,9 @@ public class LocalStorageClient implements LocalClient {
             bucketFile.mkdirs();
         }
 
-        String fileLocal = LocalOSSUtils.uploadSharding(flieName, identifier, inputStream);
+        String fileLocal = LocalOSSUtils.uploadSharding(fileName, identifier, inputStream);
         Boolean aFalse = Boolean.FALSE;
-        return buildFileInfo(flieName, FileUtil.getInputStream(fileLocal), fileLocal, Boolean.TRUE, aFalse, aFalse);
+        return buildFileInfo(fileName, FileUtil.getInputStream(fileLocal), fileLocal, Boolean.TRUE, aFalse, aFalse);
     }
 
     @Override
