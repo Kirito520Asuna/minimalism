@@ -120,7 +120,7 @@ public class AliyunMailUtils {
         //SingleSendMailResponse httpResponse = client.getAcsResponse(request);
         SingleSendMailResponse response = client.getAcsResponse(request);
         if (response.getRequestId() != null && !response.getRequestId().isEmpty()) {
-            log.info("邮件发送成功，RequestId：{}" + response.getRequestId());
+            log.info("邮件发送成功，RequestId：{}" ,response.getRequestId());
             return true;
         }
         log.error("邮件发送失败");
