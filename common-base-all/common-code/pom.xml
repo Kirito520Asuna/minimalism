@@ -250,6 +250,7 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
             <version>${pagehelper.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
