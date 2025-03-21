@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.constant.gen.GenConstants;
-import com.minimalism.pojo.BaseEntity;
+import com.minimalism.mp.pojo.BaseEntity;
 import com.minimalism.utils.other.StringUtils;
 import com.minimalism.gen.mapper.GenTableColumnMapper;
 import com.minimalism.gen.mapper.GenTableMapper;

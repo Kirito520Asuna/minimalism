@@ -1,4 +1,4 @@
-package com.minimalism.pojo;
+package com.minimalism.mp.pojo;
 
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.FieldFill;

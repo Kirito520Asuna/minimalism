@@ -1,4 +1,4 @@
-package com.minimalism.handler;
+package com.minimalism.mp.handler;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.handler.AbstractEntityHandler;

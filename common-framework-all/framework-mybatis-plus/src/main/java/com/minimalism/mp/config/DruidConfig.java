@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.mp.config;
 
 import com.minimalism.abstractinterface.config.AbstractDruidConfig;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

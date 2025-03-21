@@ -5,7 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.aop.tree.Tree;
 import com.minimalism.aop.tree.TreeMap;
-import com.minimalism.pojo.BaseEntity;
+import com.minimalism.mp.pojo.BaseEntity;
 import com.minimalism.utils.tree.TreeUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.constant.gen.GenConstants;
 import com.minimalism.gen.mapper.GenTableColumnMapper;
 import com.minimalism.gen.mapper.GenTableMapper;
-import com.minimalism.pojo.BaseEntity;
+import com.minimalism.mp.pojo.BaseEntity;
 import com.minimalism.utils.other.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 

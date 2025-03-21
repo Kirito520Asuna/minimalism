@@ -1,4 +1,4 @@
-package com.minimalism.pojo;
+package com.minimalism.mp.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
