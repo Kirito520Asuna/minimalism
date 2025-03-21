@@ -1,4 +1,4 @@
-package com.minimalism.shardingAlgorithm;
+package com.minimalism.sharding_sphere.shardingAlgorithm;
 
 import cn.hutool.core.util.StrUtil;
 import com.googlecode.aviator.AviatorEvaluator;

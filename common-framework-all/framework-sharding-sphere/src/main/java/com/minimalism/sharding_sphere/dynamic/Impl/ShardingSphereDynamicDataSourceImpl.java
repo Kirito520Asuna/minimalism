@@ -1,4 +1,4 @@
-package com.minimalism.dynamic.Impl;
+package com.minimalism.sharding_sphere.dynamic.Impl;
 
 import com.minimalism.abstractinterface.config.dynamic.AbstractDynamicDataSource;
 import org.springframework.stereotype.Service;
