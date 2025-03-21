@@ -5,6 +5,7 @@ create table `file_info`
     `url`         varchar(255) default null comment '资源路径',
     `name`        varchar(128) default null comment '资源原始名称',
     `file_name`   varchar(128) default null comment '资源名称',
+    `part_code`      varchar(50)  not null comment 'code用于合并文件',
 
     `suffix`      varchar(20)  default null COMMENT '后缀名',
     `is_img`      tinyint(1)   default null COMMENT '是否图片',
@@ -48,3 +49,5 @@ create table `file_part`
 
  ALTER TABLE `file_part`
          ADD COLUMN  `upload_dir` VARCHAR(255) DEFAULT null comment '上传目录';
+ALTER TABLE `file_info`
+    ADD COLUMN  `part_code` VARCHAR(255) not null comment 'code用于合并文件';

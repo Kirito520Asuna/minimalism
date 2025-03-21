@@ -46,6 +46,13 @@ public class FileInfo extends BaseEntity implements Serializable {
     private String url;
 
     /**
+     * 上传目录
+     */
+    @TableField(value = "upload_dir")
+    @Schema(description = "上传目录")
+    private String uploadDir;
+
+    /**
      * 资源原始名称
      */
     @TableField(value = "`name`")
@@ -106,17 +113,19 @@ public class FileInfo extends BaseEntity implements Serializable {
     private Long parentId;
 
     /**
-     * 上传目录
+     * code用于合并文件
      */
-    @TableField(value = "upload_dir")
-    @Schema(description = "上传目录")
-    private String uploadDir;
+    @TableField(value = "part_code")
+    @Schema(description = "code用于合并文件")
+    private String partCode;
 
     private static final long serialVersionUID = 1L;
 
     public static final String COL_FILE_ID = "file_id";
 
     public static final String COL_URL = "url";
+
+    public static final String COL_UPLOAD_DIR = "upload_dir";
 
     public static final String COL_NAME = "name";
 
@@ -135,5 +144,6 @@ public class FileInfo extends BaseEntity implements Serializable {
     public static final String COL_IS_LOCAL = "is_local";
 
     public static final String COL_PARENT_ID = "parent_id";
-    public static final String COL_UPLOAD_DIR = "upload_dir";
+
+    public static final String COL_PART_CODE = "part_code";
 }

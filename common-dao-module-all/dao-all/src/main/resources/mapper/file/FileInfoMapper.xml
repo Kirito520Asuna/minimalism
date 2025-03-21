@@ -6,6 +6,7 @@
     <!--@Table file_info-->
     <id column="file_id" jdbcType="BIGINT" property="fileId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="upload_dir" jdbcType="VARCHAR" property="uploadDir" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="file_name" jdbcType="VARCHAR" property="fileName" />
     <result column="suffix" jdbcType="VARCHAR" property="suffix" />
@@ -20,12 +21,12 @@
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="upload_dir" jdbcType="VARCHAR" property="uploadDir" />
+    <result column="part_code" jdbcType="VARCHAR" property="partCode" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    file_id, url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, 
-    parent_id, create_by, create_time, update_by, update_time, remark, upload_dir
+    file_id, url, upload_dir, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, 
+    is_local, parent_id, create_by, create_time, update_by, update_time, remark, part_code
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated-->
@@ -34,6 +35,11 @@
       <trim prefix="url = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
           when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.url,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="upload_dir = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.uploadDir,jdbcType=VARCHAR}
         </foreach>
       </trim>
       <trim prefix="`name` = case" suffix="end,">
@@ -106,9 +112,9 @@
           when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.remark,jdbcType=VARCHAR}
         </foreach>
       </trim>
-      <trim prefix="upload_dir = case" suffix="end,">
+      <trim prefix="part_code = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.uploadDir,jdbcType=VARCHAR}
+          when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.partCode,jdbcType=VARCHAR}
         </foreach>
       </trim>
     </trim>
@@ -125,6 +131,13 @@
         <foreach collection="list" index="index" item="item">
           <if test="item.url != null">
             when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.url,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="upload_dir = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.uploadDir != null">
+            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.uploadDir,jdbcType=VARCHAR}
           </if>
         </foreach>
       </trim>
@@ -226,10 +239,10 @@
           </if>
         </foreach>
       </trim>
-      <trim prefix="upload_dir = case" suffix="end,">
+      <trim prefix="part_code = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          <if test="item.uploadDir != null">
-            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.uploadDir,jdbcType=VARCHAR}
+          <if test="item.partCode != null">
+            when file_id = #{item.fileId,jdbcType=BIGINT} then #{item.partCode,jdbcType=VARCHAR}
           </if>
         </foreach>
       </trim>
@@ -242,49 +255,17 @@
   <insert id="batchInsert" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
-    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
-      create_by, create_time, update_by, update_time, remark, upload_dir)
+    (url, upload_dir, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, 
+      parent_id, create_by, create_time, update_by, update_time, remark, part_code)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
-        #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.local,jdbcType=BOOLEAN}, 
-        #{item.parentId,jdbcType=BIGINT}, #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}, 
-        #{item.uploadDir,jdbcType=VARCHAR})
+      (#{item.url,jdbcType=VARCHAR}, #{item.uploadDir,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, 
+        #{item.fileName,jdbcType=VARCHAR}, #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, 
+        #{item.size,jdbcType=BIGINT}, #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, 
+        #{item.local,jdbcType=BOOLEAN}, #{item.parentId,jdbcType=BIGINT}, #{item.createBy,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR}, #{item.partCode,jdbcType=VARCHAR})
     </foreach>
-  </insert>
-  <insert id="batchInsertOrUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into file_info
-    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
-      create_by, create_time, update_by, update_time, remark, upload_dir)
-    values
-    <foreach collection="list" item="item" separator=",">
-      (#{item.url,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.fileName,jdbcType=VARCHAR}, 
-        #{item.suffix,jdbcType=VARCHAR}, #{item.img,jdbcType=BOOLEAN}, #{item.size,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=VARCHAR}, #{item.dir,jdbcType=BOOLEAN}, #{item.local,jdbcType=BOOLEAN}, 
-        #{item.parentId,jdbcType=BIGINT}, #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}, 
-        #{item.uploadDir,jdbcType=VARCHAR})
-    </foreach>
-    on duplicate key update 
-    url=values(url),
-    name=values(name),
-    file_name=values(file_name),
-    suffix=values(suffix),
-    is_img=values(is_img),
-    size=values(size),
-    type=values(type),
-    is_dir=values(is_dir),
-    is_local=values(is_local),
-    parent_id=values(parent_id),
-    create_by=values(create_by),
-    create_time=values(create_time),
-    update_by=values(update_by),
-    update_time=values(update_time),
-    remark=values(remark),
-    upload_dir=values(upload_dir)
   </insert>
   <delete id="deleteByPrimaryKeyIn">
     <!--@mbg.generated-->
@@ -300,6 +281,9 @@
       <set>
         <if test="item.url != null">
           url = #{item.url,jdbcType=VARCHAR},
+        </if>
+        <if test="item.uploadDir != null">
+          upload_dir = #{item.uploadDir,jdbcType=VARCHAR},
         </if>
         <if test="item.name != null">
           `name` = #{item.name,jdbcType=VARCHAR},
@@ -343,8 +327,8 @@
         <if test="item.remark != null">
           remark = #{item.remark,jdbcType=VARCHAR},
         </if>
-        <if test="item.uploadDir != null">
-          upload_dir = #{item.uploadDir,jdbcType=VARCHAR},
+        <if test="item.partCode != null">
+          part_code = #{item.partCode,jdbcType=VARCHAR},
         </if>
       </set>
       where file_id = #{item.fileId,jdbcType=BIGINT}
@@ -353,14 +337,23 @@
   <insert id="batchInsertSelectiveUseDefaultForNull" keyColumn="file_id" keyProperty="fileId" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
-    (url, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, parent_id, 
-      create_by, create_time, update_by, update_time, remark, upload_dir)
+    (url, upload_dir, `name`, file_name, suffix, is_img, `size`, `type`, is_dir, is_local, 
+      parent_id, create_by, create_time, update_by, update_time, remark, part_code)
     values
     <foreach collection="list" item="item" separator=",">
       (
       <choose>
         <when test="item.url != null">
           #{item.url,jdbcType=VARCHAR},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.uploadDir != null">
+          #{item.uploadDir,jdbcType=VARCHAR},
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -494,8 +487,8 @@
         </otherwise>
       </choose>
       <choose>
-        <when test="item.uploadDir != null">
-          #{item.uploadDir,jdbcType=VARCHAR}
+        <when test="item.partCode != null">
+          #{item.partCode,jdbcType=VARCHAR}
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -513,6 +506,7 @@
         file_id,
       </if>
       url,
+      upload_dir,
       `name`,
       file_name,
       suffix,
@@ -527,7 +521,7 @@
       update_by,
       update_time,
       remark,
-      upload_dir,
+      part_code,
     </trim>
     values
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -535,6 +529,7 @@
         #{fileId,jdbcType=BIGINT},
       </if>
       #{url,jdbcType=VARCHAR},
+      #{uploadDir,jdbcType=VARCHAR},
       #{name,jdbcType=VARCHAR},
       #{fileName,jdbcType=VARCHAR},
       #{suffix,jdbcType=VARCHAR},
@@ -549,7 +544,7 @@
       #{updateBy,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP},
       #{remark,jdbcType=VARCHAR},
-      #{uploadDir,jdbcType=VARCHAR},
+      #{partCode,jdbcType=VARCHAR},
     </trim>
     on duplicate key update 
     <trim suffixOverrides=",">
@@ -557,6 +552,7 @@
         file_id = #{fileId,jdbcType=BIGINT},
       </if>
       url = #{url,jdbcType=VARCHAR},
+      upload_dir = #{uploadDir,jdbcType=VARCHAR},
       `name` = #{name,jdbcType=VARCHAR},
       file_name = #{fileName,jdbcType=VARCHAR},
       suffix = #{suffix,jdbcType=VARCHAR},
@@ -571,7 +567,7 @@
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
-      upload_dir = #{uploadDir,jdbcType=VARCHAR},
+      part_code = #{partCode,jdbcType=VARCHAR},
     </trim>
   </insert>
   <insert id="insertOnDuplicateUpdateSelective" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
@@ -583,6 +579,9 @@
       </if>
       <if test="url != null">
         url,
+      </if>
+      <if test="uploadDir != null">
+        upload_dir,
       </if>
       <if test="name != null">
         `name`,
@@ -626,8 +625,8 @@
       <if test="remark != null">
         remark,
       </if>
-      <if test="uploadDir != null">
-        upload_dir,
+      <if test="partCode != null">
+        part_code,
       </if>
     </trim>
     values
@@ -637,6 +636,9 @@
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadDir != null">
+        #{uploadDir,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -680,8 +682,8 @@
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="uploadDir != null">
-        #{uploadDir,jdbcType=VARCHAR},
+      <if test="partCode != null">
+        #{partCode,jdbcType=VARCHAR},
       </if>
     </trim>
     on duplicate key update 
@@ -691,6 +693,9 @@
       </if>
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadDir != null">
+        upload_dir = #{uploadDir,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
@@ -734,8 +739,8 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="uploadDir != null">
-        upload_dir = #{uploadDir,jdbcType=VARCHAR},
+      <if test="partCode != null">
+        part_code = #{partCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
