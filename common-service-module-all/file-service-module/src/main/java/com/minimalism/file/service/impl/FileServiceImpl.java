@@ -28,7 +28,6 @@ import com.minimalism.vo.PartVo;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
