@@ -24,15 +24,16 @@ import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
-import com.minimalism.utils.oss.MinioOSSUtils;
 import com.minimalism.vo.PartVo;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URL;
@@ -612,7 +613,7 @@ public class FileServiceImpl implements FileService {
         return fileByte;
     }
 
-/*    @SneakyThrows
+    @SneakyThrows
     @Override
     public void download(String identifier, boolean isPart, Integer partSort, HttpServletResponse response) {
         String fileName = StrUtil.EMPTY;
@@ -639,21 +640,22 @@ public class FileServiceImpl implements FileService {
         response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, String.valueOf(StandardCharsets.UTF_8)));
         response.flushBuffer();
         IoUtils.close(responseOutputStream);
-    }*/
+    }
+
     @SneakyThrows
     @Override
-    public void download(String identifier, boolean isPart, Integer partSort, HttpServletResponse response) {
+    public void downloadExecutor(String identifier, boolean isPart, Integer partSort, HttpServletResponse response) {
         FileByte fileByte = getBytes(identifier, isPart, partSort);
         String fileName = fileByte.getFileName();
         byte[] bytes = fileByte.getBytes();
         int fileSize = bytes.length;
 
         // 计算分块大小，比如每块 1MB
-        int chunkSize = 1024 * 1024;
+        int chunkSize = 10 * 1024 * 1024;
         int numChunks = (fileSize + chunkSize - 1) / chunkSize;
 
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName,  String.valueOf(StandardCharsets.UTF_8)));
+        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, String.valueOf(StandardCharsets.UTF_8)));
         response.setHeader("Content-Length", String.valueOf(fileSize));
 
         response.setContentType("application/octet-stream");
@@ -680,4 +682,299 @@ public class FileServiceImpl implements FileService {
         executor.shutdown();
         IoUtils.close(outputStream);
     }
+
+    @SneakyThrows
+    @Override
+    public void downloadMon(String identifier, boolean isPart, Integer partSort,
+                            HttpServletRequest request, HttpServletResponse response) {
+        // 获取文件名和文件内容
+        String fileName = StrUtil.EMPTY;
+        if (isPart) {
+            fileName = partSort + Constants.PART_SUFFIX;
+        }
+        fileName = FileUtils.getName(fileName);
+        FileByte fileByte = getBytes(identifier, isPart, partSort);
+        fileName = fileByte.getFileName();
+        byte[] bytes = fileByte.getBytes();
+        long fileSize = bytes.length;
+
+        // 设置基础响应头
+        response.setContentType("application/x-msdownload");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setHeader("Content-Disposition",
+                "attachment;filename=" + URLEncoder.encode(fileName, String.valueOf(StandardCharsets.UTF_8)));
+        response.setHeader("Accept-Ranges", "bytes"); // 声明支持断点续传
+
+        // 解析Range请求头
+        String rangeHeader = request.getHeader("Range");
+        long start = 0;
+        long end = fileSize - 1;
+        boolean hasRange = false;
+
+        if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
+            try {
+                // 解析范围值
+                String range = rangeHeader.substring("bytes=".length());
+                String[] ranges = range.split("-");
+                start = Long.parseLong(ranges[0]);
+                if (ranges.length > 1 && !ranges[1].isEmpty()) {
+                    end = Long.parseLong(ranges[1]);
+                } else {
+                    end = fileSize - 1; // 处理类似 bytes=1000- 的情况
+                }
+
+                // 验证范围有效性
+                if (start < 0 || end >= fileSize || start > end) {
+                    response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+                    response.setHeader("Content-Range", "bytes */" + fileSize);
+                    return;
+                }
+
+                hasRange = true;
+                response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+                response.setHeader("Content-Range",
+                        "bytes " + start + "-" + end + "/" + fileSize);
+                response.setHeader("Content-Length",
+                        String.valueOf(end - start + 1));
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Range Header");
+                return;
+            }
+        } else {
+            // 无Range头时返回完整文件
+            response.setHeader("Content-Length", String.valueOf(fileSize));
+        }
+
+        // 使用try-with-resources自动关闭流
+        try (InputStream inputStream = new ByteArrayInputStream(bytes);
+             OutputStream outputStream = response.getOutputStream()) {
+
+            // 跳过起始字节
+            long bytesToSkip = start;
+            while (bytesToSkip > 0) {
+                long skipped = inputStream.skip(bytesToSkip);
+                if (skipped == 0) break;
+                bytesToSkip -= skipped;
+            }
+
+            // 分段写入响应流
+            byte[] buffer = new byte[4096];
+            long remaining = end - start + 1;
+            int readLength;
+
+            while (remaining > 0 &&
+                    (readLength = inputStream.read(buffer, 0,
+                            (int) Math.min(buffer.length, remaining))) != -1) {
+                outputStream.write(buffer, 0, readLength);
+                remaining -= readLength;
+            }
+        } catch (IOException e) {
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "File streaming error");
+            }
+            throw e;
+        }
+    }
+
+
+    private static final int BUFFER_SIZE = 4096; // 4KB缓冲区
+    private static final String CONTENT_DISPOSITION_FORMAT = "attachment;filename=\"%s\";filename*=UTF-8''%s";
+
+    public void download(String identifier, boolean isPart, Integer partSort,
+                         HttpServletRequest request, HttpServletResponse response) {
+        // 参数校验
+        if (identifier == null || identifier.isEmpty()) {
+            sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid identifier");
+            return;
+        }
+
+        try {
+            // 获取文件元数据和内容
+            FileMeta fileMeta = resolveFileMeta(identifier, isPart, partSort);
+            byte[] fileContent = getFileContent(fileMeta);
+            long fileSize = fileContent.length;
+
+            // 设置通用响应头
+            setCommonHeaders(response, fileMeta.getFileName(), fileSize);
+
+            // 处理Range请求
+            Range range = parseRangeHeader(response, request, fileSize);
+            if (!range.isValid()) {
+                sendError(response, HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE,
+                        "Invalid range: " + range);
+                return;
+            }
+
+            // 流式传输文件内容
+            try (InputStream inputStream = new ByteArrayInputStream(fileContent);
+                 OutputStream outputStream = response.getOutputStream()) {
+
+                streamFileContent(inputStream, outputStream, range);
+            }
+        } catch (ClientAbortException e) {
+            handleClientAbort(e); // 客户端主动中断的特殊处理
+        } catch (IOException e) {
+            handleIOException(e, response);
+        } catch (Exception e) {
+            handleGenericException(e, response);
+        }
+    }
+
+    // region 核心逻辑方法
+    private void setCommonHeaders(HttpServletResponse response, String fileName, long fileSize)
+            throws IOException {
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setContentType("application/octet-stream");
+        response.setHeader("Accept-Ranges", "bytes");
+        response.setHeader("Content-Length", String.valueOf(fileSize));
+
+        // RFC 5987编码规范处理文件名
+        String encodedFileName = URLEncoder.encode(fileName, String.valueOf(StandardCharsets.UTF_8))
+                .replace("+", "%20");
+        response.setHeader("Content-Disposition",
+                String.format(CONTENT_DISPOSITION_FORMAT, fileName, encodedFileName));
+    }
+
+    private Range parseRangeHeader(HttpServletResponse response, HttpServletRequest request, long fileSize) {
+        String rangeHeader = request.getHeader("Range");
+        if (rangeHeader == null || !rangeHeader.startsWith("bytes=")) {
+            return new Range(0, fileSize - 1, fileSize); // 完整文件
+        }
+
+        try {
+            String rangeValue = rangeHeader.substring(6);
+            String[] parts = rangeValue.split("-");
+            long start = Long.parseLong(parts[0]);
+            long end = parts.length > 1 && !parts[1].isEmpty() ?
+                    Long.parseLong(parts[1]) : fileSize - 1;
+
+            // 范围校验
+            end = Math.min(end, fileSize - 1);
+            start = Math.max(start, 0);
+
+            if (start > end) {
+                return Range.INVALID;
+            }
+
+            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+            response.setHeader("Content-Range",
+                    String.format("bytes %d-%d/%d", start, end, fileSize));
+            response.setHeader("Content-Length",
+                    String.valueOf(end - start + 1));
+
+            return new Range(start, end, fileSize);
+        } catch (NumberFormatException e) {
+            warn("Invalid Range header: {}", rangeHeader);
+            return Range.INVALID;
+        }
+    }
+
+    private void streamFileContent(InputStream inputStream, OutputStream outputStream, Range range)
+            throws IOException {
+        long bytesToSkip = range.start;
+        long remaining = range.end - range.start + 1;
+
+        // 跳过已下载部分
+        while (bytesToSkip > 0) {
+            long skipped = inputStream.skip(bytesToSkip);
+            if (skipped <= 0) break;
+            bytesToSkip -= skipped;
+        }
+
+        // 分块传输
+        byte[] buffer = new byte[BUFFER_SIZE];
+        while (remaining > 0) {
+            int readSize = (int) Math.min(buffer.length, remaining);
+            int bytesRead = inputStream.read(buffer, 0, readSize);
+            if (bytesRead == -1) break;
+
+            try {
+                outputStream.write(buffer, 0, bytesRead);
+                outputStream.flush();
+                remaining -= bytesRead;
+            } catch (IOException e) {
+                if (isClientAbort(e)) {
+                    throw new ClientAbortException("Client aborted download", e);
+                }
+                throw e;
+            }
+        }
+    }
+    // endregion
+
+    // region 异常处理
+    private boolean isClientAbort(Throwable e) {
+        return e instanceof ClientAbortException ||
+                (e.getCause() != null && isClientAbort(e.getCause()));
+    }
+
+    private void handleClientAbort(ClientAbortException e) {
+        debug("客户端中止下载: {}", e.getMessage()); // DEBUG级别日志
+    }
+
+    private void handleIOException(IOException e, HttpServletResponse response) {
+        if (isClientAbort(e)) {
+            handleClientAbort((ClientAbortException) e);
+        } else {
+            error("文件传输IO异常", e);
+            sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "文件传输失败");
+        }
+    }
+
+    private void handleGenericException(Exception e, HttpServletResponse response) {
+        error("文件下载系统异常", e);
+        sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                "系统错误");
+    }
+
+    private void sendError(HttpServletResponse response, int sc, String msg) {
+        try {
+            if (!response.isCommitted()) {
+                response.sendError(sc, msg);
+            }
+        } catch (IOException ex) {
+            warn("发送错误响应失败", ex);
+        }
+    }
+    // endregion
+
+    // region 辅助类
+    @Data
+    @SuperBuilder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class Range {
+        static final Range INVALID = new Range(-1, -1, -1);
+        private long start;
+        private long end;
+        private long total;
+
+        boolean isValid() {
+            return start >= 0 && end >= start && total > 0;
+        }
+    }
+
+    // 模拟文件获取逻辑
+    private FileMeta resolveFileMeta(String identifier, boolean isPart, Integer partSort) {
+        // 实际项目应替换为真实文件元数据获取逻辑
+        return new FileMeta("example.txt", new byte[1024]);
+    }
+
+    private byte[] getFileContent(FileMeta meta) {
+        return meta.content;
+    }
+
+    @Data
+    @SuperBuilder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    private static class FileMeta {
+        private String fileName;
+        private byte[] content;
+
+    }
+
+
 }

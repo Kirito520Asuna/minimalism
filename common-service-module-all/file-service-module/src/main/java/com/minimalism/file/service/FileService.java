@@ -2,7 +2,9 @@ package com.minimalism.file.service;
 
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.vo.PartVo;
+import lombok.SneakyThrows;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -74,4 +76,13 @@ public interface FileService extends AbstractBean {
 
 
     void download(String identifier, boolean isPart, Integer partSort, HttpServletResponse response);
+
+    @SneakyThrows
+    void downloadExecutor(String identifier, boolean isPart, Integer partSort, HttpServletResponse response);
+
+    void downloadMon(String identifier, boolean isPart, Integer partSort,
+                     HttpServletRequest request, HttpServletResponse response);
+
+    void download(String identifier, boolean isPart, Integer partSort,
+                  HttpServletRequest request, HttpServletResponse response);
 }

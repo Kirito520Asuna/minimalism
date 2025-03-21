@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
@@ -189,11 +190,12 @@ public class FileController implements AbstractBaseController {
     public void download(@PathVariable("identifier") String identifier,
                          @RequestParam(required = false) boolean isPart,
                          @RequestParam(required = false) Integer partSort,
+                         HttpServletRequest request,
                          HttpServletResponse response) {
         if (isPart && ObjectUtils.isEmpty(partSort)) {
             throw new GlobalCustomException("非法请求");
         }
-        fileService.download(identifier, isPart, partSort, response);
+        fileService.download(identifier, isPart, partSort,request, response);
     }
 
 }
