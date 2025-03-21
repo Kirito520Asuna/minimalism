@@ -31,5 +31,6 @@ public interface FileInfoService extends IService<FileInfo> {
 
     int insertOnDuplicateUpdateSelective(FileInfo record);
 
+    FileInfo getByPartCode(String partCode);
 
 }

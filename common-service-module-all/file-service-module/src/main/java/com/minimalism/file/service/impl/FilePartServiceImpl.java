@@ -112,6 +112,14 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
     }
 
     @Override
+    public FilePart getByCode(String identifier,int sort) {
+        LambdaQueryWrapper<FilePart> wrapper = Wrappers.lambdaQuery(FilePart.class)
+                .eq(FilePart::getPartCode, identifier)
+                .eq(FilePart::getPartSort, sort);
+        return getOne(wrapper);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateByEntityFileId(FilePart filePart) {
         String identifier = filePart.getPartCode();

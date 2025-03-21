@@ -1,5 +1,6 @@
 package com.minimalism.file.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +57,10 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         return baseMapper.insertOnDuplicateUpdateSelective(record);
     }
 
-
+    @Override
+    public FileInfo getByPartCode(String partCode) {
+        LambdaQueryWrapper<FileInfo> wrapper = Wrappers.lambdaQuery(FileInfo.class)
+                .eq(FileInfo::getPartCode, partCode);
+        return getOne(wrapper);
+    }
 }

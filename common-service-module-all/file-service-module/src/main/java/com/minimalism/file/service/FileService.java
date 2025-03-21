@@ -3,6 +3,7 @@ package com.minimalism.file.service;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.vo.PartVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,4 +71,7 @@ public interface FileService extends AbstractBean {
      * @return
      */
     boolean delByteByLocal(String fileName, String folder, String identifier, Integer chunkNumber);
+
+
+    void download(String identifier, boolean isPart, Integer partSort, HttpServletResponse response);
 }

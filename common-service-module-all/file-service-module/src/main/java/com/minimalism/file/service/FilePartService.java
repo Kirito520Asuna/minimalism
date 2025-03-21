@@ -37,6 +37,7 @@ public interface FilePartService extends IService<FilePart> {
     int removePart(String identifier, Long fileId);
 
     Long getOneFileIdByCode(String identifier);
+    FilePart getByCode(String identifier,int sort);
 
     boolean updateByEntityFileId(FilePart filePart);
 

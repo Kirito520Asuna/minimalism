@@ -23,17 +23,20 @@ import com.minimalism.result.Result;
 import com.minimalism.utils.bean.CustomBeanUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
+import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
 import com.minimalism.vo.FileUploadVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.UUID;
@@ -64,10 +67,11 @@ public class FileController implements AbstractBaseController {
         //    throw new GlobalCustomException("大文件上传不支持");
         //}
         //允许大文件分片上传
-
+        FileUploadVo fileUploadVo = new FileUploadVo();
         FileInfo fileInfo = new FileInfo();
         CustomBeanUtils.copyPropertiesIgnoreNull(dto, fileInfo);
         fileInfo.setName(FileUtil.mainName(fileInfo.getFileName()))
+                .setPartCode(fileUploadVo.getIdentifier())
                 .setUploadDir(LocalOSSUtils.getUploadDir());
         fileInfoService.save(fileInfo);
 
@@ -78,7 +82,7 @@ public class FileController implements AbstractBaseController {
         int totalChunks = (int) Math.ceil((double) size / chunkSize);
 
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        return ok(new FileUploadVo()
+        return ok(fileUploadVo
                 .setFileId(fileId)
                 .setTotalFileSize(size)
                 .setChunkSize(chunkSize)
@@ -178,4 +182,18 @@ public class FileController implements AbstractBaseController {
         fileService.delByteByLocal(fileName, folder, identifier, chunkNumber);
         return ok();
     }
+
+    @SysLog
+    @Operation(summary = "下载")
+    @GetMapping("download/{identifier}")
+    public void download(@PathVariable("identifier") String identifier,
+                         @RequestParam(required = false) boolean isPart,
+                         @RequestParam(required = false) Integer partSort,
+                         HttpServletResponse response) {
+        if (isPart && ObjectUtils.isEmpty(partSort)) {
+            throw new GlobalCustomException("非法请求");
+        }
+        fileService.download(identifier, isPart, partSort, response);
+    }
+
 }

@@ -3,9 +3,7 @@ package com.minimalism.file.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.google.common.collect.Maps;
 import com.minimalism.config.OSConfig;
 import com.minimalism.constant.Constants;
 import com.minimalism.exception.BusinessException;
@@ -20,22 +18,25 @@ import com.minimalism.file.service.FileService;
 import com.minimalism.file.storage.FileFactory;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
-import com.minimalism.result.Result;
 import com.minimalism.utils.file.FileUtils;
 import com.minimalism.utils.http.FileHelper;
-import com.minimalism.utils.http.OkHttpUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
+import com.minimalism.utils.oss.MinioOSSUtils;
 import com.minimalism.vo.PartVo;
-import lombok.SneakyThrows;
+import lombok.*;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +53,7 @@ public class FileServiceImpl implements FileService {
     private FilePartService filePartService;
     @Resource
     private FileInfoService fileInfoService;
+
     @Override
     public PartVo partToInputStream(PartVo partVo) {
         InputStream inputStream = null;
@@ -161,6 +163,7 @@ public class FileServiceImpl implements FileService {
 
         return false;
     }
+
     @SneakyThrows
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -396,6 +399,7 @@ public class FileServiceImpl implements FileService {
         filePartService.removePart(identifier, fileId);
         return false;
     }
+
     @Override
     public List<byte[]> getByteByLocal(String fileName, String folder, String identifier, Integer chunkNumber) {
         List<byte[]> list = CollUtil.newArrayList();
@@ -540,4 +544,106 @@ public class FileServiceImpl implements FileService {
         return true;
     }
 
+    @Data
+    @SuperBuilder
+    @Accessors(chain = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class FileByte {
+        private String fileName;
+        private byte[] bytes;
+    }
+
+    @SneakyThrows
+    FileByte getBytes(String identifier, boolean isPart, Integer partSort) {
+        byte[] bytes = null;
+        String fileName = null;
+        if (isPart) {
+            fileName = partSort + Constants.PART_SUFFIX;
+            FilePart filePart = filePartService.getByCode(identifier, partSort);
+            if (filePart.getLocal()) {
+                String localResource = filePart.getLocalResource();
+                if (FileUtils.isFile(localResource)) {
+                    fileName = FileUtils.getName(localResource);
+                }
+                String redisInstanceId = LocalOSSUtils.getRedisInstanceId(localResource);
+
+                if (FileUploadConfig.isCurrentInstance(redisInstanceId)) {
+                    bytes = IoUtils.toByteArray(FileUtils.getInputStream(localResource));
+                } else {
+                    String uploadDir = filePart.getUploadDir();
+                    String subBefore = StrUtil.subBefore(localResource, identifier, true);
+                    String folder = subBefore.substring(uploadDir.length(), subBefore.length());
+
+                    List<byte[]> bytesByRemote = FileHelper.getBytesByRemote(redisInstanceId, fileName, folder, identifier, partSort);
+                    bytes = bytesByRemote.get(0);
+                }
+
+            } else {
+                InputStream inputStream = new URL(filePart.getUrl()).openStream();
+                bytes = IoUtils.toByteArray(inputStream);
+            }
+        } else {
+            FileInfo fileInfo = fileInfoService.getByPartCode(identifier);
+            String url = fileInfo.getUrl();
+            fileName = fileInfo.getFileName();
+            if (fileInfo.getLocal()) {
+                String uploadDir = fileInfo.getUploadDir();
+                String redisInstanceId = LocalOSSUtils.getRedisInstanceId(url);
+
+                if (FileUploadConfig.isCurrentInstance(redisInstanceId)) {
+                    bytes = IoUtils.toByteArray(FileUtils.getInputStream(url));
+                } else {
+                    String subBefore = StrUtil.subBefore(url, identifier, true);
+                    String folder = subBefore.substring(uploadDir.length(), subBefore.length());
+
+                    List<byte[]> bytesByRemote = FileHelper.getBytesByRemote(redisInstanceId, fileName, folder, identifier, null);
+                    bytes = bytesByRemote.get(0);
+                }
+            } else {
+                InputStream inputStream = new URL(url).openStream();
+                bytes = IoUtils.toByteArray(inputStream);
+            }
+        }
+        FileByte fileByte = FileByte.builder().fileName(fileName).bytes(bytes).build();
+        return fileByte;
+    }
+
+/*
+    public static void main(String[] args) {
+        String url = "/develop/code/minimalism/tmp/uploads/local/merged/2439b05c-d49f-4113-a765-21640f39001d1742217949185/tbtool.7z";
+        String identifier = "2439b05c-d49f-4113-a765-21640f39001d1742217949185";
+        String uploadDir = "/develop/code/minimalism/tmp/uploads/local/";
+        String subBefore = StrUtil.subBefore(url, identifier, true);
+        subBefore = subBefore.substring(uploadDir.length(), subBefore.length());
+        System.err.println(subBefore);
+
+    }
+*/
+
+    @SneakyThrows
+    @Override
+    public void download(String identifier, boolean isPart, Integer partSort, HttpServletResponse response) {
+        String fileName = StrUtil.EMPTY;
+
+        if (isPart) {
+            fileName = partSort + Constants.PART_SUFFIX;
+        }
+
+        fileName = FileUtils.getName(fileName);
+        FileByte fileByte = getBytes(identifier, isPart, partSort);
+        fileName = fileByte.getFileName();
+        byte[] bytes = fileByte.getBytes();
+        InputStream inputStream = new ByteArrayInputStream(bytes);
+        //InputStream inputStream = MinioOSSUtils.downloadMinioInput(minioClient, bucketName, objectName);
+        OutputStream responseOutputStream = response.getOutputStream();
+        // 将 OSS 输出流的内容复制到 HTTP 响应输出流中
+        IoUtils.copy(inputStream, responseOutputStream);
+        // 设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setContentType("application/x-msdownload");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, String.valueOf(StandardCharsets.UTF_8)));
+        response.flushBuffer();
+        IoUtils.close(responseOutputStream);
+    }
 }
