@@ -39,6 +39,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -682,15 +683,17 @@ public class FileServiceImpl implements FileService {
         IoUtils.close(outputStream);
     }
 
-    @SneakyThrows
     @Override
+    @SneakyThrows
     public void downLoadFileMultiThread(String identifier, boolean isPart, Integer partSort, HttpServletRequest request, HttpServletResponse response) {
+        // 获取文件内容和文件名
         FileByte fileByte = getBytes(identifier, isPart, partSort);
-        // 获取文件名参数
         String fileName = fileByte.getFileName();
         byte[] bytes = fileByte.getBytes();
+
         // 获取文件的总大小
         int fileSize = bytes.length;
+
         // 设置响应的文件类型为二进制流
         response.setContentType("application/octet-stream");
         // 设置响应头，告诉浏览器这是一个附件，提供下载
@@ -705,23 +708,18 @@ public class FileServiceImpl implements FileService {
 
         // 创建线程池，最大线程数为8，避免线程过多导致性能问题
         ExecutorService executor = Executors.newFixedThreadPool(Math.min(numChunks, 8));  // 根据需要动态调整线程池大小
-        // 用来存储每个线程返回的分片数据
         List<Future<byte[]>> futures = new ArrayList<>(numChunks);
-        File file = FileUtils.newFile(fileName);
-        FileUtils.getOutputStream(file).write(bytes);
+
         // 将每个文件分块的读取任务提交到线程池
         for (int i = 0; i < numChunks; i++) {
             final int chunkIndex = i;  // 当前块的索引
             futures.add(executor.submit(() -> {
-                try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
-                    // 定位到当前分块的起始位置
-                    raf.seek((long) chunkIndex * chunkSize);
-                    // 计算当前块的大小
-                    byte[] buffer = new byte[(int) Math.min(chunkSize, fileSize - (long) chunkIndex * chunkSize)];
-                    // 读取文件的当前块数据
-                    raf.readFully(buffer);
-                    return buffer; // 返回当前块的数据
-                }
+                // 根据分块大小计算读取范围
+                int start = chunkIndex * chunkSize;
+                int end = Math.min(start + chunkSize, fileSize);
+                byte[] buffer = new byte[end - start];
+                System.arraycopy(bytes, start, buffer, 0, buffer.length);
+                return buffer; // 返回当前块的数据
             }));
         }
 
@@ -733,11 +731,14 @@ public class FileServiceImpl implements FileService {
                 os.write(chunk); // 写入当前分块数据
             }
             os.flush(); // 确保所有数据写入完成
+        } catch (InterruptedException | ExecutionException e) {
+            // 捕获异常，日志记录和适当处理
+            error("下载过程中出现异常", e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } finally {
+            // 关闭线程池，释放资源
+            executor.shutdown();
         }
-
-        // 关闭线程池，释放资源
-        executor.shutdown();
     }
-
 
 }
