@@ -195,7 +195,7 @@ public class FileController implements AbstractBaseController {
         if (isPart && ObjectUtils.isEmpty(partSort)) {
             throw new GlobalCustomException("非法请求");
         }
-        fileService.download(identifier, isPart, partSort, response);
+        fileService.downLoadFileMultiThread(identifier, isPart, partSort, request,response);
     }
 
 }

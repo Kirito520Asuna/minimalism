@@ -682,4 +682,62 @@ public class FileServiceImpl implements FileService {
         IoUtils.close(outputStream);
     }
 
+    @SneakyThrows
+    @Override
+    public void downLoadFileMultiThread(String identifier, boolean isPart, Integer partSort, HttpServletRequest request, HttpServletResponse response) {
+        FileByte fileByte = getBytes(identifier, isPart, partSort);
+        // 获取文件名参数
+        String fileName = fileByte.getFileName();
+        byte[] bytes = fileByte.getBytes();
+        // 获取文件的总大小
+        int fileSize = bytes.length;
+        // 设置响应的文件类型为二进制流
+        response.setContentType("application/octet-stream");
+        // 设置响应头，告诉浏览器这是一个附件，提供下载
+        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
+        // 设置文件总大小，方便浏览器展示下载进度
+        response.setHeader("Content-Length", String.valueOf(fileSize));
+
+        // 设置每个分片的大小为4MB
+        int chunkSize = 4 * 1024 * 1024; // 每个分片4MB
+        // 计算文件需要分成多少个块
+        int numChunks = (int) Math.ceil((double) fileSize / chunkSize);
+
+        // 创建线程池，最大线程数为8，避免线程过多导致性能问题
+        ExecutorService executor = Executors.newFixedThreadPool(Math.min(numChunks, 8));  // 根据需要动态调整线程池大小
+        // 用来存储每个线程返回的分片数据
+        List<Future<byte[]>> futures = new ArrayList<>(numChunks);
+        File file = FileUtils.newFile(fileName);
+        FileUtils.getOutputStream(file).write(bytes);
+        // 将每个文件分块的读取任务提交到线程池
+        for (int i = 0; i < numChunks; i++) {
+            final int chunkIndex = i;  // 当前块的索引
+            futures.add(executor.submit(() -> {
+                try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+                    // 定位到当前分块的起始位置
+                    raf.seek((long) chunkIndex * chunkSize);
+                    // 计算当前块的大小
+                    byte[] buffer = new byte[(int) Math.min(chunkSize, fileSize - (long) chunkIndex * chunkSize)];
+                    // 读取文件的当前块数据
+                    raf.readFully(buffer);
+                    return buffer; // 返回当前块的数据
+                }
+            }));
+        }
+
+        // 将下载的分块按顺序写入到响应的输出流中
+        try (OutputStream os = new BufferedOutputStream(response.getOutputStream())) {
+            for (int i = 0; i < futures.size(); i++) {
+                // 获取当前块的数据，并写入到响应输出流中
+                byte[] chunk = futures.get(i).get(); // 使用future.get()等待当前块数据的完成
+                os.write(chunk); // 写入当前分块数据
+            }
+            os.flush(); // 确保所有数据写入完成
+        }
+
+        // 关闭线程池，释放资源
+        executor.shutdown();
+    }
+
+
 }
