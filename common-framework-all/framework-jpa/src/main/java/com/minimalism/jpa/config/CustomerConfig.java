@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.jpa.config;
 
 
 import org.springframework.beans.factory.annotation.Qualifier;
