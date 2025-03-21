@@ -1,10 +1,10 @@
-package com.minimalism.aop.aspect;
+package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
-import com.minimalism.aop.redis.RedisCacheEvict;
+import com.minimalism.redis.aop.redis.RedisCacheEvict;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
         return one;
     }
     @Override
-    @Pointcut("@annotation(com.minimalism.aop.redis.RedisCacheEvict)")
+    @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisCacheEvict)")
     public void pointcutAspect() {
     }
     @SneakyThrows

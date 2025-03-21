@@ -1,19 +1,15 @@
-package com.minimalism.aop.aspect;
+package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
-import com.minimalism.aop.redis.RedisCachePut;
+import com.minimalism.redis.aop.redis.RedisCachePut;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.jexl3.JexlEngine;
-import org.apache.commons.jexl3.JexlExpression;
-import org.apache.commons.jexl3.internal.Engine;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,11 +20,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -89,7 +82,7 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
 
 
     @Override
-    @Pointcut("@annotation(com.minimalism.aop.redis.RedisCachePut)")
+    @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisCachePut)")
     public void pointcutAspect() {
     }
 

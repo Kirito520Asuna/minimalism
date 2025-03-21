@@ -1,7 +1,7 @@
 package com.minimalism.user.service;
 
 import com.minimalism.abstractinterface.service.AbstractUserService;
-import com.minimalism.aop.redis.RedisCachePut;
+import com.minimalism.redis.aop.redis.RedisCachePut;
 import com.minimalism.constant.Redis;
 import com.minimalism.enums.im.ChatType;
 import com.minimalism.pojo.User;

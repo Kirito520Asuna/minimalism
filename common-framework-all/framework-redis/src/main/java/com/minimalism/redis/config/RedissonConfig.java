@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.redis.config;
 
 import java.time.Duration;
 import java.util.Arrays;

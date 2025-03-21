@@ -1,4 +1,4 @@
-package com.minimalism.common;
+package com.minimalism.redis.ip;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;

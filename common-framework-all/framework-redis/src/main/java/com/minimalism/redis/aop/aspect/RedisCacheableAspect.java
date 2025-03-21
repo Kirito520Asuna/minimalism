@@ -1,11 +1,11 @@
-package com.minimalism.aop.aspect;
+package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
-import com.minimalism.aop.redis.RedisCacheable;
-import com.minimalism.exception.RedisException;
+import com.minimalism.redis.aop.redis.RedisCacheable;
+import com.minimalism.redis.exception.RedisException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -54,7 +54,7 @@ public class RedisCacheableAspect implements AbstractRedisAspect {
     }
 
     @Override
-    @Pointcut("@annotation(com.minimalism.aop.redis.RedisCacheable)")
+    @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisCacheable)")
     public void pointcutAspect() {
     }
 

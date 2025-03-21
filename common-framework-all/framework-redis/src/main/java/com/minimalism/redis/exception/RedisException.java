@@ -1,4 +1,4 @@
-package com.minimalism.exception;
+package com.minimalism.redis.exception;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

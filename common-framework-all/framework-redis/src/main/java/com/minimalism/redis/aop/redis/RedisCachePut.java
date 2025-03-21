@@ -1,4 +1,4 @@
-package com.minimalism.aop.redis;
+package com.minimalism.redis.aop.redis;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;

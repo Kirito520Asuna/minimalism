@@ -1,4 +1,4 @@
-package com.minimalism.aop.aspect;
+package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -6,8 +6,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
-import com.minimalism.aop.redis.RedisNoRepeatSubmit;
-import com.minimalism.exception.RedisException;
+import com.minimalism.redis.aop.redis.RedisNoRepeatSubmit;
+import com.minimalism.redis.exception.RedisException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -59,7 +59,7 @@ public class RedisNoRepeatSubmitAspect implements AbstractRedisAspect {
     }
 
     @Override
-    @Pointcut("@annotation(com.minimalism.aop.redis.RedisNoRepeatSubmit)")
+    @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisNoRepeatSubmit)")
     public void pointcutAspect() {
     }
 

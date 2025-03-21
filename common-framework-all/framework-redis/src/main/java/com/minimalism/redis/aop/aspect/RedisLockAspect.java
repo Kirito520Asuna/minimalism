@@ -1,10 +1,10 @@
-package com.minimalism.aop.aspect;
+package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
-import com.minimalism.aop.redis.RedisLock;
-import com.minimalism.exception.RedisException;
+import com.minimalism.redis.aop.redis.RedisLock;
+import com.minimalism.redis.exception.RedisException;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -57,7 +57,7 @@ public class RedisLockAspect implements AbstractRedisAspect {
     }
 
     @Override
-    @Pointcut("@annotation(com.minimalism.aop.redis.RedisLock)")
+    @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisLock)")
     public void pointcutAspect() {
         AbstractRedisAspect.super.pointcutAspect();
     }

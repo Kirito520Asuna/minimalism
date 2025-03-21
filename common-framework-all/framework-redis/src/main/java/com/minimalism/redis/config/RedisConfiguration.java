@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.redis.config;
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.AllArgsConstructor;

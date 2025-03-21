@@ -4,8 +4,8 @@ package com.minimalism.abstractinterface;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.common.IPBan;
-import com.minimalism.common.RequestCounter;
+import com.minimalism.redis.ip.IPBan;
+import com.minimalism.redis.ip.RequestCounter;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
