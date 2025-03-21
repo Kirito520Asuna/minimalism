@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.swagger.config;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.swagger.AbstractSwagger;

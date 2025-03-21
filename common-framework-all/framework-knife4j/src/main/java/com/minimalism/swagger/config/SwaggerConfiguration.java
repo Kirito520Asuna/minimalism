@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.swagger.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

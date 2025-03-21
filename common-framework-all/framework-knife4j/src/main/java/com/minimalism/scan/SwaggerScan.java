@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yan
  * @date 2023/9/30 5:30
  */
-@ComponentScan(basePackages = {"com.minimalism.config"}
+@ComponentScan(basePackages = {"com.minimalism.config","com.minimalism.**.config"}
         , basePackageClasses = {RestController.class}
 )
 @Configuration
