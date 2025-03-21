@@ -39,6 +39,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -609,19 +612,7 @@ public class FileServiceImpl implements FileService {
         return fileByte;
     }
 
-/*
-    public static void main(String[] args) {
-        String url = "/develop/code/minimalism/tmp/uploads/local/merged/2439b05c-d49f-4113-a765-21640f39001d1742217949185/tbtool.7z";
-        String identifier = "2439b05c-d49f-4113-a765-21640f39001d1742217949185";
-        String uploadDir = "/develop/code/minimalism/tmp/uploads/local/";
-        String subBefore = StrUtil.subBefore(url, identifier, true);
-        subBefore = subBefore.substring(uploadDir.length(), subBefore.length());
-        System.err.println(subBefore);
-
-    }
-*/
-
-    @SneakyThrows
+/*    @SneakyThrows
     @Override
     public void download(String identifier, boolean isPart, Integer partSort, HttpServletResponse response) {
         String fileName = StrUtil.EMPTY;
@@ -634,16 +625,59 @@ public class FileServiceImpl implements FileService {
         FileByte fileByte = getBytes(identifier, isPart, partSort);
         fileName = fileByte.getFileName();
         byte[] bytes = fileByte.getBytes();
+        int fileSize = bytes.length;
+
         InputStream inputStream = new ByteArrayInputStream(bytes);
         //InputStream inputStream = MinioOSSUtils.downloadMinioInput(minioClient, bucketName, objectName);
         OutputStream responseOutputStream = response.getOutputStream();
         // 将 OSS 输出流的内容复制到 HTTP 响应输出流中
         IoUtils.copy(inputStream, responseOutputStream);
         // 设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setHeader("Content-Length", String.valueOf(fileSize));
         response.setContentType("application/x-msdownload");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, String.valueOf(StandardCharsets.UTF_8)));
         response.flushBuffer();
         IoUtils.close(responseOutputStream);
+    }*/
+    @SneakyThrows
+    @Override
+    public void download(String identifier, boolean isPart, Integer partSort, HttpServletResponse response) {
+        FileByte fileByte = getBytes(identifier, isPart, partSort);
+        String fileName = fileByte.getFileName();
+        byte[] bytes = fileByte.getBytes();
+        int fileSize = bytes.length;
+
+        // 计算分块大小，比如每块 1MB
+        int chunkSize = 1024 * 1024;
+        int numChunks = (fileSize + chunkSize - 1) / chunkSize;
+
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName,  String.valueOf(StandardCharsets.UTF_8)));
+        response.setHeader("Content-Length", String.valueOf(fileSize));
+
+        response.setContentType("application/octet-stream");
+
+        OutputStream outputStream = response.getOutputStream();
+        ExecutorService executor = Executors.newFixedThreadPool(4); // 4 个线程
+
+        List<Future<byte[]>> futures = new ArrayList<>();
+
+        for (int i = 0; i < numChunks; i++) {
+            int start = i * chunkSize;
+            int end = Math.min(start + chunkSize, fileSize);
+
+            // 异步任务读取文件片段
+            Future<byte[]> future = executor.submit(() -> Arrays.copyOfRange(bytes, start, end));
+            futures.add(future);
+        }
+
+        for (Future<byte[]> future : futures) {
+            outputStream.write(future.get()); // 等待数据读取完毕
+        }
+
+        outputStream.flush();
+        executor.shutdown();
+        IoUtils.close(outputStream);
     }
 }
