@@ -1,4 +1,4 @@
-package com.minimalism.config.nacos;
+package com.minimalism.nacos.config;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
