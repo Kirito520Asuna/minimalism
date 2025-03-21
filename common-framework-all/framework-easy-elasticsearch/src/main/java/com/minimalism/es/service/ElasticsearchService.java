@@ -1,4 +1,4 @@
-package com.minimalism.elasticsearch;
+package com.minimalism.es.service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @Date 2024/8/13 0013 15:41:41
  * @Description
  */
-public interface AbstractElasticsearchService {
+public interface ElasticsearchService {
     /**
      * 获取RestHighLevelClient
      *

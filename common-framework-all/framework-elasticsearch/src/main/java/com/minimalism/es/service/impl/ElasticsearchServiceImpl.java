@@ -1,6 +1,6 @@
-package com.minimalism.service.impl;
+package com.minimalism.es.service.impl;
 
-import com.minimalism.service.ElasticsearchService;
+import com.minimalism.es.service.ElasticsearchService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Service;

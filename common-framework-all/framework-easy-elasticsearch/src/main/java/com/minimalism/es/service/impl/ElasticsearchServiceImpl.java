@@ -1,6 +1,7 @@
-package com.minimalism.elasticsearch;
+package com.minimalism.es.service.impl;
 
-import com.minimalism.config.EasyElasticsearchConfig;
+import com.minimalism.es.config.EasyElasticsearchConfig;
+import com.minimalism.es.service.ElasticsearchService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @ConditionalOnBean(EasyElasticsearchConfig.class)
-public class AbstractElasticsearchServiceImpl implements AbstractElasticsearchService{
+public class ElasticsearchServiceImpl implements ElasticsearchService {
 }

@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.es.config;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Data;

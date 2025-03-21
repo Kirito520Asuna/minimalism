@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.es.config;
 
 import org.dromara.easyes.starter.register.EsMapperScan;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.minimalism.service;
+package com.minimalism.es.service;
 
 import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
