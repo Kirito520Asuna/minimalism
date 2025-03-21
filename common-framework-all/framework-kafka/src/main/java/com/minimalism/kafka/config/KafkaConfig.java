@@ -1,6 +1,6 @@
 package com.minimalism.kafka.config;
 
-import com.minimalism.kafka.handler.GlobalKafkaListenerErrorHandler;
+import com.minimalism.kafka.listener.handler.GlobalKafkaListenerErrorHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;

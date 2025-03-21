@@ -1,4 +1,4 @@
-package com.minimalism.kafka.handler;
+package com.minimalism.kafka.listener.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.listener.KafkaListenerErrorHandler;
