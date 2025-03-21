@@ -1,7 +1,7 @@
-package com.minimalism.config;
+package com.minimalism.rabbitmq.config;
 
 import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
-import com.minimalism.pojo.QueueInfo;
+import com.minimalism.rabbitmq.pojo.QueueInfo;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;

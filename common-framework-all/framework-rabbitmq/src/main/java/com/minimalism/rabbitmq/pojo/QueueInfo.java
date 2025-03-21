@@ -1,4 +1,4 @@
-package com.minimalism.pojo;
+package com.minimalism.rabbitmq.pojo;
 
 import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.rabbitmq.config;
 
 
 import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
