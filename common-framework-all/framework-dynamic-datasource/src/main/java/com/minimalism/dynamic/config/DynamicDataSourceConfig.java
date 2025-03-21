@@ -1,4 +1,4 @@
-package com.minimalism.config.dynamic;
+package com.minimalism.dynamic.config;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.dynamic.datasource.provider.DynamicDataSourceProvider;
