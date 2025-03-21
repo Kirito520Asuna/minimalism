@@ -80,9 +80,4 @@ public interface FileService extends AbstractBean {
     @SneakyThrows
     void downloadExecutor(String identifier, boolean isPart, Integer partSort, HttpServletResponse response);
 
-    void downloadMon(String identifier, boolean isPart, Integer partSort,
-                     HttpServletRequest request, HttpServletResponse response);
-
-    void download(String identifier, boolean isPart, Integer partSort,
-                  HttpServletRequest request, HttpServletResponse response);
 }
