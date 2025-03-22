@@ -1,5 +1,7 @@
 package com.minimalism.utils;
 
+import com.minimalism.utils.file.FileUtils;
+
 import java.io.*;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -43,6 +45,7 @@ public class SafeFileMerger {
     public static String mergeToFile(List<InputStream> inputStreams,
                                      int bufferSize,
                                      String tempDir) throws IOException {
+        FileUtils.newFile(tempDir).mkdirs();
         // 防御性校验
         validateInput(inputStreams, bufferSize, tempDir);
 
@@ -147,6 +150,7 @@ public class SafeFileMerger {
     public static byte[] mergeToMemory(List<InputStream> inputStreams,
                                        int bufferSize,
                                        long maxMemorySize) throws IOException {
+        FileUtils.newFile(DEFAULT_TEMP_DIR).mkdirs();
         // 防御性校验
         validateInput(inputStreams, bufferSize, DEFAULT_TEMP_DIR);
 

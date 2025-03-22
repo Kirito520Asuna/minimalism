@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -39,7 +38,7 @@ public interface FileService extends AbstractBean {
 
     void mergeMore(Long fileId, String identifier) throws IOException;
 
-    ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId);
+    String mergeToFilePath(String identifier, Long fileId);
 
     boolean mergeOk(String identifier, Long fileId);
 

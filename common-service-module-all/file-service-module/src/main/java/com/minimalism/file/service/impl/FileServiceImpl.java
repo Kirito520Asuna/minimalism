@@ -18,6 +18,7 @@ import com.minimalism.file.service.FileService;
 import com.minimalism.file.storage.FileFactory;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
+import com.minimalism.utils.SafeFileMerger;
 import com.minimalism.utils.file.FileUtils;
 import com.minimalism.utils.http.FileHelper;
 import com.minimalism.utils.io.IoUtils;
@@ -39,7 +40,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -148,12 +148,12 @@ public class FileServiceImpl implements FileService {
     }
 
 
-    public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier) {
+    public FileInfo uploadMergeChunks(InputStream inputStream, String fileMainName, String identifier, String filePath) {
         //上传到云端
         StorageType storageType = SpringUtil.getBean(FileProperties.class).getType();
         IFileStorageClient client = FileFactory.getClient(storageType);
         //FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
-        FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier);
+        FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier,filePath);
         return fileInfo.setLocal(Boolean.TRUE).setName(FileUtils.mainName(fileInfo.getFileName()));
     }
 
@@ -179,22 +179,22 @@ public class FileServiceImpl implements FileService {
         String mainName;
         String suffix;
         String fileMainName;
-        String path;
+        //String path;
 
         if (fileId != null) {
             FileInfo fileInfo = fileInfoService.getById(fileId);
             mainName = FileUtils.mainName(fileInfo.getFileName());
             suffix = fileInfo.getSuffix();
-            path = getMergePartPath(identifier, "tmp_" + mainName, suffix);
-            long fileInfoSize = fileInfo.getSize();
+            //path = getMergePartPath(identifier, "tmp_" + mainName, suffix);
+            //long fileInfoSize = fileInfo.getSize();
 
             /**
              * 因为分片大小是1MB的 总大小 1GB 也就是说 超出1024个InputStream 会出现oom
              */
-            long maxSize = 1024 * 1024 * 1024;
+          /*  long maxSize = 1024 * 1024 * 1024;
             if (fileInfoSize > maxSize) {
                 long freeMemory = JVMUtils.freeMemory();
-                if (freeMemory < fileInfoSize) {
+                if (false) {
                     //如果内存不够,直接移除文件
                     //方案一
                     fileInfoService.removeById(fileId);
@@ -211,13 +211,13 @@ public class FileServiceImpl implements FileService {
                 } else {
                     //方案二
                     //将分片合并 到不会oom的程度
-                    mergeMore(fileId, identifier);
+                    //mergeMore(fileId, identifier);
                 }
-            }
+            }*/
         } else {
             mainName = FileUtils.mainName(fileName);
             suffix = FileUtils.getSuffix(fileName);
-            path = getMergePartPath(identifier, "tmp_" + mainName, "." + FileUtils.getSuffix(fileName));
+            //path = getMergePartPath(identifier, "tmp_" + mainName, "." + FileUtils.getSuffix(fileName));
         }
 
         if (!suffix.startsWith(".")) {
@@ -226,18 +226,18 @@ public class FileServiceImpl implements FileService {
 
         fileMainName = mainName + suffix;
         //生成临时文件
-        File tmpFile = FileUtils.newFile(path);
-        if (!tmpFile.exists()) {
-            tmpFile.createNewFile();
-        }
+        //File tmpFile = FileUtils.newFile(path);
+        //if (!tmpFile.exists()) {
+        //    tmpFile.createNewFile();
+        //}
 
         try {
-            ByteArrayOutputStream outputStream = mergeOutputStream(identifier, fileId);
-            InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            OutputStream fileOutputStream = FileUtils.getOutputStream(tmpFile);
-            IoUtils.copy(inputStream, fileOutputStream);
-            inputStream = FileUtils.getInputStream(path);
-            FileInfo fileInfo = uploadMergeChunks(inputStream, fileMainName, identifier);
+            String mergeToFilePath = mergeToFilePath(identifier, fileId);
+            //InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+            //OutputStream fileOutputStream = FileUtils.getOutputStream(tmpFile);
+            //IoUtils.copy(inputStream, fileOutputStream);
+            //inputStream = FileUtils.getInputStream(path);
+            FileInfo fileInfo = uploadMergeChunks(null, fileMainName, identifier,mergeToFilePath);
             if (fileId != null) {
                 //FileInfo fileInfoById = fileInfoService.getById(fileId);
                 //fileInfoById.setUrl(fileInfo.getUrl())
@@ -250,8 +250,7 @@ public class FileServiceImpl implements FileService {
             }
             mergeOk(identifier, fileId);
         } finally {
-            FileUtils.del(path);
-            //FileUtils.del(path.substring(0, path.lastIndexOf(OSType.getSeparator(null)) + 1));
+            //FileUtils.del(path);
         }
         return true;
     }
@@ -290,7 +289,7 @@ public class FileServiceImpl implements FileService {
                 return;
             }
             //合并 todo：
-            ByteArrayOutputStream outputStream = IoUtils.merge(parts.stream().map(part -> {
+            List<InputStream> streams = parts.stream().map(part -> {
                 InputStream inputStream;
                 if (part.getLocal()) {
                     inputStream = FileUtils.getInputStream(part.getLocalResource());
@@ -302,21 +301,10 @@ public class FileServiceImpl implements FileService {
                     }
                 }
                 return inputStream;
-            }).collect(Collectors.toList()));
-
-            //合并完成
-            parts.stream().filter(FilePart::getLocal)
-                    .map(FilePart::getLocalResource)
-                    .forEach(FileUtils::del);
-
-            filePartService.removeByIds(parts.stream().map(FilePart::getPartId).collect(Collectors.toList()));
+            }).collect(Collectors.toList());
+            //ByteArrayOutputStream outputStream = IoUtils.merge(streams);
 
             FilePart filePart = parts.stream().findFirst().get();
-            info("{}" + Constants.PART_SUFFIX + "~{}" + Constants.PART_SUFFIX + ",合并完成",
-                    FileUtils.mainName(filePart.getLocal() ? filePart.getLocalResource() : filePart.getUrl()),
-                    FileUtils.mainName(parts.get(parts.size() - 1).getLocal() ?
-                            parts.get(parts.size() - 1).getLocalResource() : parts.get(parts.size() - 1).getUrl()));
-
             if (filePart.getLocal()) {
                 String partFileName = i + Constants.PART_SUFFIX;
                 String localResource = filePart.getLocalResource();
@@ -331,12 +319,25 @@ public class FileServiceImpl implements FileService {
                     file.createNewFile();
                 }
 
-                IoUtils.copy(new ByteArrayInputStream(outputStream.toByteArray()), FileUtils.getOutputStream(file));
+                SafeFileMerger.mergeToFile(streams,pathAll);
+                //合并完成
+                parts.stream().filter(FilePart::getLocal)
+                        .map(FilePart::getLocalResource)
+                        .forEach(FileUtils::del);
+
+                filePartService.removeByIds(parts.stream().map(FilePart::getPartId).collect(Collectors.toList()));
+
+                //IoUtils.copy(new ByteArrayInputStream(outputStream.toByteArray()), FileUtils.getOutputStream(file));
                 long size = IoUtils.size(FileUtils.getInputStream(pathAll));
 
                 filePart.setPartSize(size);
                 filePartService.save(filePart.setPartId(null).setLocalResource(pathAll));
                 excludePartIds.add(filePart.getPartId());
+
+                info("{}" + Constants.PART_SUFFIX + "~{}" + Constants.PART_SUFFIX + ",合并完成",
+                        FileUtils.mainName(filePart.getLocal() ? filePart.getLocalResource() : filePart.getUrl()),
+                        FileUtils.mainName(parts.get(parts.size() - 1).getLocal() ?
+                                parts.get(parts.size() - 1).getLocalResource() : parts.get(parts.size() - 1).getUrl()));
             }
         }
 
@@ -348,13 +349,26 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @SneakyThrows
     @Override
-    public ByteArrayOutputStream mergeOutputStream(String identifier, Long fileId) {
-
+    public String mergeToFilePath(String identifier, Long fileId) {
+        FileInfo fileInfo = fileInfoService.getByPartCode(identifier);
         List<PartVo> partList = getPartList(identifier, fileId).stream().map(o -> o.setIdentifier(identifier)).collect(Collectors.toList());
         List<PartVo> list = partList.stream()
                 .map(this::partToInputStream).collect(Collectors.toList());
-        ByteArrayOutputStream out = IoUtils.merge(list.stream().map(PartVo::getInputStream).collect(Collectors.toList()));
+        List<InputStream> collect = list.stream().map(PartVo::getInputStream).collect(Collectors.toList());
+        //byte[] bytes = SafeFileMerger.mergeToMemory(collect);
+
+        String mergeFilePath = LocalOSSUtils.getMergeFilePath(identifier, fileInfo.getFileName());
+        SafeFileMerger.mergeToFile(collect,mergeFilePath);
+        //collect.stream().forEach(inputStream -> {
+        //    try {
+        //        out.write( SafeFileMerger.mergeToMemory(Arrays.asList(inputStream)));
+        //    } catch (IOException e) {
+        //        throw new RuntimeException(e);
+        //    }
+        //});
+        //out = IoUtils.merge(collect);
         //移除其他实例服务器
         list.stream().filter(PartVo::getLocal).forEach(part -> {
             String uploadDir = part.getUploadDir();
@@ -393,7 +407,7 @@ public class FileServiceImpl implements FileService {
                 }
             }
         });
-        return out;
+        return mergeFilePath;
     }
 
 
@@ -635,7 +649,8 @@ public class FileServiceImpl implements FileService {
         IoUtils.copy(inputStream, responseOutputStream);
         // 设置文件ContentType类型，这样设置，会自动判断下载文件类型
         response.setHeader("Content-Length", String.valueOf(fileSize));
-        response.setContentType("application/x-msdownload");
+
+        response.setContentType("application/octet-stream");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, String.valueOf(StandardCharsets.UTF_8)));
         response.flushBuffer();

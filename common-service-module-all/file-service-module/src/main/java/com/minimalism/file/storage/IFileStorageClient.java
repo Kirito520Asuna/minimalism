@@ -187,7 +187,9 @@ public interface IFileStorageClient extends AbstractBean {
         }
         return null;
     }
-
+    default FileInfo uploadSharding(String fileName, InputStream inputStream, String identifier, String localPath) {
+        return uploadSharding(null, fileName, inputStream, identifier,localPath);
+    }
    @SneakyThrows
    default FileInfo uploadSharding(String bucketName, String fileName, InputStream inputStream, String identifier, String localPath){
        if (StrUtil.isNotBlank(localPath)) {
