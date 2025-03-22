@@ -9,21 +9,14 @@ import cn.hutool.json.JSONUtil;
 import com.minimalism.dto.FileUpDto;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 
 /**
@@ -31,16 +24,18 @@ import java.util.stream.Collectors;
  * @Date 2025/3/8 18:11:03
  * @Description
  */
+@Slf4j
 public class UploadTest {
     public static void main(String[] args) {
-        uploadChunk();
+        boolean useExecutor = false;
+        uploadChunk(useExecutor);
         //System.err.println(FileUtil.mainName("G:\\zip-all\\tbtool.7z") + "." + FileUtil.getSuffix("G:\\zip-all\\tbtool.7z"));
     }
 
     private static final int THREAD_COUNT = 4; // 线程池大小，可调整
 
     @SneakyThrows
-    public static void uploadChunk() {
+    public static void uploadChunk(boolean useExecutor) {
         String host = "192.168.3.85:13600";
 
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
@@ -77,18 +72,38 @@ public class UploadTest {
         List<InputStream> streamList = IoUtils.splitInputStream(inputStream, chunkSize);
 
         String uploadUrl = String.format("http://%s/file/file/upload/chunk", host);
+        if (useExecutor) {
+            uploadChunkExecutor(chunkNumber, totalChunks, totalFileSize, fileId, identifier, streamList, uploadUrl);
+        } else {
+            uploadChunk(chunkNumber, totalChunks, totalFileSize, fileId, identifier, streamList, uploadUrl);
+        }
+        String mergeUrl = String.format("http://%s/file/file/upload/merge", host);
+        merge(mergeUrl, fileName, identifier, totalChunks, fileId, totalFileSize);
+    }
+
+    private static void uploadChunk(int chunkNumber, int totalChunks, Long totalFileSize, Long fileId, String identifier, List<InputStream> streamList, String uploadUrl) throws Exception {
+        for (InputStream input : streamList) {
+            uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks, totalFileSize, input);
+            chunkNumber++;
+        }
+    }
+
+    private static void uploadChunkExecutor(int chunkNumber, int totalChunks, Long totalFileSize, Long fileId, String identifier, List<InputStream> streamList, String uploadUrl) {
+        log.info("uploadChunkExecutor start ...");
         //多线程执行
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         List<Future<?>> futures = CollUtil.newArrayList();
-
+        if (chunkNumber > -1) {
+            chunkNumber--;
+        }
         for (InputStream input : streamList) {
             final int currentChunk = chunkNumber++; // 确保每个任务的 chunkNumber 唯一
             futures.add(executorService.submit(() -> {
                 try {
-                    System.err.println("uploadChunk chunkNumber: " + currentChunk);
+                    log.error("uploadChunk chunkNumber: {}", currentChunk);
                     uploadChunk(uploadUrl, identifier, fileId, currentChunk, totalChunks, totalFileSize, input);
                 } catch (Exception e) {
-                    System.err.println("上传 chunk " + currentChunk + " 失败：" + e.getMessage());
+                    log.error("上传 chunk:{},失败：{}" ,currentChunk,e.getMessage());
                     throw new RuntimeException(e);
                 }
             }));
@@ -99,29 +114,23 @@ public class UploadTest {
             try {
                 future.get(); // 等待任务完成
             } catch (InterruptedException | ExecutionException e) {
-                System.err.println("任务执行失败：" + e.getMessage());
+                log.error("任务执行失败：{}", e.getMessage());
             }
         }
 
         // 关闭线程池
         executorService.shutdown();
         try {
-            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+            if (!executorService.awaitTermination(60, TimeUnit.MINUTES)) {
                 executorService.shutdownNow();
             }
         } catch (InterruptedException e) {
             executorService.shutdownNow();
         }
-        //for (InputStream input : streamList) {
-        //    System.err.println("uploadChunk chunkNumber:" + chunkNumber);
-        //    uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks, totalFileSize, input);
-        //    chunkNumber++;
-        //}
-        String mergeUrl = String.format("http://%s/file/file/upload/merge", host);
-        merge(mergeUrl, fileName, identifier, totalChunks, fileId, totalFileSize);
     }
 
     public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, Long totalFileSize, InputStream inputStream) throws Exception {
+        log.debug("uploadChunk chunkNumber:{}", chunkNumber);
         // 使用 Hutool 创建 POST 请求，上传 multipart 表单数据
         HttpResponse response = HttpRequest.post(url)
                 //.form(form)
@@ -135,12 +144,12 @@ public class UploadTest {
                 .execute();
 
         // 输出响应内容
-        System.out.println("Response: " + response.body());
+        log.info("Response: {}", response.body());
 
     }
 
     public static void merge(String url, String fileName, String identifier, int totalChunks, Long fileId, Long totalFileSize) {
-        System.err.println("Merging chunks...");
+        log.info("Merging chunks...");
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", fileName);
         params.put("identifier", identifier);
@@ -152,6 +161,6 @@ public class UploadTest {
         request.form(params);
 
         String response = request.execute().body();
-        System.err.println("Chunk " + identifier + " Merging. Server response: " + response);
+        log.info("Chunk identifier:{}, Merging. Server response:{}", identifier, response);
     }
 }
