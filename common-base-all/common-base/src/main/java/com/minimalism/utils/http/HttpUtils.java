@@ -251,25 +251,40 @@ public class HttpUtils {
     public static String get(String url, Map<String, Object> params, Map<String, String> headers) {
         return get(null, url, params, headers);
     }
+
     @SneakyThrows
-    public static String get(OkHttpClient client,String url, Map<String, Object> params, Map<String, String> headers) {
-        HttpMethod get = HttpMethod.GET;
-        return sendHttpRequest(client,get, url, params, null, headers, null);
+    public static <T> T get(OkHttpClient client, String url, Map<String, Object> params, Map<String, String> headers, Class<T> clazz) {
+        String json = get(client, url, params, headers);
+        return JSONUtil.toBean(json, clazz);
     }
+
+    @SneakyThrows
+    public static String get(OkHttpClient client, String url, Map<String, Object> params, Map<String, String> headers) {
+        HttpMethod get = HttpMethod.GET;
+        return sendHttpRequest(client, get, url, params, null, headers, null);
+    }
+
     @SneakyThrows
     public static <T> T post(String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType, Class<T> clazz) {
         String json = post(url, params, body, headers, mediaType);
         return JSONUtil.toBean(json, clazz);
     }
+
     @SneakyThrows
     public static String post(String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
         return post(null, url, params, body, headers, mediaType);
     }
 
     @SneakyThrows
-    public static String post(OkHttpClient client,String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
+    public static <T> T post(OkHttpClient client, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType, Class<T> clazz) {
+        String json = post(client, url, params, body, headers, mediaType);
+        return JSONUtil.toBean(json, clazz);
+    }
+
+    @SneakyThrows
+    public static String post(OkHttpClient client, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
         HttpMethod post = HttpMethod.POST;
-        return sendHttpRequest(client,post, url, params, body, headers, mediaType);
+        return sendHttpRequest(client, post, url, params, body, headers, mediaType);
     }
 
     @SneakyThrows
@@ -282,6 +297,13 @@ public class HttpUtils {
     public static String put(String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
         return put(null, url, params, body, headers, mediaType);
     }
+
+    @SneakyThrows
+    public static <T> T put(OkHttpClient client, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType, Class<T> clazz) {
+        String json = put(client, url, params, body, headers, mediaType);
+        return JSONUtil.toBean(json, clazz);
+    }
+
     @SneakyThrows
     public static String put(OkHttpClient client, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
         HttpMethod put = HttpMethod.PUT;
@@ -293,9 +315,16 @@ public class HttpUtils {
         String json = delete(url, params, headers);
         return JSONUtil.toBean(json, clazz);
     }
+
     @SneakyThrows
     public static String delete(String url, Map<String, Object> params, Map<String, String> headers) {
-        return delete(null, url, params,  headers);
+        return delete(null, url, params, headers);
+    }
+
+    @SneakyThrows
+    public static <T> T delete(OkHttpClient client, String url, Map<String, Object> params, Map<String, String> headers, Class<T> clazz) {
+        String json = delete(client, url, params, headers);
+        return JSONUtil.toBean(json, clazz);
     }
 
     @SneakyThrows
@@ -304,6 +333,11 @@ public class HttpUtils {
         return sendHttpRequest(client, delete, url, params, null, headers, null);
     }
 
+    @SneakyThrows
+    public static <T> T sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, String paramsJson, String bodyJson, String headersJson, String mediaType, Class<T> clazz) {
+        String json = sendHttpRequest(client, httpMethod, url, paramsJson, bodyJson, headersJson, mediaType);
+        return JSONUtil.toBean(json, clazz);
+    }
 
     @SneakyThrows
     public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, String paramsJson, String bodyJson, String headersJson, String mediaType) {
@@ -313,6 +347,11 @@ public class HttpUtils {
         return sendHttpRequest(client, httpMethod, url, paramsToMap, bodyToMap, headersToMap, mediaType);
     }
 
+    @SneakyThrows
+    public static <T> T sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, Object params, Object body, Object headers, String mediaType, Class<T> clazz) {
+        String json = sendHttpRequest(client, httpMethod, url, params, body, headers, mediaType);
+        return JSONUtil.toBean(json, clazz);
+    }
     @SneakyThrows
     public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, Object params, Object body, Object headers, String mediaType) {
         Map<String, Object> paramsToMap = objectToMap(params);
@@ -377,7 +416,7 @@ public class HttpUtils {
     }
 
     @SneakyThrows
-    public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, RequestBody requestBody, Map<String, String> headers) {
+    public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, Map<String, Object> params, RequestBody requestBody, Map<String, String> headers) {
         if (!CollUtil.newArrayList(HttpMethod.PUT, HttpMethod.POST).contains(httpMethod)) {
             log.error("请求方法{}不支持!,请使用PUT|POST", httpMethod);
             throw new Exception("请求方法不支持!");
@@ -387,10 +426,10 @@ public class HttpUtils {
         sendMap.put("httpMethod", httpMethod);
         sendMap.put("url", url);
         sendMap.put("headers", headers);
-        sendMap.put("params", null);
+        sendMap.put("params", params);
         sendMap.put("body", JSONUtil.toJsonStr(requestBody));
         log.info("[SendHttp]::[START]==>[info]:[{}]<==[END]", JSONUtil.toJsonStr(sendMap));
-        url = urlJoin(url, null);
+        url = urlJoin(url, params);
         log.info("[SendHttp]::[splicingTogether]==>url:{}<==[END]", url);
 
         Request.Builder builder = addHeader(new Request.Builder(), headers).url(url);
@@ -410,13 +449,15 @@ public class HttpUtils {
     }
 
     private static Request.Builder addUpdateMethod(HttpMethod httpMethod, RequestBody requestBody, Request.Builder builder) {
-        switch (httpMethod) {
-            case PUT:
-                builder.put(requestBody);
-                break;
-            case POST:
-                builder.post(requestBody);
-                break;
+        if (ObjectUtil.isNotEmpty(requestBody)) {
+            switch (httpMethod) {
+                case PUT:
+                    builder.put(requestBody);
+                    break;
+                case POST:
+                    builder.post(requestBody);
+                    break;
+            }
         }
         return builder;
     }
