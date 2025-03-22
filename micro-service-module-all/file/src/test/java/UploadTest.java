@@ -1,3 +1,4 @@
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -8,13 +9,21 @@ import cn.hutool.json.JSONUtil;
 import com.minimalism.dto.FileUpDto;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 
 /**
@@ -27,6 +36,8 @@ public class UploadTest {
         uploadChunk();
         //System.err.println(FileUtil.mainName("G:\\zip-all\\tbtool.7z") + "." + FileUtil.getSuffix("G:\\zip-all\\tbtool.7z"));
     }
+
+    private static final int THREAD_COUNT = 4; // 线程池大小，可调整
 
     @SneakyThrows
     public static void uploadChunk() {
@@ -57,7 +68,7 @@ public class UploadTest {
         int chunkSize = (Integer) entries.getByPath("data.chunkSize");
         int chunkNumber = (Integer) entries.getByPath("data.chunkNumber");
         int totalChunks = (Integer) entries.getByPath("data.totalChunks");
-        Long totalFileSize = Long.valueOf((Integer) entries.getByPath("data.totalFileSize"));
+        Long totalFileSize = Long.parseLong("" + entries.getByPath("data.totalFileSize"));
         Long fileId = Long.valueOf((Integer) entries.getByPath("data.fileId"));
         String identifier = (String) entries.getByPath("data.identifier");
 
@@ -66,15 +77,48 @@ public class UploadTest {
         List<InputStream> streamList = IoUtils.splitInputStream(inputStream, chunkSize);
 
         String uploadUrl = String.format("http://%s/file/file/upload/chunk", host);
+        //多线程执行
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Future<?>> futures = CollUtil.newArrayList();
 
         for (InputStream input : streamList) {
-            System.err.println("uploadChunk chunkNumber:" + chunkNumber);
-            uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks,totalFileSize , input);
-            chunkNumber++;
+            final int currentChunk = chunkNumber++; // 确保每个任务的 chunkNumber 唯一
+            futures.add(executorService.submit(() -> {
+                try {
+                    System.err.println("uploadChunk chunkNumber: " + currentChunk);
+                    uploadChunk(uploadUrl, identifier, fileId, currentChunk, totalChunks, totalFileSize, input);
+                } catch (Exception e) {
+                    System.err.println("上传 chunk " + currentChunk + " 失败：" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }));
         }
 
+        // 等待所有上传任务完成
+        for (Future<?> future : futures) {
+            try {
+                future.get(); // 等待任务完成
+            } catch (InterruptedException | ExecutionException e) {
+                System.err.println("任务执行失败：" + e.getMessage());
+            }
+        }
+
+        // 关闭线程池
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+        }
+        //for (InputStream input : streamList) {
+        //    System.err.println("uploadChunk chunkNumber:" + chunkNumber);
+        //    uploadChunk(uploadUrl, identifier, fileId, chunkNumber, totalChunks, totalFileSize, input);
+        //    chunkNumber++;
+        //}
         String mergeUrl = String.format("http://%s/file/file/upload/merge", host);
-        merge(mergeUrl, fileName, identifier, totalChunks, fileId,totalFileSize);
+        merge(mergeUrl, fileName, identifier, totalChunks, fileId, totalFileSize);
     }
 
     public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, Long totalFileSize, InputStream inputStream) throws Exception {
@@ -95,7 +139,7 @@ public class UploadTest {
 
     }
 
-    public static void merge(String url, String fileName, String identifier, int totalChunks, Long fileId,Long totalFileSize) {
+    public static void merge(String url, String fileName, String identifier, int totalChunks, Long fileId, Long totalFileSize) {
         System.err.println("Merging chunks...");
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", fileName);
