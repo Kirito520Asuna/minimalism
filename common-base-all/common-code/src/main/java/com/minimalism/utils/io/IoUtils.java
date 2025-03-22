@@ -133,24 +133,23 @@ public class IoUtils extends IoUtil {
     @SneakyThrows
     public static ByteArrayOutputStream merge(List<InputStream> list) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try (ByteArrayOutputStream outputStream = out) {
+        try {
             for (InputStream chunk : list) {
                 try (InputStream inputStream = chunk) {
-                    copy(inputStream, outputStream);
-                } finally {
-                    close(chunk);
+                    IOUtils.copy(inputStream, out); // 使用 Apache Commons IO 高效拷贝
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new GlobalCustomException("合并错误！");
+            throw new GlobalCustomException("合并错误！" + e);
         }
         return out;
     }
+
     @SneakyThrows
     public static long getInputStreamLength(byte[] bytes) {
         return getInputStreamLength(new ByteArrayInputStream(bytes));
     }
+
     @SneakyThrows
     public static long getInputStreamLength(InputStream inputStream) {
         byte[] buffer = new byte[1024];
