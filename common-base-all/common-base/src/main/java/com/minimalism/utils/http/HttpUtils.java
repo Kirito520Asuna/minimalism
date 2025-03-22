@@ -1,6 +1,7 @@
 package com.minimalism.utils.http;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Maps;
@@ -248,20 +249,27 @@ public class HttpUtils {
 
     @SneakyThrows
     public static String get(String url, Map<String, Object> params, Map<String, String> headers) {
-        HttpMethod get = HttpMethod.GET;
-        return sendHttpRequest(get, url, params, null, headers, null);
+        return get(null, url, params, headers);
     }
-
+    @SneakyThrows
+    public static String get(OkHttpClient client,String url, Map<String, Object> params, Map<String, String> headers) {
+        HttpMethod get = HttpMethod.GET;
+        return sendHttpRequest(client,get, url, params, null, headers, null);
+    }
     @SneakyThrows
     public static <T> T post(String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType, Class<T> clazz) {
         String json = post(url, params, body, headers, mediaType);
         return JSONUtil.toBean(json, clazz);
     }
-
     @SneakyThrows
     public static String post(String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
+        return post(null, url, params, body, headers, mediaType);
+    }
+
+    @SneakyThrows
+    public static String post(OkHttpClient client,String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
         HttpMethod post = HttpMethod.POST;
-        return sendHttpRequest(post, url, params, body, headers, mediaType);
+        return sendHttpRequest(client,post, url, params, body, headers, mediaType);
     }
 
     @SneakyThrows
@@ -272,8 +280,12 @@ public class HttpUtils {
 
     @SneakyThrows
     public static String put(String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
+        return put(null, url, params, body, headers, mediaType);
+    }
+    @SneakyThrows
+    public static String put(OkHttpClient client, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
         HttpMethod put = HttpMethod.PUT;
-        return sendHttpRequest(put, url, params, body, headers, mediaType);
+        return sendHttpRequest(client, put, url, params, body, headers, mediaType);
     }
 
     @SneakyThrows
@@ -281,24 +293,28 @@ public class HttpUtils {
         String json = delete(url, params, headers);
         return JSONUtil.toBean(json, clazz);
     }
-
     @SneakyThrows
     public static String delete(String url, Map<String, Object> params, Map<String, String> headers) {
+        return delete(null, url, params,  headers);
+    }
+
+    @SneakyThrows
+    public static String delete(OkHttpClient client, String url, Map<String, Object> params, Map<String, String> headers) {
         HttpMethod delete = HttpMethod.DELETE;
-        return sendHttpRequest(delete, url, params, null, headers, null);
+        return sendHttpRequest(client, delete, url, params, null, headers, null);
     }
 
 
     @SneakyThrows
-    public static String sendHttpRequest(HttpMethod httpMethod, String url, String paramsJson, String bodyJson, String headersJson, String mediaType) {
+    public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, String paramsJson, String bodyJson, String headersJson, String mediaType) {
         Map<String, Object> paramsToMap = jsonToMap(paramsJson);
         Map<String, Object> bodyToMap = jsonToMap(bodyJson);
         Map<String, String> headersToMap = jsonHeadersToMap(headersJson);
-        return sendHttpRequest(httpMethod, url, paramsToMap, bodyToMap, headersToMap, mediaType);
+        return sendHttpRequest(client, httpMethod, url, paramsToMap, bodyToMap, headersToMap, mediaType);
     }
 
     @SneakyThrows
-    public static String sendHttpRequest(HttpMethod httpMethod, String url, Object params, Object body, Object headers, String mediaType) {
+    public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, Object params, Object body, Object headers, String mediaType) {
         Map<String, Object> paramsToMap = objectToMap(params);
         Map<String, Object> bodyToMap = objectToMap(body);
         Map<String, Object> headersToMapTemp = objectToMap(headers);
@@ -306,7 +322,7 @@ public class HttpUtils {
         if (ObjectUtil.isNotEmpty(headers)) {
             headersToMapTemp.keySet().stream().forEach(key -> headersToMap.put(key, String.valueOf(headersToMapTemp.get(key))));
         }
-        return sendHttpRequest(httpMethod, url, paramsToMap, bodyToMap, headersToMap, mediaType);
+        return sendHttpRequest(client, httpMethod, url, paramsToMap, bodyToMap, headersToMap, mediaType);
     }
 
     /**
@@ -321,7 +337,7 @@ public class HttpUtils {
      * @return 响应
      */
     @SneakyThrows
-    public static String sendHttpRequest(HttpMethod httpMethod, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
+    public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, Map<String, Object> params, Map<String, Object> body, Map<String, String> headers, String mediaType) {
         Map<String, Object> sendMap = Maps.newLinkedHashMap();
         sendMap.put("httpMethod", httpMethod);
         sendMap.put("url", url);
@@ -331,6 +347,8 @@ public class HttpUtils {
         log.info("[SendHttp]::[START]==>[info]:[{}]<==[END]", JSONUtil.toJsonStr(sendMap));
         url = urlJoin(url, params);
         log.info("[SendHttp]::[splicingTogether]==>url:{}<==[END]", url);
+
+
         Request.Builder builder = addHeader(new Request.Builder(), headers).url(url);
         if (ObjectUtils.equals(HttpMethod.GET, httpMethod)) {
             builder.get();
@@ -338,20 +356,16 @@ public class HttpUtils {
             String jsonStr = JSONUtil.toJsonStr(ObjectUtils.defaultIfEmpty(body, new LinkedHashMap<>()));
             //ObjectUtil.isEmpty(mediaType) ? "application/json" : mediaType
             RequestBody requestBody = RequestBody.create(MediaType.parse(ObjectUtils.defaultIfEmpty(mediaType, "application/json")), jsonStr);
-            if (ObjectUtils.equals(HttpMethod.POST, httpMethod)) {
-                builder.post(requestBody);
-            } else if (ObjectUtils.equals(HttpMethod.PUT, httpMethod)) {
-                builder.put(requestBody);
-            } else {
-                throw new Exception("");
-            }
+            builder = addUpdateMethod(httpMethod, requestBody, builder);
         } else if (ObjectUtils.equals(HttpMethod.DELETE, httpMethod)) {
             builder.delete();
         } else {
             throw new Exception("请求方法不存在!");
         }
         Request request = builder.build();
-        OkHttpClient client = new OkHttpClient();
+        if (client == null) {
+            client = new OkHttpClient();
+        }
         Response response = client.newCall(request).execute();
         if (response.isSuccessful()) {
             log.info("[SendHttp]::[Success]");
@@ -360,5 +374,50 @@ public class HttpUtils {
         }
         String responseData = response.body().string();
         return responseData;
+    }
+
+    @SneakyThrows
+    public static String sendHttpRequest(OkHttpClient client, HttpMethod httpMethod, String url, RequestBody requestBody, Map<String, String> headers) {
+        if (!CollUtil.newArrayList(HttpMethod.PUT, HttpMethod.POST).contains(httpMethod)) {
+            log.error("请求方法{}不支持!,请使用PUT|POST", httpMethod);
+            throw new Exception("请求方法不支持!");
+        }
+
+        Map<String, Object> sendMap = Maps.newLinkedHashMap();
+        sendMap.put("httpMethod", httpMethod);
+        sendMap.put("url", url);
+        sendMap.put("headers", headers);
+        sendMap.put("params", null);
+        sendMap.put("body", JSONUtil.toJsonStr(requestBody));
+        log.info("[SendHttp]::[START]==>[info]:[{}]<==[END]", JSONUtil.toJsonStr(sendMap));
+        url = urlJoin(url, null);
+        log.info("[SendHttp]::[splicingTogether]==>url:{}<==[END]", url);
+
+        Request.Builder builder = addHeader(new Request.Builder(), headers).url(url);
+        builder = addUpdateMethod(httpMethod, requestBody, builder);
+        Request request = builder.build();
+        if (client == null) {
+            client = new OkHttpClient();
+        }
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            log.info("[SendHttp]::[Success]");
+        } else {
+            log.error("[SendHttp]::[Error]:[code={},message={}]", response.code(), response.message());
+        }
+        String responseData = response.body().string();
+        return responseData;
+    }
+
+    private static Request.Builder addUpdateMethod(HttpMethod httpMethod, RequestBody requestBody, Request.Builder builder) {
+        switch (httpMethod) {
+            case PUT:
+                builder.put(requestBody);
+                break;
+            case POST:
+                builder.post(requestBody);
+                break;
+        }
+        return builder;
     }
 }
