@@ -30,10 +30,10 @@ public class UploadTest {
 
     @SneakyThrows
     public static void uploadChunk() {
-        String host = "192.168.3.85";
+        String host = "192.168.3.85:13600";
 
         //String identifier = UUID.randomUUID().toString() + System.currentTimeMillis();
-        String path = "G:\\zip-all\\tbtool.7z";
+        String path = "C:\\Users\\Administrator\\Desktop\\VMware Workstation.zip";
         String fileName = FileUtil.getName(path);
 
         FileUpDto fileUpDto = new FileUpDto();
@@ -42,7 +42,7 @@ public class UploadTest {
                 .setType(FileUtil.getSuffix(path)).setSize(IoUtils.size(FileUtil.getInputStream(path)))
                 .setSuffix("." + FileUtil.getSuffix(path));
 
-        String format = String.format("http://%s:13600/file/file/upload/start", host);
+        String format = String.format("http://%s/file/file/upload/start", host);
         HttpRequest request = HttpUtil.createPost(format);
         request.body(JSONUtil.toJsonStr(fileUpDto));
 
@@ -65,7 +65,7 @@ public class UploadTest {
 
         List<InputStream> streamList = IoUtils.splitInputStream(inputStream, chunkSize);
 
-        String uploadUrl = String.format("http://%s:13600/file/file/upload/chunk", host);
+        String uploadUrl = String.format("http://%s/file/file/upload/chunk", host);
 
         for (InputStream input : streamList) {
             System.err.println("uploadChunk chunkNumber:" + chunkNumber);
@@ -73,7 +73,7 @@ public class UploadTest {
             chunkNumber++;
         }
 
-        String mergeUrl = String.format("http://%s:13600/file/file/upload/merge", host);
+        String mergeUrl = String.format("http://%s/file/file/upload/merge", host);
         merge(mergeUrl, fileName, identifier, totalChunks, fileId,totalFileSize);
     }
 
