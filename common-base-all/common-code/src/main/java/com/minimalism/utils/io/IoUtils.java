@@ -145,6 +145,41 @@ public class IoUtils extends IoUtil {
         return out;
     }
 
+    public static byte[] mergeStreams(List<InputStream> inputStreams,
+                                    int bufferSize) throws IOException {
+        // 创建临时文件（自动删除保障）
+        File tempFile = File.createTempFile("merged-", null);
+
+        try (FileOutputStream fos = new FileOutputStream(tempFile);
+             BufferedOutputStream bos = new BufferedOutputStream(fos, bufferSize)) {
+
+            byte[] buffer = new byte[bufferSize];
+            for (InputStream is : inputStreams) {
+                try (BufferedInputStream bis = new BufferedInputStream(is, bufferSize)) {
+                    int bytesRead;
+                    while ((bytesRead = bis.read(buffer)) != -1) {
+                        bos.write(buffer, 0, bytesRead);
+                        bos.flush(); // 确保及时刷入磁盘
+                    }
+                } catch (IOException e) {
+                    throw new IOException("合并分片时发生IO异常", e);
+                } finally {
+                    // 强制释放资源（防御性编程）
+                    close(is);
+                }
+            }
+            return toByteArray(FileUtils.getInputStream(tempFile));
+        } catch (IOException e) {
+            // 合并失败时删除临时文件
+            if (tempFile.exists() && !tempFile.delete()) {
+                log.error("无法删除临时文件: " + tempFile.getAbsolutePath());
+            }
+            throw e;
+        }finally {
+            FileUtils.del(tempFile);
+        }
+    }
+
     @SneakyThrows
     public static long getInputStreamLength(byte[] bytes) {
         return getInputStreamLength(new ByteArrayInputStream(bytes));
