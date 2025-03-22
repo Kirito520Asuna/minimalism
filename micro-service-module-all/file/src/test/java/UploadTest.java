@@ -7,10 +7,17 @@ import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.dto.FileUpDto;
+import com.minimalism.result.Result;
+import com.minimalism.utils.http.HttpUtils;
+import com.minimalism.utils.http.OkHttpUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -27,7 +34,7 @@ import java.util.concurrent.*;
 @Slf4j
 public class UploadTest {
     public static void main(String[] args) {
-        boolean useExecutor = false;
+        boolean useExecutor = true;
         uploadChunk(useExecutor);
         //System.err.println(FileUtil.mainName("G:\\zip-all\\tbtool.7z") + "." + FileUtil.getSuffix("G:\\zip-all\\tbtool.7z"));
     }
@@ -49,23 +56,19 @@ public class UploadTest {
                 .setSuffix("." + FileUtil.getSuffix(path));
 
         String format = String.format("http://%s/file/file/upload/start", host);
-        HttpRequest request = HttpUtil.createPost(format);
-        request.body(JSONUtil.toJsonStr(fileUpDto));
-
-        String response = request.execute().body();
-        JSONObject entries = JSONUtil.toBean(response, JSONObject.class);
-        System.err.println("start :" + JSONUtil.toJsonStr(entries, JSONConfig.create().setIgnoreNullValue(false)));
-        Integer code = (Integer) entries.getByPath("code");
-        if (!ObjectUtils.equals(Integer.valueOf(200), code)) {
-            throw new RuntimeException(entries.getByPath("message").toString());
+        Result<Object> result = OkHttpUtils.post(format, JSONUtil.toJsonStr(fileUpDto), Result.class);
+        if (!result.validateOk()) {
+            throw new RuntimeException(result.getMessage());
         }
+        JSONObject entries = JSONUtil.toBean(JSONUtil.toJsonStr(result.getData()), JSONObject.class);
+        System.err.println("start :" + JSONUtil.toJsonStr(entries, JSONConfig.create().setIgnoreNullValue(false)));
         //JSONObject data = entries.getByPath("data", JSONObject.class);
-        int chunkSize = (Integer) entries.getByPath("data.chunkSize");
-        int chunkNumber = (Integer) entries.getByPath("data.chunkNumber");
-        int totalChunks = (Integer) entries.getByPath("data.totalChunks");
-        Long totalFileSize = Long.parseLong("" + entries.getByPath("data.totalFileSize"));
-        Long fileId = Long.valueOf((Integer) entries.getByPath("data.fileId"));
-        String identifier = (String) entries.getByPath("data.identifier");
+        int chunkSize = (Integer) entries.getByPath("chunkSize");
+        int chunkNumber = (Integer) entries.getByPath("chunkNumber");
+        int totalChunks = (Integer) entries.getByPath("totalChunks");
+        Long totalFileSize = Long.parseLong("" + entries.getByPath("totalFileSize"));
+        Long fileId = Long.valueOf((Integer) entries.getByPath("fileId"));
+        String identifier = (String) entries.getByPath("identifier");
 
         InputStream inputStream = FileUtil.getInputStream(path);
 
@@ -100,10 +103,10 @@ public class UploadTest {
             final int currentChunk = chunkNumber++; // 确保每个任务的 chunkNumber 唯一
             futures.add(executorService.submit(() -> {
                 try {
-                    log.error("uploadChunk chunkNumber: {}", currentChunk);
+                    log.debug("uploadChunkExecutor chunkNumber: {}", currentChunk);
                     uploadChunk(uploadUrl, identifier, fileId, currentChunk, totalChunks, totalFileSize, input);
                 } catch (Exception e) {
-                    log.error("上传 chunk:{},失败：{}" ,currentChunk,e.getMessage());
+                    log.error("上传 chunk:{},失败：{}", currentChunk, e.getMessage());
                     throw new RuntimeException(e);
                 }
             }));
@@ -131,6 +134,29 @@ public class UploadTest {
 
     public static void uploadChunk(String url, String identifier, Long fileId, int chunkNumber, int totalChunks, Long totalFileSize, InputStream inputStream) throws Exception {
         log.debug("uploadChunk chunkNumber:{}", chunkNumber);
+        // 创建 multipart 请求体
+        MultipartBody.Builder multipartBuilder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", "filename",
+                        RequestBody.create(MediaType.parse("application/octet-stream"), IoUtils.toByteArray(inputStream)))
+                .addFormDataPart("chunkNumber", String.valueOf(chunkNumber))
+                .addFormDataPart("totalChunks", String.valueOf(totalChunks))
+                .addFormDataPart("identifier", String.valueOf(identifier))
+                .addFormDataPart("totalFileSize", String.valueOf(totalFileSize))
+                .addFormDataPart("fileId", String.valueOf(fileId));
+
+        // 构建请求体
+        RequestBody requestBody = multipartBuilder.build();
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(60, TimeUnit.MINUTES)
+                .readTimeout(60, TimeUnit.MINUTES)
+                .build();
+        String result = OkHttpUtils.sendHttpRequest(client, OkHttpUtils.HttpMethod.POST, url,null, requestBody, null);
+
+        // 输出响应内容
+        log.info("Response: {}", result);
+
+/*
         // 使用 Hutool 创建 POST 请求，上传 multipart 表单数据
         HttpResponse response = HttpRequest.post(url)
                 //.form(form)
@@ -144,7 +170,7 @@ public class UploadTest {
                 .execute();
 
         // 输出响应内容
-        log.info("Response: {}", response.body());
+        log.info("Response: {}", response.body());*/
 
     }
 
@@ -157,10 +183,22 @@ public class UploadTest {
         params.put("fileId", fileId);
         params.put("totalFileSize", totalFileSize);
 
-        HttpRequest request = HttpUtil.createPost(url);
+        //String json = OkHttpUtils.sendHttpRequest(null, OkHttpUtils.HttpMethod.GET, url, params,null, null);
+        //OkHttpUtils.get(url, params);
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(60, TimeUnit.MINUTES)
+                .readTimeout(60, TimeUnit.MINUTES)
+                .build();
+        Result result = OkHttpUtils.get(client,url, params,null,Result.class);
+        //OkHttpUtils.sendHttpRequest(null, OkHttpUtils.HttpMethod.POST, url, params,null,null,null);
+  /*      HttpRequest request = HttpUtil.createPost(url);
         request.form(params);
 
-        String response = request.execute().body();
-        log.info("Chunk identifier:{}, Merging. Server response:{}", identifier, response);
+        String result = request.execute().body();*/
+        if (result.validateOk()) {
+            log.info("Chunk identifier:{}, Merging. Server response:{}", identifier, result);
+        } else {
+            log.error("Chunk identifier:{}, Merging. Server response:{}", identifier, result);
+        }
     }
 }
