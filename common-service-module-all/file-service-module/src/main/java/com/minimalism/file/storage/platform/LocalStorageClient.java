@@ -3,9 +3,7 @@ package com.minimalism.file.storage.platform;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.http.useragent.OS;
 import com.minimalism.config.OSConfig;
-import com.minimalism.enums.OSType;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
@@ -17,11 +15,7 @@ import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
@@ -138,8 +132,33 @@ public class LocalStorageClient implements LocalClient {
         if (!bucketFile.exists()) {
             bucketFile.mkdirs();
         }
-
         String fileLocal = LocalOSSUtils.uploadSharding(fileName, identifier, inputStream);
+
+        Boolean aFalse = Boolean.FALSE;
+        return buildFileInfo(fileName, FileUtil.getInputStream(fileLocal), fileLocal, Boolean.TRUE, aFalse, aFalse);
+    }
+
+    @Override
+    public FileInfo uploadSharding(String bucketName, String fileName, InputStream inputStream, String identifier, String localPath) {
+        LocalClient.super.uploadSharding(bucketName, fileName, inputStream, identifier);
+
+        if (StrUtil.isBlank(identifier)) {
+            identifier = UUID.randomUUID().toString().replace("-", "") + "_" + fileName;
+        }
+        String bucketPath = LocalOSSUtils.getMergeFilePath(identifier, StrUtil.EMPTY);
+        //String separator = OSType.getSeparator(null);
+        //String bucketPath = uploadDir + separator + bucketName + separator + identifier + separator;
+        //bucketPath = bucketPath.replace(separator + separator, separator);
+        File bucketFile = FileUtil.newFile(bucketPath);
+        if (!bucketFile.exists()) {
+            bucketFile.mkdirs();
+        }
+        String fileLocal;
+        if (StrUtil.isNotBlank(localPath)) {
+            fileLocal = localPath;
+        } else {
+            fileLocal = LocalOSSUtils.uploadSharding(fileName, identifier, inputStream);
+        }
         Boolean aFalse = Boolean.FALSE;
         return buildFileInfo(fileName, FileUtil.getInputStream(fileLocal), fileLocal, Boolean.TRUE, aFalse, aFalse);
     }
@@ -147,7 +166,7 @@ public class LocalStorageClient implements LocalClient {
     @Override
     public FilePart bulidFilePart(String identifier, int chunkNumber, String url, Boolean local, InputStream inputStream) {
         FilePart filePart = LocalClient.super.bulidFilePart(identifier, chunkNumber, url, local, inputStream);
-        if (filePart.getLocal()){
+        if (filePart.getLocal()) {
             filePart.setUploadDir(LocalOSSUtils.getUploadDir());
         }
         return filePart;

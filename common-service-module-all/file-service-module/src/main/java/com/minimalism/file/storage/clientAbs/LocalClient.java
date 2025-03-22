@@ -1,10 +1,12 @@
 package com.minimalism.file.storage.clientAbs;
 
 import cn.hutool.core.collection.CollUtil;
+import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.storage.IFileStorageClient;
 import com.minimalism.file.storage.StorageType;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**

@@ -127,6 +127,8 @@ public class MinioStorageClient implements com.minimalism.file.storage.clientAbs
         return buildFileInfo(fileName, inputStream, url, aFalse, aFalse, aFalse);
     }
 
+
+
     @Override
     public FilePart uploadShardingChunkNumber(String bucketName, int chunkNumber, String identifier, InputStream inputStream) {
         String separator = OSConfig.getSeparator(OSType.linux.name());

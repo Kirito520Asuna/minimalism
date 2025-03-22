@@ -8,8 +8,10 @@ import com.minimalism.file.domain.FilePart;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
+import lombok.SneakyThrows;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -185,6 +187,15 @@ public interface IFileStorageClient extends AbstractBean {
         }
         return null;
     }
+
+   @SneakyThrows
+   default FileInfo uploadSharding(String bucketName, String fileName, InputStream inputStream, String identifier, String localPath){
+       if (StrUtil.isNotBlank(localPath)) {
+           inputStream = new FileInputStream(localPath);
+        }
+       return uploadSharding(bucketName, fileName, inputStream, identifier);
+   }
+
 
     /**
      * 上传单个分片文件
