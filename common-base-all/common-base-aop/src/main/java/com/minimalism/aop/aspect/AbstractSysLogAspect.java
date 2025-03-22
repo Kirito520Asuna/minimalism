@@ -120,16 +120,16 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             String url = GatewayUtils.replaceUrl(request, requestURL.toString());
 
             log.info(new StringBuffer()
-                            .append("\n====================================请求内容====================================")
-                            .append("\n请求服务名 : {}")
-                            .append("\n请求模块名 : {}")
-                            .append("\n请求描述 : {}")
-                            .append("\n请求IP : {}")
-                            .append("\n请求地址 : {}")
-                            .append("\n请求方式 : {}")
-                            .append("\n请求参数 : {}")
-                            .append("\n请求类方法 : {}.{}")
-                            .append("\n================================================================================")
+                            .append("\n[info]::[request]====================================请求内容====================================")
+                            .append("\n[info]::[request]请求服务名 : {}")
+                            .append("\n[info]::[request]请求模块名 : {}")
+                            .append("\n[info]::[request]请求描述 : {}")
+                            .append("\n[info]::[request]请求IP : {}")
+                            .append("\n[info]::[request]请求地址 : {}")
+                            .append("\n[info]::[request]请求方式 : {}")
+                            .append("\n[info]::[request]请求参数 : {}")
+                            .append("\n[info]::[request]请求类方法 : {}.{}")
+                            .append("\n[info]::[request]================================================================================")
                             .toString()
                     , applicationName, module, title, remoteAddr, url, method, args, declaringTypeName, name);
         }
@@ -152,9 +152,9 @@ public class AbstractSysLogAspect implements AbstractSysLog {
                 returnObj = around;
             }
             log.info(new StringBuffer()
-                    .append("\n====================================响应内容====================================")
-                    .append("\n响应 : {}")
-                    .append("\n================================================================================")
+                    .append("\n[info]::[response]====================================响应内容====================================")
+                    .append("\n[info]::[response]响应 : {}")
+                    .append("\n[info]::[response]================================================================================")
                     .toString(), JSONUtil.toJsonStr(returnObj));
         }
 
