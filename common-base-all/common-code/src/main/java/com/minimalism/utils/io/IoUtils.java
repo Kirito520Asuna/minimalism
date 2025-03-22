@@ -2,7 +2,9 @@ package com.minimalism.utils.io;
 
 import cn.hutool.core.io.IoUtil;
 import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.utils.file.FileUtils;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -13,12 +15,14 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author yan
  * @Date 2025/3/7 21:07:13
  * @Description
  */
+@Slf4j
 public class IoUtils extends IoUtil {
     @SneakyThrows
     public static long size(InputStream inputStream) {
@@ -159,5 +163,118 @@ public class IoUtils extends IoUtil {
             length += bytesRead;
         }
         return length;
+    }
+
+
+    /**
+     * 合并多个文件分片并返回一个字节数组。
+     *
+     * @param chunks 文件的分片列表，每个元素是一个字节数组。
+     * @param suffix 临时文件的后缀，例如 ".txt" 或 ".bin"
+     * @return 合并后的字节数组。
+     * @throws IOException 如果读取或写入文件发生错误。
+     */
+    public static byte[] mergeChunksAndReturnBytes(List<byte[]> chunks, String suffix) throws IOException {
+        // 确保临时文件存放目录存在
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "merged_files");
+        if (!tempDir.exists() && !tempDir.mkdirs()) {
+            throw new IOException("无法创建临时目录: " + tempDir.getAbsolutePath());
+        }
+        // 创建唯一的临时文件
+        File tempFile = File.createTempFile("tmp_merged_" + UUID.randomUUID() + System.currentTimeMillis(), suffix, tempDir);
+
+        // 通过临时文件路径创建输出流，准备将各个分片写入文件
+        try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(tempFile))) {
+            // 遍历每个分片并写入临时文件
+            for (byte[] chunk : chunks) {
+                os.write(chunk);  // 逐个分片写入文件
+            }
+            os.flush();  // 确保所有数据写入完成
+        } catch (IOException ex) {
+            // 出现异常时删除临时文件
+            log.error("合并文件过程中出现异常：{}", ex.getMessage());
+            FileUtils.del(tempFile);  // 删除临时文件以避免文件残留
+            throw ex;  // 抛出原始异常
+        }
+
+        // 采用逐块读取的方式来避免一次性加载到内存中，减少内存压力
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+             InputStream inputStream = new FileInputStream(tempFile)) {
+            byte[] buffer = new byte[8192];  // 8KB 缓冲区，适当调整以平衡性能与内存消耗
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);  // 写入缓冲区中的数据
+            }
+
+            byte[] fileBytes = byteArrayOutputStream.toByteArray();  // 获取合并后的字节数组
+
+            // 删除临时文件
+            FileUtils.del(tempFile);
+
+            return fileBytes;  // 返回合并后的字节数组
+        } catch (IOException ex) {
+            // 读取文件时出现异常，删除临时文件
+            log.error("读取临时文件失败：{}", ex.getMessage());
+            FileUtils.del(tempFile);  // 删除临时文件以避免文件残留
+            throw ex;  // 抛出原始异常
+        }
+    }
+
+    /**
+     * 合并多个输入流并返回合并后的字节数组
+     *
+     * @param chunks 输入流列表，每个流表示一个文件分片
+     * @param suffix 临时文件的后缀，例如 ".txt" 或 ".bin"
+     * @return 合并后的字节数组
+     * @throws IOException 读取或写入文件时的异常
+     */
+    public static byte[] mergeStreamsAndReturnBytes(List<InputStream> chunks, String suffix) throws IOException {
+        // 确保临时文件存放目录存在
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "merged_files");
+        if (!tempDir.exists() && !tempDir.mkdirs()) {
+            throw new IOException("无法创建临时目录: " + tempDir.getAbsolutePath());
+        }
+
+        // 创建唯一的临时文件
+        File tempFile = File.createTempFile("tmp_merged_" + UUID.randomUUID() + System.currentTimeMillis(), suffix, tempDir);
+
+        // 将所有输入流写入临时文件
+        try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(tempFile))) {
+            byte[] buffer = new byte[8192]; // 8KB 缓冲区
+            for (InputStream chunk : chunks) {
+                try (InputStream is = chunk) {  // 确保每个输入流都能被正确关闭
+                    int bytesRead;
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        os.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+            os.flush();
+        } catch (IOException ex) {
+            log.error("合并流时发生错误: {}", ex.getMessage());
+            FileUtils.del(tempFile);
+            throw ex;
+        }
+
+        // 逐块读取合并后的文件内容到内存
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+             InputStream inputStream = new FileInputStream(tempFile)) {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);
+            }
+
+            byte[] fileBytes = byteArrayOutputStream.toByteArray();
+
+            // 删除临时文件
+            FileUtils.del(tempFile);
+
+            return fileBytes;
+        } catch (IOException ex) {
+            log.error("读取临时文件失败: {}", ex.getMessage());
+            FileUtils.del(tempFile);
+            throw ex;
+        }
     }
 }
