@@ -38,7 +38,7 @@ public class FileUploadConfig implements AbstractBean {
     public static String fileControllerPath = "/file";
     public static String getPathKey = "file.byte.get";
     public static String delPathKey = "file.byte.del";
-    public static int maxChunkSize = 1024 * 1024 * 10;
+    public static int maxChunkSize = 1024 * 1024 * 1;
     @Resource
     private RedisTemplate redisTemplate;
     public static String getInstanceId() {
