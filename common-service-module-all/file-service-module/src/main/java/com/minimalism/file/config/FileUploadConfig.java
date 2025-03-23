@@ -32,15 +32,18 @@ import java.util.List;
  * @Description
  */
 @AutoConfigureAfter(NacosDiscoveryProperties.class)
-@Configuration @ConditionalOnBean(RedisTemplate.class)
+@Configuration
+@ConditionalOnBean(RedisTemplate.class)
 public class FileUploadConfig implements AbstractBean {
     public static String instanceId;
     public static String fileControllerPath = "/file";
     public static String getPathKey = "file.byte.get";
     public static String delPathKey = "file.byte.del";
+    public static String downLoadPathKey = "file.downLoad";
     public static int maxChunkSize = 1024 * 1024 * 1;
     @Resource
     private RedisTemplate redisTemplate;
+
     public static String getInstanceId() {
         if (StrUtil.isBlank(instanceId) || instanceId.endsWith("-1")) {
             instanceId = NacosUtils.getInstanceId();
@@ -79,6 +82,7 @@ public class FileUploadConfig implements AbstractBean {
             }
         });
     }
+
     @Override
     @PreDestroy
     public void destroy() {
@@ -102,7 +106,7 @@ public class FileUploadConfig implements AbstractBean {
      * @return
      */
     public static String getUrlByte(String instanceId) {
-        return getUrl(instanceId, SpringUtil.getBean(Environment.class).getProperty(getPathKey));
+        return getUrl(instanceId, SpringUtil.getBean(Environment.class).getProperty(getPathKey), fileControllerPath);
     }
 
     /**
@@ -112,18 +116,28 @@ public class FileUploadConfig implements AbstractBean {
      * @return
      */
     public static String getUrlDel(String instanceId) {
-        return getUrl(instanceId, SpringUtil.getBean(Environment.class).getProperty(delPathKey));
+        return getUrl(instanceId, SpringUtil.getBean(Environment.class).getProperty(delPathKey), fileControllerPath);
     }
 
-    public static String getUrl(String instanceId, String path) {
+    /**
+     * 获取其他服务器文件删除的url
+     *
+     * @param instanceId
+     * @return
+     */
+    public static String getUrlDownLoad(String instanceId, String identifier) {
+        return getUrl(instanceId, SpringUtil.getBean(Environment.class).getProperty(downLoadPathKey) + "/" + identifier, fileControllerPath);
+    }
+
+    public static String getUrl(String instanceId, String path, String controllerPath) {
         Environment environment = SpringUtil.getBean(Environment.class);
         String prefix = environment.getProperty("server.servlet.context-path", "");
         String serviceId = environment.getProperty("spring.application.name", "");
-        prefix = prefix + fileControllerPath;
+        prefix = prefix + controllerPath;
         return NacosUtils.getUrl(serviceId, instanceId, prefix, path);
     }
 
-   public static boolean isCurrentInstance(String instanceId){
+    public static boolean isCurrentInstance(String instanceId) {
         return ObjectUtils.equals(instanceId, FileUploadConfig.instanceId);
-   }
+    }
 }

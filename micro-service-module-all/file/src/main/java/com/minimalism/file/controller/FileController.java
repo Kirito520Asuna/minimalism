@@ -197,5 +197,13 @@ public class FileController implements AbstractBaseController {
         }
         fileService.downLoadFileMultiThread(identifier, isPart, partSort, request,response);
     }
+    @SysLog
+    @Operation(summary = "下载")
+    @GetMapping("${file.downLoad:downLoadFile}/{identifier}")
+    public void downLoadFileMultiThread(@PathVariable("identifier") String identifier,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
+        fileService.downLoadFileMultiThread(identifier, request,response);
+    }
 
 }

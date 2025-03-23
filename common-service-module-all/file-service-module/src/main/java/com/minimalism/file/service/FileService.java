@@ -81,4 +81,5 @@ public interface FileService extends AbstractBean {
 
     @SneakyThrows
     void downLoadFileMultiThread(String identifier, boolean isPart, Integer partSort, HttpServletRequest request, HttpServletResponse response);
+    void downLoadFileMultiThread(String identifier, HttpServletRequest request, HttpServletResponse response);
 }

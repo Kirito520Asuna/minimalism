@@ -32,6 +32,7 @@ file:
   byte:
     get: /fetch/byte/local
     del: /del/file/local
+  downLoad: downLoadFile
 
 cors:
   gateway:
