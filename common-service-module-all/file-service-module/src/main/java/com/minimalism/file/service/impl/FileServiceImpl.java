@@ -154,7 +154,7 @@ public class FileServiceImpl implements FileService {
         StorageType storageType = SpringUtil.getBean(FileProperties.class).getType();
         IFileStorageClient client = FileFactory.getClient(storageType);
         //FileInfo fileInfo = client.uploadMergeChunks(inputStream, fileMainName, identifier);
-        FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier,filePath);
+        FileInfo fileInfo = client.uploadSharding(fileMainName, inputStream, identifier, filePath);
         return fileInfo.setLocal(Boolean.TRUE).setName(FileUtils.mainName(fileInfo.getFileName()));
     }
 
@@ -238,7 +238,7 @@ public class FileServiceImpl implements FileService {
             //OutputStream fileOutputStream = FileUtils.getOutputStream(tmpFile);
             //IoUtils.copy(inputStream, fileOutputStream);
             //inputStream = FileUtils.getInputStream(path);
-            FileInfo fileInfo = uploadMergeChunks(null, fileMainName, identifier,mergeToFilePath);
+            FileInfo fileInfo = uploadMergeChunks(null, fileMainName, identifier, mergeToFilePath);
             if (fileId != null) {
                 //FileInfo fileInfoById = fileInfoService.getById(fileId);
                 //fileInfoById.setUrl(fileInfo.getUrl())
@@ -320,7 +320,7 @@ public class FileServiceImpl implements FileService {
                     file.createNewFile();
                 }
 
-                SafeFileMerger.mergeToFile(streams,pathAll);
+                SafeFileMerger.mergeToFile(streams, pathAll);
                 //合并完成
                 parts.stream().filter(FilePart::getLocal)
                         .map(FilePart::getLocalResource)
@@ -361,7 +361,7 @@ public class FileServiceImpl implements FileService {
         //byte[] bytes = SafeFileMerger.mergeToMemory(collect);
 
         String mergeFilePath = LocalOSSUtils.getMergeFilePath(identifier, fileInfo.getFileName());
-        SafeFileMerger.mergeToFile(collect,mergeFilePath);
+        SafeFileMerger.mergeToFile(collect, mergeFilePath);
         //collect.stream().forEach(inputStream -> {
         //    try {
         //        out.write( SafeFileMerger.mergeToMemory(Arrays.asList(inputStream)));
@@ -709,8 +709,122 @@ public class FileServiceImpl implements FileService {
         FileUtils.downLoadFileMultiThread(response, fileName, bytes);
     }
 
-
+    @SneakyThrows
     @Override
+    public void downLoadFileMultiThread(String identifier, HttpServletRequest request, HttpServletResponse response) {
+        // 根据 identifier 获取文件信息
+        FileInfo fileInfo = fileInfoService.getByPartCode(identifier);
+        if (fileInfo == null || !fileInfo.getLocal()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        long fileLength = fileInfo.getSize();
+        String fileName = fileInfo.getFileName();
+
+        // 设置响应头，处理文件名编码
+        response.setContentType("application/octet-stream");
+        try {
+            String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())
+                    .replace("+", "%20");
+            String contentDisposition = String.format("attachment; filename=\"%s\"; filename*=UTF-8''%s",
+                    fileName.replace("\"", "\\\""), encodedFileName);
+            response.setHeader("Content-Disposition", contentDisposition);
+        } catch (UnsupportedEncodingException e) {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+        }
+
+        long start = 0;
+        long end = fileLength - 1;
+        boolean isPartial = false;
+
+        // 解析Range头或参数
+        String rangeHeader = request.getHeader("Range");
+        if (rangeHeader == null) {
+            rangeHeader = request.getParameter("Range");
+        }
+        if (rangeHeader != null && !rangeHeader.isEmpty()) {
+            try {
+                rangeHeader = rangeHeader.trim().replace("bytes=", "");
+                String[] ranges = rangeHeader.split("-");
+                if (ranges.length > 0 && !ranges[0].isEmpty()) {
+                    start = Long.parseLong(ranges[0]);
+                }
+                if (ranges.length > 1 && !ranges[1].isEmpty()) {
+                    end = Long.parseLong(ranges[1]);
+                }
+                isPartial = true;
+            } catch (NumberFormatException e) {
+                response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+                return;
+            }
+        }
+
+        // 验证范围有效性
+        if (start < 0 || end >= fileLength || start > end) {
+            response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+            response.setHeader("Content-Range", "bytes */" + fileLength);
+            return;
+        }
+
+        long contentLength = end - start + 1;
+        if (isPartial) {
+            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        response.setHeader("Accept-Ranges", "bytes");
+        response.setHeader("Content-Length", String.valueOf(contentLength));
+
+        String url = fileInfo.getUrl();
+        String redisInstanceId = LocalOSSUtils.getRedisInstanceId(url);
+        if (FileUploadConfig.isCurrentInstance(redisInstanceId)) {
+            File file = FileUtils.newFile(url);
+            if (!file.exists()) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            try (RandomAccessFile raf = new RandomAccessFile(file, "r");
+                 OutputStream os = response.getOutputStream()) {
+                raf.seek(start);
+                byte[] buffer = new byte[8192];
+                long bytesRemaining = contentLength;
+                int len;
+                while (bytesRemaining > 0 && (len = raf.read(buffer, 0, (int) Math.min(buffer.length, bytesRemaining))) != -1) {
+                    os.write(buffer, 0, len);
+                    bytesRemaining -= len;
+                }
+                os.flush();
+            } catch (IOException e) {
+                if (!response.isCommitted()) {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
+                // 记录日志
+                e.printStackTrace();
+            }
+        } else {
+            String remoteInstanceUrl = FileUploadConfig.getUrlDownLoad(redisInstanceId, identifier);
+            String redirectUrl = buildRedirectUrl(remoteInstanceUrl, rangeHeader);
+            try {
+                response.sendRedirect(redirectUrl);
+            } catch (IOException e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String buildRedirectUrl(String baseUrl, String rangeHeader) {
+        if (rangeHeader == null || rangeHeader.isEmpty()) {
+            return baseUrl;
+        }
+        try {
+            return baseUrl + "?Range=" + URLEncoder.encode(rangeHeader, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            return baseUrl;
+        }
+    }
+/*    @Override
     public void downLoadFileMultiThread(String identifier, HttpServletRequest request, HttpServletResponse response) {
         // 根据 identifier 获取文件（此处可替换为实际文件定位逻辑）
         FileInfo fileInfo = fileInfoService.getByPartCode(identifier);
@@ -787,9 +901,7 @@ public class FileServiceImpl implements FileService {
                 e.printStackTrace();
             }
         }else {
-            // 如果不是当前实例，则从其他实例获取文件
-            //...
-
+            // 跨实例 速度太慢了
             // 跨实例处理：将请求重定向到拥有文件的实例
             // 获取目标实例的 URL（需提前实现该方法）
             String remoteInstanceUrl = FileUploadConfig.getUrlDownLoad(redisInstanceId, identifier);
@@ -810,5 +922,5 @@ public class FileServiceImpl implements FileService {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }

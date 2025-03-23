@@ -427,7 +427,7 @@ public class HttpUtils {
         sendMap.put("url", url);
         sendMap.put("headers", headers);
         sendMap.put("params", params);
-        sendMap.put("body", JSONUtil.toJsonStr(requestBody));
+        sendMap.put("body", requestBody.toString());
         log.info("[SendHttp]::[START]==>[info]:[{}]<==[END]", JSONUtil.toJsonStr(sendMap));
         url = urlJoin(url, params);
         log.info("[SendHttp]::[splicingTogether]==>url:{}<==[END]", url);
