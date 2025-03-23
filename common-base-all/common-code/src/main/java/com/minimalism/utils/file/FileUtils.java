@@ -96,7 +96,82 @@ public class FileUtils extends FileUtil {
         }
     }
 
+    /**
+     * 下载文件
+     * @param response
+     * @param fileLength
+     * @param fileName
+     * @param url
+     * @param start
+     * @param end
+     * @param isPartial
+     * @throws IOException
+     */
 
+    public static void downLoadFileMultiThread(HttpServletResponse response, long fileLength, String fileName, String url, long start, long end, boolean isPartial) throws IOException {
+        // 设置响应头，处理文件名编码
+        response.setContentType("application/octet-stream");
+        try {
+            String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())
+                    .replace("+", "%20");
+            String contentDisposition = String.format("attachment; filename=\"%s\"; filename*=UTF-8''%s",
+                    fileName.replace("\"", "\\\""), encodedFileName);
+            response.setHeader("Content-Disposition", contentDisposition);
+        } catch (UnsupportedEncodingException e) {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+        }
+        // 验证范围有效性
+        if (start < 0 || end >= fileLength || start > end) {
+            response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+            response.setHeader("Content-Range", "bytes */" + fileLength);
+            return;
+        }
+        long contentLength = end - start + 1;
+        if (isPartial) {
+            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        response.setHeader("Accept-Ranges", "bytes");
+        response.setHeader("Content-Length", String.valueOf(contentLength));
+
+        downLoadFileMultiThread(response, url, start, contentLength);
+    }
+
+    /**
+     * 多线程下载文件
+     * @param response
+     * @param url
+     * @param start
+     * @param contentLength
+     * @throws IOException
+     */
+    public static void downLoadFileMultiThread(HttpServletResponse response, String url, long start, long contentLength) throws IOException {
+        File file = FileUtils.newFile(url);
+        if (!file.exists()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        try (RandomAccessFile raf = new RandomAccessFile(file, "r");
+             OutputStream os = response.getOutputStream()) {
+            raf.seek(start);
+            byte[] buffer = new byte[8192];
+            long bytesRemaining = contentLength;
+            int len;
+            while (bytesRemaining > 0 && (len = raf.read(buffer, 0, (int) Math.min(buffer.length, bytesRemaining))) != -1) {
+                os.write(buffer, 0, len);
+                bytesRemaining -= len;
+            }
+            os.flush();
+        } catch (IOException e) {
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+            // 记录日志
+            e.printStackTrace();
+        }
+    }
 
 
 }

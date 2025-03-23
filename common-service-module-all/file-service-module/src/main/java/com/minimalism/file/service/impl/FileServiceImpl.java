@@ -22,6 +22,7 @@ import com.minimalism.utils.NacosUtils;
 import com.minimalism.utils.SafeFileMerger;
 import com.minimalism.utils.file.FileUtils;
 import com.minimalism.utils.http.FileHelper;
+import com.minimalism.utils.http.HttpResponseUtils;
 import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.utils.object.ObjectUtils;
@@ -720,18 +721,8 @@ public class FileServiceImpl implements FileService {
         }
         long fileLength = fileInfo.getSize();
         String fileName = fileInfo.getFileName();
-
-        // 设置响应头，处理文件名编码
-        response.setContentType("application/octet-stream");
-        try {
-            String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())
-                    .replace("+", "%20");
-            String contentDisposition = String.format("attachment; filename=\"%s\"; filename*=UTF-8''%s",
-                    fileName.replace("\"", "\\\""), encodedFileName);
-            response.setHeader("Content-Disposition", contentDisposition);
-        } catch (UnsupportedEncodingException e) {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-        }
+        String url = fileInfo.getUrl();
+        String redisInstanceId = LocalOSSUtils.getRedisInstanceId(url);
 
         long start = 0;
         long end = fileLength - 1;
@@ -758,53 +749,11 @@ public class FileServiceImpl implements FileService {
                 return;
             }
         }
-
-        // 验证范围有效性
-        if (start < 0 || end >= fileLength || start > end) {
-            response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
-            response.setHeader("Content-Range", "bytes */" + fileLength);
-            return;
-        }
-
-        long contentLength = end - start + 1;
-        if (isPartial) {
-            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-        response.setHeader("Accept-Ranges", "bytes");
-        response.setHeader("Content-Length", String.valueOf(contentLength));
-
-        String url = fileInfo.getUrl();
-        String redisInstanceId = LocalOSSUtils.getRedisInstanceId(url);
         if (FileUploadConfig.isCurrentInstance(redisInstanceId)) {
-            File file = FileUtils.newFile(url);
-            if (!file.exists()) {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-            try (RandomAccessFile raf = new RandomAccessFile(file, "r");
-                 OutputStream os = response.getOutputStream()) {
-                raf.seek(start);
-                byte[] buffer = new byte[8192];
-                long bytesRemaining = contentLength;
-                int len;
-                while (bytesRemaining > 0 && (len = raf.read(buffer, 0, (int) Math.min(buffer.length, bytesRemaining))) != -1) {
-                    os.write(buffer, 0, len);
-                    bytesRemaining -= len;
-                }
-                os.flush();
-            } catch (IOException e) {
-                if (!response.isCommitted()) {
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                }
-                // 记录日志
-                e.printStackTrace();
-            }
+            FileUtils.downLoadFileMultiThread(response, fileLength, fileName, url, start, end, isPartial);
         } else {
             String remoteInstanceUrl = FileUploadConfig.getUrlDownLoad(redisInstanceId, identifier);
-            String redirectUrl = buildRedirectUrl(remoteInstanceUrl, rangeHeader);
+            String redirectUrl = HttpResponseUtils.buildRedirectUrl(remoteInstanceUrl, rangeHeader);
             try {
                 response.sendRedirect(redirectUrl);
             } catch (IOException e) {
@@ -814,16 +763,6 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    private String buildRedirectUrl(String baseUrl, String rangeHeader) {
-        if (rangeHeader == null || rangeHeader.isEmpty()) {
-            return baseUrl;
-        }
-        try {
-            return baseUrl + "?Range=" + URLEncoder.encode(rangeHeader, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            return baseUrl;
-        }
-    }
 /*    @Override
     public void downLoadFileMultiThread(String identifier, HttpServletRequest request, HttpServletResponse response) {
         // 根据 identifier 获取文件（此处可替换为实际文件定位逻辑）
