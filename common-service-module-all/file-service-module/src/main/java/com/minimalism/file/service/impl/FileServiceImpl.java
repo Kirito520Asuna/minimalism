@@ -750,8 +750,10 @@ public class FileServiceImpl implements FileService {
             }
         }
         if (FileUploadConfig.isCurrentInstance(redisInstanceId)) {
+            info("当前文件在当前服务器上，直接下载");
             FileUtils.downLoadFileMultiThread(response, fileLength, fileName, url, start, end, isPartial);
         } else {
+            info("当前文件不在当前服务器上，转发请求");
             String remoteInstanceUrl = FileUploadConfig.getUrlDownLoad(redisInstanceId, identifier);
             String redirectUrl = HttpResponseUtils.buildRedirectUrl(remoteInstanceUrl, rangeHeader);
             try {
@@ -762,104 +764,4 @@ public class FileServiceImpl implements FileService {
             }
         }
     }
-
-/*    @Override
-    public void downLoadFileMultiThread(String identifier, HttpServletRequest request, HttpServletResponse response) {
-        // 根据 identifier 获取文件（此处可替换为实际文件定位逻辑）
-        FileInfo fileInfo = fileInfoService.getByPartCode(identifier);
-        if (fileInfo == null || !fileInfo.getLocal()) {
-            //
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        long fileLength = fileInfo.getSize();
-        String fileName = fileInfo.getFileName();
-
-        // 设置响应头，强制浏览器下载文件
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-
-        long start = 0;
-        long end = fileLength - 1;
-        boolean isPartial = false;
-
-        // 如果请求中包含 Range 头，则解析下载的起始和结束字节
-        String rangeHeader = request.getHeader("Range");
-        if (rangeHeader != null && !rangeHeader.isEmpty()) {
-            // 示例 Range 格式: "bytes=500-1023"
-            try {
-                rangeHeader = rangeHeader.trim().replace("bytes=", "");
-                String[] ranges = rangeHeader.split("-");
-                if (ranges.length > 0 && !ranges[0].isEmpty()) {
-                    start = Long.parseLong(ranges[0]);
-                }
-                if (ranges.length > 1 && !ranges[1].isEmpty()) {
-                    end = Long.parseLong(ranges[1]);
-                }
-                isPartial = true;
-            } catch (NumberFormatException e) {
-                // Range 格式错误时，可返回 416 (Requested Range Not Satisfiable) 或忽略Range
-                response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
-                return;
-            }
-        }
-
-        long contentLength = end - start + 1;
-        // 如果为断点续传，设置 206 状态码和相应头信息
-        if (isPartial) {
-            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-        response.setHeader("Accept-Ranges", "bytes");
-        response.setHeader("Content-Length", String.valueOf(contentLength));
-        // 获取本地文件（此处假设 FileUtils.newFile 根据文件 URL 返回 File 对象）
-        String url = fileInfo.getUrl();
-        String redisInstanceId = LocalOSSUtils.getRedisInstanceId(url);
-        if (FileUploadConfig.isCurrentInstance(redisInstanceId)){
-            File file = FileUtils.newFile(url);
-            if (!file.exists()) {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-            // 使用 RandomAccessFile 定位到指定位置，分段读取文件并写入响应流
-            try (RandomAccessFile raf = new RandomAccessFile(file, "r");
-                 OutputStream os = response.getOutputStream()) {
-                raf.seek(start);
-                byte[] buffer = new byte[8192];
-                long bytesRemaining = contentLength;
-                int len;
-                while (bytesRemaining > 0 && (len = raf.read(buffer, 0, (int) Math.min(buffer.length, bytesRemaining))) != -1) {
-                    os.write(buffer, 0, len);
-                    bytesRemaining -= len;
-                }
-                os.flush();
-            } catch (IOException e) {
-                // 异常处理：记录日志或返回错误信息
-                e.printStackTrace();
-            }
-        }else {
-            // 跨实例 速度太慢了
-            // 跨实例处理：将请求重定向到拥有文件的实例
-            // 获取目标实例的 URL（需提前实现该方法）
-            String remoteInstanceUrl = FileUploadConfig.getUrlDownLoad(redisInstanceId, identifier);
-            // 构建目标 URL，假设目标实例下载接口地址与当前一致
-            StringBuilder redirectUrl = new StringBuilder();
-            redirectUrl.append(remoteInstanceUrl);
-            // 如果原请求包含 Range 请求头，将其附加为查询参数，供目标实例解析
-            if (rangeHeader != null && !rangeHeader.isEmpty()) {
-                try {
-                    redirectUrl.append("?Range=").append(URLEncoder.encode(rangeHeader, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                response.sendRedirect(redirectUrl.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 }
