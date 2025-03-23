@@ -24,7 +24,7 @@ import java.util.concurrent.Future;
 @Slf4j
 public class FileUtils extends FileUtil {
     public static boolean isFile(String path) {
-        return FileUtil.isFile(path) || FileUtil.getName(path).endsWith(Constants.PART_SUFFIX);
+        return FileUtil.isFile(path) || FileUtil.getName(path).contains(".");
     }
 
     /**
