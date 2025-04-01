@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCachePut;
 import lombok.Getter;
@@ -57,30 +58,6 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
         return one;
     }
 
-
-    //@SneakyThrows
-    //public static void main(String[] args) {
-    //    // 创建JexlEngine实例
-    //    JexlEngine jexl = new Engine();
-    //
-    //    // 定义并评估表达式，判断一个JSON字符串是否不为null
-    //    String expressionStr = "{'key':'1212','value':'5464'} == null";
-    //    expressionStr = "false";
-    //    JexlExpression expression = jexl.createExpression(expressionStr);
-    //    boolean evalResult = (Boolean) expression.evaluate(null);
-    //    System.out.println(evalResult);
-    //
-    //    if (true) return;
-    //
-    //    ScriptEngineManager manager = new ScriptEngineManager();
-    //    ScriptEngine engine = manager.getEngineByName("JavaScript");
-    //    boolean eval = (Boolean) engine.eval("'{\"key\":\"1212\",\"value\":\"5464\"}'!=null");
-    //    System.out.println(eval);
-    //    Class<?> timoutClass = TimeUnit.DAYS.getClass();
-    //    System.out.println(ObjectUtil.equals(timoutClass, TimeUnit.class));
-    //}
-
-
     @Override
     @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisCachePut)")
     public void pointcutAspect() {
@@ -120,7 +97,7 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
             boolean random = cachePut.random();
             String randomRange = cachePut.randomRange();
 
-            setOne(getOne().setResponse(BeanUtil.beanToMap(result)));
+            setOne(getOne().setResponse(JSONUtil.toBean(JSONUtil.toJsonStr(result),Map.class)));
             RedisCacheParameters one = getOne();
             Map<String, Object> request = one.getRequest();
             Map<String, Object> response = one.getResponse();
@@ -130,6 +107,7 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
             map.put(responseAsName, response);
             JSONObject jsonObject = new JSONObject(map);
 
+            cacheName = effectiveSplicingString(cacheName, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
             key = effectiveSplicingString(key, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
             if (StrUtil.isNotBlank(value)) {
                 value = effectiveSplicingString(value, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
@@ -169,7 +147,7 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
                 } else if (cachePut.isHash()) {
                     redisTemplate.opsForHash().put(cacheName, key, setValue);
                     if (timout > 0) {
-                        redisTemplate.expire(cacheName, timout, timeUnit);
+                        redisTemplate.expire(formatKey, timout, timeUnit);
                     }
                 } else if (timout < 1) {
                     redisTemplate.opsForValue().set(formatKey, setValue);

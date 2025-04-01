@@ -80,6 +80,7 @@ public class RedisCacheableAspect implements AbstractRedisAspect {
         map.put(requestAsName, request);
         JSONObject jsonObject = new JSONObject(map);
 
+        cacheName = effectiveSplicingString(cacheName, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
         key = effectiveSplicingString(key, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
 
         String formatKey = String.format(templateKey, cacheName, key);

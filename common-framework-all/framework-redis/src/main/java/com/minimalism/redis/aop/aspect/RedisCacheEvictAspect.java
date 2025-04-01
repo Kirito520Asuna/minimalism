@@ -2,7 +2,9 @@ package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
 import lombok.Getter;
@@ -72,7 +74,7 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
             String requestAsName = cacheEvict.requestAsName();
             String responseAsName = cacheEvict.responseAsName();
 
-            setOne(getOne().setResponse(BeanUtil.beanToMap(result)));
+            setOne(getOne().setResponse(JSONUtil.toBean(JSONUtil.toJsonStr(result),Map.class)));
             RedisCacheParameters one = getOne();
             Map<String, Object> request = one.getRequest();
             Map<String, Object> response = one.getResponse();
@@ -82,6 +84,7 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
             map.put(responseAsName, response);
             JSONObject jsonObject = new JSONObject(map);
 
+            cacheName = effectiveSplicingString(cacheName, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
             key = effectiveSplicingString(key, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
 
             String formatKey = String.format(templateKey, cacheName, key);

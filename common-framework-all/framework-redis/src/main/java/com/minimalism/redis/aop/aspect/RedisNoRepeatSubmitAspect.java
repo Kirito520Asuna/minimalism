@@ -123,6 +123,7 @@ public class RedisNoRepeatSubmitAspect implements AbstractRedisAspect {
         boolean okCondition = verifiedOkCondition(condition);
         // 判断条件 判断是否需要
         if (okCondition) {
+            cacheName = effectiveSplicingString(cacheName, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
             key = effectiveSplicingString(key, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
             String formatKey = String.format(templateKey, cacheName, key);
 

@@ -3,9 +3,13 @@ package com.minimalism.abstractinterface.aop;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ValueNode;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.apache.commons.jexl3.JexlEngine;
@@ -140,6 +144,7 @@ public interface AbstractRedisAspect {
 //    @AfterReturning(pointcut = "pointcutAspect()", returning = "result")
     default void afterReturning(JoinPoint joinPoint, Object result) {
     }
+
     default String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
@@ -241,7 +246,15 @@ public interface AbstractRedisAspect {
                 });
                 next = conditionTypeOp.get();
             }
-            String jsonStr = JSONUtil.toJsonStr(placeholderMap.get(next));
+            Object obj = placeholderMap.get(next);
+            JsonNode jsonNode = SpringUtil.getBean(ObjectMapper.class).valueToTree(obj);
+            String objStr;
+            if (jsonNode instanceof ValueNode) {
+                objStr = String.valueOf(obj);
+            } else {
+                objStr = JSONUtil.toJsonStr(obj);
+            }
+            //String jsonStr = JSONUtil.toJsonStr(obj);
 
             if (!key.contains(next)) {
                 String mode = placeholder + "%s%s%s";
@@ -257,7 +270,7 @@ public interface AbstractRedisAspect {
                     }
                 }
             }
-            jsonMap.put(next, jsonStr);
+            jsonMap.put(next, objStr);
         }
 
         if (CollUtil.isNotEmpty(jsonMap)) {
@@ -280,7 +293,7 @@ public interface AbstractRedisAspect {
     /*#####################################################################################################################################*/
 
     default String replaceKey(String key, String[] replaceSplicingList) {
-        return key.replace(replaceSplicingList[0],replaceSplicingList[1]);
+        return key.replace(replaceSplicingList[0], replaceSplicingList[1]);
     }
 
 
