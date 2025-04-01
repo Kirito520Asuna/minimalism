@@ -217,10 +217,16 @@ public interface AbstractApiSign extends AbstractBean {
         }
         if (enableKeyPairs) {
             debug("已启用对称加解密");
+            //获取唯一身份id
+            String identity = request.getParameter("X-KeyPairs-Identity");
+            if (StrUtil.isBlank(identity)) {
+                throw new GlobalCustomException(ApiCode.VALIDATE_FAILED);
+            }
             //获取对应的私钥解密
             // redis 存储 key-公钥-私钥 的形式(设置过期时间 无法查询到就是超时或非法请求)
             //todo
-            headerSign = "";
+            AbstractKeyPair keyPair = getBean(AbstractKeyPair.class);
+            headerSign = keyPair.decrypt(identity, headerSign);
         }
 
         info("验签 {}:{}", signAsName, headerSign);
