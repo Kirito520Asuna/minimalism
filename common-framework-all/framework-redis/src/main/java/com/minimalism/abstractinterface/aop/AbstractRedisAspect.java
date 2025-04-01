@@ -5,8 +5,11 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ValueNode;
@@ -68,13 +71,20 @@ public interface AbstractRedisAspect {
      * @param joinPoint
      * @return
      */
-    default RedisCacheParameters setRequesRedisCacheParameters(RedisCacheParameters redisCacheParameters, JoinPoint joinPoint) {
+    default RedisCacheParameters setRequesRedisCacheParameters(RedisCacheParameters redisCacheParameters, JoinPoint joinPoint) throws JsonProcessingException {
         Map<String, Object> map = new LinkedHashMap<>();
         Object[] pointArgs = joinPoint.getArgs();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String[] parameterNames = signature.getParameterNames();
+        ObjectMapper mapper = SpringUtil.getBean(ObjectMapper.class);
         for (int i = 0; i < parameterNames.length; i++) {
-            map.put(parameterNames[i], pointArgs[i]);
+            String json;
+            try {
+                json = mapper.writeValueAsString(pointArgs[i]);
+            } catch (JsonMappingException e) {
+                json = String.valueOf(pointArgs[i]);
+            }
+            map.put(parameterNames[i], json);
         }
         return redisCacheParameters.setRequest(map);
     }

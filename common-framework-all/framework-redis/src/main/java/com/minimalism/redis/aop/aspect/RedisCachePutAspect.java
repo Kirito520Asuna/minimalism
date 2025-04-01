@@ -4,8 +4,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCachePut;
 import lombok.Getter;
@@ -97,7 +100,14 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
             boolean random = cachePut.random();
             String randomRange = cachePut.randomRange();
 
-            setOne(getOne().setResponse(JSONUtil.toBean(JSONUtil.toJsonStr(result),Map.class)));
+            String json;
+            try {
+                json = SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result);
+            } catch (JsonMappingException e) {
+                json = String.valueOf(result);
+            }
+            setOne(getOne().setResponse(JSONUtil.toBean(JSONUtil.toJsonStr(json),Map.class)));
+            //setOne(getOne().setResponse(JSONUtil.toBean(SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result),Map.class)));
             RedisCacheParameters one = getOne();
             Map<String, Object> request = one.getRequest();
             Map<String, Object> response = one.getResponse();
