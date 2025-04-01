@@ -147,7 +147,9 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
                 } else if (cachePut.isHash()) {
                     redisTemplate.opsForHash().put(cacheName, key, setValue);
                     if (timout > 0) {
-                        redisTemplate.expire(formatKey, timout, timeUnit);
+                        //redisTemplate.opsForHash().getOperations()
+                        //                .expire(cacheName, timout, timeUnit);
+                        redisTemplate.expire(cacheName, timout, timeUnit);
                     }
                 } else if (timout < 1) {
                     redisTemplate.opsForValue().set(formatKey, setValue);
