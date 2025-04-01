@@ -161,19 +161,22 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
                     try {
                         String[] split = randomRange.split("~");
                         timout = RandomUtil.randomLong(Long.parseLong(split[0]), Long.parseLong(split[1]));
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         log.error("randomRange is error,randomRange:{}", randomRange);
                         throw e;
                     }
                     redisTemplate.opsForValue().set(formatKey, setValue, timout, timeUnit);
                 } else if (cachePut.isHash()) {
                     redisTemplate.opsForHash().put(cacheName, key, setValue);
+                    if (timout > 0) {
+                        redisTemplate.expire(formatKey, timout, timeUnit);
+                    }
                 } else if (timout < 1) {
                     redisTemplate.opsForValue().set(formatKey, setValue);
                 } else {
                     redisTemplate.opsForValue().set(formatKey, setValue, timout, timeUnit);
                 }
-                log.info("redis cache put key:{},value:{},timout:{}", formatKey, setValue,timout);
+                log.info("redis cache put key:{},value:{},timout:{}", formatKey, setValue, timout);
             }
         } finally {
             setOne(null);

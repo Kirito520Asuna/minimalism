@@ -234,10 +234,14 @@ public interface AbstractRedissonConfig {
 
         // 设置可见性
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        // ❌ **删除这行，避免 @class 信息**
         // 序列化后添加类信息(不配置,序列化后就是一个Json字符串)
-        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        // objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        // ✅ **去掉 `@class` 信息**
+        objectMapper.deactivateDefaultTyping();
         // 将日期序列化为可读字符串而不是时间戳
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
         // 设置时间模块(格式化，不设置，则输出默认格式)
         JavaTimeModule timeModule = new JavaTimeModule();
         // LocalDateTime
