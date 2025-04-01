@@ -8,7 +8,7 @@
         <artifactId>common-framework-all</artifactId>
         <version>${revision}</version>
     </parent>
-    <artifactId>framework-nacos</artifactId>
+    <artifactId>framework-sentinel</artifactId>
 
     <properties>
         <!--2.4以下 Hoxton.SR12-2.2.7.RELEASE 2.4以上2021.0.5-2021.0.5.0 -->
@@ -38,31 +38,27 @@
     </dependencyManagement>
 
     <dependencies>
-<!--       对于高版本的springboot必须加这俩个依赖(高版本的单独拆开了)-->
-        <!--用于加载bootstrap -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-            <version>${bootstrap.version}</version>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-nacos</artifactId>
+            <version>${revision}</version>
         </dependency>
 
-        <!-- Spring Cloud LoadBalancer 依赖 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
-
-        <!-- Spring Cloud Starter Alibaba Nacos Discovery -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
 
-        <!-- Spring Cloud Starter Alibaba Nacos Config -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <artifactId>spring-cloud-alibaba-sentinel-datasource</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+
 
     </dependencies>
 </project>
