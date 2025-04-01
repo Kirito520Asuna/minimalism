@@ -1,0 +1,47 @@
+server:
+    port: 17600
+    servlet:
+        context-path: /${spring.application.name}
+
+spring:
+  application:
+    name: key-pair
+  profiles:
+    active: @spring.profiles.active@
+  cloud:
+    nacos:
+      discovery:
+        service: ${spring.application.name}
+      config:
+        refresh-enabled: true
+        refreshable-dataids: ${spring.cloud.nacos.discovery.service:${spring.application.name}}-${spring.profiles.active:test}.${spring.cloud.nacos.config.file-extension:yaml}
+
+logstash:
+  addr: 127.0.0.1:4560
+  file: var/log/${spring.application.name}/${spring.profiles.active}/${spring.application.name}.log
+  fileNamePattern: var/log/${spring.application.name}/${spring.profiles.active}/${spring.application.name}-logstash.%d{yyyy-MM-dd}.log
+  maxHistory: 30
+  totalSizeCap: 10MB
+
+cors:
+  gateway:
+    enabled: false
+  enabled: true
+  config: false
+  filter: true
+  pattern: "/**"
+  allowedOrigin:
+  allowedOriginPattern: "*"
+  allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
+  allowedHeader: "*"
+  allowCredentials: true
+  maxAge: 360000
+
+authorization:
+  shiro:
+    enable: true
+  security:
+    enable: false
+
+common:
+  openFilter: true

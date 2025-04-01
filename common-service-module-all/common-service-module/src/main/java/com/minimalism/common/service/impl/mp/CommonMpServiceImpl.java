@@ -1,4 +1,4 @@
-package com.minimalism.common.service.impl;
+package com.minimalism.common.service.impl.mp;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;

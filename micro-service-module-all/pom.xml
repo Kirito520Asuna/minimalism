@@ -25,6 +25,7 @@
         <module>websocket</module>
         <module>task</module>
         <module>user</module>
+        <module>key-pair</module>
     </modules>
 
     <dependencyManagement>

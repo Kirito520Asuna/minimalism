@@ -24,8 +24,8 @@ public interface KeyPairService extends AbstractKeyPair, AbstractBean {
     }
 
     @Override
-    @RedisCachePut(cacheName = "KEY&PAIR^INFO:#rq.identity", key = "#rq.publicKeyBase64", value = "#rq",
-            responseAsName = "re", requestAsName = "rq",
+    @RedisCachePut(cacheName = "KEY&PAIR^INFO:#rq.keyInfo.identity", key = "#rq.keyInfo.publicKeyBase64", value = "#rq.keyInfo",
+            responseAsName = "re", requestAsName = "rq",isHash = true,
             timeout = 5, timeUnit = TimeUnit.MINUTES)
     default boolean saveKey(KeyUtils.KeyInfo keyInfo) {
         return false;
