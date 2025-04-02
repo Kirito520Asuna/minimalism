@@ -79,10 +79,10 @@ public class AbstractSysLogAspect implements AbstractSysLog {
     }
 
 
-
     @Override
     @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        log();
         //获取是否有注解
         SysLog sysLog = getAnnotationLog(joinPoint);
         /**

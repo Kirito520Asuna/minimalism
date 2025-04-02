@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.minimalism.abstractinterface.aop.AbstractAop;
 import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.aop.AopConstants;
 import com.minimalism.aop.aviator.*;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.utils.object.ObjectUtils;
@@ -26,6 +27,11 @@ import java.util.stream.Collectors;
  * @Description
  */
 public interface AbstractAviatorValidAspect extends AbstractAop {
+    @Override
+    default int getOrder() {
+        return AopConstants.AviatorOrder;
+    }
+
     /**
      *
      */
@@ -210,7 +216,7 @@ public interface AbstractAviatorValidAspect extends AbstractAop {
          * 前置条件
          */
         Boolean execute = (Boolean) AviatorEvaluator.execute(preconditionExpression, variablesMap);
-        if (!ObjectUtils.defaultIfEmpty(execute,true)) {
+        if (!ObjectUtils.defaultIfEmpty(execute, true)) {
             return;
         }
         // 使用 Aviator 进行表达式校验

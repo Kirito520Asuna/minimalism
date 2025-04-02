@@ -33,6 +33,14 @@ public interface AbstractKeyPair {
      */
     KeyUtils.KeyInfo getKeyByIdentity(String identity);
 
+    default KeyUtils.KeyInfo getInfo(String identity) throws Exception {
+        //保证aop能正常执行
+        KeyUtils.KeyInfo keyInfo = SpringUtil.getBean(this.getClass()).getKeyByIdentity(identity);
+        keyInfo.setPublicKey(keyInfo.base64BuildPublicKey())
+                .setPrivateKey(keyInfo.base64BuildPrivateKey());
+        return keyInfo;
+    }
+
     /**
      * 生成密钥对
      *
@@ -41,6 +49,7 @@ public interface AbstractKeyPair {
      */
     default KeyUtils.KeyInfo generalKey() throws NoSuchAlgorithmException {
         KeyUtils.KeyInfo keyInfo = KeyUtils.generalKeyInfo();
+        //保证aop能正常执行
         SpringUtil.getBean(this.getClass()).saveKey(keyInfo);
         return keyInfo;
     }
@@ -81,7 +90,7 @@ public interface AbstractKeyPair {
     default String decrypt(String identity, String content) throws Exception {
         try {
             //保证aop能正常执行
-            return SpringUtil.getBean(this.getClass()).soleDecrypt(identity,content);
+            return SpringUtil.getBean(this.getClass()).soleDecrypt(identity, content);
         } finally {
             //解密完成移除密钥对
             delKey(identity);

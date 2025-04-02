@@ -5,9 +5,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.aop.AbstractAop;
 import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.aop.AopConstants;
 import com.minimalism.aop.async.AsyncFuture;
 import com.minimalism.utils.object.ObjectUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Pointcut;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +23,11 @@ import java.util.concurrent.atomic.AtomicReference;
  * @Description
  */
 public interface AbstractAsyncFutureAspect extends AbstractAop {
+    @Override
+    default int getOrder() {
+        return AopConstants.AsyncOrder;
+    }
+
     @Override
     @Pointcut(value = "@annotation(com.minimalism.aop.async.AsyncFuture)")
     default void Aop() {
@@ -157,6 +164,8 @@ public interface AbstractAsyncFutureAspect extends AbstractAop {
         return o;
     }
 
+    @Override
+    @Around(value = "Aop()")
     default Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         return aroundAsync(joinPoint);
     }

@@ -1,5 +1,6 @@
 package com.minimalism.abstractinterface.aop;
 
+import com.minimalism.aop.AopConstants;
 import com.minimalism.aop.log.SysLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Pointcut;
@@ -17,5 +18,8 @@ public interface AbstractSysLog extends AbstractAop {
     @Pointcut(value = "@annotation(com.minimalism.aop.log.SysLog)")
     default void Aop() {
     }
-
+    @Override
+    default int getOrder() {
+        return AopConstants.SysLogOrder;
+    }
 }

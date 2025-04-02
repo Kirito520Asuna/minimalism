@@ -1,5 +1,6 @@
 package com.minimalism.key_pair.controller;
 
+import com.minimalism.aop.env.InterfaceEnv;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.common.service.KeyPairService;
 import com.minimalism.controller.AbstractBaseController;
@@ -34,7 +35,21 @@ public class KeyPairController implements AbstractBaseController {
         KeyUtils.KeyInfo keyInfo = keyPairService.generalKey();
         String algorithm = keyInfo.getAlgorithm();
         String publicKeyBase64 = keyInfo.getPublicKeyBase64();
-        return ok(KeyVo.builder().publicKey(publicKeyBase64).algorithm(algorithm).build());
+        String identity = keyInfo.getIdentity();
+        return ok(KeyVo.builder()
+                .publicKey(publicKeyBase64)
+                .identity(identity)
+                .algorithm(algorithm).build());
+    }
+
+
+    @SneakyThrows
+    @Operation(summary = "获取基础信息")
+    @InterfaceEnv
+    @SysLog
+    @GetMapping("/info")
+    public Result<KeyUtils.KeyInfo> getInfo(@RequestParam String identity) {
+        return ok(keyPairService.getInfo(identity));
     }
 
 }

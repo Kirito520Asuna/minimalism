@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONConfig;
 import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.aop.AopConstants;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.utils.object.ObjectUtils;
 import io.swagger.annotations.Api;
@@ -15,6 +16,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.Ordered;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -27,13 +29,17 @@ import java.util.logging.Logger;
  * @Date 2023/6/1 0001 17:03
  * @Description
  */
-public interface AbstractAop extends AbstractBean {
+public interface AbstractAop extends AbstractBean, Ordered {
     JSONConfig jsonConfig = JSONConfig.create().setIgnoreNullValue(false);
 
     @Override
     @PostConstruct
     default void init() {
-        debug("[init]-[Aop]::[{}]: ", getAClassName());
+        debug("[init]-[Aop]:[Order:{}]::[{}]: ", getOrder(), getAClassName());
+    }
+
+    default void log() {
+        debug("==>[Aop]:[Order:{}]:[class:{}]<==", getOrder(),getAClassName());
     }
 
     @SneakyThrows
@@ -112,7 +118,8 @@ public interface AbstractAop extends AbstractBean {
     void Aop();
 
     default void doBefore(JoinPoint joinPoint) throws Exception {
-        info("[doBefore] {}",getClass().getName());
+        info("[doBefore] {}", getClass().getName());
+        log();
     }
 
     default Object around(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -120,7 +127,12 @@ public interface AbstractAop extends AbstractBean {
     }
 
     default void doAfterReturning(JoinPoint joinPoint, Object reValue) {
-        info("[doAfterReturning] {}",getClass().getName());
+        info("[doAfterReturning] {}", getClass().getName());
+        log();
     }
 
+    @Override
+    default int getOrder() {
+        return AopConstants.BaseOrder;
+    }
 }

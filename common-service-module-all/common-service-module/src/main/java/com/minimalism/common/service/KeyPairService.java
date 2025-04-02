@@ -1,5 +1,6 @@
 package com.minimalism.common.service;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.AbstractKeyPair;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
@@ -25,15 +26,17 @@ public interface KeyPairService extends AbstractKeyPair, AbstractBean {
 
     @Override
     @RedisCachePut(cacheName = "KEY&PAIR^INFO:#rq.keyInfo.identity", key = "#rq.keyInfo.publicKeyBase64", value = "#rq.keyInfo",
-            responseAsName = "re", requestAsName = "rq",isHash = true,
+            responseAsName = "re", requestAsName = "rq", isHash = true,
             timeout = 5, timeUnit = TimeUnit.MINUTES)
     default boolean saveKey(KeyUtils.KeyInfo keyInfo) {
         return false;
     }
 
     @Override
-    @RedisCacheable(cacheName = "KEY&PAIR^INFO", key = "#rq.identity", requestAsName = "rq", classType = KeyUtils.KeyInfo.class)
+    @RedisCacheable(cacheName = "KEY&PAIR^INFO", key = "#rq.keyInfo.identity", requestAsName = "rq", classType = KeyUtils.KeyInfo.class)
     default KeyUtils.KeyInfo getKeyByIdentity(String identity) {
         return null;
     }
+
+
 }

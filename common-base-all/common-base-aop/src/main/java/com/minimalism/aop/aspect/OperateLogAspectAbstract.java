@@ -101,6 +101,11 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
     }
 
     @Override
+    public int getOrder() {
+        return AbstractSysLog.super.getOrder() + 1;
+    }
+
+    @Override
     @Pointcut("AbstractSysLogAspect.Aop()")
     public void Aop() {
     }

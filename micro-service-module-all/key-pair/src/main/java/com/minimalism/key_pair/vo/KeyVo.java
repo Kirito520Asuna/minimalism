@@ -18,4 +18,6 @@ public class KeyVo {
     private String algorithm;
     @Schema(description = "公钥(base64)")
     private String publicKey;
+    @Schema(description = "身份id")
+    private String identity;
 }
