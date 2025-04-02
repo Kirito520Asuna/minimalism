@@ -78,13 +78,22 @@ public interface AbstractRedisAspect {
         String[] parameterNames = signature.getParameterNames();
         ObjectMapper mapper = SpringUtil.getBean(ObjectMapper.class);
         for (int i = 0; i < parameterNames.length; i++) {
+            Object pointArg = pointArgs[i];
             String json;
             try {
-                json = mapper.writeValueAsString(pointArgs[i]);
+                json = mapper.writeValueAsString(pointArg);
             } catch (JsonMappingException e) {
-                json = String.valueOf(pointArgs[i]);
+                json = String.valueOf(pointArg);
             }
-            map.put(parameterNames[i], json);
+            Object bean;
+            if (JSONUtil.isTypeJSON(json)) {
+                Map<String,Object> map1 = JSONUtil.toBean(json, Map.class);
+                bean = map1;
+            }else {
+                bean = pointArg;
+            }
+
+            map.put(parameterNames[i], bean);
         }
         return redisCacheParameters.setRequest(map);
     }

@@ -81,7 +81,10 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
             try {
                 json = SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result);
             } catch (JsonMappingException e) {
-                json = String.valueOf(result);
+                json = JSONUtil.toJsonStr(result);
+            }
+            if (!JSONUtil.isTypeJSON(json)){
+                json = JSONUtil.toJsonStr(result);
             }
             setOne(getOne().setResponse(JSONUtil.toBean(json,Map.class)));
             //setOne(getOne().setResponse(JSONUtil.toBean(SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result),Map.class)));

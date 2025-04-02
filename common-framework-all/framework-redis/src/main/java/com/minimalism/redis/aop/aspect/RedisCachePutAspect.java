@@ -104,9 +104,12 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
             try {
                 json = SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result);
             } catch (JsonMappingException e) {
-                json = String.valueOf(result);
+                json = JSONUtil.toJsonStr(result);
             }
-            setOne(getOne().setResponse(JSONUtil.toBean(JSONUtil.toJsonStr(json),Map.class)));
+            if (!JSONUtil.isTypeJSON(json)){
+                json = JSONUtil.toJsonStr(result);
+            }
+            setOne(getOne().setResponse(JSONUtil.toBean(json,Map.class)));
             //setOne(getOne().setResponse(JSONUtil.toBean(SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result),Map.class)));
             RedisCacheParameters one = getOne();
             Map<String, Object> request = one.getRequest();
