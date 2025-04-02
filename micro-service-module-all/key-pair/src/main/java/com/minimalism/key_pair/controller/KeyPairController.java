@@ -45,7 +45,7 @@ public class KeyPairController implements AbstractBaseController {
 
     @SneakyThrows
     @Operation(summary = "获取基础信息")
-    @InterfaceEnv
+    @InterfaceEnv(values = {"dev", "test"})
     @SysLog
     @GetMapping("/info")
     public Result<KeyUtils.KeyInfo> getInfo(@RequestParam String identity) {
