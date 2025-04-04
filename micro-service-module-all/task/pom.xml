@@ -13,7 +13,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <target.base.dir>../../..</target.base.dir>
     </properties>
 
     <modules>

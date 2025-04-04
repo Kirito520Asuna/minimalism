@@ -16,6 +16,7 @@
         <spring-boot.version>2.7.18</spring-boot.version>
 
         <xxl-job.version>2.2.0</xxl-job.version>
+        <target.base.dir>../../..</target.base.dir>
     </properties>
     <dependencies>
 <!--        <dependency>-->
