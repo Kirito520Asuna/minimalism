@@ -1,8 +1,7 @@
 server:
-    port: 17600
-    servlet:
-        context-path: /${spring.application.name}
-
+  port: 17600
+  servlet:
+    context-path: /${spring.application.name}
 spring:
   application:
     name: key-pair
@@ -10,6 +9,8 @@ spring:
     active: @spring.profiles.active@
   cloud:
     nacos:
+      server-ip: 127.0.0.1
+      server-addr: ${spring.cloud.nacos.server-ip}:8848
       discovery:
         service: ${spring.application.name}
       config:
@@ -45,3 +46,4 @@ authorization:
 
 common:
   openFilter: true
+
