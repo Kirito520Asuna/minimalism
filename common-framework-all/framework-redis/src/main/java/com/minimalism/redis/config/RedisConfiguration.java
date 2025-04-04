@@ -29,12 +29,13 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true) @Slf4j
+@Accessors(chain = true)
+@Slf4j
 public class RedisConfiguration {
-    @Value("${spring.redis.host:127.0.0.1}")
+    @Value("${spring.redis.host:-127.0.0.1}")
     private String redisHost;
 
-    @Value("${spring.redis.port:6379}")
+    @Value("${spring.redis.port:-6379}")
     private int redisPort;
 
     @Value("${spring.redis.password:#{null}}")
@@ -51,10 +52,12 @@ public class RedisConfiguration {
     private List<String> clusterNodes = CollUtil.newArrayList();
     @Resource
     private RedisProperties redisProperties;
-  public enum RedisMode {
-        single,sentinel, cluster;
+
+    public enum RedisMode {
+        single, sentinel, cluster;
     }
-    public RedisMode getRedisModeEnum(){
+
+    public RedisMode getRedisModeEnum() {
         RedisMode mode = RedisMode.single;
         try {
             mode = RedisMode.valueOf(redisMode);
@@ -63,6 +66,7 @@ public class RedisConfiguration {
         }
         return mode;
     }
+
     public List<String> getAddresses() {
         String template = "redis://%s:%s";
         String format = String.format(template, redisHost, redisPort);
@@ -84,7 +88,9 @@ public class RedisConfiguration {
                 addresses.addAll(collect);
                 break;
             case single:// 单机模式 传递默认default
-            default: addresses.add(format);break;
+            default:
+                addresses.add(format);
+                break;
         }
         return addresses;
     }

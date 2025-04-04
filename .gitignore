@@ -27,6 +27,7 @@ hs_err_pid*
 /.gitee/
 #过滤target文件
 /target/
+targets
 **/target/
 **/.mvn/
 #排除热部署文件

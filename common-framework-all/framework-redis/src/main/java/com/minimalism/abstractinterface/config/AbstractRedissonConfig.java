@@ -6,6 +6,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONNull;
+import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -105,7 +106,7 @@ public interface AbstractRedissonConfig {
             log.error("[error] RedisProperties  ... ");
             redisProperties = SpringUtil.getBean(RedisProperties.class);
         }
-
+        log.info("RedisProperties:{}", JSONUtil.toJsonStr(redisProperties));
         switch(redisModeEnum){
             case cluster:
                 RedisProperties.Cluster cluster = redisProperties.getCluster();
