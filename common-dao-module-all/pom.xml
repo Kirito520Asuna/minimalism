@@ -18,8 +18,9 @@
         <com.alibaba.fastjson.version>2.0.32</com.alibaba.fastjson.version>
         <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
         <mysql.version>8.0.28</mysql.version>
-    </properties>
 
+        <pom.target.dir>dao</pom.target.dir>
+    </properties>
     <modules>
         <module>dao-gen-module</module>
         <module>dao-user-module</module>

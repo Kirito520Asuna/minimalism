@@ -10,7 +10,9 @@
 
     <artifactId>common-service-module-all</artifactId>
     <packaging>pom</packaging>
-
+    <properties>
+        <pom.target.dir>service</pom.target.dir>
+    </properties>
     <modules>
         <module>common-service-module</module>
         <module>file-service-module</module>

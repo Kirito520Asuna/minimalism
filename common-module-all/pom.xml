@@ -10,7 +10,9 @@
 
     <artifactId>common-module-all</artifactId>
     <packaging>pom</packaging>
-
+    <properties>
+        <pom.target.dir>common-module</pom.target.dir>
+    </properties>
     <modules>
         <module>common-security-module</module>
         <module>common-shiro-module</module>

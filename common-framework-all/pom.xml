@@ -10,7 +10,9 @@
 
     <artifactId>common-framework-all</artifactId>
     <packaging>pom</packaging>
-
+    <properties>
+        <pom.target.dir>framework</pom.target.dir>
+    </properties>
     <modules>
         <module>framework-dynamic-datasource</module>
         <module>framework-easy-elasticsearch</module>

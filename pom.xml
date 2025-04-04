@@ -28,8 +28,12 @@
         <banner.basedir>../../</banner.basedir>
         <banner.resources-common>resources-common</banner.resources-common>
         <banner.txt.name>banner.txt</banner.txt.name>
-
+        <!--target dir-->
+        <target.base.dir>../..</target.base.dir>
+        <pom.target.dir></pom.target.dir>
+        <target.dir>${target.base.dir}/targets/${pom.target.dir}/${project.artifactId}</target.dir>
         <!-- 插件版本 -->
+        <maven-jar-plugin.verison>3.3.0</maven-jar-plugin.verison>
         <maven-resources-plugin.verison>3.3.0</maven-resources-plugin.verison>
         <maven-compiler-plugin.verison>3.11.0</maven-compiler-plugin.verison>
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
@@ -137,7 +141,16 @@
     </pluginRepositories>
 
     <build>
+        <directory>${project.basedir}/${target.dir}</directory>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.verison}</version>
+                <configuration>
+                    <outputDirectory>${project.basedir}/${target.dir}</outputDirectory>
+                </configuration>
+            </plugin>
             <!-- maven 打包时跳过测试 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

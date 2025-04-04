@@ -15,6 +15,7 @@
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
         <spring-boot.version>2.7.18</spring-boot.version>
+        <pom.target.dir>micro-service</pom.target.dir>
     </properties>
 
     <modules>
