@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  * @Description
  */
 @Slf4j
+@Deprecated
 public class CorsResponseHeaderFilter implements GlobalFilter, Ordered, AbstractBean {
 
     @Override
@@ -69,8 +70,23 @@ public class CorsResponseHeaderFilter implements GlobalFilter, Ordered, Abstract
                 });
 
                 // 清空并重置Header
-                headers.clear();
-                headers.putAll(newHeaders);
+                //headers.clear();
+                //headers.putAll(newHeaders);
+                //headers.forEach((key, values) -> {
+                //    // 去重处理
+                //    List<String> distinctValues = values.stream()
+                //            .distinct()
+                //            .collect(Collectors.toList());
+                //    newHeaders.put(key, distinctValues);
+                //});
+
+                // 不能清空 headers，会丢掉 Content-Type 等默认值
+                newHeaders.forEach((key, valueList) -> {
+                    headers.put(key, valueList);
+                });
+
+
+
                 info("处理后的header头: {}", JSONUtil.toJsonStr(headers));
             } catch (Exception e) {
                 error("去除重复请求头异常: ", e);
@@ -79,6 +95,8 @@ public class CorsResponseHeaderFilter implements GlobalFilter, Ordered, Abstract
 
         return fromRunnable;
     }
+
+
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -90,7 +108,7 @@ public class CorsResponseHeaderFilter implements GlobalFilter, Ordered, Abstract
                 public HttpHeaders getHeaders() {
                     HttpHeaders headers = new HttpHeaders();
                     headers.putAll(super.getHeaders());
-                    headers.put("content-type",CollUtil.newArrayList("application/json; charset=UTF-8"));
+                    //headers.put("content-type",CollUtil.newArrayList("application/json; charset=UTF-8"));
                     return headers;
                 }
 

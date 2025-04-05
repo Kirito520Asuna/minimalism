@@ -2,8 +2,10 @@ package com.minimalism.gateway.config;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
-import com.minimalism.gateway.filter.CorsResponseHeaderFilter;
-import com.minimalism.gateway.filter.HttpsToHttpFilter;
+import com.minimalism.gateway.filter.*;
+import com.minimalism.properties.CorsProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,7 @@ import javax.annotation.Resource;
  * @Date 2023/10/26 0026 15:58
  * @Description
  */
+@Slf4j
 @Configuration
 public class GatewayConfig implements AbstractBean {
     public static String getPrefix() {
@@ -66,14 +69,31 @@ public class GatewayConfig implements AbstractBean {
      *
      * @return
      */
-    @Bean
+    //@Bean
+    @Deprecated
     @ConditionalOnExpression("${cors.gateway.distinct-headers-filter: true}")
     public CorsResponseHeaderFilter corsResponseHeaderFilter() {
+        debug("corsResponseHeaderFilter init ...");
         return new CorsResponseHeaderFilter();
+    }
+    @Bean
+    @ConditionalOnExpression("${cors.gateway.distinct-headers-filter: true}")
+    public DistinctResponseHeaderFilter distinctResponseHeaderFilter() {
+        return new DistinctResponseHeaderFilter();
     }
 
     @Bean
-    //@ConditionalOnExpression("${cors.gateway.https-to-http-filter: true}")
+    public CorsHeaderFilter corsHeaderFilter(){
+        return new CorsHeaderFilter();
+    }
+
+    @Bean
+    public GatewayDomainsHeaderFilter gatewayDomainsHeaderFilter(){
+        return new GatewayDomainsHeaderFilter();
+    }
+
+    @Bean
+    @ConditionalOnExpression("${cors.gateway.https-to-http-filter: false}")
     public HttpsToHttpFilter httpsToHttpFilter() {
         return new HttpsToHttpFilter();
     }

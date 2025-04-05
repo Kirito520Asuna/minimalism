@@ -27,6 +27,23 @@ import org.springframework.web.util.pattern.PathPatternParser;
 @Slf4j
 @Configuration
 public class GatewayBeanList implements AbstractBean {
+
+    /**
+     * {@link com.minimalism.properties.CorsProperties}
+     *
+     * @return
+     */
+    @Bean
+    @ConditionalOnExpression("${cors.gateway.enabled: true}")
+    public CorsProperties CorsProperties(){
+        return new CorsProperties();
+    }
+
+
+    @Bean
+    public CorsGatewayProperties corsGatewayProperties(){
+        return new CorsGatewayProperties();
+    }
     /**
      * 跨域配置 配合
      * {@see
@@ -35,10 +52,11 @@ public class GatewayBeanList implements AbstractBean {
      * @link org.springframework.web.cors.reactive.CorsWebFilter -- 微服务 gateway 配置跨域
      * @link com.minimalism.filter.CorsRequestFilter  -- 微服务 各个服务Filter 跨域
      */
-    @Bean
+    //@Bean//这个会导致报错
+    @Deprecated
     @ConditionalOnExpression("${cors.gateway.default-filter: true} &&!${cors.gateway.web-filter:false}")
     public CorsWebFilter corsWebFilter() {
-        info("corsWebFilter init ...");
+        debug("corsWebFilter init ...");
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true); // 允许cookies跨域
@@ -59,27 +77,15 @@ public class GatewayBeanList implements AbstractBean {
 
         return new CorsWebFilter(source);
     }
-    @Bean
-    public CorsGatewayProperties corsGatewayProperties(){
-        return new CorsGatewayProperties();
-    }
-    /**
-     * {@link com.minimalism.properties.CorsProperties}
-     *
-     * @return
-     */
-    @Bean
-    @ConditionalOnExpression("${cors.gateway.web-filter:false} &&!${cors.gateway.default-filter: true}")
-    public CorsProperties corsProperties(){
-        return new CorsProperties();
-    }
-    @Bean
+
+    //@Bean//这个会导致报错
+    @Deprecated
     @ConditionalOnExpression("${cors.gateway.web-filter:false} &&!${cors.gateway.default-filter: true}")
     public CorsWebFilter corsGatewayWebFilter() {
         CorsProperties cors = SpringUtil.getBean(CorsProperties.class);
 
-        info("CorsProperties:{}", JSONUtil.toJsonStr(cors, JSONConfig.create().setIgnoreNullValue(false)));
-        info("corsGatewayWebFilter init ...");
+        debug("CorsProperties:{}", JSONUtil.toJsonStr(cors, JSONConfig.create().setIgnoreNullValue(false)));
+        debug("corsGatewayWebFilter init ...");
 
         String path = ObjectUtils.defaultIfEmpty(cors.getPattern(), "/**");
         String allowedOrigin = cors.getAllowedOrigin();

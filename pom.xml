@@ -143,14 +143,14 @@
     <build>
         <directory>${project.basedir}/${target.dir}</directory>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-jar-plugin</artifactId>-->
-<!--                <version>${maven-jar-plugin.verison}</version>-->
-<!--                <configuration>-->
-<!--                    <outputDirectory>${project.basedir}/${target.dir}</outputDirectory>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.verison}</version>
+                <configuration>
+                    <outputDirectory>${project.basedir}/${target.dir}</outputDirectory>
+                </configuration>
+            </plugin>
             <!-- maven 打包时跳过测试 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
