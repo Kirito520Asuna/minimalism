@@ -1,12 +1,12 @@
 nacos:
-  server-addr: 192.168.3.22:8848
+  server-addr: 127.0.0.1:8848
   username: nacos
   password: nacos
 
 spring:
   redis:
-    host: 192.168.3.22
-    database: 1
+    host: 127.0.0.1
+    database: 4
 
 websocket:
   config:

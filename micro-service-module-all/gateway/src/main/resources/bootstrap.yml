@@ -12,6 +12,8 @@ spring:
 #===========================================================================
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       discovery:
         service: ${spring.application.name}
 
@@ -58,12 +60,12 @@ captcha:
 #===========================================================================
 cors:
   gateway:
-    enabled: true
-    default-filter: false
-    web-filter: true
+    enabled: false
+    default-filter: true
+    web-filter: false
     distinct-headers-filter: true
-    https-to-http-filter: true
-  enabled: false
+    https-to-http-filter: false
+  enabled: true
   config: false
   filter: false
   pattern: "/**"
@@ -78,3 +80,7 @@ cors:
 domains:
   name: 127.0.0.1:${server.port}
   all-paths: ${domains.name}${server.servlet.context-path:}
+
+logging:
+  level:
+    com.minimalism: debug

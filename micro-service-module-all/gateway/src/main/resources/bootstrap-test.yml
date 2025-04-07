@@ -1,9 +1,9 @@
 #在配置nacos实现聚合swagger时由于
 #/v3/api-docs引起的网关路由找不到具体服务器的api-docs文档，导致swagger生成文档失败
 #解决方法：可以直接在application.yaml配置后，网关路由正常
-server:
-  servlet:
-    context-path: /test
+#server:
+#  servlet:
+#    context-path: /test
 springfox:
   documentation:
     open-api:
@@ -17,7 +17,8 @@ domains:
 spring:
   cloud:
     nacos:
-      server-addr: 192.168.3.22:8848
+
+    #      server-addr: 192.168.3.85:8848
     gateway:
       discovery:
         #docker启动时远程调用失败  需要将docker所在服务器地址设置一下
@@ -38,7 +39,7 @@ spring:
         - id: ${spring.application.name}
           uri: no://op
           predicates:
-            - Path=${server.servlet.context-path}/websocket/**,${server.servlet.context-path}/user/**,${server.servlet.context-path}/im/**,${server.servlet.context-path}/quartz/**,${server.servlet.context-path}/**,false
+            - Path=${server.servlet.context-path}/key-pair,${server.servlet.context-path}/websocket,${server.servlet.context-path}/user,${server.servlet.context-path}/im,${server.servlet.context-path}/quartz,${server.servlet.context-path}/,false
           filters:
             #本地
             - RedirectTo=302, http://${domains.all-paths}/home
@@ -121,5 +122,17 @@ spring:
             document-uri: /doc.html
           predicates:
             - Path=${server.servlet.context-path}/im/**
+          filters:
+            - StripPrefix=1
+
+        - id: key-pair
+          uri: lb://key-pair
+          order: 2
+          metadata:
+            summary: key-pair服务
+            description: key-pair服务
+            document-uri: /doc.html
+          predicates:
+            - Path=${server.servlet.context-path}/key-pair/**
           filters:
             - StripPrefix=1

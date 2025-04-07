@@ -14,15 +14,13 @@ spring:
 
   cloud:
     nacos:
+      server-addr: ${nacos.server-addr}
+      username: ${nacos.username}
+      password: ${nacos.username}
+
       discovery:
         service: ${spring.application.name}
-        server-addr: ${nacos.server-addr}
-        username: ${nacos.username}
-        password: ${nacos.username}
       config:
-        server-addr: ${nacos.server-addr}
-        username: ${nacos.username}
-        password: ${nacos.username}
         refresh-enabled: true
         refreshable-dataids: ${spring.cloud.nacos.discovery.service:${spring.application.name}}-${spring.profiles.active:test}.${spring.cloud.nacos.config.file-extension:yaml}
 
@@ -47,3 +45,7 @@ cors:
   gateway:
     enabled: false
   enabled: true
+
+logging:
+  level:
+    com.minimalism: debug
