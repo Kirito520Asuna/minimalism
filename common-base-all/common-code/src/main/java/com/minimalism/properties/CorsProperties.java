@@ -43,7 +43,13 @@ public class CorsProperties implements BeanProperties {
         if (StrUtil.isNotBlank(allowedMethods)) {
             origins = allowedMethods.split(",");
         } else {
-            CorsGatewayProperties bean = SpringUtil.getBean(CorsGatewayProperties.class);
+            CorsGatewayProperties bean;
+            try {
+                bean = SpringUtil.getBean(CorsGatewayProperties.class);
+            } catch (Exception e) {
+                warn(e.getMessage());
+                bean = new CorsGatewayProperties();
+            }
             Boolean defaultFilter = ObjectUtils.defaultIfEmpty(bean.getDefaultFilter(), true);
             Boolean webFilter = ObjectUtils.defaultIfEmpty(bean.getWebFilter(), false);
             boolean originsBool = defaultFilter || webFilter;
