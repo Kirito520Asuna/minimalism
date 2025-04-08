@@ -1,6 +1,4 @@
-drop database IF EXISTS `sys_user_data`;
-create database `sys_user_data` character set utf8mb4 collate  utf8mb4_unicode_ci;
-use `sys_user_data`;
+
 -- ----------------------------
 -- 1、用户信息表
 -- ----------------------------
