@@ -102,8 +102,7 @@ public interface AbstractApiSign extends AbstractBean {
                 List<String> exCollection = CollUtil.newArrayList(timestampAsName, signAsName);
                 List<Boolean> verifySignList = CollUtil.newArrayList();
 
-                SaltInfo saltInfo = new SaltInfo().setSalt(apiSalt).setServiceName("通用");
-                List<SaltInfo> apiSaltList = CollUtil.newArrayList(saltInfo);
+                List<SaltInfo> apiSaltList = CollUtil.newArrayList();
                 AbstractApiSaltService apiSaltService = SpringUtil.getBean(AbstractApiSaltService.class);
                 Collection<SaltInfo> saltList = apiSaltService.getSaltList();
                 if (CollUtil.isNotEmpty(saltList)) {
@@ -115,6 +114,7 @@ public interface AbstractApiSign extends AbstractBean {
                             .filter(o -> ObjectUtil.equals(o.getServiceName(), springApplicationName))
                             .collect(Collectors.toList());
                     if (CollUtil.isEmpty(apiSaltList)) {
+                        SaltInfo saltInfo = new SaltInfo().setSalt(apiSalt).setServiceName("通用");
                         apiSaltList.add(saltInfo);
                     }
                 }
