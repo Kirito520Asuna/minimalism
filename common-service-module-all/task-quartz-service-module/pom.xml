@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.minimalism</groupId>
+        <artifactId>common-service-module-all</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>task-quartz-service-module</artifactId>
+
+    <properties>
+        <spring-boot.version>2.7.9</spring-boot.version>
+
+        <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
+        <alibaba-druid.version>1.1.21</alibaba-druid.version>
+        <com.alibaba.fastjson.version>2.0.32</com.alibaba.fastjson.version>
+        <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
+        <mysql.version>8.0.28</mysql.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring-Boot Version BOM -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!--公共service模块-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.minimalism</groupId>-->
+        <!--            <artifactId>common-service-module</artifactId>-->
+        <!--            <version>${revision}</version>-->
+        <!--            <exclusions>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.springframework</groupId>-->
+        <!--                    <artifactId>spring-webmvc</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <artifactId>logback</artifactId>-->
+        <!--                    <groupId>ch.qos.logback</groupId>-->
+        <!--                </exclusion>-->
+        <!--            </exclusions>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-mybatis-plus</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>common-code</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
