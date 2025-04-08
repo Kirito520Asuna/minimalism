@@ -15,11 +15,7 @@
         <spring-boot.version>2.7.9</spring-boot.version>
 
         <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
-        <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
-        <alibaba-druid.version>1.1.21</alibaba-druid.version>
-        <com.alibaba.fastjson.version>2.0.32</com.alibaba.fastjson.version>
-        <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
-        <mysql.version>8.0.28</mysql.version>
+        <mysql.version>8.0.33</mysql.version>
     </properties>
 
 
@@ -38,37 +34,43 @@
 
     <dependencies>
         <!--公共service模块-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.minimalism</groupId>-->
-        <!--            <artifactId>common-service-module</artifactId>-->
-        <!--            <version>${revision}</version>-->
-        <!--            <exclusions>-->
-        <!--                <exclusion>-->
-        <!--                    <groupId>org.springframework</groupId>-->
-        <!--                    <artifactId>spring-webmvc</artifactId>-->
-        <!--                </exclusion>-->
-        <!--                <exclusion>-->
-        <!--                    <artifactId>logback</artifactId>-->
-        <!--                    <groupId>ch.qos.logback</groupId>-->
-        <!--                </exclusion>-->
-        <!--            </exclusions>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>com.minimalism</groupId>
-            <artifactId>framework-mybatis-plus</artifactId>
+            <artifactId>common-service-module</artifactId>
             <version>${revision}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.minimalism</groupId>
-            <artifactId>common-code</artifactId>
-            <version>${revision}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
+
+        <!-- mysql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+        <!-- orm -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!--Mybatis-Plus-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus-spring-boot-starter.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

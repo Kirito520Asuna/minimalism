@@ -5,7 +5,9 @@ server:
 spring:
   application:
     name: quartz
-
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
   profiles:
     active: @spring.profiles.active@
 
@@ -26,7 +28,6 @@ spring:
     dynamic:
       # 开启seata代理
       seata: ${seata.enabled}
-
 # seata配置
 seata:
   enabled: true
@@ -136,9 +137,9 @@ cors:
   allowedHeader: "*"
   allowCredentials: true
   maxAge: 360000
-authorization:
-  shiro:
-    enable: true
-  security:
-    enable: false
+#authorization:
+#  shiro:
+#    enable: true
+#  security:
+#    enable: false
 

@@ -1,8 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/quartz?useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
+    dynamic:
+      primary: quartz
+      datasource:
+        quartz:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/quartz?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+          username: root
+          password: root
+
     driver-class-name: com.mysql.cj.jdbc.Driver
     max-active: 1000
     max-idle: 20

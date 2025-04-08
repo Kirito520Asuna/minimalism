@@ -41,6 +41,27 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>task-quartz-service-module</artifactId>
+            <version>${revision}</version>
+            <exclusions>
+<!--                <exclusion>-->
+<!--                    <groupId>com.minimalism</groupId>-->
+<!--                    <artifactId>common-shiro-module</artifactId>-->
+<!--                </exclusion>-->
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>common-security-module</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -71,21 +92,21 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>com.minimalism</groupId>
-            <artifactId>framework-nacos</artifactId>
-            <version>${revision}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba.cloud</groupId>
-                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.minimalism</groupId>-->
+<!--            <artifactId>framework-nacos</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.alibaba.cloud</groupId>-->
+<!--                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.cloud</groupId>-->
+<!--                    <artifactId>spring-cloud-starter-bootstrap</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -156,25 +177,7 @@
             <version>${revision}</version>
         </dependency>
 
-        <!-- mysql -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
 
-        <!-- orm -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-        <!--        </dependency>-->
-
-        <!--Mybatis-Plus-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.4.3</version>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
