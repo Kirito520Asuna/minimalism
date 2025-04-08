@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.3.22:3306/quartz?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    
+#==================================================================================================================
+seata-server:
+  config:
+    group: SEATA_GROUP
+    namespace:
+  discovery:
+    group: SEATA_GROUP
+    namespace:

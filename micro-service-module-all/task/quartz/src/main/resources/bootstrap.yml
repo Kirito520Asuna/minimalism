@@ -16,15 +16,11 @@ spring:
         enabled: false
 
     nacos:
-      discovery:
-        service: ${spring.application.name}
-        server-addr: ${nacos.discovery.server-addr}
-      config:
-        server-addr: ${nacos.config.server-addr}
-        refresh-enabled: true
-        refreshable-dataids: ${spring.cloud.nacos.discovery.service:${spring.application.name}}-${spring.profiles.active:test}.${spring.cloud.nacos.config.file-extension:yaml}
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
 
-# demo
+  # demo
 #====================================================================================================================================
   datasource:
     dynamic:
@@ -55,15 +51,20 @@ seata:
   registry:
     type: nacos
     nacos:
-      server-addr: ${nacos.discovery.server-addr}
+      server-addr: ${spring.cloud.nacos.server-addr}
       group: ${seata-server.discovery.group}
       namespace: ${seata-server.discovery.namespace}
+      username: ${spring.cloud.nacos.username}
+      password: ${spring.cloud.nacos.password}
+
   config:
     type: nacos
     nacos:
-      server-addr: ${nacos.config.server-addr}
+      server-addr: ${spring.cloud.nacos.server-addr}
       group: ${seata-server.config.group}
       namespace: ${seata-server.config.namespace}
+      username: ${spring.cloud.nacos.username}
+      password: ${spring.cloud.nacos.password}
 #====================================================================================================================================
 # OpenFeign 配置
 
