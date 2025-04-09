@@ -17,3 +17,7 @@ seata-server:
   discovery:
     group: SEATA_GROUP
     namespace:
+
+shiro:
+  annotation:
+    enable: false

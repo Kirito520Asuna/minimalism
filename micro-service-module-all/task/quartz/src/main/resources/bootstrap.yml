@@ -21,7 +21,34 @@ spring:
       server-addr: 127.0.0.1:8848
       username: nacos
       password: nacos
+knife4j:
+  setting:
+    enable-dynamic-parameter: true
+  #????swagger????
+  basic:
+    #enable: false
+    username: root
+    password: root
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  open:
+    default-group-configs:
+      enable: true
+  #      other: false
+
+  group-configs:
+    - group: "test"
+      paths-to-match:
+        - "/test/**"
+    - group: "api"
+      paths-to-match:
+        - "/api/**"
+  swagger-ui:
+    operations-sorter: alpha
+    path: /swagger-ui.html
+    tags-sorter: alpha
   # demo
 #====================================================================================================================================
   datasource:
