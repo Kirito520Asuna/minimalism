@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Data @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseEntity extends SearchEntity implements Serializable {
+public abstract class BaseEntity extends SearchEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

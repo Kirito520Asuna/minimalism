@@ -12,7 +12,7 @@ import java.util.List;
  * @author yan
  */
 @Data
-public class TreeEntity extends BaseEntity {
+public abstract class TreeEntity extends BaseEntity {
     private static final long serialVersionUID = 1L;
     /**
      * 父菜单名称
