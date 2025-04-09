@@ -22,6 +22,7 @@
         <module>validate-code-service-module</module>
         <module>websocket-service-module</module>
         <module>task-quartz-service-module</module>
+        <module>job-service-module</module>
     </modules>
 
 </project>
