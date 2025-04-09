@@ -151,6 +151,7 @@ SELECT @addId := '0';
 SELECT @editId := '0';
 SELECT @removeId := '0';
 SELECT @exportId := '0';
+SELECT @importId := '0';
 -- 插入 sys_menu_ancestor 记录
 INSERT INTO sys_menu_ancestor (menu_id, menu_parent_id, level)
 SELECT menu_id, parent_id, level
@@ -241,6 +242,23 @@ FROM (
 
          UNION ALL
          SELECT @exportId as menu_id, @exportId as parent_id, 0 as level
+         UNION ALL
+         -- 递归查询所有父级菜单 ID
+         (WITH RECURSIVE ParentMenus AS (
+             SELECT menu_id, parent_id, 1 AS level
+             FROM sys_menu
+             WHERE menu_id = @exportId
+             UNION ALL
+             SELECT m.menu_id, m.parent_id, pm.level + 1
+             FROM sys_menu m
+                      INNER JOIN ParentMenus pm ON m.menu_id = pm.parent_id
+         )
+          SELECT @exportId as menu_id, parent_id, level
+          FROM ParentMenus
+          WHERE parent_id != 0)
+
+         UNION ALL
+         SELECT @importId as menu_id, @exportId as parent_id, 0 as level
          UNION ALL
          -- 递归查询所有父级菜单 ID
          (WITH RECURSIVE ParentMenus AS (
