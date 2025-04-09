@@ -47,10 +47,10 @@
             <artifactId>task-quartz-service-module</artifactId>
             <version>${revision}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>com.minimalism</groupId>
-                    <artifactId>common-shiro-module</artifactId>
-                </exclusion>
+<!--                <exclusion>-->
+<!--                    <groupId>com.minimalism</groupId>-->
+<!--                    <artifactId>common-shiro-module</artifactId>-->
+<!--                </exclusion>-->
                 <exclusion>
                     <groupId>com.minimalism</groupId>
                     <artifactId>common-security-module</artifactId>
