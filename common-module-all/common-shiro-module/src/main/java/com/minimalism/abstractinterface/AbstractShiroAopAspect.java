@@ -48,6 +48,8 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
                     hasRolesAndPermissions(joinPoint);
                     break;
             }
+        }else {
+            debug("未开启权限认证");
         }
     }
 

@@ -34,6 +34,7 @@ public class CustomSecurityExpressionRoot implements AbstractSecurityExpressionR
     @Override
     public boolean hasAuthority(String authority) {
         if (!enable()) {
+            log.debug("未开启权限认证");
             return true;
         }
         return AbstractSecurityExpressionRoot.super.hasAuthority(authority);
@@ -42,6 +43,7 @@ public class CustomSecurityExpressionRoot implements AbstractSecurityExpressionR
     @Override
     public boolean hasRole(String role) {
         if (!enable()) {
+            log.debug("未开启权限认证");
             return true;
         }
         return AbstractSecurityExpressionRoot.super.hasRole(role);
