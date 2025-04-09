@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "shiro.annotation")
 public class ShiroAnnotationConfig {
     /**
-     * 是否开启注解
+     * 是否开启注解 用于测试跳过权限
      */
     private boolean enable = true;
     /**
