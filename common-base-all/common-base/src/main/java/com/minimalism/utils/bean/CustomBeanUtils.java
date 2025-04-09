@@ -13,22 +13,6 @@ import java.util.Set;
  * @Description
  */
 public class CustomBeanUtils extends BeanUtil {
-    public static void main(String[] args) {
-        LinkedHashMap<String, Object> hashMap = new LinkedHashMap<>();
-        hashMap.put("a", "a");
-        hashMap.put("name", "123");
-        hashMap.put("age", 12);
-        hashMap.put("sex", "1");
-        hashMap.put("address", null);
-
-        LinkedHashMap<Object, Object> hashMap1 = new LinkedHashMap<>();
-        BeanUtil.copyProperties(hashMap, hashMap1);
-        LinkedHashMap<Object, Object> hashMap2 = new LinkedHashMap<>();
-        CustomBeanUtils.copyPropertiesIgnoreNull(hashMap, hashMap2);
-        System.out.println(hashMap);
-        System.out.println(hashMap1);
-        System.out.println(hashMap2);
-    }
 
     /**
      * 复制源对象到目标对象，仅复制非null属性。
