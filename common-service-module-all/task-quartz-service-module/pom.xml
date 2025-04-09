@@ -48,6 +48,12 @@
 
         <dependency>
             <groupId>com.minimalism</groupId>
+            <artifactId>job-service-module</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+<!--        <dependency>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-quartz</artifactId>
             <version>${revision}</version>
         </dependency>
@@ -55,27 +61,27 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
+        </dependency>-->
 
-        <!-- mysql -->
+  <!--      &lt;!&ndash; mysql &ndash;&gt;
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
 
-        <!-- orm -->
+        &lt;!&ndash; orm &ndash;&gt;
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!--Mybatis-Plus-->
+        &lt;!&ndash;Mybatis-Plus&ndash;&gt;
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus-spring-boot-starter.version}</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

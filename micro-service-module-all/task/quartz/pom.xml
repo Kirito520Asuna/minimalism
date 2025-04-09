@@ -41,21 +41,16 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>com.minimalism</groupId>
-            <artifactId>job-service-module</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>task-quartz-service-module</artifactId>
             <version>${revision}</version>
             <exclusions>
-<!--                <exclusion>-->
-<!--                    <groupId>com.minimalism</groupId>-->
-<!--                    <artifactId>common-shiro-module</artifactId>-->
-<!--                </exclusion>-->
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>common-shiro-module</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>com.minimalism</groupId>
                     <artifactId>common-security-module</artifactId>
@@ -63,6 +58,10 @@
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-data-jpa</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>framework-redis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -97,21 +96,6 @@
             </exclusions>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.minimalism</groupId>-->
-<!--            <artifactId>framework-nacos</artifactId>-->
-<!--            <version>${revision}</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>com.alibaba.cloud</groupId>-->
-<!--                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
-<!--                </exclusion>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.springframework.cloud</groupId>-->
-<!--                    <artifactId>spring-cloud-starter-bootstrap</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -165,30 +149,12 @@
         </dependency>
         <!--seata-end-->
 
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>framework-knife4j</artifactId>
             <version>${revision}</version>
         </dependency>
 
-
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
