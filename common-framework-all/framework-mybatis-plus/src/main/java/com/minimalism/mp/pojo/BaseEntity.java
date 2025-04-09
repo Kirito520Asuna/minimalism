@@ -3,13 +3,8 @@ package com.minimalism.mp.pojo;
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.minimalism.abstractinterface.entity.AbstractEntity;
-import com.minimalism.util.ObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -17,8 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Entity基类
@@ -29,14 +22,8 @@ import java.util.Map;
 @Data @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseEntity implements Serializable, AbstractEntity {
+public class BaseEntity extends SearchEntity implements Serializable {
     private static final long serialVersionUID = 1L;
-    /**
-     * 搜索值
-     */
-    @JsonIgnore
-    @TableField(exist = false)
-    private String searchValue;
 
     /**
      * 创建者
@@ -74,17 +61,6 @@ public class BaseEntity implements Serializable, AbstractEntity {
     @Schema(description = "备注")
     @TableField(value = "`remark`")
     private String remark;
-
-    /**
-     * 请求参数
-     */
-    @Schema(description = "请求参数")
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @TableField(exist = false)
-    private Map<String, Object> params = new HashMap<>();
-    public Map<String,Object> toParams(){
-        return toParams(ObjectUtils.defaultIfEmpty(getParams(), this));
-    }
 
     public static final String COL_CREATE_BY = "create_by";
     public static final String COL_CREATE_TIME = "create_time";
