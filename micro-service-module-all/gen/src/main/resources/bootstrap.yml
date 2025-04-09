@@ -10,11 +10,11 @@ spring:
     active: @spring.profiles.active@
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       discovery:
         service: ${spring.application.name}
-      config:
-        refresh-enabled: true
-        refreshable-dataids: ${spring.cloud.nacos.discovery.service:${spring.application.name}}-${spring.profiles.active:test}.${spring.cloud.nacos.config.file-extension:yaml}
+
 
 logstash:
   addr: 127.0.0.1:4560
@@ -43,3 +43,10 @@ authorization:
     enable: true
   security:
     enable: false
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/${spring.application.name}/*.xml
+  configuration:
+    use-generated-keys: true
+    use-column-label: true
+    map-underscore-to-camel-case: true
