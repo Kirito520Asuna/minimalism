@@ -5,10 +5,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.minimalism.mp.pojo.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "sys_job")
-public class SysJob extends BaseEntity implements Serializable {
+public class SysJob implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -38,14 +37,14 @@ public class SysJob extends BaseEntity implements Serializable {
     /**
      * 任务名称
      */
-    @TableId(value = "job_name", type = IdType.AUTO)
+    @TableField(value = "job_name")
     @Schema(description = "任务名称")
     private String jobName;
 
     /**
      * 任务组名
      */
-    @TableId(value = "job_group", type = IdType.AUTO)
+    @TableField(value = "job_group")
     @Schema(description = "任务组名")
     private String jobGroup;
 

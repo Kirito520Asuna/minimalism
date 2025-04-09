@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -81,7 +81,7 @@ public class SysJobLog implements Serializable {
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     @Schema(description = "创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     public static final String COL_JOB_LOG_ID = "job_log_id";
 
