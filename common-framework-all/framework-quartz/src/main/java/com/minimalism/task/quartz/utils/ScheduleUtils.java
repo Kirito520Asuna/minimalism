@@ -29,8 +29,22 @@ public class ScheduleUtils {
     /**
      * 构建任务触发对象
      */
+    public static TriggerKey buildDefaultTriggerKey(Long id, String jobGroup) {
+        return buildTriggerKey(ScheduleConstants.TASK_CLASS_NAME + id, jobGroup);
+    }
+
+    /**
+     * 构建任务触发对象
+     */
     public static TriggerKey buildTriggerKey(String name, String jobGroup) {
         return TriggerKey.triggerKey(name, jobGroup);
+    }
+
+    /**
+     * 构建任务键对象
+     */
+    public static JobKey buildDefaultJobKey(Long id, String jobGroup) {
+        return buildJobKey(ScheduleConstants.TASK_CLASS_NAME + id, jobGroup);
     }
 
     /**
@@ -49,23 +63,23 @@ public class ScheduleUtils {
         // 构建job信息
         Long jobId = Long.parseLong((String) jobMap.get("jobId"));
         String jobGroup = (String) jobMap.get("jobGroup");
-        JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(buildJobKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup)).build();
+        JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(buildDefaultJobKey(jobId, jobGroup)).build();
 
         // 表达式调度构建器
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule((String) jobMap.get("cronExpression"));
         cronScheduleBuilder = handleCronScheduleMisfirePolicy(jobMap, cronScheduleBuilder);
 
         // 按新的cronExpression表达式构建一个新的trigger
-        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(buildTriggerKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup))
+        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(buildDefaultTriggerKey(jobId, jobGroup))
                 .withSchedule(cronScheduleBuilder).build();
 
         // 放入参数，运行时的方法可以获取
         jobDetail.getJobDataMap().put(ScheduleConstants.TASK_PROPERTIES, jobMap);
 
         // 判断是否存在
-        if (scheduler.checkExists(buildJobKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup))) {
+        if (scheduler.checkExists(buildDefaultJobKey(jobId, jobGroup))) {
             // 防止创建时存在数据问题 先移除，然后在执行创建操作
-            scheduler.deleteJob(buildJobKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup));
+            scheduler.deleteJob(buildDefaultJobKey(jobId, jobGroup));
         }
 
         // 判断任务是否过期
@@ -76,7 +90,7 @@ public class ScheduleUtils {
 
         // 暂停任务
         if (StrUtil.equals(ScheduleConstants.Status.PAUSE.getValue(), (String) jobMap.get("status"))) {
-            scheduler.pauseJob(ScheduleUtils.buildJobKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup));
+            scheduler.pauseJob(ScheduleUtils.buildDefaultJobKey(jobId, jobGroup));
         }
     }
 

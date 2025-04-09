@@ -41,6 +41,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>job-service-module</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.minimalism</groupId>
