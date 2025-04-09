@@ -150,32 +150,32 @@ UNION ALL
 ) AS subquery;
 
 
-<sql id="ancestorInsertInto">
-    <!--@mbg.generated-->
-    <if test="ids != null and ids.size() != 0">
-        INSERT INTO `sys_menu_ancestor` (`menu_id`, `menu_parent_id`, `level`)
-        SELECT `id`, `parent_id`, `level`
-        FROM (
-        <foreach collection="ids" item="idOneInsert" index="i">
-            SELECT #{idOneInsert} as `id`, #{idOneInsert} as `parent_id`, 0 as `level`
-            UNION ALL
+-- <sql id="ancestorInsertInto">
+    --<!--@mbg.generated-->
+    --<if test="ids != null and ids.size() != 0">
+    --    INSERT INTO `sys_menu_ancestor` (`menu_id`, `menu_parent_id`, `level`)
+    --    SELECT `id`, `parent_id`, `level`
+    --    FROM (
+    --    <foreach collection="ids" item="idOneInsert" index="i">
+    --        SELECT #{idOneInsert} as `id`, #{idOneInsert} as `parent_id`, 0 as `level`
+    --        UNION ALL
             -- 递归查询所有父级菜单 ID
-            (WITH RECURSIVE ParentMenus AS (SELECT `menu_id`, `parent_id`, 1 AS `level`
-            FROM `sys_menu`
-            WHERE `menu_id` = #{idOneInsert}
-            UNION ALL
-            SELECT m.`menu_id`, m.`parent_id`, (pm.`level` + 1) as `level`
-            FROM `sys_menu` m
-            INNER JOIN ParentMenus pm ON m.`menu_id` = pm.`parent_id`)
-            SELECT #{idOneInsert} as `id`, `parent_id`, `level`
-            FROM ParentMenus
-            WHERE `parent_id` != 0)
-            <choose>
-                <when test="i != (ids.size() - 1)">
-                    UNION ALL
-                </when>
-            </choose>
-        </foreach>
-        ) as ancestorInsertInto
-    </if>
-</sql>
+    --        (WITH RECURSIVE ParentMenus AS (SELECT `menu_id`, `parent_id`, 1 AS `level`
+    --        FROM `sys_menu`
+    --        WHERE `menu_id` = #{idOneInsert}
+    --        UNION ALL
+    --        SELECT m.`menu_id`, m.`parent_id`, (pm.`level` + 1) as `level`
+    --        FROM `sys_menu` m
+    --        INNER JOIN ParentMenus pm ON m.`menu_id` = pm.`parent_id`)
+    --        SELECT #{idOneInsert} as `id`, `parent_id`, `level`
+    --        FROM ParentMenus
+    --        WHERE `parent_id` != 0)
+    --        <choose>
+    --            <when test="i != (ids.size() - 1)">
+    --                UNION ALL
+    --            </when>
+    --        </choose>
+    --    </foreach>
+    --    ) as ancestorInsertInto
+    -- </if>
+    --</sql>
