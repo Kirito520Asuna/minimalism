@@ -38,5 +38,22 @@ public interface KeyPairService extends AbstractKeyPair, AbstractBean {
         return null;
     }
 
+    /***
+     * 一次一密
+     * 每次请求前获取密钥
+     *
+     * S:服务端 G:生成 C:客户端 P:公钥 R:私钥
+     *
+     * S:=>G=>P,R  P as S-P ,R as S-R
+     * S-P 传输 给 C
+     * C: =>G=>P,R  P as C-P ,R as C-R
+     * S-P 加密 C-P 传输 给 S
+     *
+     * S: S-R 解密 获取 C-P
+     * G==>密钥
+     * C-P 加密 密钥 传输 给 C
+     * C: C-R 解密 获取 密钥
+     * todo: 优化
+     */
 
 }
