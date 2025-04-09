@@ -61,7 +61,7 @@ public class ScheduleUtils {
     public static void createScheduleJob(Scheduler scheduler, Map<String, Object> jobMap) throws SchedulerException, TaskException {
         Class<? extends Job> jobClass = getQuartzJobClass(jobMap);
         // 构建job信息
-        Long jobId = Long.parseLong((String) jobMap.get("jobId"));
+        Long jobId = Long.parseLong(String.valueOf(jobMap.get("jobId")));
         String jobGroup = (String) jobMap.get("jobGroup");
         JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(buildDefaultJobKey(jobId, jobGroup)).build();
 

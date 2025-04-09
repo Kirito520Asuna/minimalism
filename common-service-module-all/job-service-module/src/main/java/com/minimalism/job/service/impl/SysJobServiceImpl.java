@@ -19,6 +19,7 @@ import com.minimalism.job.service.SysJobService;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class SysJobServiceImpl extends ServiceImpl<SysJobMapper, SysJob> implements SysJobService {
+    @Resource
+    private Scheduler scheduler;
+
+    @Override
+    public Scheduler getScheduler() {
+        if (scheduler == null) {
+            scheduler = SysJobService.super.getScheduler();
+        }
+        return scheduler;
+    }
+
     @PostConstruct
     public void init() throws SchedulerException, TaskException {
         Scheduler scheduler = getScheduler();
