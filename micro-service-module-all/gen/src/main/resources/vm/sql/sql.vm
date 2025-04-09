@@ -1,6 +1,6 @@
 -- 菜单 SQL
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${functionName}', '${parentMenuId}', '1', '${businessName}', '${moduleName}/${businessName}/index', 1, 0, 'C', '0', '0', '${permissionPrefix}:list', '#', 'admin', sysdate(), '', null, '${functionName}菜单');
+values('${functionName}', '${parentMenuId}', '1', '${businessName}', '${moduleName}/${businessName}/index', 1, 0, 'C', '0', '0', '${permissionPrefix}:list', '#', '1', sysdate(), '', null, '${functionName}菜单');
 
 -- 按钮父菜单ID
 SELECT @parentId := LAST_INSERT_ID();
@@ -36,6 +36,11 @@ values('${functionName}导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', '
 -- 按钮导出ID
 SELECT @exportId := LAST_INSERT_ID();
 
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('${functionName}导入', @parentId, '6',  '#', '', 1, 0, 'F', '0', '0', '${permissionPrefix}:import',       '#', '1', sysdate(), '1', sysdate(), '');
+
+-- 按钮导出ID
+SELECT @importId := LAST_INSERT_ID();
 
 -- 菜单权限祖先 关联
 ##insert into `sys_menu_ancestor`(`menu_id`, `menu_parent_id`, `level`)
@@ -133,6 +138,23 @@ UNION ALL
 
 UNION ALL
     SELECT @exportId as menu_id, @exportId as parent_id, 0 as level
+    UNION ALL
+    -- 递归查询所有父级菜单 ID
+    (WITH RECURSIVE ParentMenus AS (
+    SELECT menu_id, parent_id, 1 AS level
+    FROM sys_menu
+    WHERE menu_id = @exportId
+    UNION ALL
+    SELECT m.menu_id, m.parent_id, pm.level + 1
+    FROM sys_menu m
+    INNER JOIN ParentMenus pm ON m.menu_id = pm.parent_id
+    )
+    SELECT @exportId as menu_id, parent_id, level
+    FROM ParentMenus
+    WHERE parent_id != 0)
+
+UNION ALL
+    SELECT @importId as menu_id, @exportId as parent_id, 0 as level
     UNION ALL
     -- 递归查询所有父级菜单 ID
     (WITH RECURSIVE ParentMenus AS (
