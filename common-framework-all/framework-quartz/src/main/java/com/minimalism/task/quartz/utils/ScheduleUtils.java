@@ -1,6 +1,7 @@
 package com.minimalism.task.quartz.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.minimalism.task.quartz.exception.TaskException;
 import com.minimalism.task.quartz.job.QuartzDisallowConcurrentExecution;
 import com.minimalism.task.quartz.job.QuartzJobExecution;
 import com.minimalism.task.quartz.schedule.ScheduleConstants;
@@ -43,7 +44,7 @@ public class ScheduleUtils {
     /**
      * 创建定时任务
      */
-    public static void createScheduleJob(Scheduler scheduler, Map<String, Object> jobMap) throws Exception {
+    public static void createScheduleJob(Scheduler scheduler, Map<String, Object> jobMap) throws SchedulerException, TaskException {
         Class<? extends Job> jobClass = getQuartzJobClass(jobMap);
         // 构建job信息
         Long jobId = Long.parseLong((String) jobMap.get("jobId"));
@@ -84,7 +85,7 @@ public class ScheduleUtils {
      * 设置定时任务策略
      */
     public static CronScheduleBuilder handleCronScheduleMisfirePolicy(Map<String, Object> jobMap, CronScheduleBuilder cb)
-            throws Exception {
+            throws TaskException {
         String misfirePolicy = (String) jobMap.get("misfirePolicy");
         switch (misfirePolicy) {
             case ScheduleConstants.MISFIRE_DEFAULT:
@@ -98,7 +99,7 @@ public class ScheduleUtils {
             default:
                 String message = "The task misfire policy '" + misfirePolicy
                         + "' cannot be used in cron schedule tasks";
-                throw new Exception(message);
+                throw new TaskException(message);
         }
     }
 
