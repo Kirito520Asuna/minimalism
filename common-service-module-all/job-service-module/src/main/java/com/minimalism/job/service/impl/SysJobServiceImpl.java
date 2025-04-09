@@ -18,11 +18,33 @@ import com.minimalism.job.domain.SysJob;
 import com.minimalism.job.service.SysJobService;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SysJobServiceImpl extends ServiceImpl<SysJobMapper, SysJob> implements SysJobService {
+    @PostConstruct
+    public void init() throws SchedulerException, TaskException {
+        Scheduler scheduler = getScheduler();
+        scheduler.clear();
+        List<SysJob> jobList = list();
+
+        List<Map<String, Object>> jobMapList = jobList.stream()
+                .map(job -> {
+
+                    Map<String, Object> jobMap = Maps.newLinkedHashMap();
+                    CustomBeanUtils.copyPropertiesIgnoreNull(job, jobMap);
+                    return jobMap;
+                }).collect(Collectors.toList());
+
+        for (Map<String, Object> jobMap : jobMapList) {
+            ScheduleUtils.createScheduleJob(scheduler, jobMap);
+        }
+    }
+
     /**
      * 获取quartz调度器的计划任务
      *
