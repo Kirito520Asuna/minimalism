@@ -21,3 +21,7 @@ seata-server:
 shiro:
   annotation:
     enable: false
+
+security:
+  annotation:
+    enable: true
