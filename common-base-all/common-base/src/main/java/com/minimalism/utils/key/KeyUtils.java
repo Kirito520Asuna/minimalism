@@ -3,6 +3,7 @@ package com.minimalism.utils.key;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.minimalism.utils.crypto.CryptoUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,7 +49,8 @@ public class KeyUtils {
         private RSAPrivateKey privateKey;
         private String publicKeyBase64;
         private String privateKeyBase64;
-
+        //密钥标识
+        private String secretKey = CryptoUtils.generateHexKey();
         private String identity = new StringBuffer()
                 .append(System.currentTimeMillis())
                 .append("<#>")
@@ -196,7 +198,14 @@ public class KeyUtils {
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
     }
-
+    /**
+     * RSA 加密
+     */
+    public static String encrypt(Key key, String data) throws Exception {
+        String algorithm = key.getAlgorithm();
+        byte[] bytes = encrypt(key, data.getBytes(StandardCharsets.UTF_8), algorithm);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
     /**
      * RSA 加密
      */
@@ -205,6 +214,15 @@ public class KeyUtils {
         Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return cipher.doFinal(data);
+    }
+
+    /**
+     * RSA 解密
+     */
+    public static String decrypt(Key key, String data) throws Exception {
+        String algorithm = key.getAlgorithm();
+        byte[] bytes = decrypt(key, data.getBytes(StandardCharsets.UTF_8), algorithm);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     /**

@@ -18,6 +18,10 @@ public class KeyVo {
     private String algorithm;
     @Schema(description = "公钥(base64)")
     private String publicKey;
+    @Schema(description = "客户端的公钥加密后的服务端的公钥(base64)")
+    private String encryptPublicKey;
     @Schema(description = "身份id")
     private String identity;
+    @Schema(description = "客户端的公钥加密后的密钥")
+    private String encryptSecretKey;
 }
