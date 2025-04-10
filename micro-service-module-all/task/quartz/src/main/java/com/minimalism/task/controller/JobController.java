@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.minimalism.aop.shiro.ShiroPermissions;
+//import org.springframework.security.access.prepost.PreAuthorize;
 
 @Tag(description = "定时任务管理", name = "定时任务管理")
 @RestController
@@ -37,7 +38,7 @@ public class JobController implements AbstractBaseController {
      */
     @SysLog(title = "查询定时任务调度列表")
     @Operation(summary = "查询定时任务调度列表")
-
+    //@PreAuthorize("@custom.hasAuthority('minimalism:job:list')")
     @ShiroPermissions("minimalism:job:list")
     @GetMapping("/list")
     public Result<ResultPage<SysJob>> list(@RequestParam(defaultValue = "1") Long pageNumber,
