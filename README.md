@@ -2,7 +2,8 @@
 
 #### 介绍
 让代码变简单
-
+github 地址：https://github.com/Kirito520Asuna/minimalism
+gitee  地址：https://gitee.com/kirito-asuna/minimalism
 #### 软件架构
 软件架构说明
 
@@ -16,23 +17,23 @@
 #### 使用说明
 
 1. 关于安全模块的使用
-    common-module-all 公共模块
-    包含 openfeign、security、shiro
- 
-    common-module-all/common-service-module 服务模块
-    已经依赖 common-module-all下的common-security-module,common-shiro-module
-    使用时 只需要引入common-service-module即可 注意安全模块 security,shiro只能二选一
-    不同的服务 可以引入不同的安全模块（已兼容）
+- common-module-all 公共模块
+- 包含 openfeign、security、shiro
 
-    security,shiro 已提供 权限 测试环境 跳过 的配置
-    security==>security.annotation.enable=false
-    shiro==> shiro.annotation.enable=false
+- common-service-module-all/common-service-module 服务模块
+- 已经依赖 common-module-all下的common-security-module,common-shiro-module\n
+- 使用时 只需要引入common-service-module即可 注意安全模块 security,shiro只能二选一
+- 不同的服务 可以引入不同的安全模块（已兼容）
+
+- security,shiro 已提供 权限 测试环境 跳过 的配置 
+- security==> security.annotation.enable=false 
+- shiro==> shiro.annotation.enable=false
 
 2.  gateway网关
-    gateway网关使用的是springcloud gateway
-    已经整合各个微服务的swagger文档(配置只生效于dev,test 如需自定义配置 请修改HomePageConfiguration中@Profile配置的值)
-    具体配置请参考gateway下的bootstrap-test.yml
-    ip:port/${server.servlet.context-path}/home 
+- gateway网关使用的是springcloud gateway
+- 已经整合各个微服务的swagger文档(配置只生效于dev,test 如需自定义配置 请修改HomePageConfiguration中@Profile配置的值)
+- 具体配置请参考gateway下的bootstrap-test.yml
+- 地址 ip:port/${server.servlet.context-path}/home
 3.  xxxx
 
 #### 参与贡献
