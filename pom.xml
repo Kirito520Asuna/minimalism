@@ -2,32 +2,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.minimalism</groupId>
     <artifactId>minimalism</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
     <properties>
-        <project-module.version>0.0.1-BOOT2-SNAPSHOT</project-module.version>
+        <java.version>1.8</java.version>
+        <project-module.version>1.0.0</project-module.version>
+        <project.Encoding>UTF-8</project.Encoding>
         <revision>${project-module.version}</revision>
 
-        <java.version>8</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <spring-boot.version>2.7.18</spring-boot.version>
-        <spring-cloud.version>2021.0.5</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
 
         <hutool.version>5.8.18</hutool.version>
-        <lombok.version>1.18.26</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <slf4j-api.version>1.7.0</slf4j-api.version>
 
-        <jackson-annotations.version>5.1.11</jackson-annotations.version>
-        <jakarta.annotation-api.version>5.1.11</jakarta.annotation-api.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
+        <maven.compiler.encoding>${project.Encoding}</maven.compiler.encoding>
+        <project.build.sourceEncoding>${project.Encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.Encoding}</project.reporting.outputEncoding>
 
+        <resources.basedir>../../</resources.basedir>
+        <resources.resources-common>resources-common</resources.resources-common>
+        <resources.banner.name>banner.txt</resources.banner.name>
+        <resources.logstash.name>logback-spring.xml</resources.logstash.name>
+        <!--target dir-->
+        <target.base.dir>../..</target.base.dir>
+        <pom.target.dir></pom.target.dir>
+        <target.dir>${target.base.dir}/targets/${pom.target.dir}/${project.artifactId}</target.dir>
         <!-- 插件版本 -->
         <maven-jar-plugin.verison>3.3.0</maven-jar-plugin.verison>
         <maven-resources-plugin.verison>3.3.0</maven-resources-plugin.verison>
@@ -36,27 +43,54 @@
     </properties>
 
     <modules>
-        <module>micro-auth</module>
-        <module>micro-central</module>
-        <module>micro-cores</module>
-        <module>micro-database</module>
-        <module>micro-framework</module>
-        <module>micro-service</module>
-        <module>micro-sub-cores</module>
+        <module>common-base-all</module>
+        <module>common-framework-all</module>
+        <module>common-module-all</module>
+        <module>common-dao-module-all</module>
+        <module>common-service-module-all</module>
+        <module>micro-service-module-all</module>
     </modules>
+
+    <!--远程仓库-->
+    <repositories>
+        <repository>
+            <id>aliyun-public</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>public</id>
+            <name>huawei nexus</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
             <dependency>
@@ -69,13 +103,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
 
         <dependency>
@@ -84,40 +118,9 @@
         </dependency>
     </dependencies>
 
-    <!--远程仓库-->
-    <repositories>
-        <repository>
-            <id>maven-central</id>
-            <url>https://repo1.maven.org/maven2/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>aliyun-public</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>aliyun</id>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>
@@ -125,81 +128,38 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </repository>
-        <repository>
+        </pluginRepository>
+
+        <pluginRepository>
             <id>public</id>
             <name>huawei nexus</name>
             <url>https://mirrors.huaweicloud.com/repository/maven/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
-        </repository>
-        <repository>
-            <id>snapshots-repo</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
-        </repository>
-    </repositories>
-
-    <!--    <pluginRepositories>-->
-    <!--        <pluginRepository>-->
-    <!--            <id>aliyun-plugin</id>-->
-    <!--            <url>https://maven.aliyun.com/repository/public</url>-->
-    <!--            <releases>-->
-    <!--                <enabled>true</enabled>-->
-    <!--            </releases>-->
-    <!--            <snapshots>-->
-    <!--                <enabled>false</enabled>-->
-    <!--            </snapshots>-->
-    <!--        </pluginRepository>-->
-
-    <!--        <pluginRepository>-->
-    <!--            <id>public</id>-->
-    <!--            <name>huawei nexus</name>-->
-    <!--            <url>https://mirrors.huaweicloud.com/repository/maven/</url>-->
-    <!--            <releases>-->
-    <!--                <enabled>true</enabled>-->
-    <!--            </releases>-->
-    <!--            <snapshots>-->
-    <!--                <enabled>false</enabled>-->
-    <!--            </snapshots>-->
-    <!--        </pluginRepository>-->
-    <!--    </pluginRepositories>-->
-
-
-    <profiles>
-        <profile>
-            <id>test</id>
-            <properties>
-                <spring.profiles.active>test</spring.profiles.active>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <spring.profiles.active>dev</spring.profiles.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <spring.profiles.active>prod</spring.profiles.active>
-            </properties>
-        </profile>
-    </profiles>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
+<!--        <directory>${project.basedir}/${target.dir}</directory>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven-jar-plugin.verison}</version>
+<!--                <configuration>-->
+<!--                    <outputDirectory>${project.basedir}/${target.dir}</outputDirectory>-->
+<!--                </configuration>-->
             </plugin>
+            <!-- maven 打包时跳过测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -207,9 +167,10 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <encoding>${project.Encoding}</encoding>
                 </configuration>
             </plugin>
+
             <!-- 统一版本号管理 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -238,4 +199,28 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>
