@@ -7,10 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @Author yan
@@ -21,7 +24,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@Component
+@Component @Slf4j
 @ConfigurationProperties(prefix = "shiro.annotation")
 public class ShiroAnnotationConfig {
     /**
@@ -37,4 +40,11 @@ public class ShiroAnnotationConfig {
      * @see ShiroAopAspect#around(ProceedingJoinPoint)
      */
     private Logical logical = Logical.AND;
+
+    @PostConstruct
+    public void init() {
+        log.debug("初始化自定义权限校验");
+        log.debug("设置 shiro.annotation.enable=false 可跳过权限校验 用于本地测试");
+    }
+
 }

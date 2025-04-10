@@ -18,11 +18,7 @@ import java.util.List;
 @Component("custom")
 @Slf4j
 public class CustomSecurityExpressionRoot  implements AbstractSecurityExpressionRoot {
-    @PostConstruct
-    @Override
-    public void init() {
-        log.debug("初始化自定义权限校验");
-    }
+
     //@PreAuthorize("@custom.hasAuthority('admin')")
     //@PreAuthorize("@custom.hasRole('admin')")
     public boolean enable() {
