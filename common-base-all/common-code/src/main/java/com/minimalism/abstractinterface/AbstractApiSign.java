@@ -161,9 +161,13 @@ public interface AbstractApiSign extends AbstractBean {
         String timestampHeader = request.getHeader(timestampAsName);
         if (StrUtil.isBlank(timestampHeader) ||
                 Math.abs(Duration.between(DateUtils.longToLocalDateTime(Long.parseLong(timestampHeader)), LocalDateTime.now()).toMinutes()) >= signTimeOut) {
-            getLogger().error("{}=={},{},{}", timestampAsName, timestampHeader,
-                    System.currentTimeMillis(),
-                    Math.abs(Duration.between(DateUtils.longToLocalDateTime(Long.parseLong(timestampHeader)), LocalDateTime.now()).toMinutes()));
+            if (StrUtil.isNotBlank(timestampHeader)) {
+                getLogger().error("{}=={},{},{}", timestampAsName, timestampHeader,
+                        System.currentTimeMillis(),
+                        Math.abs(Duration.between(DateUtils.longToLocalDateTime(Long.parseLong(timestampHeader)), LocalDateTime.now()).toMinutes()));
+            }else {
+                error("timestampAsName is null");
+            }
             throw new GlobalCustomException(ApiCode.VALIDATE_FAILED, "请求时间戳不合法");
         }
         return timestampHeader;
@@ -188,7 +192,7 @@ public interface AbstractApiSign extends AbstractBean {
             Map<String, Object> readValue = JSON.parseObject(json, Map.class);
             readValue.entrySet().stream().forEach(o -> {
                 String empty = null;
-                Object value = (o.getValue() == null || "null".equals(o.getValue())) ? empty :  o.getValue();
+                Object value = (o.getValue() == null || "null".equals(o.getValue())) ? empty : o.getValue();
                 body.put(o.getKey(), value);
             });
 
