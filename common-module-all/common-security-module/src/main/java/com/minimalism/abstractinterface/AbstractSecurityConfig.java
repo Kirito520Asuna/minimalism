@@ -21,12 +21,21 @@ public interface AbstractSecurityConfig extends AbstractAuthorizationConfig {
      * @param http
      */
     default void addFilterBeforeList(HttpSecurity http) {
-        http.addFilterBefore(SpringUtil.getBean(JwtFilter.class), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(SpringUtil.getBean(ApiFilter.class), JwtFilter.class);
-        Environment env = SpringUtil.getBean(Environment.class);
-        Boolean corsFilte = ObjectUtils.defaultIfEmpty(env.getProperty(ExpressionConstants.corsFilte, Boolean.class), true);
-        if (corsFilte) {
-            http.addFilterBefore(SpringUtil.getBean(CorsRequestFilter.class), ApiFilter.class);
+        JwtFilter jwtFilter = SpringUtil.getBean(JwtFilter.class);
+        if (jwtFilter == null) {
+            throw new IllegalStateException("JwtFilter is null, please make sure it's a Spring Bean");
         }
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        //ApiFilter apiFilter = SpringUtil.getBean(ApiFilter.class);
+        //if (apiFilter == null) {
+        //    throw new IllegalStateException("ApiFilter is null, please make sure it's a Spring Bean");
+        //}
+        //http.addFilterBefore(apiFilter, JwtFilter.class);
+        //Environment env = SpringUtil.getBean(Environment.class);
+        //Boolean corsFilte = ObjectUtils.defaultIfEmpty(env.getProperty(ExpressionConstants.corsFilte, Boolean.class), true);
+        //if (corsFilte) {
+            //http.addFilterBefore(SpringUtil.getBean(CorsRequestFilter.class), ApiFilter.class);
+        //}
     }
 }

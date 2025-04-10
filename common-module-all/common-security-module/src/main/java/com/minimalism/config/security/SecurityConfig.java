@@ -94,5 +94,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Abst
         return super.authenticationManagerBean();
     }
 
-
 }

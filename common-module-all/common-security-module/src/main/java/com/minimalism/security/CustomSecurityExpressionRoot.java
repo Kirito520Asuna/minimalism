@@ -5,9 +5,9 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.security.AbstractSecurityExpressionRoot;
 import com.minimalism.config.security.SecurityAnnotationConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -17,14 +17,19 @@ import java.util.List;
  */
 @Component("custom")
 @Slf4j
-public class CustomSecurityExpressionRoot implements AbstractSecurityExpressionRoot {
-    //@PreAuthorize("custom.hasAuthority('admin')")
-    //@PreAuthorize("custom.hasRole('admin')")
+public class CustomSecurityExpressionRoot  implements AbstractSecurityExpressionRoot {
+    @PostConstruct
+    @Override
+    public void init() {
+        log.debug("初始化自定义权限校验");
+    }
+    //@PreAuthorize("@custom.hasAuthority('admin')")
+    //@PreAuthorize("@custom.hasRole('admin')")
     public boolean enable() {
         boolean enable = SpringUtil.getBean(SecurityAnnotationConfig.class).isEnable();
         return enable;
     }
-
+    //org.springframework.security.access.expression.method.MethodSecurityExpressionRoot
     /**
      * 自定义认证
      *

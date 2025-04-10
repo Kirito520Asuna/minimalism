@@ -1,16 +1,13 @@
 package com.minimalism.config.security.impl;
 
 import com.minimalism.abstractinterface.AbstractSecurityConfig;
-import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.JwtFilter;
 import com.minimalism.filter.bean.FilterBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 
 /**
  * @Author yan
