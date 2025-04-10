@@ -2,7 +2,8 @@
 
 #### 介绍
 让代码变简单
-
+github 地址：https://github.com/Kirito520Asuna/minimalism
+gitee  地址：https://gitee.com/kirito-asuna/minimalism
 #### 软件架构
 软件架构说明
 
