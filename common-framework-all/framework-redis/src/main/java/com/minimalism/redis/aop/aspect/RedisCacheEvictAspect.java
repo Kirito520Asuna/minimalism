@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
+import com.minimalism.redis.service.RedisService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -53,14 +54,17 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
         setOne(one);
         return one;
     }
+
     public RedisCacheParameters setOne(RedisCacheParameters one) {
         redisCacheThreadLocal.set(one);
         return one;
     }
+
     @Override
     @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisCacheEvict)")
     public void pointcutAspect() {
     }
+
     @SneakyThrows
     @Override
     @AfterReturning(pointcut = "pointcutAspect()", returning = "result")
@@ -83,10 +87,10 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
             } catch (JsonMappingException e) {
                 json = JSONUtil.toJsonStr(result);
             }
-            if (!JSONUtil.isTypeJSON(json)){
+            if (!JSONUtil.isTypeJSON(json)) {
                 json = JSONUtil.toJsonStr(result);
             }
-            setOne(getOne().setResponse(JSONUtil.toBean(json,Map.class)));
+            setOne(getOne().setResponse(JSONUtil.toBean(json, Map.class)));
             //setOne(getOne().setResponse(JSONUtil.toBean(SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result),Map.class)));
             RedisCacheParameters one = getOne();
             Map<String, Object> request = one.getRequest();
@@ -113,13 +117,18 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
             boolean okCondition = verifiedOkCondition(condition);
             // 判断条件 判断是否需要缓存
             if (okCondition) {
+                //if (cacheEvict.isHash()) {
+                //    redisTemplate.opsForHash().delete(cacheName, key);
+                //    log.info("delete redis hash key:{},hashKey:{}", cacheName, key);
+                //}else {
+                //    redisTemplate.delete(formatKey);
+                //    log.info("delete redis key:{}", formatKey);
+                //}
                 if (cacheEvict.isHash()) {
-                    redisTemplate.opsForHash().delete(cacheName, key);
-                    log.info("delete redis hash key:{},hashKey:{}", cacheName, key);
-                }else {
-                    redisTemplate.delete(formatKey);
-                    log.info("delete redis key:{}", formatKey);
+                    formatKey = key;
                 }
+                SpringUtil.getBean(RedisService.class)
+                        .del(cacheName, cacheEvict.isHash(), formatKey);
             }
         } finally {
             setOne(null);

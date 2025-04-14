@@ -1,11 +1,13 @@
 package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCacheable;
 import com.minimalism.redis.exception.RedisException;
+import com.minimalism.redis.service.RedisService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -97,15 +99,16 @@ public class RedisCacheableAspect implements AbstractRedisAspect {
         // 判断条件 判断是否需要缓存
         Object o = null;
         if (okCondition) {
-            if (cacheable.isHash()) {
-                o = redisTemplate.opsForHash().get(cacheName, key);
-            } else {
-                o = redisTemplate.opsForValue().get(formatKey);
-            }
+            //if (cacheable.isHash()) {
+            //    o = redisTemplate.opsForHash().get(cacheName, key);
+            //} else {
+            //    o = redisTemplate.opsForValue().get(formatKey);
+            //}
+            o = SpringUtil.getBean(RedisService.class).get(cacheName, cacheable.isHash(), key);
             if (o != null) {
                 Object bean = JSONUtil.toBean(JSONUtil.toJsonStr(o), aClass);
                 o = bean;
-                log.info("缓存命中，key:{},value:{}", formatKey, o);
+                //log.info("缓存命中，key:{},value:{}", formatKey, o);
             } else {
                 Object around = AbstractRedisAspect.super.around(joinPoint);
                 if (around != null) {

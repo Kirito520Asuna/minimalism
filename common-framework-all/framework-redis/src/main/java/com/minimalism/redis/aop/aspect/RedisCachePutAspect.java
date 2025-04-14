@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCachePut;
+import com.minimalism.redis.service.RedisService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -106,10 +107,10 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
             } catch (JsonMappingException e) {
                 json = JSONUtil.toJsonStr(result);
             }
-            if (!JSONUtil.isTypeJSON(json)){
+            if (!JSONUtil.isTypeJSON(json)) {
                 json = JSONUtil.toJsonStr(result);
             }
-            setOne(getOne().setResponse(JSONUtil.toBean(json,Map.class)));
+            setOne(getOne().setResponse(JSONUtil.toBean(json, Map.class)));
             //setOne(getOne().setResponse(JSONUtil.toBean(SpringUtil.getBean(ObjectMapper.class).writeValueAsString(result),Map.class)));
             RedisCacheParameters one = getOne();
             Map<String, Object> request = one.getRequest();
@@ -148,7 +149,7 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
                 if (StrUtil.isNotBlank(value)) {
                     setValue = value;
                 }
-                if (random) {
+               /* if (random) {
                     try {
                         String[] split = randomRange.split("~");
                         timout = RandomUtil.randomLong(Long.parseLong(split[0]), Long.parseLong(split[1]));
@@ -170,6 +171,12 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
                     redisTemplate.opsForValue().set(formatKey, setValue, timout, timeUnit);
                 }
                 log.info("redis cache put key:{},value:{},timout:{}", formatKey, setValue, timout);
+*/
+                if (cachePut.isHash()) {
+                    formatKey = key;
+                }
+                SpringUtil.getBean(RedisService.class).
+                        save(random, randomRange, cacheName, cachePut.isHash(), formatKey, setValue, timout, timeUnit);
             }
         } finally {
             setOne(null);

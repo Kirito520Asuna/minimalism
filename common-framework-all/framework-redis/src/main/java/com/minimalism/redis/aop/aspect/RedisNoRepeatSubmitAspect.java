@@ -4,10 +4,12 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
 import com.minimalism.redis.aop.redis.RedisNoRepeatSubmit;
 import com.minimalism.redis.exception.RedisException;
+import com.minimalism.redis.service.RedisService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -127,12 +129,16 @@ public class RedisNoRepeatSubmitAspect implements AbstractRedisAspect {
             key = effectiveSplicingString(key, jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
             String formatKey = String.format(templateKey, cacheName, key);
 
-            Object o = redisTemplate.opsForValue().get(formatKey);
+            RedisService redisService = SpringUtil.getBean(RedisService.class);
+
+            //Object o = redisTemplate.opsForValue().get(formatKey);
+            Object o = redisService.get(formatKey);
             Object result = StrUtil.isBlank(value) ? requestValue : value;
             Map<String, Object> toMap = ObjectUtil.isEmpty(o) ? new HashMap<>() : BeanUtil.beanToMap(o);
             if (ObjectUtil.isEmpty(o) ||
                     (ObjectUtil.isNotEmpty(o) && (!ObjectUtil.equals(toMap, requestValue)))) {
-                redisTemplate.opsForValue().set(formatKey, result, timout, timeUnit);
+                //redisTemplate.opsForValue().set(formatKey, result, timout, timeUnit);
+                redisService.save(formatKey, result, timout, timeUnit);
             } else {
                 throw new RedisException(exceptionMessage);
             }
