@@ -10,6 +10,8 @@ import com.minimalism.constant.cache.CacheConstants;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.pojo.CaptchaInfo;
 import com.minimalism.properties.CaptchaProperties;
+import com.minimalism.redis.aop.redis.RedisCachePut;
+import com.minimalism.redis.service.RedisService;
 import com.minimalism.validate_code.service.ValidateCodeService;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -63,8 +65,10 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
                 capStr = code = captchaProducer.createText();
                 image = captchaProducer.createImage(capStr);
             }
-            SpringUtil.getBean(RedisTemplate.class).opsForValue()
-                    .set(captchaKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+            //SpringUtil.getBean(RedisTemplate.class).opsForValue()
+            //        .set(captchaKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+            SpringUtil.getBean(RedisService.class)
+                    .save(captchaKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
             // 转换流信息写出
             FastByteArrayOutputStream os = new FastByteArrayOutputStream();
 
@@ -93,11 +97,15 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         }
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + ObjectUtils.defaultIfEmpty(uuid, "");
-        String captcha = (String) redisTemplate.opsForValue().get(verifyKey);
+        //String captcha = (String) redisTemplate.opsForValue().get(verifyKey);
+        RedisService redisService = SpringUtil.getBean(RedisService.class);
+        String captcha = (String) redisService.get(verifyKey);
+
         if (captcha == null) {
             throw new GlobalCustomException("验证码已失效");
         }
         redisTemplate.delete(verifyKey);
+        redisService.del("",false,verifyKey);
         if (!captcha.equalsIgnoreCase(code)) {
             throw new GlobalCustomException("验证码错误");
         }
