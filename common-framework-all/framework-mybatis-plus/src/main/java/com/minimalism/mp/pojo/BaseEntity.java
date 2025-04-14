@@ -29,7 +29,7 @@ public abstract class BaseEntity extends SearchEntity implements Serializable {
      * 创建者
      */
     @Schema(description = "创建者")
-    @TableField(value = "`create_by`")
+    @TableField(value = "`create_by`", fill = FieldFill.INSERT)
     private String createBy;
 
     /**
@@ -43,8 +43,8 @@ public abstract class BaseEntity extends SearchEntity implements Serializable {
     /**
      * 更新者
      */
-    @Schema(description = "更新时间")
-    @TableField(value = "`update_by`")
+    @Schema(description = "更新者")
+    @TableField(value = "`update_by`", fill = FieldFill.UPDATE)
     private String updateBy;
 
     /**
