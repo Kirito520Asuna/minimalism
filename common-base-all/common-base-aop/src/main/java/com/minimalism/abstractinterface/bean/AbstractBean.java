@@ -38,6 +38,7 @@ public interface AbstractBean {
                 .setLogger(LoggerFactory.getLogger(this.getClass()));
         return logBean;
     }
+
     default <T> T getBean(Class<T> clazz) {
         return SpringUtil.getBean(clazz);
     }
@@ -52,6 +53,7 @@ public interface AbstractBean {
         return getLogBean().getAClass();
     }
 
+    @JsonIgnore
     default String getAClassName() {
         return StrUtil.subBefore(getAClass().getName(), "$", false);
     }
@@ -79,13 +81,14 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isProd() {
         Environment env = SpringUtil.getBean(Environment.class);
         String active = env.getProperty("spring.profiles.active");
         return ObjectUtils.equals("prod", active);
     }
 
-
+    @JsonIgnore
     default boolean isTraceEnabled() {
         return getLogger().isTraceEnabled();
     }
@@ -120,6 +123,7 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isTraceEnabled(Marker var1) {
         return getLogger().isTraceEnabled(var1);
     }
@@ -154,6 +158,7 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isDebugEnabled() {
         return getLogger().isDebugEnabled();
     }
@@ -188,6 +193,7 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isDebugEnabled(Marker var1) {
         return getLogger().isDebugEnabled(var1);
     }
@@ -220,6 +226,7 @@ public interface AbstractBean {
         getLogger().debug(var1, var2);
     }
 
+    @JsonIgnore
     default boolean isInfoEnabled() {
         return getLogger().isInfoEnabled();
     }
@@ -255,6 +262,7 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isInfoEnabled(Marker var1) {
         return getLogger().isInfoEnabled(var1);
     }
@@ -289,6 +297,7 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isWarnEnabled() {
         return getLogger().isWarnEnabled();
     }
@@ -323,6 +332,7 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isWarnEnabled(Marker var1) {
         return getLogger().isWarnEnabled(var1);
     }
@@ -357,6 +367,7 @@ public interface AbstractBean {
         }
     }
 
+    @JsonIgnore
     default boolean isErrorEnabled() {
         return getLogger().isErrorEnabled();
     }
