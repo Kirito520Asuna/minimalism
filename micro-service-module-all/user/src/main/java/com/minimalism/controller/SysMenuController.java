@@ -10,11 +10,13 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.common.service.CommonUserService;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.tomapper.SysMenuMapper;
 import com.minimalism.util.ObjectUtils;
 import com.minimalism.utils.jwt.JwtUtils;
 import com.minimalism.utils.poi.ExcelUtil;
 import com.minimalism.utils.shiro.SecurityContextUtil;
 import com.minimalism.vo.SysMenuTreeVo;
+import com.minimalism.vo.user.router.RouterVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import cn.hutool.core.collection.CollUtil;
@@ -91,7 +93,7 @@ public class SysMenuController implements AbstractBaseController {
     public Result importData(MultipartFile file, boolean updateSupport) {
         ExcelUtil<SysMenu> util = new ExcelUtil<SysMenu>(SysMenu.class);
         List<SysMenu> sysMenuList = util.importExcel(file.getInputStream());
-        String operName = SecurityContextUtil.getUserIdNoThrow();
+        String operName = SpringUtil.getBean(CommonUserService.class).getUserId();
         String message = sysMenuService.importDataSysMenu(sysMenuList, updateSupport, operName);
         return ok();
     }
@@ -155,7 +157,7 @@ public class SysMenuController implements AbstractBaseController {
     @SysLog
     @Operation(summary = "获取路由信息")
     @GetMapping("getRouters")
-    public Result<List<SysMenuTreeVo>> getRouters(@RequestParam(required = false) Long userId
+    public Result<List<RouterVo>> getRouters(@RequestParam(required = false) Long userId
             , @RequestParam(required = false) String token) {
         if (ObjectUtils.isNotEmpty(token)) {
             String subjectByParseJWT = JwtUtils.getSubjectByParseJWT(token);
@@ -164,11 +166,11 @@ public class SysMenuController implements AbstractBaseController {
         if (ObjectUtils.isEmpty(userId)) {
             userId = Long.parseLong(SpringUtil.getBean(CommonUserService.class).getUserId());
         }
-        if (ObjectUtils.isEmpty(userId)){
+        if (ObjectUtils.isEmpty(userId)) {
             throw new GlobalCustomException(ApiCode.UNAUTHORIZED);
         }
 
         List<SysMenuTreeVo> sysMenuTreeVos = sysMenuService.selectMenuTreeByUserId(userId);
-        return ok(sysMenuTreeVos);
+        return ok(SysMenuMapper.buildMenus(sysMenuTreeVos));
     }
 }

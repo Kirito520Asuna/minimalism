@@ -23,4 +23,8 @@ public class StrUtils extends StrUtil {
         // 将StringBuilder对象转换为字符串并返回
         return sb.toString();
     }
+
+    public static boolean isHttp(String path) {
+        return StrUtil.startWith(path, "http") || StrUtil.startWith(path, "https");
+    }
 }

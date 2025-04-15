@@ -65,7 +65,7 @@ drop table if exists `sys_menu`;
 create table `sys_menu` (
                           `menu_id`           bigint(20)      not null auto_increment       comment '菜单ID',
                           `menu_name`         varchar(50)     not null                      comment '菜单名称',
-                          `parent_id`         bigint(20)      default 0                     comment '父菜单ID',
+                          `parent_id`         bigint(20)      default null                     comment '父菜单ID',
                           `order_num`         int(4)          default 0                     comment '显示顺序',
                           `path`              varchar(200)    default ''                    comment '路由地址',
                           `component`         varchar(255)    default null                  comment '组件路径',
