@@ -63,7 +63,31 @@ public interface RedisService {
      * @return
      */
     default boolean save(String key, Object value, long timout, TimeUnit timeUnit) {
-        return save(false, null, key, false, key, value, timout, timeUnit);
+        return save(false, null, key, value, timout, timeUnit);
+    }
+
+    /**
+     *
+     * @param isHash
+     * @param cacheName
+     * @param key
+     * @param value
+     * @return
+     */
+    default boolean save(boolean isHash, String cacheName, String key, Object value) {
+        return save(isHash, cacheName, key, value, -1, null);
+    }
+    /**
+     * @param isHash
+     * @param cacheName
+     * @param key
+     * @param value
+     * @param timout
+     * @param timeUnit
+     * @return
+     */
+    default boolean save(boolean isHash, String cacheName, String key, Object value, long timout, TimeUnit timeUnit) {
+        return save(false, null, cacheName, isHash, key, value, timout, timeUnit);
     }
 
     /**
@@ -106,11 +130,12 @@ public interface RedisService {
 
     /**
      * 删除数据
+     *
      * @param key
      * @return
      */
     default boolean del(String key) {
-        return del(null,false, key);
+        return del(null, false, key);
     }
 
     /**
