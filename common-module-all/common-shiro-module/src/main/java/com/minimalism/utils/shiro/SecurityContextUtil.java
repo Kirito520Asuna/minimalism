@@ -13,6 +13,7 @@ import com.minimalism.constant.Roles;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.pojo.shiro.UserBase;
+import com.minimalism.redis.service.RedisService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -88,8 +89,11 @@ public class SecurityContextUtil implements AbstractBean {
         if (StrUtil.isBlank(userId)) {
             String username = getUsername();
             if (StrUtil.isNotBlank(username)) {
-                RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-                userId = (String) redisTemplate.opsForHash().get(Redis.login_username_userId_map, username);
+                //RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
+                //userId = (String) redisTemplate.opsForHash().get(Redis.login_username_userId_map, username);
+
+                RedisService redisService = SpringUtil.getBean(RedisService.class);
+                userId = (String)redisService.get(Redis.login_username_userId_map, true, username);
             }
         }
         return userId;
@@ -106,8 +110,12 @@ public class SecurityContextUtil implements AbstractBean {
             throw e;
         } finally {
             if (!throwException) {
-                RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-                redisTemplate.opsForHash().put(Redis.login_username_userId_map, username, userId);
+                //RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
+                //redisTemplate.opsForHash().put(Redis.login_username_userId_map, username, userId);
+
+                RedisService redisService = SpringUtil.getBean(RedisService.class);
+                redisService.save(true, Redis.login_username_userId_map, username, userId);
+
                 setUserId(userId);
             }
         }
@@ -124,8 +132,10 @@ public class SecurityContextUtil implements AbstractBean {
             throw e;
         } finally {
             if (!throwException) {
-                RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
-                redisTemplate.opsForHash().put(Redis.login_username_userId_map, usernamePasswordToken.getUsername(), userId);
+                //RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
+                //redisTemplate.opsForHash().put(Redis.login_username_userId_map, usernamePasswordToken.getUsername(), userId);
+                RedisService redisService = SpringUtil.getBean(RedisService.class);
+                redisService.save(true, Redis.login_username_userId_map, usernamePasswordToken.getUsername(), userId);
                 setUserId(userId);
             }
         }
