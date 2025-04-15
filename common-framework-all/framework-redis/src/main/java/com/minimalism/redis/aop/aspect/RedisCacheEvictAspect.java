@@ -124,6 +124,7 @@ public class RedisCacheEvictAspect implements AbstractRedisAspect {
                 //    redisTemplate.delete(formatKey);
                 //    log.info("delete redis key:{}", formatKey);
                 //}
+                log.debug("@RedisCacheEvict");
                 if (cacheEvict.isHash()) {
                     formatKey = key;
                 }

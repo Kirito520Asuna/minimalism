@@ -171,7 +171,7 @@ public class RedisCachePutAspect implements AbstractRedisAspect {
                     redisTemplate.opsForValue().set(formatKey, setValue, timout, timeUnit);
                 }
                 log.info("redis cache put key:{},value:{},timout:{}", formatKey, setValue, timout);
-*/
+*/              log.debug("@RedisCachePut");
                 if (cachePut.isHash()) {
                     formatKey = key;
                 }

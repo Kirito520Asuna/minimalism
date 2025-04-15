@@ -85,6 +85,7 @@ public class RedisLockAspect implements AbstractRedisAspect {
         JSONObject jsonObject = new JSONObject(map);
 
         String key = effectiveSplicingString(annotation.key(), jsonObject, CollUtil.newArrayList(splicer), OperationType.str);
+        log.debug("@RedisLock");
         RLock lock = redissonClient.getLock(key);
         boolean isLocked = lock.isLocked();
         try {

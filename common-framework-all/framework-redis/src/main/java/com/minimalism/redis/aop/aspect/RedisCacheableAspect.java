@@ -104,7 +104,11 @@ public class RedisCacheableAspect implements AbstractRedisAspect {
             //} else {
             //    o = redisTemplate.opsForValue().get(formatKey);
             //}
-            o = SpringUtil.getBean(RedisService.class).get(cacheName, cacheable.isHash(), key);
+            if (cacheable.isHash()) {
+                formatKey = key;
+            }
+            log.debug("@RedisCacheable");
+            o = SpringUtil.getBean(RedisService.class).get(cacheName, cacheable.isHash(), formatKey);
             if (o != null) {
                 Object bean = JSONUtil.toBean(JSONUtil.toJsonStr(o), aClass);
                 o = bean;
