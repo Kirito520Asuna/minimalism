@@ -84,6 +84,34 @@ public interface AbstractAop extends AbstractBean, Ordered {
                 }
             }
         }
+
+        if (StrUtil.isBlank(module)) {
+            // 获取方法签名
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            // 获取所在的类
+            Class<?> declaringClass = signature.getDeclaringType();
+            Tag tagAnnotation = declaringClass.getAnnotation(Tag.class);
+            if (ObjectUtils.isNotEmpty(tagAnnotation)) {
+                if (StrUtil.isNotEmpty(tagAnnotation.name())) {
+                    // 优先读取 @Tag 的 name 属性
+                    module = tagAnnotation.name();
+                }else if (StrUtil.isNotEmpty(tagAnnotation.description())) {
+                    // 没有的话，读取 @Tag 的 description 属性
+                    module = tagAnnotation.description();
+                }
+            }else {
+                Api apiAnnotation = declaringClass.getAnnotation(Api.class);
+                if (ObjectUtils.isNotEmpty(apiAnnotation)) {
+                    if (StrUtil.isNotEmpty(apiAnnotation.value())) {
+                        // 优先读取 @Api 的 value 属性
+                        module = apiAnnotation.value();
+                    }else if (StrUtil.isNotEmpty(apiAnnotation.description())) {
+                        // 没有的话，读取 @Api 的 description 属性
+                        module = apiAnnotation.description();
+                    }
+                }
+            }
+        }
         return module;
     }
 
