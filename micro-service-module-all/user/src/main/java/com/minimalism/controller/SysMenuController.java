@@ -6,6 +6,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
+import cn.hutool.extra.spring.SpringUtil;
+import com.minimalism.common.service.CommonUserService;
+import com.minimalism.enums.ApiCode;
+import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.util.ObjectUtils;
 import com.minimalism.utils.jwt.JwtUtils;
 import com.minimalism.utils.poi.ExcelUtil;
@@ -158,7 +162,10 @@ public class SysMenuController implements AbstractBaseController {
             userId = Long.parseLong(subjectByParseJWT);
         }
         if (ObjectUtils.isEmpty(userId)) {
-            userId = Long.parseLong(SecurityContextUtil.getUserId());
+            userId = Long.parseLong(SpringUtil.getBean(CommonUserService.class).getUserId());
+        }
+        if (ObjectUtils.isEmpty(userId)){
+            throw new GlobalCustomException(ApiCode.UNAUTHORIZED);
         }
 
         List<SysMenuTreeVo> sysMenuTreeVos = sysMenuService.selectMenuTreeByUserId(userId);
