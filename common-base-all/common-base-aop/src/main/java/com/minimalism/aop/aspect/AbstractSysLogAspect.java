@@ -154,10 +154,6 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             com.alibaba.fastjson.JSON.toJSONString(returnObj);
             String jsonStr = JSONUtil.toJsonStr(returnObj);
             log.info(new StringBuffer()
-                    .append("\n[info]::[response]====================================响应内容====================================")
-                    .append("\n[info]::[response]响应 : {}")
-                    .append("\n[info]::[response]================================================================================")
-                    .toString(), JSONUtil.toJsonStr(returnObj));
                     .append("\n====================================响应内容====================================")
                     .append("\n==>响应 : {} <==")
                     .append("\n================================================================================")
