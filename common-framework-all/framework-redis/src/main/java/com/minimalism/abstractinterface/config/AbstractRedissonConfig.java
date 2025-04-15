@@ -95,7 +95,7 @@ public interface AbstractRedissonConfig {
         return getRedissonClient(addresses, redisPassword, redisTimeout, redisMode);
     }
     default RedissonClient getRedissonClient(RedisConfiguration configuration){
-        log.info("[init] [RedisProperties]  [RedissonClient]");
+        log.debug("[init] [RedisProperties]  [RedissonClient]");
         Config config = new Config();
         BaseConfig baseConfig;
         RedisConfiguration.RedisMode redisModeEnum = configuration.getRedisModeEnum();
@@ -106,7 +106,7 @@ public interface AbstractRedissonConfig {
             log.error("[error] RedisProperties  ... ");
             redisProperties = SpringUtil.getBean(RedisProperties.class);
         }
-        log.info("RedisProperties:{}", JSONUtil.toJsonStr(redisProperties));
+        log.debug("RedisProperties:{}", JSONUtil.toJsonStr(redisProperties));
         switch(redisModeEnum){
             case cluster:
                 RedisProperties.Cluster cluster = redisProperties.getCluster();

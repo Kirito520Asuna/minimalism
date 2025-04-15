@@ -108,7 +108,7 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             StringBuffer requestURL = request.getRequestURL();
 
             Object[] pointArgs = joinPoint.getArgs();
-            String args = JSONUtil.parse(CollUtil.isEmpty(paramMap) ? pointArgs : paramMap, jsonConfig).toString();
+            String args = JSONUtil.toJsonStr(JSONUtil.parse(CollUtil.isEmpty(paramMap) ? pointArgs : paramMap, jsonConfig));
 
             String declaringTypeName = joinPoint.getSignature().getDeclaringTypeName();
             String name = joinPoint.getSignature().getName();
@@ -120,16 +120,16 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             String url = GatewayUtils.replaceUrl(request, requestURL.toString());
 
             log.info(new StringBuffer()
-                            .append("\n[info]::[request]====================================请求内容====================================")
-                            .append("\n[info]::[request]请求服务名 : {}")
-                            .append("\n[info]::[request]请求模块名 : {}")
-                            .append("\n[info]::[request]请求描述 : {}")
-                            .append("\n[info]::[request]请求IP : {}")
-                            .append("\n[info]::[request]请求地址 : {}")
-                            .append("\n[info]::[request]请求方式 : {}")
-                            .append("\n[info]::[request]请求参数 : {}")
-                            .append("\n[info]::[request]请求类方法 : {}.{}")
-                            .append("\n[info]::[request]================================================================================")
+                            .append("\n====================================请求内容====================================")
+                            .append("\n==>请求服务名 : {} <==")
+                            .append("\n==>请求模块名 : {} <==")
+                            .append("\n==>请求描述 : {} <==")
+                            .append("\n==>请求IP : {} <==")
+                            .append("\n==>请求地址 : {} <==")
+                            .append("\n==>请求方式 : {} <==")
+                            .append("\n==>请求参数 : {} <==")
+                            .append("\n==>请求类方法 : {}.{} <==")
+                            .append("\n================================================================================")
                             .toString()
                     , applicationName, module, title, remoteAddr, url, method, args, declaringTypeName, name);
         }
@@ -151,11 +151,17 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             } else {
                 returnObj = around;
             }
+            com.alibaba.fastjson.JSON.toJSONString(returnObj);
+            String jsonStr = JSONUtil.toJsonStr(returnObj);
             log.info(new StringBuffer()
                     .append("\n[info]::[response]====================================响应内容====================================")
                     .append("\n[info]::[response]响应 : {}")
                     .append("\n[info]::[response]================================================================================")
                     .toString(), JSONUtil.toJsonStr(returnObj));
+                    .append("\n====================================响应内容====================================")
+                    .append("\n==>响应 : {} <==")
+                    .append("\n================================================================================")
+                    .toString(), jsonStr);
         }
 
         return around;

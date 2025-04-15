@@ -107,9 +107,9 @@ public interface AbstractAviatorValidAspect extends AbstractAop {
             Map<String, Object> compareTo = ObjectUtils.toMap(variables);
             Map<String, Object> variablesMap = ObjectUtils.mapKeyLengthReversed(compareTo);
             variablesMap = ObjectUtils.blankReplace(variablesMap);
-            info("parameters参数：{}", JSONUtil.toJsonStr(parameters, jsonConfig));
-            info("variables参数：{}", variables);
-            info("variablesMap参数：{}", variablesMap);
+            debug("parameters参数：{}", JSONUtil.toJsonStr(parameters, jsonConfig));
+            debug("variables参数：{}", variables);
+            debug("variablesMap参数：{}", variablesMap);
             //log.info("classMaps参数：{}", classMaps);
             for (AviatorValidInfo validInfo : validInfos) {
                 execute(variablesMap, validInfo);
