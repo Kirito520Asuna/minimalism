@@ -15,6 +15,7 @@
     </properties>
     <modules>
         <module>common-service-module</module>
+        <module>dict-service-module</module>
         <module>file-service-module</module>
         <module>gen-service-module</module>
         <module>user-service-module</module>
