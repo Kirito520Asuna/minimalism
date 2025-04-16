@@ -124,8 +124,10 @@ public class GenController implements AbstractBaseController {
     @GetMapping("/genCode/{tableName}")
     public Result genCode(@PathVariable("tableName") String tableName,
                           @Parameter(description = "Shiro|Security  defaultValue = \"Shiro\"")
-                          @RequestParam(required = false, defaultValue = "Shiro") String usePermissions) {
-        genTableService.generatorCode(tableName, usePermissions);
+                          @RequestParam(required = false, defaultValue = "Shiro") String usePermissions,
+                          @Parameter(description = "模块名 用于拼接权限前缀 以gen为例 如：${moduleName}:gen:list,${moduleName}:gen:add ...")
+                          @RequestParam(required = false) String moduleName) {
+        genTableService.generatorCode(tableName, usePermissions,moduleName);
         return ok();
     }
 
@@ -211,7 +213,7 @@ public class GenController implements AbstractBaseController {
                          @RequestParam(required = false, defaultValue = "Shiro") String usePermissions,
                          @Parameter(description = "模块名 用于拼接权限前缀 以gen为例 如：${moduleName}:gen:list,${moduleName}:gen:add ...")
                          @RequestParam(required = false) String moduleName) throws IOException {
-        byte[] data = genTableService.downloadCode(tableName, usePermissions,moduleName);
+        byte[] data = genTableService.downloadCode(tableName, usePermissions, moduleName);
         genCode(response, data, null);
     }
 
@@ -228,7 +230,7 @@ public class GenController implements AbstractBaseController {
                              @Parameter(description = "模块名 用于拼接权限前缀 以gen为例 如：${moduleName}:gen:list,${moduleName}:gen:add ...")
                              @RequestParam(required = false) String moduleName) throws IOException {
         List<String> tableNames = Arrays.stream(Convert.toStrArray(tables)).collect(Collectors.toList());
-        byte[] data = genTableService.downloadCode(tableNames, usePermissions,moduleName);
+        byte[] data = genTableService.downloadCode(tableNames, usePermissions, moduleName);
         genCode(response, data, null);
     }
 
