@@ -1,5 +1,8 @@
 package com.minimalism.dto.abs;
 
+import com.minimalism.exception.ValidateException;
+
+
 public interface Validate<T> {
     /**
      * 校验是否通过
@@ -10,6 +13,10 @@ public interface Validate<T> {
     boolean validateOk(T t);
 
     default boolean validateOk() {
-        return validateOk((T) this);
+        boolean validateOk = validateOk((T) this);
+        if (!validateOk) {
+            throw new ValidateException();
+        }
+        return validateOk;
     }
 }
