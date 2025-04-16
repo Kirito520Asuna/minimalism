@@ -22,5 +22,10 @@
             <artifactId>dao-all</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-redis</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 </project>
