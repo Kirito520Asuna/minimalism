@@ -23,4 +23,8 @@ public interface SysDictDataMapper extends BaseMapper<SysDictData> {
     int insertOnDuplicateUpdate(SysDictData record);
 
     int insertOnDuplicateUpdateSelective(SysDictData record);
+
+    List<SysDictData> selectSysDictDataList(SysDictData sysDictData);
+
+    List<SysDictData> selectDictDataListByType(String dictType);
 }
