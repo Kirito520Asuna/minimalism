@@ -7,6 +7,7 @@ import com.minimalism.aop.async.AsyncFuture;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.aop.shiro.ShiroPermissions;
 import com.minimalism.controller.AbstractBaseController;
+import com.minimalism.dto.gen.ImportGenTableDto;
 import com.minimalism.enums.BusinessType;
 import com.minimalism.enums.OperateTypeEnum;
 import com.minimalism.exception.GlobalCustomException;
@@ -19,6 +20,7 @@ import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
 import com.minimalism.text.Convert;
 import com.minimalism.util.PageUtils;
+import com.minimalism.utils.str.StrUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -127,7 +129,7 @@ public class GenController implements AbstractBaseController {
                           @RequestParam(required = false, defaultValue = "Shiro") String usePermissions,
                           @Parameter(description = "模块名 用于拼接权限前缀 以gen为例 如：${moduleName}:gen:list,${moduleName}:gen:add ...")
                           @RequestParam(required = false) String moduleName) {
-        genTableService.generatorCode(tableName, usePermissions,moduleName);
+        genTableService.generatorCode(tableName, usePermissions, moduleName);
         return ok();
     }
 
@@ -138,14 +140,21 @@ public class GenController implements AbstractBaseController {
     @Operation(summary = "导入表结构（保存）")
     @ShiroPermissions("tool:gen:import")
     @PostMapping("/importTable")
-    public Result importTableSave(String tables) {
+    public Result importTableSave(@RequestBody ImportGenTableDto dto) {
+        dto.validateOk();
         List<String> tableNames = new ArrayList<>();
-        tableNames = Arrays.stream(Convert.toStrArray(tables)).collect(Collectors.toList());
+        tableNames = Arrays.stream(Convert.toStrArray(dto.getTables())).collect(Collectors.toList());
         if (CollUtil.isEmpty(tableNames)) {
             throw new GlobalCustomException("请选择要导入的表");
         }
+        String moduleName = dto.getModelName();
         // 查询表信息
         List<GenTable> tableList = genTableService.selectDbTableListByNames(tableNames);
+        if (StrUtils.isNotBlank(moduleName)) {
+            tableList.stream().forEach(genTable -> {
+                genTable.setModuleName(moduleName);
+            });
+        }
         genTableService.importGenTable(tableList);
         return ok();
     }
