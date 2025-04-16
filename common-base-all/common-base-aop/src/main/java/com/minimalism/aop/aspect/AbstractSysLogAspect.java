@@ -1,6 +1,7 @@
 package com.minimalism.aop.aspect;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSON;
@@ -85,6 +86,7 @@ public class AbstractSysLogAspect implements AbstractSysLog {
         log();
         //获取是否有注解
         SysLog sysLog = getAnnotationLog(joinPoint);
+        String trackId = new StringBuilder().append(System.currentTimeMillis()).append("#").append(IdUtil.getSnowflakeNextIdStr()).toString();
         /**
          * 开启请求日志
          */
@@ -118,9 +120,9 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             }
 
             String url = GatewayUtils.replaceUrl(request, requestURL.toString());
-
             log.info(new StringBuffer()
                             .append("\n====================================请求内容====================================")
+                            .append("\n==>TRACK_ID : {} <==")
                             .append("\n==>请求服务名 : {} <==")
                             .append("\n==>请求模块名 : {} <==")
                             .append("\n==>请求描述 : {} <==")
@@ -131,7 +133,7 @@ public class AbstractSysLogAspect implements AbstractSysLog {
                             .append("\n==>请求类方法 : {}.{} <==")
                             .append("\n================================================================================")
                             .toString()
-                    , applicationName, module, title, remoteAddr, url, method, args, declaringTypeName, name);
+                    , trackId, applicationName, module, title, remoteAddr, url, method, args, declaringTypeName, name);
         }
         // 执行方法
         Object around = AbstractSysLog.super.around(joinPoint);
@@ -155,9 +157,10 @@ public class AbstractSysLogAspect implements AbstractSysLog {
             String jsonStr = JSONUtil.toJsonStr(returnObj);
             log.info(new StringBuffer()
                     .append("\n====================================响应内容====================================")
+                    .append("\n==>TRACK_ID : {} <==")
                     .append("\n==>响应 : {} <==")
                     .append("\n================================================================================")
-                    .toString(), jsonStr);
+                    .toString(),trackId, jsonStr);
         }
 
         return around;
