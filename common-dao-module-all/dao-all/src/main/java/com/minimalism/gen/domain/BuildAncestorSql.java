@@ -12,8 +12,10 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Data @Schema(description = "生成插入祖先表sql")
+@Data
+@Schema(description = "生成插入祖先表sql")
 @SuperBuilder
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -36,13 +38,25 @@ public class BuildAncestorSql implements Serializable, Validate<BuildAncestorSql
     String tableAncestorParentId;
     @Schema(description = "祖先表层级名")
     String tableAncestorLevel;
-
+    @Schema(description = "idsStr: 1,2,3")
+    String idsStr;
     @Schema(description = "id集合")
     List<String> ids;
 
     @Override
     public boolean validateOk(BuildAncestorSql buildAncestorSql) {
-        if (StrUtils.isBlank(buildAncestorSql.tableName) || StrUtils.isBlank(buildAncestorSql.tableId) || StrUtils.isBlank(buildAncestorSql.tableParentId) || StrUtils.isBlank(buildAncestorSql.tableLevel) || StrUtils.isBlank(buildAncestorSql.tableAncestorName) || StrUtils.isBlank(buildAncestorSql.tableAncestorId) || StrUtils.isBlank(buildAncestorSql.tableAncestorParentId) || StrUtils.isBlank(buildAncestorSql.tableAncestorLevel) || CollUtil.isEmpty(buildAncestorSql.ids)) {
+        if (StrUtils.isBlank(buildAncestorSql.tableName) || StrUtils.isBlank(buildAncestorSql.tableId) || StrUtils.isBlank(buildAncestorSql.tableParentId) || StrUtils.isBlank(buildAncestorSql.tableLevel) || StrUtils.isBlank(buildAncestorSql.tableAncestorName) || StrUtils.isBlank(buildAncestorSql.tableAncestorId) || StrUtils.isBlank(buildAncestorSql.tableAncestorParentId) || StrUtils.isBlank(buildAncestorSql.tableAncestorLevel)) {
+            return false;
+        }
+
+        if (StrUtils.isNotBlank(buildAncestorSql.idsStr)) {
+            buildAncestorSql.ids = CollUtil.isEmpty(buildAncestorSql.ids) ? CollUtil.newArrayList() : buildAncestorSql.ids;
+            buildAncestorSql.ids.addAll(
+                    StrUtils.split(buildAncestorSql.idsStr, ",").stream().map(String::trim).collect(Collectors.toList())
+            );
+        }
+
+        if (CollUtil.isEmpty(buildAncestorSql.ids)) {
             return false;
         }
         return true;
