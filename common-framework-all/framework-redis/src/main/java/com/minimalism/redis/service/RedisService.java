@@ -5,7 +5,9 @@ import cn.hutool.extra.spring.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 public interface RedisService {
@@ -52,6 +54,25 @@ public interface RedisService {
         }
         return value;
     }
+
+    /**
+     * 获得缓存的基本对象（泛型）。
+     *
+     * @param key 缓存键值
+     * @return 缓存键值对应的数据
+     */
+    default <T> T getGenerics(String key) {
+        RedisTemplate redisTemplate = getRedisTemplate();
+        ValueOperations<String, T> operation = redisTemplate.opsForValue();
+        T t = operation.get(key);
+        if (t != null) {
+            log().debug("缓存命中，key:{},value:{}", key, t);
+        } else {
+            log().error("缓存未命中，key:{}", key);
+        }
+        return t;
+    }
+
     /**
      * 缓存数据
      *
@@ -62,6 +83,7 @@ public interface RedisService {
     default boolean save(String key, Object value) {
         return save(false, null, key, value, -1, null);
     }
+
     /**
      * 缓存数据
      *
@@ -76,7 +98,6 @@ public interface RedisService {
     }
 
     /**
-     *
      * @param isHash
      * @param cacheName
      * @param key
@@ -86,6 +107,7 @@ public interface RedisService {
     default boolean save(boolean isHash, String cacheName, String key, Object value) {
         return save(isHash, cacheName, key, value, -1, null);
     }
+
     /**
      * @param isHash
      * @param cacheName
@@ -167,4 +189,31 @@ public interface RedisService {
         return true;
     }
 
+    /**
+     * 删除集合对象
+     *
+     * @param collection 多个对象
+     * @return
+     */
+    default boolean delList(Collection collection) {
+        RedisTemplate redisTemplate = getRedisTemplate();
+        boolean del = redisTemplate.delete(collection) > 0;
+        if (del) {
+            log().debug("删除集合缓存成功，key:{}", collection);
+        } else {
+            log().error("删除集合缓存失败，key:{}", collection);
+        }
+        return del;
+    }
+
+    /**
+     * 获得缓存的基本对象列表
+     *
+     * @param pattern 字符串前缀
+     * @return 对象列表
+     */
+    default Collection<String> keys(String pattern) {
+        RedisTemplate redisTemplate = getRedisTemplate();
+        return redisTemplate.keys(pattern);
+    }
 }
