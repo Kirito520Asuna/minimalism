@@ -7,6 +7,7 @@ import com.minimalism.dict.domain.SysDictData;
 import com.minimalism.redis.service.RedisService;
 import com.minimalism.utils.object.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class DictUtils {
      * @return dictDatas 字典数据列表
      *///
     public static List<SysDictData> getDictCache(String key) {
-        JSONArray arrayCache = SpringUtil.getBean(RedisService.class).getGenerics(getCacheKey(key));
+        JSONArray arrayCache = new JSONArray((ArrayList) SpringUtil.getBean(RedisService.class).getGenerics(getCacheKey(key)));
         if (ObjectUtils.isNotNull(arrayCache)) {
             return arrayCache.toList(SysDictData.class);
         }

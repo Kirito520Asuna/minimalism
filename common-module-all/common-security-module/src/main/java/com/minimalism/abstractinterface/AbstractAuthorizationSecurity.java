@@ -12,8 +12,10 @@ import com.minimalism.security.SecurityContextUtil;
 import com.minimalism.service.AbstractUserDetailsService;
 import com.minimalism.utils.jwt.JwtUtils;
 import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.utils.str.StrUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.StringUtils;
@@ -85,6 +87,9 @@ public interface AbstractAuthorizationSecurity extends AbstractAuthorization {
         String userId = null;
         //获取token
         String token = request.getHeader(tokenName);
+        if (StrUtils.isEmpty(token)) {
+            token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        }
         if (StringUtils.hasText(token)) {
             //解析token
             String secret = bean.getSecret();

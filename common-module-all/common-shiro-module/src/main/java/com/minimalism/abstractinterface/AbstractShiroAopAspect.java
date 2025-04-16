@@ -18,6 +18,7 @@ import org.aspectj.lang.JoinPoint;
 import org.springframework.core.env.Environment;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
                     hasRolesAndPermissions(joinPoint);
                     break;
             }
-        }else {
+        } else {
             debug("未开启权限认证");
         }
     }
@@ -250,44 +251,62 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
                 pass = true;
                 break;
         }
-        for (String key : rolesOrPermissionsKeys) {
-            if (isAdmin(key)) {
-                pass = true;
-                break;
-            } else if (ObjectUtil.equal(Logical.OR, logical)) {
-                if (keyList.contains(key)) {
-                    pass = true;
-                    break;
-                }
-            } else {
-                if (!pass) {
-                    break;
+
+        if (isAdmin(getRoles())) {
+            pass = true;
+        } else {
+            for (String key : rolesOrPermissionsKeys) {
+                if (ObjectUtil.equal(Logical.OR, logical)) {
+                    if (keyList.contains(key)) {
+                        pass = true;
+                        break;
+                    }
                 } else {
-                    pass = keyList.contains(key) && pass;
+                    if (!pass) {
+                        break;
+                    } else {
+                        pass = keyList.contains(key) && pass;
+                    }
                 }
             }
         }
         return pass;
     }
 
+    default boolean isAdmin(List<String> keys) {
+        keys = ObjectUtils.defaultIfEmpty(keys, new ArrayList<>());
+        boolean isAdmin = false;
+
+        for (String key : keys) {
+            isAdmin = isAdmin || isAdmin(key);
+            if (isAdmin) {
+                break;
+            }
+        }
+        return isAdmin;
+    }
+
+
     /**
      * @param key
      * @return
      */
     default boolean isAdmin(String key) {
-        String property = SpringUtil.getBean(AuthorizationConfig.class).getAdminKey();
-        String admin = ObjectUtils.defaultIfEmpty(property, "admin");
-        key = ObjectUtils.defaultIfEmpty(key, "");
-
-        if (!key.startsWith(Roles.roles)) {
-            key = new StringBuffer(Roles.roles).append(key).toString();
-        }
-
-        if (!admin.startsWith(Roles.roles)) {
-            admin = new StringBuffer(Roles.roles).append(admin).toString();
-        }
-
-        return ObjectUtils.equals(admin, key);
+        AuthorizationConfig config = SpringUtil.getBean(AuthorizationConfig.class);
+        //String property = config.getAdminKey();
+        //String admin = ObjectUtils.defaultIfEmpty(property, "admin");
+        //key = ObjectUtils.defaultIfEmpty(key, "");
+        //
+        //if (!key.startsWith(Roles.roles)) {
+        //    key = new StringBuffer(Roles.roles).append(key).toString();
+        //}
+        //
+        //if (!admin.startsWith(Roles.roles)) {
+        //    admin = new StringBuffer(Roles.roles).append(admin).toString();
+        //}
+        //
+        //return ObjectUtils.equals(admin, key);
+        return config.isAdmin(key);
     }
 
 }

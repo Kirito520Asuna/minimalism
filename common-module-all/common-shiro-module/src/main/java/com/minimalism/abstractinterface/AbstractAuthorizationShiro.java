@@ -14,10 +14,12 @@ import com.minimalism.utils.jwt.JwtUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.response.ResponseUtils;
 import com.minimalism.utils.shiro.SecurityContextUtil;
+import com.minimalism.utils.str.StrUtils;
 import lombok.SneakyThrows;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,6 +81,10 @@ public interface AbstractAuthorizationShiro extends AbstractAuthorization {
         String userId = null;
         //获取token
         String token = request.getHeader(tokenName);
+
+        if (StrUtils.isEmpty(token)) {
+            token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        }
         boolean executeLogin = false;
         try {
             if (StringUtils.hasText(token)) {

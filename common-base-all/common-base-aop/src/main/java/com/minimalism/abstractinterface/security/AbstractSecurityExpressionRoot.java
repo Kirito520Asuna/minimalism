@@ -31,23 +31,21 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
      * @return
      */
     default boolean isAdmin(String key) {
-        String property = SpringUtil.getBean(AuthorizationConfig.class).getAdminKey();
-        String admin = ObjectUtils.defaultIfEmpty(property, "admin");
-        key = ObjectUtils.defaultIfEmpty(key, "");
-
-        if (key.startsWith(Roles.roles)) {
-            key = key.replace(Roles.roles, "");
-        } else if (key.startsWith(Roles.perms)) {
-            key = key.replace(Roles.perms, "");
-        }
-
-        if (admin.startsWith(Roles.roles)) {
-            admin = admin.replace(Roles.roles, "");
-        } else if (admin.startsWith(Roles.perms)) {
-            admin = admin.replace(Roles.perms, "");
-        }
-
-        return ObjectUtils.equals(admin, key);
+        AuthorizationConfig config = SpringUtil.getBean(AuthorizationConfig.class);
+        //String property = config.getAdminKey();
+        //String admin = ObjectUtils.defaultIfEmpty(property, "admin");
+        //key = ObjectUtils.defaultIfEmpty(key, "");
+        //
+        //if (key.startsWith(Roles.roles)) {
+        //    key = key.replace(Roles.roles, "");
+        //}
+        //
+        //if (admin.startsWith(Roles.roles)) {
+        //    admin = admin.replace(Roles.roles, "");
+        //}
+        //
+        //return ObjectUtils.equals(admin, key);
+        return config.isAdmin(key);
     }
 
     default boolean isAdmin(List<String> keys) {
