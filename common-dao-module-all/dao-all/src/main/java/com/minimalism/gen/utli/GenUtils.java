@@ -5,6 +5,7 @@ import com.minimalism.constant.gen.GenConstants;
 import com.minimalism.gen.domain.GenTable;
 import com.minimalism.utils.other.StringUtils;
 import com.minimalism.gen.domain.GenTableColumn;
+import com.minimalism.utils.str.StrUtils;
 import org.apache.commons.lang3.RegExUtils;
 
 import java.util.Arrays;
@@ -21,7 +22,7 @@ public class GenUtils {
     public static void initTable(GenTable genTable, String operName) {
         genTable.setClassName(convertClassName(genTable.getTableName()));
         genTable.setPackageName(GenConfig.getPackageName());
-        genTable.setModuleName(getModuleName(GenConfig.getPackageName()));
+        genTable.setModuleName(StrUtils.isNotBlank(genTable.getModuleName()) ? genTable.getModuleName() : getModuleName(GenConfig.getPackageName()));
         genTable.setBusinessName(getBusinessName(genTable.getTableName()));
         genTable.setFunctionName(replaceText(genTable.getTableComment()));
         genTable.setFunctionAuthor(GenConfig.getAuthor());

@@ -23,6 +23,6 @@ public class ImportGenTableDto implements Serializable, Validate<ImportGenTableD
         if (ObjectUtils.isEmpty(importGenTableDto.getTables())) {
             throw new BusinessException("表名不能为空");
         }
-        return false;
+        return true;
     }
 }

@@ -151,9 +151,9 @@ public class GenController implements AbstractBaseController {
         // 查询表信息
         List<GenTable> tableList = genTableService.selectDbTableListByNames(tableNames);
         if (StrUtils.isNotBlank(moduleName)) {
-            tableList.stream().forEach(genTable -> {
-                genTable.setModuleName(moduleName);
-            });
+            tableList = tableList.stream().map(genTable ->
+                    genTable.setModuleName(moduleName)
+            ).collect(Collectors.toList());
         }
         genTableService.importGenTable(tableList);
         return ok();
