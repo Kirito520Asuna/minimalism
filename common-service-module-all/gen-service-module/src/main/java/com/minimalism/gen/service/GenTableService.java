@@ -2,6 +2,7 @@ package com.minimalism.gen.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 import com.minimalism.gen.domain.GenTable;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -27,6 +28,7 @@ public interface GenTableService extends IService<GenTable> {
      * @return 数据库表集合
      */
     List<GenTable> selectDbTableList(GenTable genTable);
+
     /**
      * 查询据库列表
      *
@@ -49,13 +51,16 @@ public interface GenTableService extends IService<GenTable> {
      * @return 结果
      */
     boolean deleteGenTableByIds(List<Long> tableIds);
+
     /**
      * 生成代码（下载方式）
      *
-     * @param tableName 表名称
+     * @param tableName  表名称
+     * @param moduleName
      * @return 数据
      */
-     byte[] downloadCode(String tableName,String usePermissions);
+    byte[] downloadCode(String tableName, String usePermissions, String moduleName);
+
     /**
      * 批量生成代码（下载方式）
      *
@@ -63,7 +68,15 @@ public interface GenTableService extends IService<GenTable> {
      * @param usePermissions
      * @return 数据
      */
-     byte[] downloadCode(List<String> tableNames, String usePermissions);
+    byte[] downloadCode(List<String> tableNames, String usePermissions, String moduleName);
+
+    /**
+     * 同步数据库
+     *
+     * @param tableName 表名称
+     */
+    void synchDb(String tableName);
+
     /**
      * 生成代码（自定义路径）
      *
@@ -72,14 +85,42 @@ public interface GenTableService extends IService<GenTable> {
      * @return 数据
      */
     void generatorCode(String tableName, String usePermissions);
+
+
     /**
-     * 同步数据库
+     * 生成代码（自定义路径）
      *
-     * @param tableName 表名称
+     * @param tableName      表名称
+     * @param usePermissions
+     * @return 数据
      */
-     void synchDb(String tableName);
+    void generatorCode(String tableName, String usePermissions, String moduleName);
 
+    /**
+     * 生成代码（自定义路径）
+     *
+     * @param tableName
+     * @param usePermissions
+     * @param zip
+     */
+    void generatorCode(String tableName, String usePermissions, ZipOutputStream zip);
 
+    /**
+     * 生成代码（自定义路径）
+     *
+     * @param tableName
+     * @param usePermissions
+     * @param moduleName
+     * @param zip
+     */
+    void generatorCode(String tableName, String usePermissions, String moduleName, ZipOutputStream zip);
+
+    /**
+     * 查询表信息
+     *
+     * @param tableName
+     * @return
+     */
     GenTable selectGenTableByName(String tableName);
 
     /**
@@ -88,6 +129,7 @@ public interface GenTableService extends IService<GenTable> {
      * @param tableList 导入表列表
      */
     void importGenTable(List<GenTable> tableList);
+
     /**
      * 预览代码
      *
@@ -95,19 +137,22 @@ public interface GenTableService extends IService<GenTable> {
      * @return 预览数据列表
      */
     Map<String, String> previewCode(Long tableId);
+
     /**
      * 修改保存参数校验
      *
      * @param genTable 业务信息
      */
     void validateEdit(GenTable genTable);
+
     /**
      * 修改业务
      *
      * @param genTable 业务信息
      * @return 结果
      */
-     void updateGenTable(GenTable genTable);
+    void updateGenTable(GenTable genTable);
+
     int updateBatch(List<GenTable> list);
 
     int updateBatchSelective(List<GenTable> list);

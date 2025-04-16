@@ -15,6 +15,7 @@ import com.minimalism.gen.utli.VelocityUtils;
 import com.minimalism.text.CharsetKit;
 import com.minimalism.utils.other.StringUtils;
 import com.minimalism.utils.shiro.SecurityContextUtil;
+import com.minimalism.utils.str.StrUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
@@ -95,53 +96,17 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
         return baseMapper.selectDbTableListByNames(tableNames);
     }
 
-    /**
-     * 生成代码（自定义路径）
-     *
-     * @param tableName      表名称
-     * @param usePermissions
-     */
-    @Override
-    public void generatorCode(String tableName, String usePermissions) {
-        // 查询表信息
-        GenTable table = selectGenTableByName(tableName);
-        // 设置主子表信息
-        table.setSubTable(null)
-                // 设置主键列信息
-                .setPkColumn(null)
-                .setUsePermissions(usePermissions);
 
-        VelocityInitializer.initVelocity();
-
-        VelocityContext context = VelocityUtils.prepareContext(table);
-
-        // 获取模板列表
-        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(), table.getTplWebType());
-        for (String template : templates) {
-            if (!StringUtils.containsAny(template, "sql.vm", "api.js.vm", "index.vue.vm", "index-tree.vue.vm")) {
-                // 渲染模板
-                StringWriter sw = new StringWriter();
-                Template tpl = Velocity.getTemplate(template, Constants.UTF8);
-                tpl.merge(context, sw);
-                try {
-                    String path = getGenPath(table, template);
-                    System.err.println("path:" + path);
-                    FileUtils.writeStringToFile(new File(path), sw.toString(), CharsetKit.UTF_8);
-                } catch (IOException e) {
-                    throw new GlobalCustomException("渲染模板失败，表名：" + table.getTableName());
-                }
-            }
-        }
-    }
 
     /**
      * 生成代码（下载方式）
      *
-     * @param tableName 表名称
+     * @param tableName  表名称
+     * @param moduleName
      * @return 数据
      */
     @Override
-    public byte[] downloadCode(String tableName,String usePermissions) {
+    public byte[] downloadCode(String tableName, String usePermissions, String moduleName) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ZipOutputStream zip = new ZipOutputStream(outputStream);
         generatorCode(tableName,usePermissions, zip);
@@ -157,11 +122,11 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
      * @return 数据
      */
     @Override
-    public byte[] downloadCode(List<String> tableNames, String usePermissions) {
+    public byte[] downloadCode(List<String> tableNames, String usePermissions, String moduleName) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ZipOutputStream zip = new ZipOutputStream(outputStream);
         for (String tableName : tableNames) {
-            generatorCode(tableName,usePermissions, zip);
+            generatorCode(tableName,usePermissions,moduleName, zip);
         }
         IOUtils.closeQuietly(zip);
         return outputStream.toByteArray();
@@ -214,10 +179,25 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
         }
     }
 
+
     /**
-     * 查询表信息并生成代码
+     * 生成代码（自定义路径）
+     *
+     * @param tableName      表名称
+     * @param usePermissions
      */
-    private void generatorCode(String tableName,String usePermissions, ZipOutputStream zip) {
+    @Override
+    public void generatorCode(String tableName, String usePermissions) {
+        generatorCode(tableName,usePermissions,"");
+    }
+    /**
+     * 生成代码（自定义路径）
+     *
+     * @param tableName      表名称
+     * @param usePermissions
+     */
+    @Override
+    public void generatorCode(String tableName, String usePermissions, String moduleName) {
         // 查询表信息
         GenTable table = selectGenTableByName(tableName);
         // 设置主子表信息
@@ -225,6 +205,58 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
                 // 设置主键列信息
                 .setPkColumn(null)
                 .setUsePermissions(usePermissions);
+
+        if (StrUtils.isNotBlank(moduleName)) {
+            table.setModuleName(moduleName);
+        }
+
+        VelocityInitializer.initVelocity();
+
+        VelocityContext context = VelocityUtils.prepareContext(table);
+
+        // 获取模板列表
+        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(), table.getTplWebType());
+        for (String template : templates) {
+            if (!StringUtils.containsAny(template, "sql.vm", "api.js.vm", "index.vue.vm", "index-tree.vue.vm")) {
+                // 渲染模板
+                StringWriter sw = new StringWriter();
+                Template tpl = Velocity.getTemplate(template, Constants.UTF8);
+                tpl.merge(context, sw);
+                try {
+                    String path = getGenPath(table, template);
+                    System.err.println("path:" + path);
+                    FileUtils.writeStringToFile(new File(path), sw.toString(), CharsetKit.UTF_8);
+                } catch (IOException e) {
+                    throw new GlobalCustomException("渲染模板失败，表名：" + table.getTableName());
+                }
+            }
+        }
+    }
+
+    /**
+     * 查询表信息并生成代码
+     */
+    @Override
+    public void generatorCode(String tableName, String usePermissions, ZipOutputStream zip) {
+        generatorCode(tableName,usePermissions,null, zip);
+    }
+
+    /**
+     * 查询表信息并生成代码
+     */
+    @Override
+    public void generatorCode(String tableName, String usePermissions, String moduleName, ZipOutputStream zip) {
+        // 查询表信息
+        GenTable table = selectGenTableByName(tableName);
+        // 设置主子表信息
+        table.setSubTable(null)
+                // 设置主键列信息
+                .setPkColumn(null)
+                .setUsePermissions(usePermissions);
+
+        if (StrUtils.isNotEmpty(moduleName)) {
+            table.setModuleName(moduleName);
+        }
 
         VelocityInitializer.initVelocity();
 
@@ -249,6 +281,7 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
             }
         }
     }
+
 
     @Override
     public GenTable selectGenTableByName(String tableName) {

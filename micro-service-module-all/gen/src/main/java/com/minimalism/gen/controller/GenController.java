@@ -208,8 +208,10 @@ public class GenController implements AbstractBaseController {
     @SysLog(title = "生成代码（下载方式）", businessType = BusinessType.GENCODE)
     @GetMapping("/download/{tableName}")
     public void download(HttpServletResponse response, @PathVariable("tableName") String tableName, @Parameter(description = "Shiro|Security  defaultValue = \"Shiro\"")
-    @RequestParam(required = false, defaultValue = "Shiro") String usePermissions) throws IOException {
-        byte[] data = genTableService.downloadCode(tableName, usePermissions);
+                         @RequestParam(required = false, defaultValue = "Shiro") String usePermissions,
+                         @Parameter(description = "模块名 用于拼接权限前缀 以gen为例 如：${moduleName}:gen:list,${moduleName}:gen:add ...")
+                         @RequestParam(required = false) String moduleName) throws IOException {
+        byte[] data = genTableService.downloadCode(tableName, usePermissions,moduleName);
         genCode(response, data, null);
     }
 
@@ -222,9 +224,11 @@ public class GenController implements AbstractBaseController {
     @GetMapping("/batchGenCode")
     public void batchGenCode(HttpServletResponse response,
                              @RequestParam String tables, @Parameter(description = "Shiro|Security  defaultValue = \"Shiro\"")
-                             @RequestParam(required = false, defaultValue = "Shiro") String usePermissions) throws IOException {
+                             @RequestParam(required = false, defaultValue = "Shiro") String usePermissions,
+                             @Parameter(description = "模块名 用于拼接权限前缀 以gen为例 如：${moduleName}:gen:list,${moduleName}:gen:add ...")
+                             @RequestParam(required = false) String moduleName) throws IOException {
         List<String> tableNames = Arrays.stream(Convert.toStrArray(tables)).collect(Collectors.toList());
-        byte[] data = genTableService.downloadCode(tableNames, usePermissions);
+        byte[] data = genTableService.downloadCode(tableNames, usePermissions,moduleName);
         genCode(response, data, null);
     }
 
