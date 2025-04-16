@@ -48,7 +48,7 @@ public class ${ClassName}Controller implements AbstractBaseController {
 /**
  * 查询${functionName}列表
  */
-@SysLog(title = "查询${functionName}列表")
+@SysLog
 @Operation(summary = "查询${functionName}列表")
     #if($table.isShiro())
     @ShiroPermissions("${permissionPrefix}:list")
@@ -83,7 +83,7 @@ public class ${ClassName}Controller implements AbstractBaseController {
     /**
      * 导出${functionName}列表
      */
-    @SysLog(title = "导出${functionName}列表", businessType = BusinessType.EXPORT)
+    @SysLog(businessType = BusinessType.EXPORT)
     @Operation(summary = "导出${functionName}列表")
         #if($table.isShiro())
         @ShiroPermissions("${permissionPrefix}:export")
@@ -101,7 +101,7 @@ public class ${ClassName}Controller implements AbstractBaseController {
     /**
      * 导入${functionName}
      */
-    @SysLog(title = "导入${functionName}", businessType = BusinessType.EXPORT)
+    @SysLog(businessType = BusinessType.EXPORT)
     @Operation(summary = "导入${functionName}")
         #if($table.isShiro())
         @ShiroPermissions("${permissionPrefix}:import")
@@ -121,7 +121,7 @@ public class ${ClassName}Controller implements AbstractBaseController {
     /**
      * 获取${functionName}详细信息
      */
-    @SysLog(title = "获取${functionName}详细信息")
+    @SysLog
     @Operation(summary = "获取${functionName}详细信息")
         #if($table.isShiro())
         @ShiroPermissions("${permissionPrefix}:query")
@@ -136,7 +136,7 @@ public class ${ClassName}Controller implements AbstractBaseController {
     /**
      * 新增${functionName}
      */
-    @SysLog(title = "新增${functionName}", businessType = BusinessType.INSERT)
+    @SysLog(businessType = BusinessType.INSERT)
     @Operation(summary = "新增${functionName}")
         #if($table.isShiro())
         @ShiroPermissions("${permissionPrefix}:add")
@@ -151,7 +151,7 @@ public class ${ClassName}Controller implements AbstractBaseController {
     /**
      * 修改${functionName}
      */
-    @SysLog(title = "修改${functionName}", businessType = BusinessType.UPDATE)
+    @SysLog(businessType = BusinessType.UPDATE)
     @Operation(summary = "修改${functionName}")
         #if($table.isShiro())
         @ShiroPermissions("${permissionPrefix}:edit")
@@ -166,7 +166,7 @@ public class ${ClassName}Controller implements AbstractBaseController {
     /**
      * 删除${functionName}
      */
-    @SysLog(title = "删除${functionName}", businessType = BusinessType.DELETE)
+    @SysLog(businessType = BusinessType.DELETE)
     @Operation(summary = "删除${functionName}")
         #if($table.isShiro())
         @ShiroPermissions("${permissionPrefix}:remove")
