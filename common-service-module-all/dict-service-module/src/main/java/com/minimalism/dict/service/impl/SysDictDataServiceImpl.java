@@ -2,15 +2,13 @@ package com.minimalism.dict.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.minimalism.utils.dict.DictUtils;
+import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import java.util.List;
 
 import com.minimalism.dict.mapper.SysDictDataMapper;
 import com.minimalism.dict.domain.SysDictData;
@@ -88,7 +86,10 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
     @Override
     public List<SysDictData> selectDictDataByType(String dictType) {
         List<SysDictData> dictDataList = CollUtil.newArrayList();
-        dictDataList.addAll(DictUtils.getDictCache(dictType));
+        List<SysDictData> dictCache = DictUtils.getDictCache(dictType);
+        if (null != dictCache) {
+            dictDataList.addAll(dictCache);
+        }
         if (CollUtil.isEmpty(dictDataList)) {
             List<SysDictData> dataList = baseMapper.selectDictDataListByType(dictType);
             DictUtils.setDictCache(dictType, dataList);
