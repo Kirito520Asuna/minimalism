@@ -52,7 +52,16 @@ public interface RedisService {
         }
         return value;
     }
-
+    /**
+     * 缓存数据
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    default boolean save(String key, Object value) {
+        return save(false, null, key, value, -1, null);
+    }
     /**
      * 缓存数据
      *
