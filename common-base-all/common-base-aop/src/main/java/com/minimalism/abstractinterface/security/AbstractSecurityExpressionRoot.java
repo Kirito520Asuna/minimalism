@@ -32,19 +32,6 @@ public interface AbstractSecurityExpressionRoot extends AbstractBean {
      */
     default boolean isAdmin(String key) {
         AuthorizationConfig config = SpringUtil.getBean(AuthorizationConfig.class);
-        //String property = config.getAdminKey();
-        //String admin = ObjectUtils.defaultIfEmpty(property, "admin");
-        //key = ObjectUtils.defaultIfEmpty(key, "");
-        //
-        //if (key.startsWith(Roles.roles)) {
-        //    key = key.replace(Roles.roles, "");
-        //}
-        //
-        //if (admin.startsWith(Roles.roles)) {
-        //    admin = admin.replace(Roles.roles, "");
-        //}
-        //
-        //return ObjectUtils.equals(admin, key);
         return config.isAdmin(key);
     }
 

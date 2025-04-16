@@ -293,19 +293,6 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
      */
     default boolean isAdmin(String key) {
         AuthorizationConfig config = SpringUtil.getBean(AuthorizationConfig.class);
-        //String property = config.getAdminKey();
-        //String admin = ObjectUtils.defaultIfEmpty(property, "admin");
-        //key = ObjectUtils.defaultIfEmpty(key, "");
-        //
-        //if (!key.startsWith(Roles.roles)) {
-        //    key = new StringBuffer(Roles.roles).append(key).toString();
-        //}
-        //
-        //if (!admin.startsWith(Roles.roles)) {
-        //    admin = new StringBuffer(Roles.roles).append(admin).toString();
-        //}
-        //
-        //return ObjectUtils.equals(admin, key);
         return config.isAdmin(key);
     }
 
