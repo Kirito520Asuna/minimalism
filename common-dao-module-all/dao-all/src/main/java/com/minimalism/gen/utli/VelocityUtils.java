@@ -1,12 +1,15 @@
 package com.minimalism.gen.utli;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.minimalism.constant.gen.GenConstants;
 import com.minimalism.gen.domain.GenTable;
+import com.minimalism.util.ObjectUtils;
 import com.minimalism.utils.other.StringUtils;
 import com.minimalism.gen.domain.GenTableColumn;
+import com.minimalism.utils.str.StrUtils;
 import org.apache.velocity.VelocityContext;
 
 import java.time.LocalDateTime;
@@ -50,6 +53,9 @@ public class VelocityUtils {
         String functionName = genTable.getFunctionName();
 
         VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("CollUtil",new CollUtil());
+        velocityContext.put("ObjectUtils",new ObjectUtils());
+        velocityContext.put("StrUtils",new StrUtils());
         velocityContext.put("tplCategory", genTable.getTplCategory());
         velocityContext.put("tableName", genTable.getTableName());
         velocityContext.put("functionName", StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称】");
@@ -75,6 +81,7 @@ public class VelocityUtils {
         if (GenConstants.TPL_SUB.equals(tplCategory)) {
             setSubVelocityContext(velocityContext, genTable);
         }
+
         return velocityContext;
     }
 
