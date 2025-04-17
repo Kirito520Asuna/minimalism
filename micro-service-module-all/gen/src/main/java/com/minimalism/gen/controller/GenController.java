@@ -61,7 +61,7 @@ public class GenController implements AbstractBaseController {
         Map<String, Object> params = genTable.getParams();
         params.put(PageUtils.pageNumber, pageNumber);
         params.put(PageUtils.pageSize, pageSize);
-        PageUtils.startPage(params);
+        PageUtils.startPage(genTable.toParams());
         List<GenTable> list = genTableService.selectGenTableList(genTable);
         return listToPage(list);
     }
@@ -82,7 +82,7 @@ public class GenController implements AbstractBaseController {
         params.put(PageUtils.pageNumber, pageNumber);
         params.put(PageUtils.pageSize, pageSize);
         params.put("excludeTableNames", excludeTableNames);
-        PageUtils.startPage(params);
+        PageUtils.startPage(genTable.toParams());
         List<GenTable> list = genTableService.selectDbTableList(genTable);
         return listToPage(list);
     }
