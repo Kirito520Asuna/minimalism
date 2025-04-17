@@ -11,6 +11,7 @@ public interface TableConstants {
     /*=====================================================*/
     String dept = "sys_dept";
     String user_dept = "sys_user_dept";
+    String role_dept = "sys_role_dept";
     String dept_ancestor = "sys_dept_ancestor";
     /*=====================================================*/
     String dict_data = "sys_dict_data";
