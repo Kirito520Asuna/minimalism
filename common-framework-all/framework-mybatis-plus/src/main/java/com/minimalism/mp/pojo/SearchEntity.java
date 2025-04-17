@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,18 @@ public abstract class SearchEntity implements AbstractEntity {
     @TableField(exist = false)
     private Map<String, Object> params = new HashMap<>();
 
+    @PostConstruct
+    public void init() {
+        toEntityParams();
+    }
+
+    protected Map<String, Object> toEntityParams() {
+        Map<String, Object> toEntityParams = toParams(ObjectUtils.defaultIfEmpty(getParams(), this));
+        this.params = toEntityParams;
+        return toEntityParams;
+    }
+
     public Map<String, Object> toParams() {
-        return toParams(ObjectUtils.defaultIfEmpty(getParams(), this));
+        return toEntityParams();
     }
 }
