@@ -65,7 +65,7 @@ values (109, 102, /*'0,100,102',*/ '财务部门', 2, '若依', '15888888888', '
         null);
 # select @insert10 := LAST_INSERT_ID();
 -- ----------------------------
--- 4、部门祖先表
+-- 2、部门祖先表
 -- ----------------------------
 drop table if exists `sys_dept_ancestor`;
 create table `sys_dept_ancestor`
@@ -78,7 +78,33 @@ create table `sys_dept_ancestor`
 ) engine = InnoDB
   default CHARSET = utf8mb4 comment '部门祖先表';
 
+-- ----------------------------
+-- 3、角色和部门关联表  角色1-N部门
+-- ----------------------------
+drop table if exists sys_role_dept;
+create table sys_role_dept
+(
+    id      bigint(20) not null auto_increment comment 'id',
+    role_id bigint(20) not null comment '角色ID',
+    dept_id bigint(20) not null comment '部门ID',
+    primary key (id),
+    index `idx_role_dept_id` (`role_id`, `dept_id`),
+    index `idx_dept_role_id` (`dept_id`, `role_id`)
+) engine = innodb comment = '角色和部门关联表';
 
+-- ----------------------------
+-- 初始化-角色和部门关联表数据
+-- ----------------------------
+insert into sys_role_dept(role_id, dept_id)
+values ('2', '100');
+insert into sys_role_dept(role_id, dept_id)
+values ('2', '101');
+insert into sys_role_dept(role_id, dept_id)
+values ('2', '105');
+
+-- ----------------------------
+-- 4、用户部门关联表
+-- ----------------------------
 drop table if exists `sys_user_dept`;
 create table `sys_user_dept`
 (
@@ -86,8 +112,8 @@ create table `sys_user_dept`
     `user_id` bigint(20) not null comment '用户id',
     `dept_id` bigint(20) not null comment '部门id',
     primary key (`id`),
-    unique key `idx_user_dept_id` (`user_id`, `dept_id`),
-    unique key `idx_dept_user_id` (`dept_id`, `user_id`)
+    unique key `k_idx_user_dept_id` (`user_id`, `dept_id`),
+    index `idx_dept_user_id` (`dept_id`, `user_id`)
 ) engine = InnoDB
   default CHARSET = utf8mb4 comment '用户部门关联表';
 

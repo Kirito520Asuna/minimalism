@@ -94,7 +94,9 @@ create table `sys_menu_ancestor`(
                                 `menu_id` bigint(20) not null comment '菜单ID',
                                 `menu_parent_id` bigint(20) not null comment '上级菜单ID',
                                 `level` bigint(20) not null comment '第几级祖先 从自身往上数 0->',
-                                primary key (`id`)
+                                primary key (`id`),
+                                unique key `k_idx_menu_ancestor_id` (`menu_id`, `menu_parent_id`, `level`),
+                                index `idx_menu_parent_id` (`menu_parent_id`, `menu_id`, `level`)
 )engine=InnoDB default CHARSET=utf8mb4 comment '菜单权限祖先表';
 
 -- ----------------------------
