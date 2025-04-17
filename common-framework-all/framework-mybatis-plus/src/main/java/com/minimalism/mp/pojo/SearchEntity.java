@@ -10,12 +10,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
+@Data @Slf4j
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,6 +41,7 @@ public abstract class SearchEntity implements AbstractEntity {
     }
 
     protected Map<String, Object> toEntityParams() {
+        log.debug("execute toEntityParams method");
         Map<String, Object> toEntityParams = toParams(ObjectUtils.defaultIfEmpty(getParams(), this));
         this.params = toEntityParams;
         return toEntityParams;

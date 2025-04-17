@@ -1,5 +1,6 @@
 package com.minimalism.mp.pojo;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -8,10 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * Entity基类
@@ -19,7 +24,9 @@ import java.time.LocalDateTime;
  * @author yan
  */
 
-@Data @SuperBuilder
+@Data
+@Slf4j
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class BaseEntity extends SearchEntity implements Serializable {
@@ -67,5 +74,18 @@ public abstract class BaseEntity extends SearchEntity implements Serializable {
     public static final String COL_UPDATE_BY = "update_by";
     public static final String COL_UPDATE_TIME = "update_time";
     public static final String COL_REMARK = "remark";
+
+    protected void buildEntity(Map<String, Object> buildMap) {
+        log.warn("buildEntity is not implemented buildMap:{}", buildMap);
+    }
+
+    protected void buildEntity(Object obj) {
+        log.debug("execute buildEntity method");
+        buildEntity(BeanUtil.beanToMap(obj));
+    }
+
+    public void buildEntity() {
+        buildEntity(this);
+    }
 
 }

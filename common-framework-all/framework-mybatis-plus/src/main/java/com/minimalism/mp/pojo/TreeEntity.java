@@ -42,6 +42,6 @@ public abstract class TreeEntity extends BaseEntity {
      * 子部门
      */
     @TableField(exist = false)
-    private List<?> children = new ArrayList<>();
+    private List<? extends TreeEntity> children = new ArrayList<>();
 
 }

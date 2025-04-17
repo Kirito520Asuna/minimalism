@@ -78,6 +78,19 @@ create table `sys_dept_ancestor`
 ) engine = InnoDB
   default CHARSET = utf8mb4 comment '部门祖先表';
 
+
+drop table if exists `sys_user_dept`;
+create table `sys_user_dept`
+(
+    `id`      bigint(20) not null auto_increment comment 'id',
+    `user_id` bigint(20) not null comment '用户id',
+    `dept_id` bigint(20) not null comment '部门id',
+    primary key (`id`),
+    unique key `idx_user_dept_id` (`user_id`, `dept_id`),
+    unique key `idx_dept_user_id` (`dept_id`, `user_id`)
+) engine = InnoDB
+  default CHARSET = utf8mb4 comment '用户部门关联表';
+
 --
 -- 可通过gen 中的 生成祖先表插入sql 接口 生成
 --
