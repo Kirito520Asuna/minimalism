@@ -2,6 +2,7 @@ package com.minimalism.mp.pojo;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -80,17 +81,46 @@ public abstract class BaseEntity extends SearchEntity implements Serializable {
     public static final String COL_UPDATE_TIME = "update_time";
     public static final String COL_REMARK = "remark";
 
+    /**
+     * 是否开启扩展构建 (默认关闭)
+     *
+     * @return
+     */
+    private boolean openExtendedBuilds() {
+        return false;
+    }
+
+    /**
+     * 扩展构建
+     *
+     * @param buildMap
+     */
     protected void buildEntity(Map<String, Object> buildMap) {
         log.warn("buildEntity is not implemented buildMap:{}", buildMap);
     }
 
-    protected void buildEntity(Object obj) {
-        log.debug("execute buildEntity method");
-        buildEntity(BeanUtil.beanToMap(obj));
+    /**
+     * 基础构建
+     *
+     * @param obj
+     * @param <T>
+     */
+    protected <T extends BaseEntity> T buildEntity(T obj) {
+        boolean openExtendedBuilds = openExtendedBuilds();
+        if (openExtendedBuilds) {
+            log.debug("execute buildEntity method");
+            buildEntity(BeanUtil.beanToMap(obj));
+        } else {
+            log.warn("execute BaseEntity:{}", JSONUtil.toJsonStr(obj));
+        }
+        return obj;
     }
 
-    public void buildEntity() {
-        buildEntity(this);
+    /**
+     * 一键调用构建
+     */
+    public <T extends BaseEntity> T buildEntity() {
+        return (T) buildEntity(this);
     }
 
 }
