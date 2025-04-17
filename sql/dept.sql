@@ -74,7 +74,9 @@ create table `sys_dept_ancestor`
     `dept_id`        bigint(20) not null comment 'ID',
     `dept_parent_id` bigint(20) not null comment '上级ID',
     `level`          bigint(20) not null comment '第几级祖先 从自身往上数 0->',
-    primary key (`id`)
+    primary key (`id`),
+    unique key `k_idx_dept_ancestor_id` (`dept_id`, `dept_parent_id`, `level`),
+    index `idx_dept_ancestor_id` (`level`,`dept_parent_id`, `dept_id`)
 ) engine = InnoDB
   default CHARSET = utf8mb4 comment '部门祖先表';
 
@@ -88,7 +90,7 @@ create table sys_role_dept
     role_id bigint(20) not null comment '角色ID',
     dept_id bigint(20) not null comment '部门ID',
     primary key (id),
-    index `idx_role_dept_id` (`role_id`, `dept_id`),
+    unique `k_idx_role_dept_id` (`role_id`, `dept_id`),
     index `idx_dept_role_id` (`dept_id`, `role_id`)
 ) engine = innodb comment = '角色和部门关联表';
 
