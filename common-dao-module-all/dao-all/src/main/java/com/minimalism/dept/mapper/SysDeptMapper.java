@@ -21,4 +21,6 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
     int insertOrUpdate(SysDept record);
 
     int insertOrUpdateSelective(SysDept record);
+
+    List<SysDept> selectSysDeptList(SysDept dept);
 }

@@ -20,4 +20,5 @@ public interface SysDeptAncestorService extends IService<SysDeptAncestor>{
 
     int insertOrUpdateSelective(SysDeptAncestor record);
 
+    List<SysDeptAncestor> selectDeptAncestorList(SysDeptAncestor deptAncestor);
 }
