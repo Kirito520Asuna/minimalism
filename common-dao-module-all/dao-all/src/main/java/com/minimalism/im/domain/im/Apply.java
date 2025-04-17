@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.minimalism.constant.table.TableConstants;
 import com.minimalism.view.BaseJsonView;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "`apply`")
+@TableName(value = TableConstants.apply)
 public class Apply implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(description = "")
