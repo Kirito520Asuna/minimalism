@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.minimalism.constant.table.TableConstants;
 import com.minimalism.enums.im.ChatType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "`chat_user`")
+@TableName(value = TableConstants.chat_user)
 public class ChatUser implements Serializable {
     @TableId(value = "`id`",type = IdType.AUTO)
     @Schema(description = "")

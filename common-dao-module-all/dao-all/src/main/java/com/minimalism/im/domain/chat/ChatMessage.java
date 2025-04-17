@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.minimalism.constant.table.TableConstants;
 import com.minimalism.enums.im.MessageType;
 import com.minimalism.view.BaseJsonView;
 import com.minimalism.vo.user.UserVo;
@@ -25,18 +26,19 @@ import java.time.LocalDateTime;
  * @Date 2023/8/10 0010 14:22
  * @Description
  */
+
 /**
-    * 聊天窗口关联消息
-    */
-@Schema(description="聊天窗口关联消息")
+ * 聊天窗口关联消息
+ */
+@Schema(description = "聊天窗口关联消息")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "`chat_message`")
+@TableName(value = TableConstants.chat_message)
 public class ChatMessage implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
-    @Schema(description="")
-    @NotNull(message = "不能为null",groups = {BaseJsonView.UpdateView.class})
+    @Schema(description = "")
+    @NotNull(message = "不能为null", groups = {BaseJsonView.UpdateView.class})
     @JsonView(value = {BaseJsonView.ChatView.class})
     private Integer id;
 
@@ -44,41 +46,41 @@ public class ChatMessage implements Serializable {
      * 聊天窗口id
      */
     @TableField(value = "`chat_id`")
-    @Schema(description="聊天窗口id")
+    @Schema(description = "聊天窗口id")
     @NotNull(message = "聊天窗口id不能为null")
-    @JsonView(value = {BaseJsonView.ChatView.class,BaseJsonView.SendMessageView.class})
+    @JsonView(value = {BaseJsonView.ChatView.class, BaseJsonView.SendMessageView.class})
     private Long chatId;
 
     /**
      * 消息id
      */
     @TableField(value = "`message_id`")
-    @Schema(description="消息id")
-    @NotNull(message = "消息id不能为null",groups = {BaseJsonView.UpdateView.class})
+    @Schema(description = "消息id")
+    @NotNull(message = "消息id不能为null", groups = {BaseJsonView.UpdateView.class})
     @JsonView(value = {BaseJsonView.ChatView.class})
     private Long messageId;
     @TableField(exist = false)
-    @Schema(description="发送人id")
+    @Schema(description = "发送人id")
     @NotNull(groups = {BaseJsonView.SendMessageView.class})
     @JsonView(value = {BaseJsonView.SendMessageView.class})
     private Long sendUserId;
     @TableField(exist = false)
-    @Schema(description="发送人")
+    @Schema(description = "发送人")
     @JsonView(value = {BaseJsonView.ChatView.class})
     private UserVo sendUser;
     @TableField(exist = false)
-    @Schema(description="内容")
+    @Schema(description = "内容")
     @NotNull(groups = {BaseJsonView.SendMessageView.class})
-    @JsonView(value = {BaseJsonView.ChatView.class,BaseJsonView.SendMessageView.class})
+    @JsonView(value = {BaseJsonView.ChatView.class, BaseJsonView.SendMessageView.class})
     private String content;
     @TableField(exist = false)
-    @Schema(description="类型")
+    @Schema(description = "类型")
     @NotNull(groups = {BaseJsonView.SendMessageView.class})
-    @JsonView(value = {BaseJsonView.ChatView.class,BaseJsonView.SendMessageView.class})
+    @JsonView(value = {BaseJsonView.ChatView.class, BaseJsonView.SendMessageView.class})
     @Enumerated(value = EnumType.STRING)
     private MessageType type;
     @TableField(exist = false)
-    @Schema(description="时间")
+    @Schema(description = "时间")
     @JsonView(value = {BaseJsonView.ChatView.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;

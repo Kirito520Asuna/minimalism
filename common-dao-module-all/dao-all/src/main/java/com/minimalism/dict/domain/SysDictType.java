@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.minimalism.constant.table.TableConstants;
 import com.minimalism.mp.pojo.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
@@ -25,7 +26,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "sys_dict_type")
+@TableName(value = TableConstants.dict_type)
 public class SysDictType extends BaseEntity implements Serializable {
     /**
      * 字典主键

@@ -24,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "sys_user_dept")
+@TableName(value = TableConstants.user_dept)
 public class SysUserDept implements Serializable {
     /**
      * id

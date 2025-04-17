@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.constant.gen.GenConstants;
+import com.minimalism.constant.table.TableConstants;
 import com.minimalism.mp.pojo.BaseEntity;
 import com.minimalism.utils.other.StringUtils;
 import com.minimalism.gen.mapper.GenTableColumnMapper;
@@ -39,7 +40,7 @@ import java.util.List;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "`gen_table`")
+@TableName(value = TableConstants.gen_table)
 public class GenTable extends BaseEntity implements Serializable {
     /**
      * 编号

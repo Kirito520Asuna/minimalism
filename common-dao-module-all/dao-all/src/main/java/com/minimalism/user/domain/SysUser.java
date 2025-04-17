@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.minimalism.constant.table.TableConstants;
+import com.minimalism.dept.domain.SysDept;
 import com.minimalism.mp.pojo.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author yan
@@ -28,7 +31,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "`sys_user`")
+@TableName(value = TableConstants.user)
 public class SysUser extends BaseEntity implements Serializable {
     /**
      * 用户ID
@@ -120,6 +123,20 @@ public class SysUser extends BaseEntity implements Serializable {
     @TableField(value = "`login_date`")
     @Schema(description = "最后登录时间")
     private LocalDateTime loginDate;
+
+    /**
+     * 部门对象
+     */
+    @Schema(description = "部门对象")
+    @TableField(exist = false)
+    private SysDept dept;
+
+    /**
+     * 角色对象
+     */
+    @Schema(description = "角色对象")
+    @TableField(exist = false)
+    private List<SysRole> roles;
 
     private static final long serialVersionUID = 1L;
 

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.minimalism.constant.table.TableConstants;
 import com.minimalism.mp.pojo.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
@@ -24,7 +25,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "sys_job")
+@TableName(value = TableConstants.job)
 public class SysJob extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

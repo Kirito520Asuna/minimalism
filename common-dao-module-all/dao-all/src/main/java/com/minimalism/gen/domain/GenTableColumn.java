@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.minimalism.constant.table.TableConstants;
 import com.minimalism.mp.pojo.BaseEntity;
 import com.minimalism.utils.other.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +31,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "gen_table_column")
+@TableName(value = TableConstants.gen_table_column)
 public class GenTableColumn extends BaseEntity implements Serializable {
     /**
      * 编号
