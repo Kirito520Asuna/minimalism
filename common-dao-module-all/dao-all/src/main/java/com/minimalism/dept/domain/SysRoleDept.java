@@ -38,7 +38,8 @@ public class SysRoleDept extends BaseEntity implements Serializable {
     /**
      * 角色ID
      */
-    @TableField(value = "role_id")
+    //@TableField(value = "role_id")
+    @TableField(value = COL_ROLE_ID)
     @Schema(description="角色ID")
     private Long roleId;
 
@@ -51,7 +52,7 @@ public class SysRoleDept extends BaseEntity implements Serializable {
 
     public static final String COL_ID = "id";
 
-    public static final String COL_ROLE_ID = "role_id";
+    public static final String COL_ROLE_ID = TableConstants.ROLE_DEPT_COL_ROLE_ID;
 
     public static final String COL_DEPT_ID = "dept_id";
 }

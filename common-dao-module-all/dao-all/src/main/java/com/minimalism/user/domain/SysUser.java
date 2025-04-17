@@ -36,7 +36,8 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      * 用户ID
      */
-    @TableId(value = "`user_id`", type = IdType.AUTO)
+    //@TableId(value = "`user_id`", type = IdType.AUTO)
+    @TableId(value = COL_USER_ID, type = IdType.AUTO)
     @Schema(description = "用户ID")
     private Long userId;
 
@@ -140,7 +141,7 @@ public class SysUser extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String COL_USER_ID = "user_id";
+    public static final String COL_USER_ID = TableConstants.USER_COL_USER_ID;
 
     public static final String COL_USER_NAME = "user_name";
 

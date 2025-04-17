@@ -39,14 +39,16 @@ public class SysDeptAncestor implements Serializable {
     /**
      * ID
      */
-    @TableField(value = "dept_id")
+    //@TableField(value = "dept_id")
+    @TableField(value = COL_DEPT_ID)
     @Schema(description = "ID")
     private Long deptId;
 
     /**
      * 上级ID
      */
-    @TableField(value = "dept_parent_id")
+    //@TableField(value = "dept_parent_id")
+    @TableField(value = COL_DEPT_PARENT_ID)
     @Schema(description = "上级ID")
     private Long deptParentId;
 
@@ -59,9 +61,9 @@ public class SysDeptAncestor implements Serializable {
 
     public static final String COL_ID = "id";
 
-    public static final String COL_DEPT_ID = "dept_id";
+    public static final String COL_DEPT_ID = TableConstants.DEPT_ANCESTOR_COL_DEPT_ID;
 
-    public static final String COL_DEPT_PARENT_ID = "dept_parent_id";
+    public static final String COL_DEPT_PARENT_ID = TableConstants.DEPT_ANCESTOR_COL_DEPT_PARENT_ID;
 
     public static final String COL_LEVEL = "level";
 }

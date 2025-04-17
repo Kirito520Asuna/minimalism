@@ -32,7 +32,8 @@ public class SysDept extends BaseEntity implements Serializable {
     /**
      * 部门id
      */
-    @TableId(value = "dept_id", type = IdType.AUTO)
+    //@TableId(value = "dept_id", type = IdType.AUTO)
+    @TableId(value = COL_DEPT_ID, type = IdType.AUTO)
     @Schema(description="部门id")
     private Long deptId;
 
@@ -92,7 +93,7 @@ public class SysDept extends BaseEntity implements Serializable {
     @Schema(description="删除标志（0代表存在 2代表删除）")
     private String delFlag;
 
-    public static final String COL_DEPT_ID = "dept_id";
+    public static final String COL_DEPT_ID = TableConstants.DEPT_COL_DEPT_ID;
 
     public static final String COL_PARENT_ID = "parent_id";
 
