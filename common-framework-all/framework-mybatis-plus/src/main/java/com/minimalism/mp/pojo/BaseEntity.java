@@ -36,7 +36,8 @@ public abstract class BaseEntity extends SearchEntity implements Serializable {
      * 创建者
      */
     @Schema(description = "创建者")
-    @TableField(value = "`create_by`", fill = FieldFill.INSERT)
+    //@TableField(value = "`create_by`", fill = FieldFill.INSERT)
+    @TableField(value = COL_CREATE_BY, fill = FieldFill.INSERT)
     private String createBy;
 
     /**
@@ -44,14 +45,16 @@ public abstract class BaseEntity extends SearchEntity implements Serializable {
      */
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    @TableField(value = "`create_time`", fill = FieldFill.INSERT)
+    //@TableField(value = "`create_time`", fill = FieldFill.INSERT)
+    @TableField(value = COL_CREATE_TIME, fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
      * 更新者
      */
     @Schema(description = "更新者")
-    @TableField(value = "`update_by`", fill = FieldFill.UPDATE)
+    //@TableField(value = "`update_by`", fill = FieldFill.UPDATE)
+    @TableField(value = COL_UPDATE_BY, fill = FieldFill.UPDATE)
     private String updateBy;
 
     /**
@@ -59,14 +62,16 @@ public abstract class BaseEntity extends SearchEntity implements Serializable {
      */
     @Schema(description = "更新时间")
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    @TableField(value = "`update_time`", fill = FieldFill.INSERT_UPDATE)
+    //@TableField(value = "`update_time`", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = COL_UPDATE_TIME, fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**
      * 备注
      */
     @Schema(description = "备注")
-    @TableField(value = "`remark`")
+    //@TableField(value = "`remark`")
+    @TableField(value = COL_REMARK)
     private String remark;
 
     public static final String COL_CREATE_BY = "create_by";
