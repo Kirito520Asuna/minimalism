@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 数据权限关于表 设置默认值
  */
 @Data @Accessors(chain = true)
-@NoArgsConstructor
+@NoArgsConstructor @SuperBuilder
 @AllArgsConstructor
 public class DataScopeAboutTable {
     /**
