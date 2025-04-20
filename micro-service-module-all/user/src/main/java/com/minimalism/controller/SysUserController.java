@@ -168,8 +168,8 @@ public class SysUserController implements AbstractBaseController {
     }
 
     @GetMapping("getOne")
-    @Operation(summary = "获取当前登录用户")
-    @SysLog(title = "获取当前登录用户")
+    @Operation(summary = "获取当前登录用户[im]")
+    @SysLog
     @JsonView(value = {BaseJsonView.WebView.class})
     public Result<UserVo> getOne(
             HttpServletRequest request) throws Exception {
@@ -187,8 +187,8 @@ public class SysUserController implements AbstractBaseController {
     }
 
     @GetMapping("getUser")
-    @Operation(summary = "获取用户")
-    @SysLog(title = "获取用户")
+    @Operation(summary = "获取用户[im]")
+    @SysLog
     @JsonView(value = {BaseJsonView.WebView.class})
     public Result<UserVo> getUser(@Parameter(description = "用户id") @RequestParam Long userId) {
         SysUser user = sysUserService.getById(userId);
@@ -198,7 +198,7 @@ public class SysUserController implements AbstractBaseController {
 
     @GetMapping("getOneUser")
     @Operation(summary = "获取用户")
-    @SysLog(title = "获取用户")
+    @SysLog
     @JsonView(value = {BaseJsonView.UserChatView.class})
     public Result<UserVo> getOneUser(@Parameter(description = "用户id") @RequestParam(required = false) Long userId,
                                      @Parameter(description = "当前登录用户id") @RequestParam(required = false) Long nowUserId) {
@@ -214,8 +214,8 @@ public class SysUserController implements AbstractBaseController {
     }
 
     @GetMapping("getUsers")
-    @Operation(summary = "搜索用户")
-    @SysLog(title = "搜索用户")
+    @Operation(summary = "搜索用户[im]")
+    @SysLog
     @JsonView(value = {BaseJsonView.UserView.class})
     public Result<List<UserVo>> getUsers(@Parameter(description = "用户id") @RequestParam Long userId,
                                          @Parameter(description = "账号或者昵称") @RequestParam(required = false) String keyword) {
