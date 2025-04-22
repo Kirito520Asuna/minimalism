@@ -1,4 +1,4 @@
-package com.minimalism.config;
+package com.minimalism.config.thread_pool;
 
 import com.minimalism.utils.thread.ThreadMdcUtil;
 import lombok.Data;
@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
  * @Description
  */
 @Data @NoArgsConstructor
-public class AbstractThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
+public abstract class AbstractThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
     @Override
     public boolean prefersShortLivedTasks() {
         return super.prefersShortLivedTasks();

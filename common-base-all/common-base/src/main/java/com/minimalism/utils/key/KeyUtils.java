@@ -16,25 +16,20 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class KeyUtils {
+
     @Data
     @Accessors(chain = true)
     @NoArgsConstructor
@@ -44,9 +39,9 @@ public class KeyUtils {
     public static class KeyInfo implements Serializable {
         private String algorithm;
         @JsonIgnore
-        private RSAPublicKey publicKey;
+        private PublicKey publicKey;
         @JsonIgnore
-        private RSAPrivateKey privateKey;
+        private PrivateKey privateKey;
         private String publicKeyBase64;
         private String privateKeyBase64;
         //密钥标识
@@ -101,7 +96,7 @@ public class KeyUtils {
          * @return
          * @throws Exception
          */
-        public RSAPrivateKey base64BuildPrivateKey() throws Exception {
+        public PrivateKey base64BuildPrivateKey() throws Exception {
             return KeyUtils.getPrivateKeyFromBase64(this.privateKeyBase64, this.algorithm);
         }
 
@@ -111,7 +106,7 @@ public class KeyUtils {
          * @return
          * @throws Exception
          */
-        public RSAPublicKey base64BuildPublicKey() throws Exception {
+        public PublicKey base64BuildPublicKey() throws Exception {
             return KeyUtils.getPublicKeyFromBase64(this.publicKeyBase64, this.algorithm);
         }
     }
@@ -180,24 +175,25 @@ public class KeyUtils {
     /**
      * 通过 Base64 字符串构建 RSAPublicKey
      */
-    public static RSAPublicKey getPublicKeyFromBase64(String base64PublicKey, String algorithm) throws Exception {
+    public static PublicKey getPublicKeyFromBase64(String base64PublicKey, String algorithm) throws Exception {
         algorithm = ObjectUtils.defaultIfEmpty(algorithm, "RSA");
         byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        return (PublicKey) keyFactory.generatePublic(keySpec);
     }
 
     /**
      * 通过 Base64 字符串构建 RSAPrivateKey
      */
-    public static RSAPrivateKey getPrivateKeyFromBase64(String base64PrivateKey, String algorithm) throws Exception {
+    public static PrivateKey getPrivateKeyFromBase64(String base64PrivateKey, String algorithm) throws Exception {
         algorithm = ObjectUtils.defaultIfEmpty(algorithm, "RSA");
         byte[] keyBytes = Base64.getDecoder().decode(base64PrivateKey);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+        return (PrivateKey) keyFactory.generatePrivate(keySpec);
     }
+
     /**
      * RSA 加密
      */
@@ -206,6 +202,7 @@ public class KeyUtils {
         byte[] bytes = encrypt(key, data.getBytes(StandardCharsets.UTF_8), algorithm);
         return new String(bytes, StandardCharsets.UTF_8);
     }
+
     /**
      * RSA 加密
      */
@@ -249,7 +246,7 @@ public class KeyUtils {
         return keyPairGenerator;
     }
 
-    private static KeyInfo generalKeyInfo(KeyPair keyPair, String algorithm) {
+    public static KeyInfo generalKeyInfo(KeyPair keyPair, String algorithm) {
         // 公钥和私钥
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
@@ -265,6 +262,13 @@ public class KeyUtils {
         return keyInfo;
     }
 
+    public static KeyInfo generalKeyInfo(String algorithm) throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = generatorKeyPair(algorithm, null);
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        KeyInfo keyInfo = generalKeyInfo(keyPair, algorithm);
+        return keyInfo;
+    }
+
     public static KeyInfo generalKeyInfo() throws NoSuchAlgorithmException {
         // 生成  密钥对
         KeyPairGenerator keyPairGenerator = generatorKeyPair();
@@ -275,89 +279,97 @@ public class KeyUtils {
     }
 
 
-    @SneakyThrows
-    public static void main(String[] args) {
-        KeyInfo keyInfo = generalKeyInfo();
-        System.err.println(JSONUtil.toJsonStr(keyInfo, JSONConfig.create().setIgnoreNullValue(false)));
-        byte[] bytes = "sdadawojfjid 之间".getBytes(StandardCharsets.UTF_8);
-        byte[] encrypt = encrypt(keyInfo.publicKey, bytes, keyInfo.algorithm);
-        System.err.println("加密后的数据 (Base64)：" + Base64.getEncoder().encodeToString(encrypt));
-        // 解密数据
-        byte[] decryptedData = decrypt(keyInfo.privateKey, encrypt, keyInfo.algorithm);
-        System.err.println("解密后的数据：" + new String(decryptedData, StandardCharsets.UTF_8));
-        //test01();
-        // 生成 RSA 密钥对
-        //test02();
+    /**
+     * @param serverPrivateKey
+     * @param clientPublicKey
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     */
+    public static String generateSharedSecretBase64(PrivateKey serverPrivateKey, PublicKey clientPublicKey) throws NoSuchAlgorithmException, InvalidKeyException {
+        return Base64.getEncoder().encodeToString(generateSharedSecret(serverPrivateKey, clientPublicKey));
     }
 
-    private static void test02() throws Exception {
-        String algorithm = "RSA";
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
-        keyPairGenerator.initialize(1024);
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-
-        // 将公钥/私钥转换为 Base64 字符串
-        String publicKeyBase64 = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-        String privateKeyBase64 = Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
-
-        System.out.println("公钥 (Base64)：" + publicKeyBase64);
-        System.out.println("私钥 (Base64)：" + privateKeyBase64);
-
-        // 通过 Base64 解析回 RSAPublicKey / RSAPrivateKey
-        RSAPublicKey rsaPublicKey = getPublicKeyFromBase64(publicKeyBase64, algorithm);
-        RSAPrivateKey rsaPrivateKey = getPrivateKeyFromBase64(privateKeyBase64, algorithm);
-
-        // 加密数据
-        String originalText = "你好，springdoc.cn";
-
-        System.out.println("原文：" + originalText);
-        byte[] encryptedData = encrypt(rsaPublicKey, originalText.getBytes(StandardCharsets.UTF_8), algorithm);
-
-        System.out.println("加密后的数据 (Base64)：" + Base64.getEncoder().encodeToString(encryptedData));
-
-        // 解密数据
-        byte[] decryptedData = decrypt(rsaPrivateKey, encryptedData, algorithm);
-        System.out.println("解密后的数据：" + new String(decryptedData, StandardCharsets.UTF_8));
+    /**
+     * 生成密钥
+     *
+     * @param serverPrivateKey
+     * @param clientPublicKey
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     */
+    public static byte[] generateSharedSecret(PrivateKey serverPrivateKey, PublicKey clientPublicKey) throws NoSuchAlgorithmException, InvalidKeyException {
+        // 接收到 Key 后，计算共享密钥
+        String ecdh = "ECDH";
+        KeyAgreement keyAgreement = KeyAgreement.getInstance(ecdh);
+        keyAgreement.init(serverPrivateKey);
+        keyAgreement.doPhase(clientPublicKey, true);
+        byte[] generateSecret = keyAgreement.generateSecret();  // 对称密钥，通常再做 key derivation
+        return generateSecret;
     }
 
+    /**
+     * 客户端公钥加密服务端公钥
+     *
+     * @param clientPublicKey
+     * @param serverPublicKey
+     * @return
+     * @throws Exception
+     */
+    public static byte[] clientEncryptServerPublicKey(PublicKey clientPublicKey, PublicKey serverPublicKey) throws Exception {
+        String clientAlgorithm = clientPublicKey.getAlgorithm();
+        return clientEncryptServerPublicKey(clientPublicKey, serverPublicKey, clientAlgorithm);
+    }
 
-    private static void test01() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException {
-        // 生成 RSA 密钥对
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(512);
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+    /**
+     * 客户端公钥加密服务端公钥
+     *
+     * @param clientPublicKey
+     * @param serverPublicKey
+     * @param clientAlgorithm
+     * @return
+     * @throws Exception
+     */
+    public static byte[] clientEncryptServerPublicKey(PublicKey clientPublicKey, PublicKey serverPublicKey, String clientAlgorithm) throws Exception {
+        // 使用传入的 clientAlgorithm 获取 Cipher 实例
+        Cipher cipher = Cipher.getInstance(clientAlgorithm);
+        cipher.init(Cipher.ENCRYPT_MODE, clientPublicKey);
+        // 获取服务端公钥的编码字节
+        byte[] serverPublicKeyBytes = serverPublicKey.getEncoded();
+        // 返回加密后的数据
+        return cipher.doFinal(serverPublicKeyBytes);
+    }
 
-        String puKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKOWy2/7kOzE5DzTbfN1nqoHrUwqfJDIiCHe33CfO85CyOjkr0FBE6s77AUUCHl7P0Hpllc3nlpB9CozjwLD+Y8CAwEAAQ==";
-        String prKey = "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAo5bLb/uQ7MTkPNNt83WeqgetTCp8kMiIId7fcJ87zkLI6OSvQUETqzvsBRQIeXs/QemWVzeeWkH0KjOPAsP5jwIDAQABAkBExVzqy8gGMVN92qhrY/P6qNWKooXRW+wWyRoHv3kl4TIilGuAZhlksIh7Xnq3WVLuSpSSlTQlJeYWofafcSnRAiEA6Dkt21waWz2xNTgRHQ9NlbRNSlckCPU12XwmQXO++BcCIQC0VqMjM+wLVPJtnnpnHm5GekdaGpQ2mu4sRhNZfrR9SQIhAKyT0cBzciLcdhVW1WEDPmVC2S2mFOGTWbGG0edSXVmBAiA9QMAgkN436x58xTtmExv5rEbX//cfpPgI6bRgzXyYoQIgRlZ9fPERaLwjUTEjryK7nrgOBZgJogsKEEgNfVat3/A=";
+    public static PublicKey clientDecryptServerPublicKey(PrivateKey clientPrivateKey, byte[] serverPublicKeyBytes, String serverAlgorithm) throws Exception {
+        return clientDecryptServerPublicKey(clientPrivateKey, serverPublicKeyBytes, serverAlgorithm, clientPrivateKey.getAlgorithm());
+    }
 
+    public static PublicKey clientDecryptServerPublicKey(PrivateKey clientPrivateKey, byte[] serverPublicKeyBytes, String serverAlgorithm, String clientAlgorithm) throws Exception {
+        Cipher cipher = Cipher.getInstance(clientAlgorithm);
+        cipher.init(Cipher.DECRYPT_MODE, clientPrivateKey);
+        serverPublicKeyBytes = cipher.doFinal(serverPublicKeyBytes);
+        // 通过 KeyFactory 构造 PublicKey 对象（这里使用 X509 格式）
+        KeyFactory keyFactory = KeyFactory.getInstance(serverAlgorithm);
+        return keyFactory.generatePublic(new X509EncodedKeySpec(serverPublicKeyBytes));
+    }
 
-        // 公钥和私钥
-        RSAPublicKey rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
+    private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
-        System.out.println("algorithmPu: " + rsaPublicKey.getAlgorithm());
-        System.out.println("algorithmPr: " + rsaPrivateKey.getAlgorithm());
-        System.out.println("公钥：" + Base64.getEncoder().encodeToString(rsaPublicKey.getEncoded()));
-        System.out.println("私钥：" + Base64.getEncoder().encodeToString(rsaPrivateKey.getEncoded()));
+    public static byte[] aesEncrypt(byte[] data, byte[] key) throws Exception {
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+        IvParameterSpec iv = new IvParameterSpec(new byte[16]); // IV 为 0 简化演示
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
+        return cipher.doFinal(data);
+    }
 
-        // 要加密的原文
-        byte[] content = "你好 springdoc.cn".getBytes(StandardCharsets.UTF_8);
-
-        System.out.println("原文：" + new String(content, StandardCharsets.UTF_8));
-
-        // 加密后的密文
-        ByteArrayOutputStream encryptedout = new ByteArrayOutputStream();
-        // 公钥加密
-        encode(rsaPublicKey, new ByteArrayInputStream(content), encryptedout);
-
-        System.out.println("加密后的密文：" + Base64.getEncoder().encodeToString(encryptedout.toByteArray()));
-
-        // 解密后的原文
-        ByteArrayOutputStream decryptedOut = new ByteArrayOutputStream();
-        // 私钥解密
-        decode(rsaPrivateKey, new ByteArrayInputStream(encryptedout.toByteArray()), decryptedOut);
-
-        System.out.println("解密后的原文：" + new String(decryptedOut.toByteArray(), StandardCharsets.UTF_8));
+    public static byte[] aesDecrypt(byte[] encrypted, byte[] key) throws Exception {
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+        IvParameterSpec iv = new IvParameterSpec(new byte[16]);
+        cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
+        return cipher.doFinal(encrypted);
     }
 
 }
