@@ -5,6 +5,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.google.common.collect.Maps;
 import com.minimalism.common.service.CommonUserService;
 import com.minimalism.constant.user.UserConstants;
 import com.minimalism.dept.domain.SysDeptAncestor;
@@ -15,9 +16,11 @@ import com.minimalism.dept.service.SysUserDeptService;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.mp.aop.dataScope.DataScope;
 import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.vo.dept.DeptTreeVo;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -180,8 +183,13 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
         if (ObjectUtils.isNotEmpty(parentId) && !ObjectUtils.equals(parentId, sysDept.getParentId())) {
             // 如果修改了上级部门，则需要更新子节点的上级部门
+            Map<String, DeptTreeVo> treeMap = Maps.newLinkedHashMap();
+            List<DeptTreeVo> deptTreeVos = baseMapper.selectTree(CollUtil.newArrayList(deptId));
+            deptTreeVos.stream().forEach(deptTree -> {
+                treeMap.put(deptTree.getId() + "#" + deptTree.getParentId(), deptTree);
+            });
             //todo: 需要更新子节点的上级部门 注意事务
-            deptAncestorService.updateByParentDeptId(deptId);
+            deptAncestorService.updateByParentDeptId(deptId,treeMap);
         }
         List<SysDeptAncestor> deptAncestors = deptAncestorService.selectDeptAncestorListByAncestorDeptId(deptId);
         deptAncestors.stream().filter(deptAncestor -> !ObjectUtils.equals(deptAncestor.getDeptParentId(), deptId))

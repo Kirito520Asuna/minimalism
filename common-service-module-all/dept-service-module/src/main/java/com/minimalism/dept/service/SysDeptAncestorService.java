@@ -1,8 +1,12 @@
 package com.minimalism.dept.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.minimalism.dept.domain.SysDeptAncestor;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.minimalism.vo.dept.DeptTreeVo;
+
 public interface SysDeptAncestorService extends IService<SysDeptAncestor>{
 
 
@@ -31,5 +35,5 @@ public interface SysDeptAncestorService extends IService<SysDeptAncestor>{
      */
     List<Long> selectSubDeptAncestorListByAncestorDeptParentId(Long deptId);
 
-    boolean updateByParentDeptId(Long deptId);
+    boolean updateByParentDeptId(Long deptId, Map<String, DeptTreeVo> treeMap);
 }

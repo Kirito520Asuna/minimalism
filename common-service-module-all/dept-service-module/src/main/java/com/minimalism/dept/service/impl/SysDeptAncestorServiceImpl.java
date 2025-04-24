@@ -4,8 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.minimalism.vo.dept.DeptTreeVo;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import com.minimalism.dept.mapper.SysDeptAncestorMapper;
 import com.minimalism.dept.domain.SysDeptAncestor;
 import com.minimalism.dept.service.SysDeptAncestorService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SysDeptAncestorServiceImpl extends ServiceImpl<SysDeptAncestorMapper, SysDeptAncestor> implements SysDeptAncestorService {
@@ -90,26 +91,49 @@ public class SysDeptAncestorServiceImpl extends ServiceImpl<SysDeptAncestorMappe
     }
 
     @Override
-    public boolean updateByParentDeptId(Long deptId) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateByParentDeptId(Long deptId, Map<String, DeptTreeVo> treeMap) {
         LambdaQueryWrapper<SysDeptAncestor> query = Wrappers.lambdaQuery(SysDeptAncestor.class);
         query.eq(SysDeptAncestor::getDeptParentId, deptId);
         List<SysDeptAncestor> list = list(query);
         Map<Long, List<SysDeptAncestor>> listMap = list.stream().collect(Collectors.groupingBy(SysDeptAncestor::getDeptId));
 
+        List<SysDeptAncestor> saveList = CollUtil.newArrayList();
         List<SysDeptAncestor> updateList = CollUtil.newArrayList();
         List<Long> delList = CollUtil.newArrayList();
 
         for (Map.Entry<Long, List<SysDeptAncestor>> entry : listMap.entrySet()) {
             Long key = entry.getKey();
-            List<SysDeptAncestor> value = entry.getValue();
+            List<SysDeptAncestor> values = entry.getValue();
             // todo: 判断是否需要删除 需要更新
+            for (SysDeptAncestor deptAncestor : values) {
+                Long id = deptAncestor.getDeptId();
+                Long parentId = deptAncestor.getDeptParentId();
+                DeptTreeVo deptTreeVo = treeMap.get(id + "#" + parentId);
+                if (deptTreeVo != null) {
+                    deptAncestor.setLevel(deptTreeVo.getLevel());
+                    updateList.add(deptAncestor);
+                } else {
+                    //treeMap不存在的 需要删除
+                    delList.add(deptAncestor.getId());
+                }
+            }
         }
-        if (CollUtil.isNotEmpty(updateList)){
+
+        boolean ok = false;
+        if (CollUtil.isNotEmpty(saveList)) {
+            // 应该不存在这中情况 先保留
+            saveBatch(saveList);
+            ok = true;
+        }
+        if (CollUtil.isNotEmpty(updateList)) {
             updateBatch(updateList);
+            ok = true;
         }
-        if (CollUtil.isNotEmpty(delList)){
+        if (CollUtil.isNotEmpty(delList)) {
             removeByIds(delList);
+            ok = true;
         }
-        return false;
+        return ok;
     }
 }
