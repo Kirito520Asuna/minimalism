@@ -1,6 +1,8 @@
 package com.minimalism.es.config;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -10,6 +12,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +20,22 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.util.ObjectUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+//    spring:
+//    elasticsearch:
+//    rest:
+//    uris: 192.168.200.128:9200,192.168.200.129:9200
+//    url:
+//    host:
+//    port:
+//    username: elastic
+//    password: ppT8kmzu^3I
 
 /**
  * ES配置类：初始化ES客户端
@@ -26,24 +45,17 @@ import org.springframework.util.ObjectUtils;
 @EnableElasticsearchRepositories
 @ConfigurationProperties(prefix = "spring.elasticsearch.rest")
 public class ElasticSearchConfig {
-
-//    spring:
-//    elasticsearch:
-//    rest:
-//    uris: 192.168.200.128:9200
-//    username: elastic
-//    password: ppT8kmzu^3I
-
     private String host;
     private int port;
-    private String uris;
+    private List<String> uris = Collections.emptyList();
+    private String url;
     private String username;
     private String password;
 
     public String getHost() {
-        String uris = getUris();
-        if (ObjectUtil.isNotEmpty(uris)) {
-            String[] split = uris.split(":");
+        String url = getUrl();
+        if (ObjectUtil.isNotEmpty(url)) {
+            String[] split = url.split(":");
             String host = split[0];
             return host;
         }
@@ -51,17 +63,44 @@ public class ElasticSearchConfig {
     }
 
     public int getPort() {
-        if (ObjectUtil.isNotEmpty(uris)) {
-            String uris = getUris();
-            String[] split = uris.split(":");
+        if (ObjectUtil.isNotEmpty(url)) {
+            String url = getUrl();
+            String[] split = url.split(":");
             String port = split[1];
             return Integer.parseInt(port);
         }
         return port;
     }
 
+    /**
+     * 解析 uris 为 HttpHost 列表
+     */
+    private List<HttpHost> parseHttpHosts() {
+        if (uris.isEmpty()) {
+            return CollUtil.newArrayList(new HttpHost("127.0.0.1", 9200));
+        }
+        return uris.stream()
+                .map(String::trim)
+                .map(uri -> {
+                    String[] parts = uri.split(":");
+                    if (parts.length != 2) {
+                        throw new IllegalArgumentException("Invalid URI format: " + uri);
+                    }
+                    String host = parts[0];
+                    int port;
+                    try {
+                        port = Integer.parseInt(parts[1]);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid port in URI: " + uri);
+                    }
+                    return new HttpHost(host, port);
+                })
+                .collect(Collectors.toList());
+    }
+
     @Bean
     public RestHighLevelClient client() {
+        //ElasticsearchProperties elasticsearchProperties = SpringUtil.getBean(ElasticsearchProperties.class);
         RestHighLevelClient rest;
         String defHost = "127.0.0.1" ;
         int defPort = 9200;
@@ -76,9 +115,16 @@ public class ElasticSearchConfig {
                     .append(":")
                     .append(port)
                     .toString();
+            List<String> addrList = CollUtil.newArrayList();
+            if (CollUtil.isNotEmpty(uris)) {
+                addrList.addAll(uris);
+            }else {
+                addrList.add(addr);
+            }
             //无账号密码
-            ClientConfiguration.MaybeSecureClientConfigurationBuilder builder = ClientConfiguration.builder().connectedTo(addr);
-            if (ObjectUtil.isNotEmpty(username) && ObjectUtil.isNotEmpty(password)){
+            ClientConfiguration.MaybeSecureClientConfigurationBuilder builder = ClientConfiguration.builder()
+                    .connectedTo(addrList.toArray(new String[addrList.size()]));
+            if (ObjectUtil.isNotEmpty(username) && ObjectUtil.isNotEmpty(password)) {
                 builder.withBasicAuth(username, password);
             }
             ClientConfiguration clientConfiguration = builder.build();
@@ -86,7 +132,13 @@ public class ElasticSearchConfig {
         } else {
             //有账号密码
             HttpHost httpHost = new HttpHost(host, port);
-            RestClientBuilder builder = RestClient.builder(httpHost);
+            List<HttpHost> httpHostList = CollUtil.newArrayList();
+            if (CollUtil.isNotEmpty(uris)) {
+                httpHostList.addAll(parseHttpHosts());
+            }else {
+                httpHostList.add(httpHost);
+            }
+            RestClientBuilder builder = RestClient.builder(httpHostList.toArray(new HttpHost[httpHostList.size()]));
 
             if (ObjectUtil.isNotEmpty(username) && ObjectUtil.isNotEmpty(password)) {
                 CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
