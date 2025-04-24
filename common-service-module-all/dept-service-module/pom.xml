@@ -27,5 +27,16 @@
             <artifactId>framework-redis</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>common-service-module</artifactId>
+            <version>${revision}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>

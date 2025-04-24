@@ -574,7 +574,7 @@
             AND `status` = #{status}
         </if>
 
-        <if test="params != null and params.get('dataScope') != null and params.get('dataScope') != ''">
+        <if test="params.dataScope != null and params.dataScope != ''">
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </if>

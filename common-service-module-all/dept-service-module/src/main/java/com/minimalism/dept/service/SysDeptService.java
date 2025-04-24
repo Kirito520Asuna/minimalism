@@ -31,7 +31,37 @@ public interface SysDeptService extends IService<SysDept>{
     /**
      * 校验部门是否有数据权限
      *
+     * @param deptIds 部门id
+     */
+    void checkDeptDataScope(List<Long> deptIds);
+
+    /**
+     * 校验部门是否有数据权限
+     *
      * @param deptId 部门id
      */
     void checkDeptDataScope(Long deptId);
+
+    /**
+     * 是否存在部门子节点
+     *
+     * @param deptIds 部门IDS
+     * @return 结果
+     */
+    boolean hasChildByDeptIds(List<Long> deptIds);
+
+    /**
+     * 查询部门是否存在用户
+     *
+     * @param deptIds 部门IDS
+     * @return 结果 true 存在 false 不存在
+     */
+    boolean checkDeptExistUser(List<Long> deptIds);
+
+    /**
+     *
+     * @param deptIds
+     * @return
+     */
+    boolean deleteByDeptIds(List<Long> deptIds);
 }
