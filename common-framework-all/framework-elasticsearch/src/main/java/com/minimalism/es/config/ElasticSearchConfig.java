@@ -63,7 +63,7 @@ public class ElasticSearchConfig {
     @Bean
     public RestHighLevelClient client() {
         RestHighLevelClient rest;
-        String defHost = "127.0.0.1";
+        String defHost = "127.0.0.1" ;
         int defPort = 9200;
         String host = getHost();
         int port = getPort();
@@ -72,24 +72,27 @@ public class ElasticSearchConfig {
         port = ObjectUtils.isEmpty(port) ? defPort : port;
 
         if (ObjectUtils.isEmpty(username) && ObjectUtils.isEmpty(password)) {
+            String addr = new StringBuilder(host)
+                    .append(":")
+                    .append(port)
+                    .toString();
             //无账号密码
-            ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                    .connectedTo(
-                            new StringBuilder(host)
-                                    .append(":")
-                                    .append(port)
-                                    .toString())
-                    .build();
+            ClientConfiguration.MaybeSecureClientConfigurationBuilder builder = ClientConfiguration.builder().connectedTo(addr);
+            if (ObjectUtil.isNotEmpty(username) && ObjectUtil.isNotEmpty(password)){
+                builder.withBasicAuth(username, password);
+            }
+            ClientConfiguration clientConfiguration = builder.build();
             rest = RestClients.create(clientConfiguration).rest();
         } else {
             //有账号密码
-            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-
             HttpHost httpHost = new HttpHost(host, port);
             RestClientBuilder builder = RestClient.builder(httpHost);
-            builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
 
+            if (ObjectUtil.isNotEmpty(username) && ObjectUtil.isNotEmpty(password)) {
+                CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+                builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+            }
             rest = new RestHighLevelClient(builder);
         }
         return rest;
