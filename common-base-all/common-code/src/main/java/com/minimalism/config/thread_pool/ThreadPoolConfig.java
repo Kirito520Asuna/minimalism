@@ -1,6 +1,9 @@
-package com.minimalism.config;
+package com.minimalism.config.thread_pool;
 
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -10,10 +13,16 @@ import java.util.concurrent.Executor;
  * @Date 2024/5/14 0014 16:59
  * @Description
  */
-//@Configuration
+@Configuration
 //@EnableAsync
 @Slf4j
 public class ThreadPoolConfig {
+    private static final String GLOBAL_THREAD_POOL_TASK_EXECUTOR = "GLOBAL_THREAD_POOL_TASK_EXECUTOR" ;
+
+    @Bean(GLOBAL_THREAD_POOL_TASK_EXECUTOR)
+    public ThreadPoolTaskExecutor globalThreadPoolTaskExecutor() {
+        return new GlobalThreadPoolTaskExecutor();
+    }
     /**
      * 声明一个线程池
      *
@@ -22,7 +31,7 @@ public class ThreadPoolConfig {
     //@Bean("Executor")
     public Executor asyncExecutor() {
         log.info("-----------------asyncExecutor-----------------");
-        ThreadPoolTaskExecutor executor = getThreadPoolTaskExecutor();
+        ThreadPoolTaskExecutor executor = SpringUtil.getBean(GLOBAL_THREAD_POOL_TASK_EXECUTOR, ThreadPoolTaskExecutor.class);
         //核心线程数5：线程池创建时候初始化的线程数
         executor.setCorePoolSize(5);
         //最大线程数5：线程池最大的线程数，只有在缓冲队列满了之后才会申请超过核心线程数的线程
@@ -38,7 +47,4 @@ public class ThreadPoolConfig {
         return executor;
     }
 
-    public ThreadPoolTaskExecutor getThreadPoolTaskExecutor() {
-        return new AbstractThreadPoolTaskExecutor();
-    }
 }
