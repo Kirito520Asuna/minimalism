@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @Description 通用树状结构
  */
 public class TreeUtils {
-    //todo        idName parentIdName subsetName 后期使用注解实现 (已实现)
+    //        idName parentIdName subsetName 后期使用注解实现 (已实现)
     public static final String id = "id";
     public static final String parentId = "parentId";
     public static final String subset = "subset";

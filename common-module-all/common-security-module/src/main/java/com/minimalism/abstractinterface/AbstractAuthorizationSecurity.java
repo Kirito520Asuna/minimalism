@@ -68,7 +68,6 @@ public interface AbstractAuthorizationSecurity extends AbstractAuthorization {
         //获取权限信息 使用数据库查询的信息
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         //String password = user.getPassword();
-        //TODO 获取权限信息封装到Authentication中
         // 构建UsernamePasswordAuthenticationToken,这里密码为null，是因为提供了正确的JWT,实现自动登录
         UserInfo userInfo = user.getUser();
         if (ObjectUtil.isEmpty(userInfo)) {

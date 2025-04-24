@@ -228,7 +228,6 @@ public interface AbstractApiSign extends AbstractBean {
             }
             //获取对应的私钥解密
             // redis 存储 key-公钥-私钥 的形式(设置过期时间 无法查询到就是超时或非法请求)
-            //todo
             AbstractKeyPair keyPair = getBean(AbstractKeyPair.class);
             headerSign = keyPair.decrypt(identity, headerSign);
         }

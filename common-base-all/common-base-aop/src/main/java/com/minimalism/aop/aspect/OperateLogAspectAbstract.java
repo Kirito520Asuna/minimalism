@@ -306,7 +306,7 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
 
 
         String module = sysLog.module();
-        // todo 尝试读取 {@link Tag#interfaceName()} 属性
+        //  尝试读取 {@link Tag#interfaceName()} 属性
         module = ObjectUtil.isEmpty(module) ? getModule(joinPoint) : module;
         //获取用户类型名
         //String userTypeName = environment.getProperty("operate.log.user.type.interfaceName");

@@ -53,7 +53,7 @@ public interface KeyPairService extends AbstractKeyPair, AbstractBean {
      * G==>密钥
      * C-P 加密 密钥 传输 给 C
      * C: C-R 解密 获取 密钥
-     * todo: 优化
+     * : 优化
      */
 
 }

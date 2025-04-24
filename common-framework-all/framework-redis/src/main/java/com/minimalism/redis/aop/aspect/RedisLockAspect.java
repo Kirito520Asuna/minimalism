@@ -94,7 +94,6 @@ public class RedisLockAspect implements AbstractRedisAspect {
             if (!isLocked) {
                 throw new RedisException(annotation.exceptionMessage());
             }
-            //todo 缓存处理加锁
             return AbstractRedisAspect.super.around(joinPoint);
         } finally {
             //确保只有当前线程持有锁时，才解锁
