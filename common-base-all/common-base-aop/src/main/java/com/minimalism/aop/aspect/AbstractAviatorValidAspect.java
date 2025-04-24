@@ -112,6 +112,7 @@ public interface AbstractAviatorValidAspect extends AbstractAop {
             debug("variablesMap参数：{}", variablesMap);
             //log.info("classMaps参数：{}", classMaps);
             for (AviatorValidInfo validInfo : validInfos) {
+                //StrUtil.replace(validInfo.getExpression(), "''", "\"\"", false);
                 execute(variablesMap, validInfo);
             }
         }
@@ -221,7 +222,7 @@ public interface AbstractAviatorValidAspect extends AbstractAop {
         }
         // 使用 Aviator 进行表达式校验
         try {
-            info("aviator表达式：{}", expression);
+            debug("aviator表达式：{}", expression);
             Boolean bool = !(Boolean) AviatorEvaluator.execute(expression, variablesMap);
             validFail = ObjectUtils.defaultIfEmpty(bool, true);
         } catch (Exception e) {
