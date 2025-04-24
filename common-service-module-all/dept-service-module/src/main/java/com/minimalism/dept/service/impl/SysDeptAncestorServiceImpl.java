@@ -1,13 +1,13 @@
 package com.minimalism.dept.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -87,5 +87,29 @@ public class SysDeptAncestorServiceImpl extends ServiceImpl<SysDeptAncestorMappe
                 .ge(SysDeptAncestor::getLevel, 0);
         List<Long> collect = list(query).stream().map(SysDeptAncestor::getDeptId).collect(Collectors.toList());
         return collect;
+    }
+
+    @Override
+    public boolean updateByParentDeptId(Long deptId) {
+        LambdaQueryWrapper<SysDeptAncestor> query = Wrappers.lambdaQuery(SysDeptAncestor.class);
+        query.eq(SysDeptAncestor::getDeptParentId, deptId);
+        List<SysDeptAncestor> list = list(query);
+        Map<Long, List<SysDeptAncestor>> listMap = list.stream().collect(Collectors.groupingBy(SysDeptAncestor::getDeptId));
+
+        List<SysDeptAncestor> updateList = CollUtil.newArrayList();
+        List<Long> delList = CollUtil.newArrayList();
+
+        for (Map.Entry<Long, List<SysDeptAncestor>> entry : listMap.entrySet()) {
+            Long key = entry.getKey();
+            List<SysDeptAncestor> value = entry.getValue();
+            // todo: 判断是否需要删除 需要更新
+        }
+        if (CollUtil.isNotEmpty(updateList)){
+            updateBatch(updateList);
+        }
+        if (CollUtil.isNotEmpty(delList)){
+            removeByIds(delList);
+        }
+        return false;
     }
 }

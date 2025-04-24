@@ -580,4 +580,26 @@
         </if>
         order by d.`parent_id`, d.`order_num`
     </select>
+
+    <select id="selectTree" resultType="com.minimalism.vo.dept.DeptTreeVo">
+        <if test="ids != null and ids.size() != 0">
+            SELECT DISTINCT `id`, `parent_id` as parentId, `level`
+            FROM (
+            <foreach collection="ids" item="id" index="index" open="(" separator=" UNION ALL " close=")">
+                SELECT #{id} as `id`, #{id} as `parent_id`, 0 as `level`
+                UNION ALL
+                (WITH RECURSIVE ParentTrees AS (SELECT `dept_id`, `parent_id`, 1 AS `level`
+                FROM `sys_dept`
+                WHERE `dept_id` = #{id}
+                UNION ALL
+                SELECT m.`dept_id`, m.`parent_id`, pm.`level` + 1
+                FROM `sys_dept` m
+                INNER JOIN ParentTrees pm ON m.`dept_id` = pm.`parent_id`)
+                SELECT #{id} as `id`, `parent_id`, `level`
+                FROM ParentTrees
+                WHERE `parent_id` != 0 AND `parent_id` IS NOT NULL )
+            </foreach>
+            ) AS subquery;
+        </if>
+    </select>
 </mapper>

@@ -3,6 +3,9 @@ package com.minimalism.dept.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.minimalism.dept.domain.SysDept;
 import java.util.List;
+import java.util.Map;
+
+import com.minimalism.vo.dept.DeptTreeVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,4 +26,6 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
     int insertOrUpdateSelective(SysDept record);
 
     List<SysDept> selectSysDeptList(SysDept dept);
+
+    List<DeptTreeVo> selectTree(@Param("ids") List<Long> ids);
 }

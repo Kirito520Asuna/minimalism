@@ -180,8 +180,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
         if (ObjectUtils.isNotEmpty(parentId) && !ObjectUtils.equals(parentId, sysDept.getParentId())) {
             // 如果修改了上级部门，则需要更新子节点的上级部门
-            //todo: 需要更新子节点的上级部门
-            //deptAncestorService.
+            //todo: 需要更新子节点的上级部门 注意事务
+            deptAncestorService.updateByParentDeptId(deptId);
         }
         List<SysDeptAncestor> deptAncestors = deptAncestorService.selectDeptAncestorListByAncestorDeptId(deptId);
         deptAncestors.stream().filter(deptAncestor -> !ObjectUtils.equals(deptAncestor.getDeptParentId(), deptId))

@@ -30,4 +30,6 @@ public interface SysDeptAncestorService extends IService<SysDeptAncestor>{
      * @return
      */
     List<Long> selectSubDeptAncestorListByAncestorDeptParentId(Long deptId);
+
+    boolean updateByParentDeptId(Long deptId);
 }
