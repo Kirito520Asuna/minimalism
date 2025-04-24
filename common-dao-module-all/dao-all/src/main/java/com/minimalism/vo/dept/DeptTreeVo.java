@@ -17,5 +17,5 @@ import java.io.Serializable;
 public class DeptTreeVo implements Serializable {
     private Long id;
     private Long parentId;
-    private int level;
+    private long level;
 }
