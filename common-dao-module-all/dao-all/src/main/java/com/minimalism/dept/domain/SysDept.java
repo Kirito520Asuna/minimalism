@@ -17,6 +17,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * 部门表
  */
@@ -47,6 +52,8 @@ public class SysDept extends BaseEntity implements Serializable {
     /**
      * 部门名称
      */
+    @NotBlank(message = "部门名称不能为空")
+    @Size(min = 0, max = 30, message = "部门名称长度不能超过30个字符")
     @TableField(value = "dept_name")
     @Schema(description="部门名称")
     private String deptName;
@@ -54,6 +61,7 @@ public class SysDept extends BaseEntity implements Serializable {
     /**
      * 显示顺序
      */
+    @NotNull(message = "显示顺序不能为空")
     @TableField(value = "order_num")
     @Schema(description="显示顺序")
     private Integer orderNum;
@@ -68,6 +76,7 @@ public class SysDept extends BaseEntity implements Serializable {
     /**
      * 联系电话
      */
+    @Size(min = 0, max = 11, message = "联系电话长度不能超过11个字符")
     @TableField(value = "phone")
     @Schema(description="联系电话")
     private String phone;
@@ -75,6 +84,8 @@ public class SysDept extends BaseEntity implements Serializable {
     /**
      * 邮箱
      */
+    @Email(message = "邮箱格式不正确")
+    @Size(min = 0, max = 50, message = "邮箱长度不能超过50个字符")
     @TableField(value = "email")
     @Schema(description="邮箱")
     private String email;

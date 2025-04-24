@@ -21,4 +21,13 @@ public interface SysDeptAncestorService extends IService<SysDeptAncestor>{
     int insertOrUpdateSelective(SysDeptAncestor record);
 
     List<SysDeptAncestor> selectDeptAncestorList(SysDeptAncestor deptAncestor);
+
+    List<SysDeptAncestor> selectDeptAncestorListByAncestorDeptId(Long deptId);
+
+    /**
+     * 查询所有子部门id
+     * @param deptId
+     * @return
+     */
+    List<Long> selectSubDeptAncestorListByAncestorDeptParentId(Long deptId);
 }

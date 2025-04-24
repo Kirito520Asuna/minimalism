@@ -3,10 +3,14 @@ package com.minimalism.dept.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.minimalism.common.service.CommonUserService;
+import com.minimalism.constant.user.UserConstants;
+import com.minimalism.dept.domain.SysDeptAncestor;
 import com.minimalism.dept.domain.SysUserDept;
 import com.minimalism.dept.mapper.SysUserDeptMapper;
+import com.minimalism.dept.service.SysDeptAncestorService;
 import com.minimalism.dept.service.SysUserDeptService;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.mp.aop.dataScope.DataScope;
@@ -82,6 +86,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
             checkDeptDataScope(deptId);
         }
     }
+
     @Override
     public void checkDeptDataScope(Long deptId) {
         boolean isAdmin = SpringUtil.getBean(CommonUserService.class).isAdmin();
@@ -101,7 +106,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         query.eq(SysDept::getDelFlag, "0")
                 .in(SysDept::getParentId, deptIds)
                 .last(" limit 1");
-        int count = count(query);
+        long count = count(query);
         return count > 0;
     }
 
@@ -122,5 +127,81 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         query.eq(SysDept::getDelFlag, "2")
                 .in(SysDept::getDeptId, deptIds);
         return remove(query);
+    }
+
+    @Override
+    public boolean checkDeptNameUnique(SysDept dept) {
+        Long deptId = dept.getDeptId();
+        LambdaQueryWrapper<SysDept> query = Wrappers.lambdaQuery(SysDept.class);
+        query.eq(SysDept::getDeptName, dept.getDeptName())
+                .eq(SysDept::getParentId, dept.getParentId())
+                .eq(SysDept::getDelFlag, "0")
+                .last(" limit 1 ");
+        SysDept info = getOne(query);
+        if (ObjectUtils.isNotNull(info) && !ObjectUtils.equals(info.getDeptId(), deptId)) {
+            return UserConstants.NOT_UNIQUE;
+        }
+        return UserConstants.UNIQUE;
+    }
+
+    @Override
+    public int selectNormalChildrenDeptById(Long deptId) {
+        List<SysDeptAncestor> sysDeptAncestors = SpringUtil.getBean(SysDeptAncestorService.class)
+                .selectDeptAncestorListByAncestorDeptId(deptId);
+        List<Long> deptIds = sysDeptAncestors.stream().map(SysDeptAncestor::getDeptId).collect(Collectors.toList());
+        LambdaQueryWrapper<SysDept> query = Wrappers.lambdaQuery(SysDept.class);
+        query.eq(SysDept::getDelFlag, "0")
+                .eq(SysDept::getStatus, "0")
+                .in(SysDept::getDeptId, deptIds);
+        return (int) count(query);
+    }
+
+    @Override
+    public boolean updateDept(SysDept dept) {
+        Long deptId = dept.getDeptId();
+        Long parentId = dept.getParentId();
+        if (ObjectUtils.equals(deptId, parentId)) {
+            throw new BusinessException("修改部门'" + dept.getDeptName() + "'失败，上级部门不能是自己");
+        }
+        SysDept sysDept = getById(deptId);
+        SysDept parentDept = getById(parentId);
+
+        if (ObjectUtils.isEmpty(sysDept) || ObjectUtils.isNotEmpty(parentId) && ObjectUtils.isEmpty(parentDept)) {
+            throw new BusinessException("部门不存在");
+        }
+        SysDeptAncestorService deptAncestorService = SpringUtil.getBean(SysDeptAncestorService.class);
+        List<Long> subDeptIds = deptAncestorService.selectSubDeptAncestorListByAncestorDeptParentId(deptId);
+
+        if (subDeptIds.contains(parentId)) {
+            throw new BusinessException("非法操作！父不可移到子级以下！");
+        }
+
+        boolean update = updateById(dept);
+
+        if (ObjectUtils.isNotEmpty(parentId) && !ObjectUtils.equals(parentId, sysDept.getParentId())) {
+            // 如果修改了上级部门，则需要更新子节点的上级部门
+            //todo: 需要更新子节点的上级部门
+            //deptAncestorService.
+        }
+        List<SysDeptAncestor> deptAncestors = deptAncestorService.selectDeptAncestorListByAncestorDeptId(deptId);
+        deptAncestors.stream().filter(deptAncestor -> !ObjectUtils.equals(deptAncestor.getDeptParentId(), deptId))
+                .map(SysDeptAncestor::getDeptParentId).collect(Collectors.toList());
+        if (ObjectUtils.equals(UserConstants.DEPT_NORMAL, sysDept.getStatus())
+                && ObjectUtils.isNotEmpty(sysDept.getParentId())
+                && CollUtil.isNotEmpty(deptAncestors)) {
+            // 如果该部门是启用状态，则启用该部门的所有上级部门
+            updateParentDeptStatusNormal(deptAncestors.stream().map(SysDeptAncestor::getDeptId).collect(Collectors.toList()));
+        }
+        return update;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateParentDeptStatusNormal(List<Long> deptIds) {
+        if (CollUtil.isNotEmpty(deptIds)) {
+            LambdaUpdateWrapper<SysDept> update = Wrappers.lambdaUpdate(SysDept.class);
+            update.set(SysDept::getStatus, "0").in(SysDept::getDeptId, deptIds);
+            return update(update);
+        }
+        return false;
     }
 }

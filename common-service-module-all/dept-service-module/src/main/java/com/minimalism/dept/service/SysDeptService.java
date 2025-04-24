@@ -64,4 +64,25 @@ public interface SysDeptService extends IService<SysDept>{
      * @return
      */
     boolean deleteByDeptIds(List<Long> deptIds);
+
+    /**
+     * 校验部门名称是否唯一
+     * @param sysDept
+     * @return
+     */
+    boolean checkDeptNameUnique(SysDept sysDept);
+
+    /**
+     * 查询子部门ID
+     * @param deptId
+     * @return
+     */
+    int selectNormalChildrenDeptById(Long deptId);
+
+    /**
+     *
+     * @param sysDept
+     * @return
+     */
+    boolean updateDept(SysDept sysDept);
 }
