@@ -108,7 +108,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         LambdaQueryWrapper<SysDept> query = Wrappers.lambdaQuery(SysDept.class);
         query.eq(SysDept::getDelFlag, "0")
                 .in(SysDept::getParentId, deptIds)
-                .last(" limit 1");
+                .last(" limit 1 ");
         long count = count(query);
         return count > 0;
     }
@@ -154,12 +154,19 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         List<Long> deptIds = sysDeptAncestors.stream().map(SysDeptAncestor::getDeptId).collect(Collectors.toList());
         LambdaQueryWrapper<SysDept> query = Wrappers.lambdaQuery(SysDept.class);
         query.eq(SysDept::getDelFlag, "0")
-                .eq(SysDept::getStatus, "0")
+                .eq(SysDept::getStatus, UserConstants.DEPT_NORMAL)
                 .in(SysDept::getDeptId, deptIds);
         return (int) count(query);
     }
 
     @Override
+    public List<DeptTreeVo> selectTree(List<Long> ids) {
+        List<DeptTreeVo> deptTreeVos = baseMapper.selectTree(ids);
+        return deptTreeVos;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateDept(SysDept dept) {
         Long deptId = dept.getDeptId();
         Long parentId = dept.getParentId();
@@ -189,7 +196,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
                 treeMap.put(deptTree.getId() + "#" + deptTree.getParentId(), deptTree);
             });
             //todo: 需要更新子节点的上级部门 注意事务
-            deptAncestorService.updateByParentDeptId(deptId,treeMap);
+            deptAncestorService.updateByParentDeptId(deptId, treeMap);
         }
         List<SysDeptAncestor> deptAncestors = deptAncestorService.selectDeptAncestorListByAncestorDeptId(deptId);
         deptAncestors.stream().filter(deptAncestor -> !ObjectUtils.equals(deptAncestor.getDeptParentId(), deptId))
@@ -207,9 +214,35 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     public boolean updateParentDeptStatusNormal(List<Long> deptIds) {
         if (CollUtil.isNotEmpty(deptIds)) {
             LambdaUpdateWrapper<SysDept> update = Wrappers.lambdaUpdate(SysDept.class);
-            update.set(SysDept::getStatus, "0").in(SysDept::getDeptId, deptIds);
+            update.set(SysDept::getStatus, UserConstants.DEPT_NORMAL).in(SysDept::getDeptId, deptIds);
             return update(update);
         }
         return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveDept(SysDept dept) {
+        SysDept info = getById(dept.getParentId());
+        // 如果父节点不为正常状态,则不允许新增子节点
+        if (!UserConstants.DEPT_NORMAL.equals(info.getStatus())) {
+            throw new BusinessException("部门停用，不允许新增");
+        }
+        boolean save = save(dept);
+        if (save) {
+            Long deptId = dept.getDeptId();
+            List<DeptTreeVo> deptTreeVos = selectTree(CollUtil.newArrayList(deptId));
+            List<SysDeptAncestor> ancestors = deptTreeVos.stream().map(deptTree -> {
+                SysDeptAncestor deptAncestor = new SysDeptAncestor()
+                        .setDeptId(deptTree.getId())
+                        .setDeptParentId(deptTree.getParentId())
+                        .setLevel(deptTree.getLevel());
+                return deptAncestor;
+            }).collect(Collectors.toList());
+
+            SysDeptAncestorService deptAncestorService = SpringUtil.getBean(SysDeptAncestorService.class);
+            deptAncestorService.saveBatch(ancestors);
+        }
+        return save;
     }
 }

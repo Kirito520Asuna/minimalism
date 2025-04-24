@@ -3,6 +3,8 @@ package com.minimalism.dept.service;
 import java.util.List;
 import com.minimalism.dept.domain.SysDept;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.minimalism.vo.dept.DeptTreeVo;
+
 public interface SysDeptService extends IService<SysDept>{
 
 
@@ -67,10 +69,10 @@ public interface SysDeptService extends IService<SysDept>{
 
     /**
      * 校验部门名称是否唯一
-     * @param sysDept
+     * @param dept
      * @return
      */
-    boolean checkDeptNameUnique(SysDept sysDept);
+    boolean checkDeptNameUnique(SysDept dept);
 
     /**
      * 查询子部门ID
@@ -79,10 +81,19 @@ public interface SysDeptService extends IService<SysDept>{
      */
     int selectNormalChildrenDeptById(Long deptId);
 
+    List<DeptTreeVo> selectTree(List<Long> ids);
+
     /**
      *
-     * @param sysDept
+     * @param dept
      * @return
      */
-    boolean updateDept(SysDept sysDept);
+    boolean updateDept(SysDept dept);
+
+    /**
+     * 新增部门信息
+     * @param dept
+     * @return
+     */
+    boolean saveDept(SysDept dept);
 }

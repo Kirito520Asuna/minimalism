@@ -116,7 +116,11 @@ public class SysDeptController implements AbstractBaseController {
     @ShiroPermissions("system:dept:add")
     @PostMapping
     public Result add(@Validated @RequestBody SysDept sysDept) {
-        return ok(deptService.save(sysDept));
+        boolean checkDeptNameUnique = deptService.checkDeptNameUnique(sysDept);
+        if (!checkDeptNameUnique) {
+            throw new BusinessException("新增部门'" + sysDept.getDeptName() + "'失败，部门名称已存在");
+        }
+        return ok(deptService.saveDept(sysDept));
     }
 
     /**
