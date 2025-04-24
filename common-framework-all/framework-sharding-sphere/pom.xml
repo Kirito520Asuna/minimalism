@@ -23,7 +23,7 @@
         <shardingsphere.version>5.0.0-alpha</shardingsphere.version>
         <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
         <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
-        <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
+        <mybatis-plus-spring-boot-starter.version>3.5.3</mybatis-plus-spring-boot-starter.version>
 
         <aviator.version>5.2.0</aviator.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>

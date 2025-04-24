@@ -115,6 +115,23 @@
 
         <dependency>
             <groupId>com.minimalism</groupId>
+            <artifactId>dept-service-module</artifactId>
+            <version>${revision}</version>
+            <exclusions>
+                <!--排除使用 user-service-module 的主配置-->
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>dao-all</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.minimalism</groupId>
+                    <artifactId>framework-redis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
             <artifactId>validate-code-service-module</artifactId>
             <version>${revision}</version>
             <exclusions>

@@ -14,7 +14,7 @@
     <properties>
         <spring-boot.version>2.7.9</spring-boot.version>
 
-        <mybatis-plus-spring-boot-starter.version>3.4.3</mybatis-plus-spring-boot-starter.version>
+        <mybatis-plus-spring-boot-starter.version>3.5.3</mybatis-plus-spring-boot-starter.version>
         <mysql.version>8.0.33</mysql.version>
     </properties>
 
