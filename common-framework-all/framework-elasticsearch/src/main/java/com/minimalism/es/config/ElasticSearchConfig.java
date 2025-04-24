@@ -82,6 +82,14 @@ public class ElasticSearchConfig {
         return uris.stream()
                 .map(String::trim)
                 .map(uri -> {
+                    String schemeHttp = "http" ;
+                    String schemeHttps = "https" ;
+                    boolean isHttps = uri.startsWith(schemeHttps);
+                    if (isHttps) {
+                        uri = uri.replace(schemeHttps + "://", "");
+                    } else if (uri.startsWith(schemeHttp)) {
+                        uri = uri.replace(schemeHttp + "://", "");
+                    }
                     String[] parts = uri.split(":");
                     if (parts.length != 2) {
                         throw new IllegalArgumentException("Invalid URI format: " + uri);
@@ -92,6 +100,9 @@ public class ElasticSearchConfig {
                         port = Integer.parseInt(parts[1]);
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Invalid port in URI: " + uri);
+                    }
+                    if (isHttps){
+                        return new HttpHost(host, port, schemeHttps);
                     }
                     return new HttpHost(host, port);
                 })
@@ -118,7 +129,7 @@ public class ElasticSearchConfig {
             List<String> addrList = CollUtil.newArrayList();
             if (CollUtil.isNotEmpty(uris)) {
                 addrList.addAll(uris);
-            }else {
+            } else {
                 addrList.add(addr);
             }
             //无账号密码
@@ -135,7 +146,7 @@ public class ElasticSearchConfig {
             List<HttpHost> httpHostList = CollUtil.newArrayList();
             if (CollUtil.isNotEmpty(uris)) {
                 httpHostList.addAll(parseHttpHosts());
-            }else {
+            } else {
                 httpHostList.add(httpHost);
             }
             RestClientBuilder builder = RestClient.builder(httpHostList.toArray(new HttpHost[httpHostList.size()]));
