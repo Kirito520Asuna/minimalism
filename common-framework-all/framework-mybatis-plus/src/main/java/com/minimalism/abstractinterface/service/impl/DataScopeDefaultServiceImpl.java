@@ -28,15 +28,25 @@ public abstract class DataScopeDefaultServiceImpl implements DataScopeService {
         String deptAncestorsIdName = dataScopeAboutTable.getDeptAncestorsIdName();
         String deptAncestorsParentIdName = dataScopeAboutTable.getDeptAncestorsParentIdName();
 
-        String isConditionsValue = " OR %s.`" + deptIdName + "` = 0 ";
-        String dataScopeCustomScopeCustomIdsTrueValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + roleDeptTableDeptIdName + "` FROM `" +
-                roleDeptTableName + "` WHERE `" + roleDeptTableRoleIdName + "` in (%s) ) ";
-        String dataScopeCustomScopeCustomIdsFalseValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + roleDeptTableDeptIdName + "` FROM `" +
-                roleDeptTableDeptIdName + "` WHERE `" + roleDeptTableRoleIdName + "`  = %s ) ";
-        String dataScopeDeptDeptAliasTrueValue = " OR %s.`" + deptIdName + "` = %s ";
-        String dataScopeDeptAndChildDeptAliasTrueValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + deptAncestorsParentIdName + "` FROM `" +
-                deptAncestorsName + "` WHERE `" + deptAncestorsIdName + "` = %s ) ";
-        String dataScopeSelfUserAliasTrueValue = " OR %s.`" + userIdName + "` = %s ";
+        //String isConditionsValue = " OR %s.`" + deptIdName + "` = 0 ";
+        //String dataScopeCustomScopeCustomIdsTrueValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + roleDeptTableDeptIdName + "` FROM `" +
+        //        roleDeptTableName + "` WHERE `" + roleDeptTableRoleIdName + "` in (%s) ) " ;
+        //String dataScopeCustomScopeCustomIdsFalseValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + roleDeptTableDeptIdName + "` FROM `" +
+        //        roleDeptTableDeptIdName + "` WHERE `" + roleDeptTableRoleIdName + "`  = %s ) " ;
+        //String dataScopeDeptDeptAliasTrueValue = " OR %s.`" + deptIdName + "` = %s " ;
+        //String dataScopeDeptAndChildDeptAliasTrueValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + deptAncestorsParentIdName + "` FROM `" +
+        //        deptAncestorsName + "` WHERE `" + deptAncestorsIdName + "` = %s ) " ;
+        //String dataScopeSelfUserAliasTrueValue = " OR %s.`" + userIdName + "` = %s " ;
+
+        String isConditionsValue = String.format(" OR key&str.`%s` = 0 ", deptIdName).replace("key&str", "%s");
+        String dataScopeCustomScopeCustomIdsTrueValue = String.format(" OR key&str.`%s` IN ( SELECT `%s` FROM `%s` WHERE `%s` in (key&str) ) ",
+                deptIdName, roleDeptTableDeptIdName, roleDeptTableName, roleDeptTableName).replace("key&str", "%s");
+        String dataScopeCustomScopeCustomIdsFalseValue = String.format(" OR key&str.`%s` IN ( SELECT `%s` FROM `%s` WHERE `%s`  = key&str ) ",
+                deptIdName, roleDeptTableDeptIdName, roleDeptTableDeptIdName, roleDeptTableRoleIdName).replace("key&str", "%s");
+        String dataScopeDeptDeptAliasTrueValue = String.format(" OR key&str.`%s` = key&str ", deptIdName).replace("key&str", "%s");
+        String dataScopeDeptAndChildDeptAliasTrueValue = String.format(" OR key&str.`%s` IN ( SELECT `%s` FROM `%s` WHERE `%s` = key&str ",
+                deptIdName, deptAncestorsParentIdName, deptAncestorsName, deptAncestorsIdName).replace("key&str", "%s");
+        String dataScopeSelfUserAliasTrueValue = String.format(" OR key&str.`%s` = key&str ",userIdName).replace("key&str", "%s");
 
         Map<String, String> dataScopeSqlBuildFormatMap = new LinkedHashMap<>();
         dataScopeSqlBuildFormatMap.put(IS_CONDITIONS, isConditionsValue);
