@@ -25,9 +25,10 @@
         <project.build.sourceEncoding>${project.Encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.Encoding}</project.reporting.outputEncoding>
 
-        <banner.basedir>../../</banner.basedir>
-        <banner.resources-common>resources-common</banner.resources-common>
-        <banner.txt.name>banner.txt</banner.txt.name>
+        <resources.basedir>../../</resources.basedir>
+        <resources.resources-common>resources-common</resources.resources-common>
+        <resources.banner.name>banner.txt</resources.banner.name>
+        <resources.logstash.name>logback-spring.xml</resources.logstash.name>
         <!--target dir-->
         <target.base.dir>../..</target.base.dir>
         <pom.target.dir></pom.target.dir>
