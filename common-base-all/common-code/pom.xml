@@ -39,8 +39,17 @@
         <fastexcel.version>1.1.0</fastexcel.version>
 
         <aliyun-sdk.version>3.1.0</aliyun-sdk.version>
+
+        <logstash.version>5.3</logstash.version>
     </properties>
     <dependencies>
+        <!--集成logstash-->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-core</artifactId>

@@ -135,7 +135,7 @@ public class UserController {
                         @RequestBody Apply apply) {
         LambdaQueryWrapper<Apply> la = new LambdaQueryWrapper<>();
         la.eq(Apply::getUid, apply.getUid()).eq(Apply::getTid, apply.getTid());
-        int count = applyService.count(la);
+        int count = (int) applyService.count(la);
 
         if (count > 0){
             return fail("该用户已向您发起了好友申请！");
@@ -143,7 +143,7 @@ public class UserController {
 
         LambdaQueryWrapper<Friend> friendLambdaQueryWrapper = new LambdaQueryWrapper<>();
         friendLambdaQueryWrapper.eq(Friend::getUid, apply.getUid()).eq(Friend::getFid, apply.getTid());
-        count = friendService.count(friendLambdaQueryWrapper);
+        count = (int) friendService.count(friendLambdaQueryWrapper);
         if (count > 0) {
             return fail("已添加过该好友！");
         }
