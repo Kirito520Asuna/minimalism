@@ -142,7 +142,7 @@ public class FilePartServiceImpl extends ServiceImpl<FilePartMapper, FilePart> i
                 .eq(ObjectUtils.isNotEmpty(fileId),FilePart::getFileId, fileId)
                 .eq(StrUtil.isNotBlank(identifier),FilePart::getPartCode, identifier)
                 .groupBy(FilePart::getPartCode);
-        return count(wrapper);
+        return (int) count(wrapper);
     }
 
     @Override

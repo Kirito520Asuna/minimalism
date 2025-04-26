@@ -106,9 +106,9 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
         if (CollUtil.isNotEmpty(dictIds)) {
             List<SysDictType> dictTypes = listByIds(dictIds);
             for (SysDictType dictType : dictTypes) {
-                int count = count(Wrappers.lambdaQuery(SysDictType.class).eq(SysDictType::getDictType, dictType.getDictType()));
+                int count = (int) count(Wrappers.lambdaQuery(SysDictType.class).eq(SysDictType::getDictType, dictType.getDictType()));
                 if (count > 0) {
-                    throw new BusinessException(String.format("%1$s已分配,不能删除", dictType.getDictName()));
+                    throw new BusinessException(String.format("%s已分配,不能删除", dictType.getDictName()));
                 }
                 removeById(dictType.getDictId());
                 DictUtils.removeDictCache(dictType.getDictType());
@@ -131,7 +131,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
     @Override
     public void loadingDictCache() {
         SysDictData dictData = new SysDictData();
-        dictData.setStatus("0");
+        dictData.setStatus(UserConstants.NORMAL/*"0"*/);
         Map<String, List<SysDictData>> dictDataMap = dictDataService.selectSysDictDataList(dictData).stream().collect(Collectors.groupingBy(SysDictData::getDictType));
         for (Map.Entry<String, List<SysDictData>> entry : dictDataMap.entrySet()) {
             DictUtils.setDictCache(entry.getKey(), entry.getValue().stream().sorted(Comparator.comparing(SysDictData::getDictSort)).collect(Collectors.toList()));
