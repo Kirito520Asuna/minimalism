@@ -35,10 +35,10 @@
 
     <!-- 根据日志文件地址是否为有效地址，决定是否启用 RollingFileAppender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logstashFile:-/var/log/${appName}/${dev}/${appName}-logstash.log}</file>
+        <file>${logstashFile:-var/log/${appName}/${dev}/${appName}-logstash.log}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 设置日志文件名 -->
-            <fileNamePattern>${logstashFileNamePattern:-/var/log/${appName}/${dev}/${appName}-logstash.%d{yyyy-MM-dd}.log}</fileNamePattern>
+            <fileNamePattern>${logstashFileNamePattern:-var/log/${appName}/${dev}/${appName}-logstash.%d{yyyy-MM-dd}.log}</fileNamePattern>
             <!-- 最多保留 30 天的日志 -->
             <maxHistory>${logstashMaxHistory:-30}</maxHistory>
             <!--设置日志文件大小，超过就重新生成文件，默认10M-->
