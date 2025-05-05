@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 
 
@@ -75,7 +76,7 @@ public class KeyPairController implements AbstractBaseController {
         String algorithm = keyInfo.getAlgorithm();
         String publicKeyBase64 = keyInfo.getPublicKeyBase64();
         String identity = keyInfo.getIdentity();
-        RSAPublicKey clientPublicKey = KeyUtils.getPublicKeyFromBase64(clientPublicKeyBase64, clientAlgorithm);
+        PublicKey clientPublicKey = KeyUtils.getPublicKeyFromBase64(clientPublicKeyBase64, clientAlgorithm);
         String encryptPublicKeyBase64 = KeyUtils.encrypt(clientPublicKey, publicKeyBase64);
         String encryptSecretKey = KeyUtils.encrypt(clientPublicKey, keyInfo.getSecretKey());
 
