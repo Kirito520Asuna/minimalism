@@ -42,6 +42,11 @@ public class LoginServiceImpl implements AbstractLoginService {
         return tokenInfo;
     }
 
+    @Override
+    public String getCurrentUserId() {
+        return SecurityContextUtil.getUserIdNoThrow();
+    }
+
     /**
      * @param id 
      */

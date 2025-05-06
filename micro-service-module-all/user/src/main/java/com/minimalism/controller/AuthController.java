@@ -82,7 +82,8 @@ public class AuthController implements AbstractBaseController {
     @Operation(summary = "登出")
     @PostMapping("/logout")
     public Result logout() {
-        SecurityContextUtil.logout();
+        SpringUtil.getBean(AbstractLoginService.class).logout();
+        //SecurityContextUtil.logout();
         return ok();
     }
 }

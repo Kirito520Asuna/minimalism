@@ -8,6 +8,7 @@ import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.pojo.TokenInfo;
 import com.minimalism.pojo.UserInfo;
 import com.minimalism.pojo.shiro.UserBase;
+import com.minimalism.utils.shiro.SecurityContextUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
@@ -37,8 +38,13 @@ public class LoginServiceImpl implements AbstractLoginService {
         return tokenInfo;
     }
 
+    @Override
+    public String getCurrentUserId() {
+        return SecurityContextUtil.getUserIdNoThrow();
+    }
+
     /**
-     * @param id 
+     * @param id
      */
     @Override
     public void logout(String id) {

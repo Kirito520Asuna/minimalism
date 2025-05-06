@@ -28,7 +28,7 @@ public interface AbstractLoginService {
      * @param user
      * @return
      */
-    default TokenInfo login(UserInfo user){
+    default TokenInfo login(UserInfo user) {
         return SpringUtil.getBean(AbstractUserService.class).login(user);
     }
 
@@ -38,9 +38,20 @@ public interface AbstractLoginService {
      * @param id
      * @return
      */
-   default User getOneRedis(String id){
-       return SpringUtil.getBean(AbstractUserService.class).getOneRedis(id);
-   }
+    default User getOneRedis(String id) {
+        return SpringUtil.getBean(AbstractUserService.class).getOneRedis(id);
+    }
+
+    String getCurrentUserId();
+
+    /**
+     * 账号退出(移除redis数据)
+     *
+     * @return
+     */
+    default void logout() {
+        SpringUtil.getBean(getClass()).logout(getCurrentUserId());
+    }
 
     /**
      * 账号退出(移除redis数据)
