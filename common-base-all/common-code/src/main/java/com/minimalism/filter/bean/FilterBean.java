@@ -6,6 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.ApiFilter;
+import com.minimalism.filter.CommonFilter;
 import com.minimalism.filter.CorsRequestFilter;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;
@@ -30,7 +31,7 @@ import org.springframework.web.filter.CorsFilter;
 public class FilterBean implements AbstractBean {
     @Override
     public void init() {
-      debug("[Bean]-[Filter]-[init] {}",getClass().getName());
+        debug("[Bean]-[Filter]-[init] {}", getClass().getName());
     }
 
     //@Bean
@@ -47,27 +48,27 @@ public class FilterBean implements AbstractBean {
         // CORS 配置
         CorsConfiguration corsConfig = new CorsConfiguration();
 
-        if (ObjectUtils.isNotEmpty(allowedOrigin)){
+        if (ObjectUtils.isNotEmpty(allowedOrigin)) {
             corsConfig.addAllowedOrigin(allowedOrigin);  // 允许的域
         }
-        if (ObjectUtils.isNotEmpty(allowedOriginPattern)){
+        if (ObjectUtils.isNotEmpty(allowedOriginPattern)) {
             corsConfig.addAllowedOriginPattern(allowedOriginPattern);  // 允许的域
         }
         for (String method : allowedMethods) {
             corsConfig.addAllowedMethod(method);  // 允许的请求方法
         }
-        if (ObjectUtils.isNotEmpty(allowedHeader)){
+        if (ObjectUtils.isNotEmpty(allowedHeader)) {
             corsConfig.addAllowedHeader(allowedHeader);  // 允许的请求头
         }
-        if (ObjectUtils.isNotEmpty(allowCredentials)){
+        if (ObjectUtils.isNotEmpty(allowCredentials)) {
             corsConfig.setAllowCredentials(allowCredentials);  // 是否允许凭证（cookies）
         }
-        if (ObjectUtils.isNotEmpty(maxAge)){
+        if (ObjectUtils.isNotEmpty(maxAge)) {
             corsConfig.setMaxAge(maxAge);
         }
         // 配置源（UrlBasedCorsConfigurationSource）
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration(ObjectUtils.defaultIfEmpty(cors.getPattern(),"/**"), corsConfig);  // 对所有路径有效
+        source.registerCorsConfiguration(ObjectUtils.defaultIfEmpty(cors.getPattern(), "/**"), corsConfig);  // 对所有路径有效
 
         log.info("CorsConfiguration:{}", JSONUtil.toJsonStr(corsConfig, JSONConfig.create().setIgnoreNullValue(false)));
         return new CorsFilter(source);  // 返回一个 CorsFilter 实例
@@ -87,4 +88,9 @@ public class FilterBean implements AbstractBean {
         return new ApiFilter();
     }
 
+    @Bean
+    @ConditionalOnBean(FilterBean.class)
+    public CommonFilter commonFilter() {
+        return new CommonFilter();
+    }
 }
