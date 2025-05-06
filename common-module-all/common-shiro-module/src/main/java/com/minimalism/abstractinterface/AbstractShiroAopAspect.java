@@ -50,7 +50,7 @@ public interface AbstractShiroAopAspect extends AbstractSysLog {
                     break;
             }
         } else {
-            debug("未开启权限认证");
+            warn("未开启权限认证");
         }
     }
 
