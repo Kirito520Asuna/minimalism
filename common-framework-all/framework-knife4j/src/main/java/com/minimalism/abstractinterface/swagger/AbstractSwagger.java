@@ -21,8 +21,6 @@ import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -200,7 +198,7 @@ public interface AbstractSwagger {
          */
         List<Parameter> parameterList;
     }
-    default GroupedOpenApi buildGroupedOpenApi(@Valid @NotNull GroupSwagger groupSwagger){
+    default GroupedOpenApi buildGroupedOpenApi( GroupSwagger groupSwagger){
         String groupName = groupSwagger.getGroupName();
         List<String> paths = groupSwagger.getPaths();
         List<String> excludePaths = groupSwagger.getExcludePaths();
@@ -305,7 +303,7 @@ public interface AbstractSwagger {
         Boolean required = false;
     }
 
-    default Parameter buildHeaderParameter(@Valid @NotNull SwaggerParameter swaggerParameter) {
+    default Parameter buildHeaderParameter(SwaggerParameter swaggerParameter) {
         String name = swaggerParameter.getName();
         String description = swaggerParameter.getDescription();
         SecurityScheme.In securitySchemeIn = swaggerParameter.getSecuritySchemeIn();
@@ -328,8 +326,8 @@ public interface AbstractSwagger {
      * @param schemaDescription    schema描述
      * @return
      */
-    default Parameter buildHeaderParameter(@NotNull String parameterName,
-                                           @NotNull String parameterDescription,
+    default Parameter buildHeaderParameter(String parameterName,
+                                           String parameterDescription,
                                            String parameterIn,
                                            String schemaDefault,
                                            String schemaName,
