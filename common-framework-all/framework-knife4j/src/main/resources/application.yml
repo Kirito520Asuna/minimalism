@@ -20,7 +20,8 @@
 #    path: /v3/api-docs
 ## 请注意使用group名时如果配置了GroupedOpenApi引用自动配置时组名不能重复
 #  open:
-#    default-group-configs: true
+#    default-group-configs:
+#      enable: true
 #  group-configs:
 #    - group: "api"
 #      paths-to-match: "/api/**"
