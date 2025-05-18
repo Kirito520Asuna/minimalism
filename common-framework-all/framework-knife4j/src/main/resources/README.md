@@ -76,45 +76,47 @@ knife4j:
         <artifactId>common-framework-all</artifactId>
         <version>${revision}</version>
     </parent>
-    
     <artifactId>framework-knife4j</artifactId>
 
     <properties>
         <!--swagger 版本-->
         <knife4j.version>4.1.0</knife4j.version>
         <springdoc-openapi-ui.version>1.6.15</springdoc-openapi-ui.version>
-        <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+        <spring-boot.version>2.5.0</spring-boot.version>
     </properties>
-    
-     <dependencyManagement>
-         <dependencies>
-             <!--swagger-->
-             <dependency>
-                 <groupId>com.github.xiaoymin</groupId>
-                 <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
-                 <version>${knife4j.version}</version>
-             </dependency>
+    <!--      网关引用需要排除
+    <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
+            -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring-Boot Version BOM -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
 
-             <dependency>
-                 <groupId>org.springdoc</groupId>
-                 <artifactId>springdoc-openapi-ui</artifactId>
-                 <version>${springdoc-openapi-ui.version}</version>
-             </dependency>
+            <!--swagger-->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
 
-             <dependency>
-                 <groupId>javax.servlet</groupId>
-                 <artifactId>javax.servlet-api</artifactId>
-                 <version>${javax.servlet-api.version}</version>
-             </dependency>
-
-             <dependency>
-                 <groupId>javax.annotation</groupId>
-                 <artifactId>javax.annotation-api</artifactId>
-                 <version>${javax.annotation-api.version}</version>
-             </dependency>
-         </dependencies>
-     </dependencyManagement>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc-openapi-ui.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!--swagger-->
@@ -136,11 +138,6 @@ knife4j:
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 
@@ -165,10 +162,20 @@ knife4j:
         <!--swagger 版本-->
         <knife4j.version>4.4.0</knife4j.version>
         <springdoc-openapi.version>2.6.0</springdoc-openapi.version>
+        <spring-boot.version>3.3.5</spring-boot.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- Spring-Boot Version BOM -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
@@ -182,7 +189,14 @@ knife4j:
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <!--      网关引用需要排除
+    <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
+            -->
     <dependencies>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
