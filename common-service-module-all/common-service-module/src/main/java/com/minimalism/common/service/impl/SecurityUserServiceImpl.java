@@ -2,7 +2,7 @@ package com.minimalism.common.service.impl;
 
 import com.minimalism.abstractinterface.service.config.AbsAuthSecurityConfig;
 import com.minimalism.common.service.CommonUserService;
-import com.minimalism.security.SecurityContextUtil;
+import com.minimalism.security.utils.SecurityContextUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 

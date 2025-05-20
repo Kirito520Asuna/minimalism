@@ -19,7 +19,7 @@ import com.minimalism.enums.BusinessType;
 import com.minimalism.shiro.aop.ShiroPermissions;
 #else
 import org.springframework.security.access.prepost.PreAuthorize;
-import com.minimalism.security.SecurityContextUtil;
+import com.minimalism.utils.SecurityContextUtil;
 #end
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.${ClassName}Service;
