@@ -2,7 +2,7 @@ package com.minimalism.sharding_sphere.shardingAlgorithm;
 
 import cn.hutool.core.util.StrUtil;
 import com.googlecode.aviator.AviatorEvaluator;
-import com.minimalism.abstractinterface.shardingAlgorithm.AbstractIdShardingAlgorithm;
+import com.minimalism.sharding_sphere.abs.AbsIdShardingAlgorithm;
 import groovy.util.logging.Slf4j;
 import lombok.SneakyThrows;
 import org.apache.shardingsphere.sharding.api.sharding.standard.PreciseShardingValue;
@@ -20,7 +20,7 @@ import java.util.Properties;
  * @Description //自定义分片策略
  */
 @Slf4j
-public class IdCustomShardingAlgorithm implements AbstractIdShardingAlgorithm, StandardShardingAlgorithm<Long> {
+public class IdCustomShardingAlgorithm implements AbsIdShardingAlgorithm, StandardShardingAlgorithm<Long> {
     private Properties props = new Properties();
 
     /**
@@ -101,7 +101,7 @@ public class IdCustomShardingAlgorithm implements AbstractIdShardingAlgorithm, S
      */
     @Override
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<Long> shardingValue) {
-        return AbstractIdShardingAlgorithm.super.doSharding(availableTargetNames, shardingValue);
+        return AbsIdShardingAlgorithm.super.doSharding(availableTargetNames, shardingValue);
     }
 
 
@@ -114,7 +114,7 @@ public class IdCustomShardingAlgorithm implements AbstractIdShardingAlgorithm, S
      */
     @Override
     public Collection<String> doSharding(Collection<String> availableTargetNames, RangeShardingValue<Long> shardingValue) {
-        return AbstractIdShardingAlgorithm.super.doSharding(availableTargetNames, shardingValue);
+        return AbsIdShardingAlgorithm.super.doSharding(availableTargetNames, shardingValue);
     }
 
 

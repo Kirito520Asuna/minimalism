@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.shardingAlgorithm;
+package com.minimalism.sharding_sphere.abs;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -16,7 +16,7 @@ import java.util.*;
  * @Date 2024/12/6 23:29:43
  * @Description
  */
-public interface AbstractIdShardingAlgorithm {
+public interface AbsIdShardingAlgorithm {
     interface ConstantShardingAlgorithm {
         String SPOT = ".";
         String PREFIX = "_";
