@@ -1,7 +1,7 @@
 package com.minimalism.rabbitmq.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
+import com.minimalism.rabbitmq.abs.AbsRabbitMq;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
  * @Description
  */
 @Configuration
-public class RabbitConfig implements AbstractRabbitMq {
+public class RabbitConfig implements AbsRabbitMq {
     @Bean
     @Override
     public MessageConverter JsonMessageConverter(ObjectMapper objectMapper) {
-        return AbstractRabbitMq.super.JsonMessageConverter(objectMapper);
+        return AbsRabbitMq.super.JsonMessageConverter(objectMapper);
     }
 }

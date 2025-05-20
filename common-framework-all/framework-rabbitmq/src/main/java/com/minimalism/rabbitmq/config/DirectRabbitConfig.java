@@ -1,6 +1,6 @@
 package com.minimalism.rabbitmq.config;
 
-import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
+import com.minimalism.rabbitmq.abs.AbsRabbitMq;
 import com.minimalism.rabbitmq.pojo.QueueInfo;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @ConditionalOnBean(RabbitConfig.class)
 @Configuration
-public class DirectRabbitConfig implements AbstractRabbitMq {
+public class DirectRabbitConfig implements AbsRabbitMq {
     private static QueueInfo QUEUE_INFO = new QueueInfo(DIRECT_QUEUE, DIRECT_EXCHANGE, DIRECT_ROUTING);
 
 

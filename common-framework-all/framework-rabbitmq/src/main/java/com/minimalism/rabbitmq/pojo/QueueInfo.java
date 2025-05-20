@@ -1,6 +1,6 @@
 package com.minimalism.rabbitmq.pojo;
 
-import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
+import com.minimalism.rabbitmq.abs.AbsRabbitMq;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.amqp.core.Queue;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueueInfo implements AbstractRabbitMq {
+public class QueueInfo implements AbsRabbitMq {
     // 队列key
     String queueKey;
     // 交换机key

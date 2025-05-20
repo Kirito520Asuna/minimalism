@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.rabbitmq;
+package com.minimalism.rabbitmq.abs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.*;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @Date 2024/7/26 0026 17:42:42
  * @Description
  */
-public interface AbstractRabbitMq {
+public interface AbsRabbitMq {
     String TTL_QUEUE = "ttl.queue";
     String TTL_ROUTING_KEY = "ttl.queue.key";
     String TTL_EXCHANGE = "ttl.queue.exchange";

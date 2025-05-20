@@ -1,7 +1,7 @@
 package com.minimalism.rabbitmq.config;
 
 
-import com.minimalism.abstractinterface.rabbitmq.AbstractRabbitMq;
+import com.minimalism.rabbitmq.abs.AbsRabbitMq;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
@@ -20,35 +20,35 @@ import org.springframework.context.annotation.Configuration;
  */
 @ConditionalOnBean(RabbitConfig.class)
 @Configuration
-public class DelayQueueDirectConfig implements AbstractRabbitMq {
+public class DelayQueueDirectConfig implements AbsRabbitMq {
     @Bean
     @Override
     public Queue buildTtlQueue() {
         //TTL_QUEUE
-        return AbstractRabbitMq.super.buildTtlQueue();
+        return AbsRabbitMq.super.buildTtlQueue();
     }
     @Bean
     @Override
     public DirectExchange buildTtlExchange() {
         //TTL_EXCHANGE
-        return AbstractRabbitMq.super.buildTtlExchange();
+        return AbsRabbitMq.super.buildTtlExchange();
     }
     @Bean
     @Override
     public DirectExchange buildDlxExchange() {
         //DLX_EXCHANGE
-        return AbstractRabbitMq.super.buildDlxExchange();
+        return AbsRabbitMq.super.buildDlxExchange();
     }
     @Bean
     @Override
     public Binding buildDlxBinding(Queue dlxQueue, DirectExchange dlxExchange) {
         //DLX_ROUTING_KEY
-        return AbstractRabbitMq.super.buildDlxBinding(dlxQueue, dlxExchange);
+        return AbsRabbitMq.super.buildDlxBinding(dlxQueue, dlxExchange);
     }
     @Bean
     @Override
     public Binding buildTtlBinding(Queue ttlQueue, DirectExchange ttlExchange) {
         //TTL_ROUTING_KEY
-        return AbstractRabbitMq.super.buildTtlBinding(ttlQueue, ttlExchange);
+        return AbsRabbitMq.super.buildTtlBinding(ttlQueue, ttlExchange);
     }
 }
