@@ -61,7 +61,7 @@ public class RedisBanAspect implements AbstractRedisAspect {
     //@Around(value = "@annotation(org.springframework.web.bind.annotation.RestController)")
     @Around("execution(* com..*Controller.*(..))")
     public Object checkGlobalBan(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("[{}]执行全局检查", System.currentTimeMillis());
+        //log.debug("[{}]执行全局检查", System.currentTimeMillis());
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ipAddress = getClientIP(request);
         BanConfiguration banConfiguration = DEFAULT_BAN_CONFIGURATION;
@@ -103,7 +103,7 @@ public class RedisBanAspect implements AbstractRedisAspect {
         if (ban == null) {
             return joinPoint.proceed();
         }
-        log.info("[{}]执行检查", System.currentTimeMillis());
+        //log.debug("[{}]执行检查", System.currentTimeMillis());
         BanType banType = ban.type();
         long windowSeconds = ban.windowSeconds();
         long maxRequests = ban.maxRequests();
