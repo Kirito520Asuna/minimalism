@@ -8,7 +8,7 @@ import com.minimalism.base.constant.file.FileConstant;
 import com.minimalism.common_code.utils.file.FileUtils;
 import com.minimalism.nacos.utils.NacosUtils;
 import com.minimalism.base.utils.object.ObjectUtils;
-import com.minimalism.utils.oss.LocalOSSUtils;
+import com.minimalism.file.utils.oss.LocalOSSUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;

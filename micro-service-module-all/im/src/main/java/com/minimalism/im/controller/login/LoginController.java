@@ -6,7 +6,7 @@
 //import cn.hutool.extra.spring.SpringUtil;
 //import com.fasterxml.jackson.annotation.JsonView;
 //
-//import com.minimalism.dto.user.UserDto;
+//import com.minimalism.user.dto.user.UserDto;
 //import com.minimalism.im.domain.security.User;
 //import com.minimalism.im.domain.test.TestAop;
 //import com.minimalism.im.utils.EncodePasswordUtils;

@@ -9,7 +9,7 @@ import com.minimalism.user.service.SysMenuAncestorService;
 import com.minimalism.user.service.SysMenuService;
 import com.minimalism.user.service.SysRoleService;
 import com.minimalism.base.config.AuthorizationConfig;
-import com.minimalism.dto.SysMenuDto;
+import com.minimalism.user.dto.SysMenuDto;
 import com.minimalism.base.enums.ApiCode;
 import com.minimalism.base.exception.GlobalCustomException;
 import com.minimalism.tomapper.SysMenuMapper;

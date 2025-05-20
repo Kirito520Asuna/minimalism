@@ -1,7 +1,7 @@
 package com.minimalism.dict.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.minimalism.utils.dict.DictUtils;
+import com.minimalism.dict.utils.DictUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

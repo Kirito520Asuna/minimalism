@@ -12,7 +12,7 @@ import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.file.storage.clientAbs.LocalClient;
 import com.minimalism.base.utils.object.ObjectUtils;
-import com.minimalism.utils.oss.LocalOSSUtils;
+import com.minimalism.file.utils.oss.LocalOSSUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;

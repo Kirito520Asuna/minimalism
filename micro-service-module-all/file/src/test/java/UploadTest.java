@@ -3,7 +3,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.dto.FileUpDto;
+import com.minimalism.user.dto.FileUpDto;
 import com.minimalism.base.result.Result;
 import com.minimalism.common_code.utils.http.OkHttpUtils;
 import com.minimalism.common_code.utils.io.IoUtils;

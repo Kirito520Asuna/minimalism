@@ -7,7 +7,7 @@ import com.minimalism.aop.all.async.AsyncFuture;
 import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.shiro.aop.ShiroPermissions;
 import com.minimalism.aop.controller.AbsBaseController;
-import com.minimalism.dto.gen.ImportGenTableDto;
+import com.minimalism.user.dto.gen.ImportGenTableDto;
 import com.minimalism.base.enums.BusinessType;
 import com.minimalism.base.enums.OperateTypeEnum;
 import com.minimalism.base.exception.GlobalCustomException;

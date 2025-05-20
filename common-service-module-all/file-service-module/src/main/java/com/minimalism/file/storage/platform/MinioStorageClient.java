@@ -10,7 +10,7 @@ import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.common_code.utils.io.IoUtils;
-import com.minimalism.utils.oss.MinioOSSUtils;
+import com.minimalism.file.utils.oss.MinioOSSUtils;
 import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
 import io.minio.Result;

@@ -7,7 +7,7 @@ import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.common_code.utils.io.IoUtils;
 import com.minimalism.base.utils.object.ObjectUtils;
-import com.minimalism.utils.oss.LocalOSSUtils;
+import com.minimalism.file.utils.oss.LocalOSSUtils;
 import lombok.SneakyThrows;
 
 import javax.servlet.http.HttpServletResponse;

@@ -9,7 +9,7 @@ import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.StorageType;
 import com.minimalism.file.storage.clientAbs.AliyunClient;
 import com.minimalism.common_code.utils.io.IoUtils;
-import com.minimalism.utils.oss.AliyunOSSUtils;
+import com.minimalism.file.utils.oss.AliyunOSSUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;

@@ -7,7 +7,7 @@ import com.minimalism.base.constant.user.UserConstants;
 import com.minimalism.dict.domain.SysDictData;
 import com.minimalism.dict.service.SysDictDataService;
 import com.minimalism.base.exception.BusinessException;
-import com.minimalism.utils.dict.DictUtils;
+import com.minimalism.dict.utils.DictUtils;
 import com.minimalism.base.utils.object.ObjectUtils;
 import org.springframework.stereotype.Service;
 

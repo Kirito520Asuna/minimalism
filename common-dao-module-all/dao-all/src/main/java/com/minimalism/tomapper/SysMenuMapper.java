@@ -3,7 +3,7 @@ package com.minimalism.tomapper;
 import cn.hutool.core.util.StrUtil;
 import com.minimalism.base.constant.Constants;
 import com.minimalism.base.constant.user.UserConstants;
-import com.minimalism.dto.SysMenuDto;
+import com.minimalism.user.dto.SysMenuDto;
 import com.minimalism.user.domain.SysMenu;
 import com.minimalism.base.utils.object.ObjectUtils;
 import com.minimalism.common_code.utils.str.StrUtils;
