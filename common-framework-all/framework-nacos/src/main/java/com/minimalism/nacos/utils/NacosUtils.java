@@ -1,4 +1,4 @@
-package com.minimalism.utils;
+package com.minimalism.nacos.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;

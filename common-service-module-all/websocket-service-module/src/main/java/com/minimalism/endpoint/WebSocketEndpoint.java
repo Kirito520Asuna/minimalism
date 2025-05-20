@@ -2,12 +2,11 @@ package com.minimalism.endpoint;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.domain.Message;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;
-import com.minimalism.utils.NacosUtils;
+import com.minimalism.nacos.utils.NacosUtils;
 import com.minimalism.utils.bean.CustomBeanUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
