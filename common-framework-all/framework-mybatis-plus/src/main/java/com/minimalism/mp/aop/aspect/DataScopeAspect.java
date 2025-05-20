@@ -7,7 +7,7 @@ import com.minimalism.mp.aop.dataScope.DataScope;
 import com.minimalism.mp.aop.domain.DataScopeRole;
 import com.minimalism.mp.aop.domain.DataScopeUser;
 import com.minimalism.mp.pojo.BaseEntity;
-import com.minimalism.util.ObjectUtils;
+import com.minimalism.util.MpObjectUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -34,9 +34,9 @@ public class DataScopeAspect implements DataScopeConstants {
 
     protected void handleDataScope(JoinPoint point, DataScope dataScope) {
         DataScopeUser dataScopeUser = new DataScopeUser();
-        if (ObjectUtils.isNotNull(dataScopeUser) && !dataScopeUser.isAdmin()) {
+        if (MpObjectUtils.isNotNull(dataScopeUser) && !dataScopeUser.isAdmin()) {
             String Permission = dataScopeUser.getRoleKey();
-            String permission = ObjectUtils.defaultIfEmpty(dataScope.permission(), Permission);
+            String permission = MpObjectUtils.defaultIfEmpty(dataScope.permission(), Permission);
             dataScopeFilter(point, dataScopeUser, dataScope.deptAlias(), dataScope.userAlias(), permission);
         }
     }
@@ -60,8 +60,8 @@ public class DataScopeAspect implements DataScopeConstants {
         List<DataScopeRole> roles = user.getRoles();
 
         roles.stream().forEach(role -> {
-            if (ObjectUtils.equals(role.getDataScope(), DATA_SCOPE_CUSTOM)
-                    && ObjectUtils.equals(role.getStatus(), ROLE_NORMAL)
+            if (MpObjectUtils.equals(role.getDataScope(), DATA_SCOPE_CUSTOM)
+                    && MpObjectUtils.equals(role.getStatus(), ROLE_NORMAL)
                     && CollUtil.contains(role.getPermissions(), permission)) {
                 scopeCustomIds.add(role.getRoleId());
             }
@@ -69,24 +69,24 @@ public class DataScopeAspect implements DataScopeConstants {
 
         for (DataScopeRole role : roles) {
             String dataScope = role.getDataScope();
-            if (CollUtil.contains(conditions, dataScope) || ObjectUtils.equals(role.getStatus(), ROLE_DISABLE)) {
+            if (CollUtil.contains(conditions, dataScope) || MpObjectUtils.equals(role.getStatus(), ROLE_DISABLE)) {
                 continue;
             }
             if (!CollUtil.contains(role.getPermissions(), permission)) {
                 continue;
             }
-            if (ObjectUtils.equals(DATA_SCOPE_ALL, dataScope)) {
+            if (MpObjectUtils.equals(DATA_SCOPE_ALL, dataScope)) {
                 sqlBuild = new StringBuilder();
                 conditions.add(dataScope);
                 break;
-            } else if (ObjectUtils.equals(DATA_SCOPE_CUSTOM, dataScope)) {
+            } else if (MpObjectUtils.equals(DATA_SCOPE_CUSTOM, dataScope)) {
                 sqlBuild = role.scopeCustomIdsBuildDataScope(sqlBuild, scopeCustomIds, deptAlias);
             } else {
-                if (ObjectUtils.equals(DATA_SCOPE_DEPT, dataScope)) {
+                if (MpObjectUtils.equals(DATA_SCOPE_DEPT, dataScope)) {
                     sqlBuild = role.deptBuildDataScope(sqlBuild, deptAlias, deptId);
-                } else if (ObjectUtils.equals(DATA_SCOPE_DEPT_AND_CHILD, dataScope)) {
+                } else if (MpObjectUtils.equals(DATA_SCOPE_DEPT_AND_CHILD, dataScope)) {
                     sqlBuild = role.deptAndChildBuildDataScope(sqlBuild, deptAlias, deptId);
-                } else if (ObjectUtils.equals(DATA_SCOPE_SELF, dataScope)) {
+                } else if (MpObjectUtils.equals(DATA_SCOPE_SELF, dataScope)) {
                     if (StrUtil.isNotBlank(userAlias)) {
                         sqlBuild = role.selfBuildDataScope(sqlBuild, userAlias, userId);
                     } else {
@@ -104,7 +104,7 @@ public class DataScopeAspect implements DataScopeConstants {
 
         if (StrUtil.isNotBlank(sqlBuild.toString())) {
             Object params = joinPoint.getArgs()[0];
-            if (ObjectUtils.isNotNull(params) && params instanceof BaseEntity) {
+            if (MpObjectUtils.isNotNull(params) && params instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) params;
                 baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlBuild.substring(4) + ")");
             }

@@ -9,7 +9,7 @@ import org.apache.ibatis.type.Alias;
  * @Description
  */
 @Alias("MyObjectUtils")
-public class ObjectUtils extends ObjectUtil {
+public class MpObjectUtils extends ObjectUtil {
     public static <T> T defaultIfEmpty(T object, T defaultValue) {
         return isEmpty(object) ? defaultValue : object;
     }

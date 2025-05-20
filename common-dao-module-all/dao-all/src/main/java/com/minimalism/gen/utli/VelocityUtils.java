@@ -6,7 +6,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.minimalism.constant.gen.GenConstants;
 import com.minimalism.gen.domain.GenTable;
-import com.minimalism.util.ObjectUtils;
+import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.other.StringUtils;
 import com.minimalism.gen.domain.GenTableColumn;
 import com.minimalism.utils.str.StrUtils;

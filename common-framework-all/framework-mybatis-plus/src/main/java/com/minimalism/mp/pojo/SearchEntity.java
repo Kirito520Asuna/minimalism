@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.minimalism.abstractinterface.entity.AbstractEntity;
-import com.minimalism.util.ObjectUtils;
+import com.minimalism.util.MpObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +42,7 @@ public abstract class SearchEntity implements AbstractEntity {
 
     protected Map<String, Object> toEntityParams() {
         log.debug("execute toEntityParams method");
-        Map<String, Object> toEntityParams = toParams(ObjectUtils.defaultIfEmpty(getParams(), this));
+        Map<String, Object> toEntityParams = toParams(MpObjectUtils.defaultIfEmpty(getParams(), this));
         this.params = toEntityParams;
         return toEntityParams;
     }

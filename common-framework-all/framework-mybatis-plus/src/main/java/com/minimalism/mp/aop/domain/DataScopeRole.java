@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.service.DataScopeService;
 import com.minimalism.mp.aop.constants.DataScopeConstants;
-import com.minimalism.util.ObjectUtils;
+import com.minimalism.util.MpObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -141,7 +141,7 @@ public class DataScopeRole implements DataScopeConstants {
             //String formatDefaultValue = " OR %s.dept_id = 0 ";
             String formatDefaultValue = " OR %s.`" + deptIdName + "` = 0 ";
             String format = dataScopeSqlBuildFormatMap.get(IS_CONDITIONS);
-            format = ObjectUtils.defaultIfEmpty(format, formatDefaultValue);
+            format = MpObjectUtils.defaultIfEmpty(format, formatDefaultValue);
             sqlBuild.append(String.format(format, deptAlias));
             return sqlBuild;
         }
@@ -149,53 +149,53 @@ public class DataScopeRole implements DataScopeConstants {
         if (StrUtil.isBlank(dataScope)) {
             dataScope = getDataScope();
         }
-        if (ObjectUtils.equals(DATA_SCOPE_ALL, dataScope)) {
+        if (MpObjectUtils.equals(DATA_SCOPE_ALL, dataScope)) {
             sqlBuild = new StringBuilder();
-        } else if (ObjectUtils.equals(DATA_SCOPE_CUSTOM, dataScope)) {
+        } else if (MpObjectUtils.equals(DATA_SCOPE_CUSTOM, dataScope)) {
             if (CollUtil.isNotEmpty(scopeCustomIds)) {
                 // 多个自定数据权限使用in查询，避免多次拼接。
                 String format = dataScopeSqlBuildFormatMap.get(DATA_SCOPE_CUSTOM_SCOPE_CUSTOM_IDS_TRUE);
                 //String formatDefaultValue = " OR %s.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id in (%s) ) ";
                 String formatDefaultValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + roleDeptTableDeptIdName + "` FROM `" +
                         roleDeptTableName + "` WHERE `" + roleDeptTableRoleIdName + "` in (%s) ) ";
-                format = ObjectUtils.defaultIfEmpty(format, formatDefaultValue);
+                format = MpObjectUtils.defaultIfEmpty(format, formatDefaultValue);
                 sqlBuild.append(String.format(format, deptAlias, String.join(",", scopeCustomIds)));
             } else {
                 String format = dataScopeSqlBuildFormatMap.get(DATA_SCOPE_CUSTOM_SCOPE_CUSTOM_IDS_FALSE);
                 //String formatDefaultValue = " OR %s.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = %s ) ";
                 String formatDefaultValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + roleDeptTableDeptIdName + "` FROM `" +
                         roleDeptTableDeptIdName + "` WHERE `" + roleDeptTableRoleIdName + "`  = %s ) ";
-                format = ObjectUtils.defaultIfEmpty(format, formatDefaultValue);
+                format = MpObjectUtils.defaultIfEmpty(format, formatDefaultValue);
                 sqlBuild.append(String.format(format, deptAlias, getRoleId()));
             }
         } else {
-            if (ObjectUtils.equals(DATA_SCOPE_DEPT, dataScope)) {
+            if (MpObjectUtils.equals(DATA_SCOPE_DEPT, dataScope)) {
                 //String formatDefaultValue = " OR %s.dept_id = %s ";
                 String formatDefaultValue = " OR %s.`" + deptIdName + "` = %s ";
                 String format = dataScopeSqlBuildFormatMap.get(DATA_SCOPE_DEPT_DEPT_ALIAS_TRUE);
-                format = ObjectUtils.defaultIfEmpty(format, formatDefaultValue);
+                format = MpObjectUtils.defaultIfEmpty(format, formatDefaultValue);
                 sqlBuild.append(String.format(format, deptAlias, deptId));
-            } else if (ObjectUtils.equals(DATA_SCOPE_DEPT_AND_CHILD, dataScope)) {
+            } else if (MpObjectUtils.equals(DATA_SCOPE_DEPT_AND_CHILD, dataScope)) {
                 //String formatDefaultValue = " OR %s.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = %s or find_in_set( %s , ancestors ) )";
                 //String formatDefaultValue = " OR %s.dept_id IN ( SELECT dept_parent_id FROM sys_dept_ancestors WHERE dept_id = %s )";
                 String formatDefaultValue = " OR %s.`" + deptIdName + "` IN ( SELECT `" + deptAncestorsParentIdName + "` FROM `" +
                         deptAncestorsName + "` WHERE `" + deptAncestorsIdName + "` = %s ) ";
                 String format = dataScopeSqlBuildFormatMap.get(DATA_SCOPE_DEPT_AND_CHILD_DEPT_ALIAS_TRUE);
-                format = ObjectUtils.defaultIfEmpty(format, formatDefaultValue);
+                format = MpObjectUtils.defaultIfEmpty(format, formatDefaultValue);
                 sqlBuild.append(String.format(format, deptAlias, deptId, deptId));
-            } else if (ObjectUtils.equals(DATA_SCOPE_SELF, dataScope)) {
+            } else if (MpObjectUtils.equals(DATA_SCOPE_SELF, dataScope)) {
                 if (StrUtil.isNotBlank(userAlias)) {
                     //String formatDefaultValue = " OR %s.user_id = %s ";
                     String formatDefaultValue = " OR %s.`" + userIdName + "` = %s ";
                     String format = dataScopeSqlBuildFormatMap.get(DATA_SCOPE_SELF_USER_ALIAS_TRUE);
-                    format = ObjectUtils.defaultIfEmpty(format, formatDefaultValue);
+                    format = MpObjectUtils.defaultIfEmpty(format, formatDefaultValue);
                     sqlBuild.append(String.format(format, userAlias, userId));
                 } else {
                     // 数据权限为仅本人且没有userAlias别名不查询任何数据
                     //String formatDefaultValue = " OR %s.dept_id = 0 ";
                     String formatDefaultValue = " OR %s.`" + deptIdName + "` = 0 ";
                     String format = dataScopeSqlBuildFormatMap.get(IS_CONDITIONS);
-                    format = ObjectUtils.defaultIfEmpty(format, formatDefaultValue);
+                    format = MpObjectUtils.defaultIfEmpty(format, formatDefaultValue);
                     sqlBuild.append(String.format(format, deptAlias));
                 }
             }

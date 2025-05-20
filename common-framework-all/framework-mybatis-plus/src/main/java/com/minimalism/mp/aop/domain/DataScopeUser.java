@@ -1,6 +1,6 @@
 package com.minimalism.mp.aop.domain;
 
-import com.minimalism.util.ObjectUtils;
+import com.minimalism.util.MpObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class DataScopeUser {
         //        break;
         //    }
         //}
-        isAdmin = ObjectUtils.equal(roleKey, adminKey);
+        isAdmin = MpObjectUtils.equal(roleKey, adminKey);
         return isAdmin;
     }
 }

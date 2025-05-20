@@ -3,7 +3,7 @@ package com.minimalism.abstractinterface.entity;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.minimalism.mp.aop.constants.DataScopeConstants;
-import com.minimalism.util.ObjectUtils;
+import com.minimalism.util.MpObjectUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,8 +24,8 @@ public interface AbstractEntity {
 
     default Map<String, Object> toParams(Object entity) {
         LinkedHashMap<String, Object> defaultValue = new LinkedHashMap<>();
-        Map<String, Object> beanToMap = BeanUtil.beanToMap(ObjectUtils.defaultIfEmpty(entity, defaultValue));
-        Map<String, Object> paramsMap = BeanUtil.beanToMap(ObjectUtils.defaultIfEmpty(beanToMap.get(ABSTRACT_ENTITY_PARAMS), null));
+        Map<String, Object> beanToMap = BeanUtil.beanToMap(MpObjectUtils.defaultIfEmpty(entity, defaultValue));
+        Map<String, Object> paramsMap = BeanUtil.beanToMap(MpObjectUtils.defaultIfEmpty(beanToMap.get(ABSTRACT_ENTITY_PARAMS), null));
         Map<String, Object> toParams = ObjectUtil.defaultIfNull(paramsMap, beanToMap);
         if (ObjectUtil.isEmpty(toParams.get(DATA_SCOPE))) {
             toParams.put(DATA_SCOPE, "");
