@@ -5,7 +5,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.abs.aop.AbsAop;
 import com.minimalism.aop.all.AopConstants;
 import com.minimalism.aop.all.env.InterfaceEnv;
-import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.base.exception.GlobalCustomException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Pointcut;

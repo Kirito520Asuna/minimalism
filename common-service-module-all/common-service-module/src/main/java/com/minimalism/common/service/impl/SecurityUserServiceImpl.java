@@ -1,6 +1,6 @@
 package com.minimalism.common.service.impl;
 
-import com.minimalism.abstractinterface.service.config.AbsAuthSecurityConfig;
+import com.minimalism.common_code.abs.service.config.AbsAuthSecurityConfig;
 import com.minimalism.common.service.CommonUserService;
 import com.minimalism.security.utils.SecurityContextUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

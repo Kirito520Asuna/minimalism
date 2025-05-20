@@ -1,12 +1,10 @@
 package com.minimalism.dept.domain;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.minimalism.constant.table.TableConstants;
-import com.minimalism.mp.pojo.BaseEntity;
+import com.minimalism.base.constant.table.TableConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

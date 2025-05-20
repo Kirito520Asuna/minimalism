@@ -1,7 +1,7 @@
 package com.minimalism.aop.utils.gateway;
 
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.constant.gateway.GatewayConstants;
+import com.minimalism.base.constant.gateway.GatewayConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 

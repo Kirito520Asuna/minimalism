@@ -2,7 +2,7 @@ package com.minimalism.im.mapper.chat;
 
 
 import com.minimalism.mp.abs.mapper.MpMapper;
-import com.minimalism.enums.im.ChatType;
+import com.minimalism.base.enums.im.ChatType;
 import com.minimalism.im.domain.chat.ChatUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

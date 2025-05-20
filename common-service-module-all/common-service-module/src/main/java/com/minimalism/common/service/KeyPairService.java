@@ -1,12 +1,12 @@
 package com.minimalism.common.service;
 
-import com.minimalism.abstractinterface.AbstractKeyPair;
+import com.minimalism.common_code.abs.AbstractKeyPair;
 import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
 import com.minimalism.redis.aop.redis.RedisCachePut;
 import com.minimalism.redis.aop.redis.RedisCacheable;
 import com.minimalism.redis.aop.redis.RedisLock;
-import com.minimalism.utils.key.KeyUtils;
+import com.minimalism.base.utils.key.KeyUtils;
 
 import java.util.concurrent.TimeUnit;
 

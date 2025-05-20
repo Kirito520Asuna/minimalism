@@ -9,10 +9,10 @@ import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.aop.abs.aop.AbsSysLog;
 import com.minimalism.aop.all.log.SysLog;
-import com.minimalism.enums.RequestMethod;
+import com.minimalism.base.enums.RequestMethod;
 
 import com.minimalism.aop.utils.gateway.GatewayUtils;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

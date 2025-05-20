@@ -7,12 +7,12 @@ import com.minimalism.aop.abs.aop.AbsSysLog;
 import com.minimalism.shiro.aop.ShiroLogical;
 import com.minimalism.shiro.aop.ShiroPermissions;
 import com.minimalism.shiro.aop.ShiroRoles;
-import com.minimalism.config.AuthorizationConfig;
+import com.minimalism.base.config.AuthorizationConfig;
 import com.minimalism.shiro.config.ShiroAnnotationConfig;
-import com.minimalism.constant.Roles;
-import com.minimalism.enums.ApiCode;
-import com.minimalism.exception.GlobalCustomException;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.constant.Roles;
+import com.minimalism.base.enums.ApiCode;
+import com.minimalism.base.exception.GlobalCustomException;
+import com.minimalism.base.utils.object.ObjectUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.aspectj.lang.JoinPoint;
 

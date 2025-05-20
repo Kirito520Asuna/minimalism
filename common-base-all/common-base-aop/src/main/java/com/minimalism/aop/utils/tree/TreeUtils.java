@@ -2,7 +2,7 @@ package com.minimalism.aop.utils.tree;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.minimalism.aop.all.tree.TreeMap;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

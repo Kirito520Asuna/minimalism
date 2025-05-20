@@ -2,13 +2,13 @@ package com.minimalism.shiro.abs;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.service.AbstractUserService;
+import com.minimalism.common_code.abs.service.AbstractUserService;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
 import com.minimalism.redis.aop.redis.RedisCachePut;
 import com.minimalism.redis.aop.redis.RedisCacheable;
-import com.minimalism.constant.Redis;
-import com.minimalism.exception.GlobalCustomException;
-import com.minimalism.pojo.UserInfo;
+import com.minimalism.base.constant.Redis;
+import com.minimalism.base.exception.GlobalCustomException;
+import com.minimalism.common_code.pojo.UserInfo;
 import com.minimalism.shiro.pojo.UserBase;
 import com.minimalism.shiro.utils.EncodePasswordUtils;
 import com.minimalism.shiro.utils.SecurityContextUtil;

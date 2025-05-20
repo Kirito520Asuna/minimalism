@@ -1,7 +1,7 @@
 package com.minimalism.security.abs;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.service.config.AbsAuthorizationConfig;
+import com.minimalism.common_code.abs.service.config.AbsAuthorizationConfig;
 import com.minimalism.security.filter.JwtFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;

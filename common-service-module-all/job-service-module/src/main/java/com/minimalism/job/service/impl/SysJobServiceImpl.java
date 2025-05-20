@@ -6,7 +6,7 @@ import com.minimalism.task.quartz.exception.TaskException;
 import com.minimalism.task.quartz.schedule.ScheduleConstants;
 import com.minimalism.task.quartz.utils.CronUtils;
 import com.minimalism.task.quartz.utils.ScheduleUtils;
-import com.minimalism.utils.bean.CustomBeanUtils;
+import com.minimalism.base.utils.bean.CustomBeanUtils;
 import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

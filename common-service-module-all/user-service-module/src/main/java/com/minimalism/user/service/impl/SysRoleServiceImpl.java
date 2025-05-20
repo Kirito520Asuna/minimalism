@@ -2,13 +2,12 @@ package com.minimalism.user.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.minimalism.user.service.SysRoleService;
-import com.minimalism.constant.Roles;
-import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.base.constant.Roles;
+import com.minimalism.base.exception.GlobalCustomException;
 import com.minimalism.user.domain.SysUserRole;
 import com.minimalism.user.service.SysUserRoleService;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 

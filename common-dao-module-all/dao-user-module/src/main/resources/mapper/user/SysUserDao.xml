@@ -660,7 +660,7 @@
         </trim>
     </insert>
 
-    <select id="getUserVoById" resultType="com.minimalism.vo.user.UserVo">
+    <select id="getUserVoById" resultType="com.minimalism.common_code.vo.user.UserVo">
         select
         <include refid="Base_Column_List"/>
         from `sys_user`

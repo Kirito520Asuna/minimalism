@@ -2,7 +2,7 @@ package com.minimalism.gen.utli;
 
 
 
-import com.minimalism.constant.Constants;
+import com.minimalism.base.constant.Constants;
 import org.apache.velocity.app.Velocity;
 
 import java.util.Properties;

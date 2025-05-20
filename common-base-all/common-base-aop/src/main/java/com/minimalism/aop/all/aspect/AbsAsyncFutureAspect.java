@@ -6,7 +6,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.abs.aop.AbsAop;
 import com.minimalism.aop.all.AopConstants;
 import com.minimalism.aop.all.async.AsyncFuture;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Pointcut;

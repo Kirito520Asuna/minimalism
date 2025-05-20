@@ -2,7 +2,7 @@ package com.minimalism.file.storage;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
-import com.minimalism.exception.BusinessException;
+import com.minimalism.base.exception.BusinessException;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.platform.AliyunOssStorageClient;
 import com.minimalism.file.storage.platform.LocalStorageClient;

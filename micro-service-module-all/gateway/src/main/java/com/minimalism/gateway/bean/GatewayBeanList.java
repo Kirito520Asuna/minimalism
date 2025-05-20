@@ -5,9 +5,10 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
-import com.minimalism.properties.CorsGatewayProperties;
-import com.minimalism.properties.CorsProperties;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.common_code.filter.CorsRequestFilter;
+import com.minimalism.common_code.properties.CorsGatewayProperties;
+import com.minimalism.common_code.properties.CorsProperties;
+import com.minimalism.base.utils.object.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,7 @@ import org.springframework.web.util.pattern.PathPatternParser;
 public class GatewayBeanList implements AbsBean {
 
     /**
-     * {@link com.minimalism.properties.CorsProperties}
+     * {@link CorsProperties}
      *
      * @return
      */
@@ -50,7 +51,7 @@ public class GatewayBeanList implements AbsBean {
      *
      * @return
      * @link org.springframework.web.cors.reactive.CorsWebFilter -- 微服务 gateway 配置跨域
-     * @link com.minimalism.filter.CorsRequestFilter  -- 微服务 各个服务Filter 跨域
+     * @link CorsRequestFilter  -- 微服务 各个服务Filter 跨域
      */
     //@Bean//这个会导致报错
     @Deprecated

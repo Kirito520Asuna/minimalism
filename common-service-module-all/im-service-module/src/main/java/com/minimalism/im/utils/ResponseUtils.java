@@ -1,7 +1,7 @@
 package com.minimalism.im.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 import org.apache.ibatis.type.Alias;
 
 

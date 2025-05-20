@@ -5,7 +5,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.minimalism.aop.all.pdf.enums.PDFType;
-import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.base.exception.GlobalCustomException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

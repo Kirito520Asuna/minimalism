@@ -1,6 +1,6 @@
 package com.minimalism.validate_code.service;
 
-import com.minimalism.pojo.CaptchaInfo;
+import com.minimalism.common_code.pojo.CaptchaInfo;
 
 
 /**

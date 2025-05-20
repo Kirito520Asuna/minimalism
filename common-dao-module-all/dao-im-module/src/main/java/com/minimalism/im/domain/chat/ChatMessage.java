@@ -7,10 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import com.minimalism.enums.im.MessageType;
-import com.minimalism.pojo.User;
-import com.minimalism.view.BaseJsonView;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.base.enums.im.MessageType;
+import com.minimalism.base.view.BaseJsonView;
+import com.minimalism.common_code.vo.user.UserVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

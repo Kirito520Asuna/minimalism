@@ -3,15 +3,15 @@ package com.minimalism.im.controller.chat;
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.minimalism.aop.all.log.SysLog;
-import com.minimalism.enums.im.ChatType;
+import com.minimalism.base.enums.im.ChatType;
 import com.minimalism.im.domain.chat.ChatMessage;
 import com.minimalism.im.service.chat.ChatMessageService;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 import com.minimalism.user.domain.SysUser;
 import com.minimalism.user.service.SysUserService;
-import com.minimalism.utils.bean.CustomBeanUtils;
-import com.minimalism.view.BaseJsonView;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.base.utils.bean.CustomBeanUtils;
+import com.minimalism.base.view.BaseJsonView;
+import com.minimalism.common_code.vo.user.UserVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.minimalism.result.Result.ok;
+import static com.minimalism.base.result.Result.ok;
 
 /**
  * @Author minimalism

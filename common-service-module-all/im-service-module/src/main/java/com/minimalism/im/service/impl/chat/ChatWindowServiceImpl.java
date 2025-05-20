@@ -2,9 +2,9 @@ package com.minimalism.im.service.impl.chat;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.minimalism.constant.DataSourceName;
+import com.minimalism.base.constant.DataSourceName;
 import com.minimalism.im.domain.chat.ChatWindow;
-import com.minimalism.enums.im.ChatType;
+import com.minimalism.base.enums.im.ChatType;
 import com.minimalism.im.mapper.chat.ChatWindowMapper;
 import com.minimalism.im.service.chat.ChatWindowService;
 import org.springframework.stereotype.Service;

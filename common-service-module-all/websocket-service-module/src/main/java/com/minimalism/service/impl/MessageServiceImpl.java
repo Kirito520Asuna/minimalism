@@ -1,16 +1,15 @@
 package com.minimalism.service.impl;
 
-import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.domain.Message;
 import com.minimalism.enums.MessageType;
-import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.base.exception.GlobalCustomException;
 import com.minimalism.openfeign.factory.interfaces.ImClient;
-import com.minimalism.pojo.openfeign.OpenfeignChatMessage;
-import com.minimalism.result.Result;
+import com.minimalism.common_code.pojo.openfeign.OpenfeignChatMessage;
+import com.minimalism.base.result.Result;
 import com.minimalism.service.MessageService;
-import com.minimalism.utils.object.ObjectUtils;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.base.utils.object.ObjectUtils;
+import com.minimalism.common_code.vo.user.UserVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,7 +53,7 @@ public class MessageServiceImpl implements MessageService {
         openfeignChatMessage.setSendUser(new UserVo());
         openfeignChatMessage.setMessageId(null);
         openfeignChatMessage.setContent("message");
-        openfeignChatMessage.setType(com.minimalism.enums.im.MessageType.valueOf("TXT"/*"type"*/));
+        openfeignChatMessage.setType(com.minimalism.base.enums.im.MessageType.valueOf("TXT"/*"type"*/));
         openfeignChatMessage.setTime(LocalDateTime.now());
         Result result = /*SpringUtil.getBean(ImClient.class)*/
         imClient.sendMessage(openfeignChatMessage);

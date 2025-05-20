@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.minimalism.file.service.FilePartService;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import com.minimalism.vo.PartVo;
 import org.springframework.stereotype.Service;
 

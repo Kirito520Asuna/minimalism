@@ -1,7 +1,7 @@
 package com.minimalism.gateway.web;
 
 import com.minimalism.aop.abs.bean.AbsBean;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.route.Route;
@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.minimalism.result.Result.ok;
+import static com.minimalism.base.result.Result.ok;
 
 
 /**

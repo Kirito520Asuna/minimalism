@@ -1,8 +1,8 @@
 package com.minimalism.dto.gen;
 
-import com.minimalism.dto.abs.Validate;
-import com.minimalism.exception.BusinessException;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.common_code.dto.abs.Validate;
+import com.minimalism.base.exception.BusinessException;
+import com.minimalism.base.utils.object.ObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

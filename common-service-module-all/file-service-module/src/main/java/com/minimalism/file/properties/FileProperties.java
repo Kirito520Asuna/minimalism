@@ -1,9 +1,8 @@
 package com.minimalism.file.properties;
 
 
-import com.minimalism.abstractinterface.service.properties.BeanProperties;
-import com.minimalism.config.OSConfig;
-import com.minimalism.enums.OSType;
+import com.minimalism.common_code.abs.service.properties.BeanProperties;
+import com.minimalism.common_code.config.OSConfig;
 import com.minimalism.file.storage.StorageType;
 import lombok.Data;
 import lombok.Getter;

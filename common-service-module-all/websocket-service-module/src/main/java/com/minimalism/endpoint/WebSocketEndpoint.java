@@ -4,11 +4,11 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.domain.Message;
-import com.minimalism.constant.websocket.WebSocket;
+import com.minimalism.base.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;
 import com.minimalism.nacos.utils.NacosUtils;
-import com.minimalism.utils.bean.CustomBeanUtils;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.bean.CustomBeanUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 

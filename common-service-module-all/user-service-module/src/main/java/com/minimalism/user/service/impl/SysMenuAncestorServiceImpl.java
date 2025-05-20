@@ -1,12 +1,6 @@
 package com.minimalism.user.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
-import com.minimalism.dto.SysMenuDto;
-import com.minimalism.exception.GlobalCustomException;
-import com.minimalism.tomapper.SysMenuMapper;
-import com.minimalism.user.domain.SysMenu;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

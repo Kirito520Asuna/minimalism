@@ -1,11 +1,11 @@
 package com.minimalism.gen.utli;
 
-import com.minimalism.config.gen.GenConfig;
-import com.minimalism.constant.gen.GenConstants;
+import com.minimalism.common_code.config.gen.GenConfig;
+import com.minimalism.base.constant.gen.GenConstants;
 import com.minimalism.gen.domain.GenTable;
-import com.minimalism.utils.other.StringUtils;
+import com.minimalism.base.utils.other.StringUtils;
 import com.minimalism.gen.domain.GenTableColumn;
-import com.minimalism.utils.str.StrUtils;
+import com.minimalism.common_code.utils.str.StrUtils;
 import org.apache.commons.lang3.RegExUtils;
 
 import java.util.Arrays;

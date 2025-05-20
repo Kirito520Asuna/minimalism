@@ -1,0 +1,13 @@
+package com.minimalism.common_code.abs.service.config;
+
+/**
+ * @Author yan
+ * @Date 2025/3/10 17:58:56
+ * @Description
+ */
+public interface AbsAuthShiroConfig extends AbsAuthorizationConfig {
+    @Override
+    default void init() {
+        debug("[Bean]-[AuthShiro]-[init]::[{}]",getAClassName());
+    }
+}

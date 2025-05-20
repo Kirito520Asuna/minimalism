@@ -3,7 +3,7 @@ package com.minimalism.im.service.chat;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.minimalism.im.domain.chat.ChatWindow;
-import com.minimalism.enums.im.ChatType;
+import com.minimalism.base.enums.im.ChatType;
 
 /**
  * @Author minimalism

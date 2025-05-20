@@ -3,9 +3,9 @@ package com.minimalism.aop.abs.security;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
-import com.minimalism.config.AuthorizationConfig;
-import com.minimalism.constant.Roles;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.config.AuthorizationConfig;
+import com.minimalism.base.constant.Roles;
+import com.minimalism.base.utils.object.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;

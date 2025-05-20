@@ -1,7 +1,7 @@
 package com.minimalism.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.minimalism.enums.OSType;
+import com.minimalism.base.enums.OSType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

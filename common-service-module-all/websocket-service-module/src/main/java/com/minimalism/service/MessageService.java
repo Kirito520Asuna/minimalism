@@ -5,11 +5,11 @@ import cn.hutool.json.JSONUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.domain.netty.NettyMessage;
 import com.minimalism.endpoint.WebSocketEndpoint;
-import com.minimalism.constant.websocket.WebSocket;
+import com.minimalism.base.constant.websocket.WebSocket;
 import com.minimalism.domain.Message;
 import com.minimalism.enums.MessageType;
 import com.minimalism.message.listener.RedisMessageListener;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.websocket.Session;

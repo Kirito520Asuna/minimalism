@@ -3,32 +3,32 @@ package com.minimalism.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.minimalism.abstractinterface.service.AbstractLoginService;
-import com.minimalism.abstractinterface.service.AbstractUserService;
+import com.minimalism.common_code.abs.service.AbstractLoginService;
+import com.minimalism.common_code.abs.service.AbstractUserService;
 import com.minimalism.aop.controller.AbsBaseController;
-import com.minimalism.enums.Header;
-import com.minimalism.pojo.User;
-import com.minimalism.pojo.UserInfo;
+import com.minimalism.base.enums.Header;
+import com.minimalism.common_code.pojo.User;
+import com.minimalism.common_code.pojo.UserInfo;
 import com.minimalism.user.domain.SysUser;
 import com.minimalism.user.service.SysUserService;
-import com.minimalism.utils.bean.CustomBeanUtils;
-import com.minimalism.utils.jwt.JwtUtils;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.bean.CustomBeanUtils;
+import com.minimalism.common_code.utils.jwt.JwtUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import com.minimalism.aop.utils.poi.ExcelUtil;
 import com.minimalism.shiro.utils.SecurityContextUtil;
-import com.minimalism.view.BaseJsonView;
-import com.minimalism.vo.UserInfoVo;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.base.view.BaseJsonView;
+import com.minimalism.common_code.vo.UserInfoVo;
+import com.minimalism.common_code.vo.user.UserVo;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.minimalism.aop.all.log.SysLog;
-import com.minimalism.enums.BusinessType;
+import com.minimalism.base.enums.BusinessType;
 import com.minimalism.shiro.aop.ShiroPermissions;
 
-import com.minimalism.result.Result;
-import com.minimalism.result.ResultPage;
+import com.minimalism.base.result.Result;
+import com.minimalism.base.result.ResultPage;
 import com.minimalism.mp.util.PageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.minimalism.result.Result.ok;
+import static com.minimalism.base.result.Result.ok;
 
 /**
  * @Author yan
@@ -225,7 +225,7 @@ public class SysUserController implements AbsBaseController {
         user.setUserName(keyword);
         user.setNickName(keyword);
         List<UserVo> users = sysUserService.getUsers(user)
-                .stream().filter(com.minimalism.utils.object.ObjectUtils::isNotEmpty)
+                .stream().filter(ObjectUtils::isNotEmpty)
                 .map(sysUser -> createUserVo(sysUser)).collect(Collectors.toList());
 
         return ok(users);

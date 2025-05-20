@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.minimalism.mp.pojo.BaseEntity;
-import com.minimalism.utils.other.StringUtils;
+import com.minimalism.base.utils.other.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;

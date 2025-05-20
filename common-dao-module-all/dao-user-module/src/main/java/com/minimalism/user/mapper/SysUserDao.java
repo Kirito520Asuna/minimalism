@@ -1,11 +1,11 @@
 package com.minimalism.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.minimalism.enums.im.ChatType;
+import com.minimalism.base.enums.im.ChatType;
 import com.minimalism.user.domain.SysUser;
 import java.util.List;
 
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.common_code.vo.user.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -3,7 +3,7 @@ package com.minimalism.file.message.listener;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.constant.file.FileConstant;
+import com.minimalism.base.constant.file.FileConstant;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.service.FileService;
 import org.springframework.data.redis.connection.Message;
@@ -11,7 +11,6 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

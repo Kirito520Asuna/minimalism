@@ -1,6 +1,6 @@
 package com.minimalism.security.abs;
 
-import com.minimalism.abstractinterface.service.filter.AbsAuthFiler;
+import com.minimalism.common_code.abs.service.filter.AbsAuthFiler;
 
 /**
  * @Author yan

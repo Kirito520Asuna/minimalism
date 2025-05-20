@@ -7,15 +7,15 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Maps;
 import com.minimalism.common.service.CommonUserService;
-import com.minimalism.constant.user.UserConstants;
+import com.minimalism.base.constant.user.UserConstants;
 import com.minimalism.dept.domain.SysDeptAncestor;
 import com.minimalism.dept.domain.SysUserDept;
 import com.minimalism.dept.mapper.SysUserDeptMapper;
 import com.minimalism.dept.service.SysDeptAncestorService;
 import com.minimalism.dept.service.SysUserDeptService;
-import com.minimalism.exception.BusinessException;
+import com.minimalism.base.exception.BusinessException;
 import com.minimalism.mp.aop.dataScope.DataScope;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import com.minimalism.vo.dept.DeptTreeVo;
 import org.springframework.stereotype.Service;
 

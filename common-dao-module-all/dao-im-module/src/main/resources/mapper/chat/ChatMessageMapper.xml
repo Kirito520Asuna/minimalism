@@ -19,7 +19,7 @@
     <result column="content" jdbcType="VARCHAR" property="content"/>
     <result column="time" jdbcType="TIMESTAMP"  property="time"/>
     <result column="type" jdbcType="VARCHAR" property="type"/>
-    <association column="from" property="sendUser" javaType="com.minimalism.vo.user.UserVo"
+    <association column="from" property="sendUser" javaType="com.minimalism.common_code.vo.user.UserVo"
                  select="com.minimalism.user.mapper.SysUserDao.getUserVoById"/>
   </resultMap>
 

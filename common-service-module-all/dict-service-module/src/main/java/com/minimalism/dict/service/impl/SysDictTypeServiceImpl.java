@@ -3,12 +3,12 @@ package com.minimalism.dict.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.minimalism.constant.user.UserConstants;
+import com.minimalism.base.constant.user.UserConstants;
 import com.minimalism.dict.domain.SysDictData;
 import com.minimalism.dict.service.SysDictDataService;
-import com.minimalism.exception.BusinessException;
+import com.minimalism.base.exception.BusinessException;
 import com.minimalism.utils.dict.DictUtils;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

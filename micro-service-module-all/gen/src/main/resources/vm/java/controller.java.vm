@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.*;
 import com.minimalism.aop.all.log.SysLog;
-import com.minimalism.enums.BusinessType;
+import com.minimalism.base.enums.BusinessType;
 #if($table.isShiro())
 import com.minimalism.shiro.aop.ShiroPermissions;
 #else
@@ -23,8 +23,8 @@ import com.minimalism.utils.SecurityContextUtil;
 #end
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.${ClassName}Service;
-import com.minimalism.result.Result;
-import com.minimalism.result.ResultPage;
+import com.minimalism.base.result.Result;
+import com.minimalism.base.result.ResultPage;
 import com.minimalism.mp.util.PageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

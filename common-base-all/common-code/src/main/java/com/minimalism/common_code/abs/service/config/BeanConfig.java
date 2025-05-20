@@ -1,0 +1,19 @@
+package com.minimalism.common_code.abs.service.config;
+
+import com.minimalism.aop.abs.bean.AbsBean;
+
+import javax.annotation.PostConstruct;
+
+/**
+ * @Author yan
+ * @Date 2025/3/10 20:04:00
+ * @Description
+ */
+public interface BeanConfig extends AbsBean {
+
+    @Override
+    @PostConstruct
+    default void init() {
+        debug("[init]-[BeanConfig]::[{}]",getAClassName());
+    }
+}

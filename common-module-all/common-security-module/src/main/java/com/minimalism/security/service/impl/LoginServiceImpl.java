@@ -1,11 +1,11 @@
 package com.minimalism.security.service.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.service.AbstractLoginService;
-import com.minimalism.abstractinterface.service.AbstractUserService;
+import com.minimalism.common_code.abs.service.AbstractLoginService;
+import com.minimalism.common_code.abs.service.AbstractUserService;
 import com.minimalism.security.config.SecurityConfig;
-import com.minimalism.pojo.TokenInfo;
-import com.minimalism.pojo.UserInfo;
+import com.minimalism.common_code.pojo.TokenInfo;
+import com.minimalism.common_code.pojo.UserInfo;
 import com.minimalism.security.utils.SecurityContextUtil;
 import com.minimalism.security.service.AbsUserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

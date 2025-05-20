@@ -3,21 +3,16 @@ package com.minimalism.config;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.constant.websocket.WebSocket;
-import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.message.listener.RedisMessageListener;
-import com.minimalism.service.MessageService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

@@ -1,0 +1,66 @@
+package com.minimalism.common_code.exception;
+
+import com.minimalism.aop.abs.bean.AbsBean;
+import com.minimalism.base.enums.ApiCode;
+import com.minimalism.base.exception.BusinessException;
+import com.minimalism.base.exception.GlobalConfigException;
+import com.minimalism.base.exception.GlobalCustomException;
+import com.minimalism.base.result.Result;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * @Author yan
+ * @Date 2024/9/27 上午1:37:08
+ * @Description
+ */
+public interface AbsExceptionHandler extends AbsBean {
+
+    @Override
+    @PostConstruct
+    default void init() {
+        debug("[init]-[ExceptionHandler]::[{}]: ",getAClassName());
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseBody
+    default void handleIOException(HttpServletResponse response) {
+        response.setStatus(HttpStatus.OK.value());
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    default Result exceptionHandler(HttpServletRequest req, Exception e) {
+        e.printStackTrace();
+        String errMessage = "系统繁忙";
+        Result result = Result.fail();
+
+        Integer code = ApiCode.FAIL.getCode();
+        String message = ApiCode.FAIL.getMessage();
+        if (e instanceof GlobalConfigException) {
+            GlobalConfigException exception = (GlobalConfigException) e;
+            code = exception.getCode();
+            message = exception.getMessage();
+        }else if (e instanceof BusinessException) {
+            BusinessException exception = (BusinessException) e;
+            code = exception.getCode();
+            message = exception.getMessage();
+        }else if (e instanceof GlobalCustomException) {
+            GlobalCustomException exception = (GlobalCustomException) e;
+            code = exception.getCode();
+            message = exception.getMessage();
+        } else {
+            message = isProd() ? errMessage : e.getMessage();
+        }
+        result.setCode(code);
+        result.setMessage(message);
+        return result;
+    }
+
+}

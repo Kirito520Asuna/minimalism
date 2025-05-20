@@ -10,14 +10,14 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.minimalism.aop.abs.aop.AbsSysLog;
 import com.minimalism.aop.all.log.SysLog;
-import com.minimalism.enums.RequestMethod;
+import com.minimalism.base.enums.RequestMethod;
 
 import com.minimalism.aop.pojo.OperateLogInfo;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 import com.minimalism.aop.abs.service.AbsOperateLogService;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import com.minimalism.aop.utils.servlet.ServletUtils;
-import com.minimalism.utils.date.DateUtils;
+import com.minimalism.base.utils.date.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

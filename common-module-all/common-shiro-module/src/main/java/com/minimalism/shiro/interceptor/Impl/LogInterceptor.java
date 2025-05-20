@@ -2,7 +2,7 @@ package com.minimalism.shiro.interceptor.Impl;
 
 import com.minimalism.shiro.abs.AbsAuthorizationShiro;
 import com.minimalism.shiro.abs.AuthorizationFilter;
-import com.minimalism.interceptor.AbsLogInInterceptor;
+import com.minimalism.common_code.interceptor.AbsLogInInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

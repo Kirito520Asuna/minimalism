@@ -7,13 +7,13 @@ import com.minimalism.im.domain.im.Apply;
 import com.minimalism.im.domain.im.Friend;
 import com.minimalism.im.service.im.ApplyService;
 import com.minimalism.im.service.im.FriendService;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 import com.minimalism.user.domain.SysUser;
 import com.minimalism.user.service.SysUserService;
-import com.minimalism.utils.bean.CustomBeanUtils;
-import com.minimalism.utils.object.ObjectUtils;
-import com.minimalism.view.BaseJsonView;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.base.utils.bean.CustomBeanUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
+import com.minimalism.base.view.BaseJsonView;
+import com.minimalism.common_code.vo.user.UserVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,8 +24,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.minimalism.result.Result.fail;
-import static com.minimalism.result.Result.ok;
+import static com.minimalism.base.result.Result.fail;
+import static com.minimalism.base.result.Result.ok;
 
 
 /**

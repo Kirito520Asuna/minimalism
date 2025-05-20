@@ -4,10 +4,10 @@ import cn.hutool.core.util.ObjectUtil;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.minimalism.constant.DataSourceName;
+import com.minimalism.base.constant.DataSourceName;
 import com.minimalism.im.domain.chat.ChatUser;
 import com.minimalism.im.domain.chat.ChatWindow;
-import com.minimalism.enums.im.ChatType;
+import com.minimalism.base.enums.im.ChatType;
 import com.minimalism.im.domain.im.Apply;
 import com.minimalism.im.domain.im.Friend;
 import com.minimalism.im.mapper.im.ApplyMapper;
@@ -17,7 +17,7 @@ import com.minimalism.im.service.im.FriendService;
 import com.minimalism.im.service.im.ApplyService;
 import com.minimalism.user.domain.SysUser;
 import com.minimalism.user.service.SysUserService;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.common_code.vo.user.UserVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

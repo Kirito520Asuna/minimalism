@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
-import com.minimalism.utils.io.IoUtils;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.common_code.utils.io.IoUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
 import lombok.SneakyThrows;
 

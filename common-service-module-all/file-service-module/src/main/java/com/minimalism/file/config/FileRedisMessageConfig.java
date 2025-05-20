@@ -3,7 +3,6 @@ package com.minimalism.file.config;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.constant.file.FileConstant;
 import com.minimalism.file.message.listener.FileRedisMessageListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

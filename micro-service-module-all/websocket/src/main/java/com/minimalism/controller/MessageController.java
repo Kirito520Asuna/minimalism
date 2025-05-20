@@ -4,7 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.aop.all.security.Login;
 import com.minimalism.domain.Message;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 
 import com.minimalism.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;

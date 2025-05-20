@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.minimalism.aop.all.security.AutoOperation;
 import com.minimalism.dto.SysMenuDto;
-import com.minimalism.enums.AutoOperationEnum;
+import com.minimalism.base.enums.AutoOperationEnum;
 import com.minimalism.user.domain.SysMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.minimalism.vo.SysMenuTreeVo;

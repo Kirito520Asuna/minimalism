@@ -7,7 +7,7 @@ import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.aop.all.async.AsyncFuture;
-import com.minimalism.enums.RequestMethod;
+import com.minimalism.base.enums.RequestMethod;
 import com.minimalism.aop.pojo.OperateLogInfo;
 
 import javax.annotation.PostConstruct;

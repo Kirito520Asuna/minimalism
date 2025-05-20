@@ -4,14 +4,14 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.time.LocalDateTime;
 
-import com.minimalism.constant.DataSourceName;
+import com.minimalism.base.constant.DataSourceName;
 import com.minimalism.im.domain.chat.ChatMessage;
-import com.minimalism.enums.im.MessageType;
+import com.minimalism.base.enums.im.MessageType;
 import com.minimalism.im.domain.im.Message;
 import com.minimalism.im.mapper.chat.ChatMessageMapper;
 import com.minimalism.im.service.im.MessageService;
 import com.minimalism.im.service.chat.ChatMessageService;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.common_code.vo.user.UserVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;

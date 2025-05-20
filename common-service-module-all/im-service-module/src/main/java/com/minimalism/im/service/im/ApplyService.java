@@ -3,7 +3,7 @@ package com.minimalism.im.service.im;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.minimalism.im.domain.im.Apply;
-import com.minimalism.vo.user.UserVo;
+import com.minimalism.common_code.vo.user.UserVo;
 
 /**
  * @Author minimalism

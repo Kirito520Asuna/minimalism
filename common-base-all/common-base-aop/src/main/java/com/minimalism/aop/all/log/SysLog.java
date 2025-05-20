@@ -1,8 +1,8 @@
 package com.minimalism.aop.all.log;
 
 
-import com.minimalism.enums.BusinessType;
-import com.minimalism.enums.OperateTypeEnum;
+import com.minimalism.base.enums.BusinessType;
+import com.minimalism.base.enums.OperateTypeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

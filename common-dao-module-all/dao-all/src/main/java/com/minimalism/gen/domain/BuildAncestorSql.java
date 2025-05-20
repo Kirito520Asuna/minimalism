@@ -1,8 +1,8 @@
 package com.minimalism.gen.domain;
 
 import cn.hutool.core.collection.CollUtil;
-import com.minimalism.dto.abs.Validate;
-import com.minimalism.utils.str.StrUtils;
+import com.minimalism.common_code.dto.abs.Validate;
+import com.minimalism.common_code.utils.str.StrUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

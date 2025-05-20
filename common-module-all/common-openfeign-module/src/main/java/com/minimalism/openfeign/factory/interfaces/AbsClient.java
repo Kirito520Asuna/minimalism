@@ -1,8 +1,8 @@
 package com.minimalism.openfeign.factory.interfaces;
 
-import com.minimalism.enums.ApiCode;
+import com.minimalism.base.enums.ApiCode;
 import com.minimalism.openfeign.factory.AbsEnum;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 
 /**
  * @Author yan

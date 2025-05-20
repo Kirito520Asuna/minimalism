@@ -2,7 +2,7 @@ package com.minimalism.security.config.impl;
 
 import com.minimalism.security.abs.AbsSecurityConfig;
 import com.minimalism.security.filter.JwtFilter;
-import com.minimalism.filter.bean.FilterBean;
+import com.minimalism.common_code.filter.bean.FilterBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

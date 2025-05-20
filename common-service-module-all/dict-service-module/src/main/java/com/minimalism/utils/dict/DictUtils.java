@@ -2,10 +2,10 @@ package com.minimalism.utils.dict;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson2.JSONArray;
-import com.minimalism.constant.cache.CacheConstants;
+import com.minimalism.base.constant.cache.CacheConstants;
 import com.minimalism.dict.domain.SysDictData;
 import com.minimalism.redis.service.RedisService;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

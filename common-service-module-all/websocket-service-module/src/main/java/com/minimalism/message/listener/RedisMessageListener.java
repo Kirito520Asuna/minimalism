@@ -2,16 +2,13 @@ package com.minimalism.message.listener;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.constant.file.FileConstant;
-import com.minimalism.constant.websocket.WebSocket;
-import com.minimalism.endpoint.WebSocketEndpoint;
+import com.minimalism.base.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 

@@ -1,7 +1,7 @@
 package com.minimalism.controller;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.service.AbstractLoginService;
+import com.minimalism.common_code.abs.service.AbstractLoginService;
 import com.minimalism.aop.all.aviator.AviatorNotBlank;
 import com.minimalism.aop.all.aviator.AviatorValid;
 import com.minimalism.aop.all.aviator.AviatorValids;
@@ -9,12 +9,12 @@ import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.aop.controller.AbsBaseController;
 import com.minimalism.dto.LoginDto;
 import com.minimalism.dto.RegisterDto;
-import com.minimalism.pojo.TokenInfo;
-import com.minimalism.pojo.User;
-import com.minimalism.pojo.UserInfo;
-import com.minimalism.result.Result;
+import com.minimalism.common_code.pojo.TokenInfo;
+import com.minimalism.common_code.pojo.User;
+import com.minimalism.common_code.pojo.UserInfo;
+import com.minimalism.base.result.Result;
 //import com.minimalism.security.SecurityContextUtil;
-import com.minimalism.utils.object.ObjectUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
 import com.minimalism.validate_code.service.ValidateCodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

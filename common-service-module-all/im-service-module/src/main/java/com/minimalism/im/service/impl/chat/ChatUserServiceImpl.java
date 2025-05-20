@@ -2,7 +2,7 @@ package com.minimalism.im.service.impl.chat;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.minimalism.constant.DataSourceName;
+import com.minimalism.base.constant.DataSourceName;
 import com.minimalism.im.domain.chat.ChatUser;
 import com.minimalism.im.mapper.chat.ChatUserMapper;
 import com.minimalism.im.service.chat.ChatUserService;

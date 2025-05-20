@@ -2,10 +2,10 @@ package com.minimalism.shiro.service.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.shiro.abs.AbstractUserDetailsByShiroService;
-import com.minimalism.abstractinterface.service.AbstractLoginService;
+import com.minimalism.common_code.abs.service.AbstractLoginService;
 import com.minimalism.shiro.config.ShiroConfig;
-import com.minimalism.pojo.TokenInfo;
-import com.minimalism.pojo.UserInfo;
+import com.minimalism.common_code.pojo.TokenInfo;
+import com.minimalism.common_code.pojo.UserInfo;
 import com.minimalism.shiro.pojo.UserBase;
 import com.minimalism.shiro.utils.SecurityContextUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

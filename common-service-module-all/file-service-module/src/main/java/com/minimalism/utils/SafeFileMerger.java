@@ -1,6 +1,7 @@
 package com.minimalism.utils;
 
-import com.minimalism.utils.file.FileUtils;
+
+import com.minimalism.common_code.utils.file.FileUtils;
 
 import java.io.*;
 import java.nio.channels.Channels;

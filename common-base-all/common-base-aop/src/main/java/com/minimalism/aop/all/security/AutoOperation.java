@@ -1,6 +1,6 @@
 package com.minimalism.aop.all.security;
 
-import com.minimalism.enums.AutoOperationEnum;
+import com.minimalism.base.enums.AutoOperationEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

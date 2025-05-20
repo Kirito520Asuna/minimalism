@@ -1,8 +1,8 @@
 package com.minimalism.security.handler;
 
-import com.minimalism.enums.ApiCode;
-import com.minimalism.exception.handler.CommonExceptionHandler;
-import com.minimalism.result.Result;
+import com.minimalism.base.enums.ApiCode;
+import com.minimalism.common_code.exception.handler.CommonExceptionHandler;
+import com.minimalism.base.result.Result;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

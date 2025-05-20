@@ -2,8 +2,8 @@ package com.minimalism.openfeign.factory.interfaces.impl;
 
 import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.openfeign.factory.interfaces.ImClient;
-import com.minimalism.pojo.openfeign.OpenfeignChatMessage;
-import com.minimalism.result.Result;
+import com.minimalism.common_code.pojo.openfeign.OpenfeignChatMessage;
+import com.minimalism.base.result.Result;
 
 /**
  * @Author yan

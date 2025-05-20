@@ -1,17 +1,15 @@
 package com.minimalism.file.storage.platform;
 
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.config.OSConfig;
-import com.minimalism.constant.Constants;
-import com.minimalism.enums.OSType;
-import com.minimalism.exception.GlobalConfigException;
+import com.minimalism.common_code.config.OSConfig;
+import com.minimalism.base.constant.Constants;
+import com.minimalism.base.enums.OSType;
+import com.minimalism.base.exception.GlobalConfigException;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.StorageType;
-import com.minimalism.file.storage.clientAbs.AliyunClient;
-import com.minimalism.utils.io.IoUtils;
-import com.minimalism.utils.oss.AliyunOSSUtils;
+import com.minimalism.common_code.utils.io.IoUtils;
 import com.minimalism.utils.oss.MinioOSSUtils;
 import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;

@@ -1,11 +1,11 @@
 package com.minimalism.user.service;
 
-import com.minimalism.abstractinterface.service.AbstractUserService;
+import com.minimalism.common_code.abs.service.AbstractUserService;
 import com.minimalism.redis.aop.redis.RedisCachePut;
-import com.minimalism.constant.Redis;
-import com.minimalism.enums.im.ChatType;
-import com.minimalism.pojo.User;
-import com.minimalism.pojo.UserInfo;
+import com.minimalism.base.constant.Redis;
+import com.minimalism.base.enums.im.ChatType;
+import com.minimalism.common_code.pojo.User;
+import com.minimalism.common_code.pojo.UserInfo;
 import com.minimalism.user.domain.SysUser;
 
 import java.util.List;

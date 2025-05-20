@@ -2,7 +2,7 @@ package com.minimalism.tomapper;
 
 import com.minimalism.dto.SysMenuDto;
 import com.minimalism.user.domain.SysMenu;
-import com.minimalism.utils.bean.CustomBeanUtils;
+import com.minimalism.base.utils.bean.CustomBeanUtils;
 import com.minimalism.vo.SysMenuTreeVo;
 
 /**

@@ -2,11 +2,12 @@ package com.minimalism.utils.http;
 
 import cn.hutool.core.collection.CollUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.exception.BusinessException;
-import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.base.exception.BusinessException;
+import com.minimalism.base.exception.GlobalCustomException;
+import com.minimalism.common_code.utils.http.OkHttpUtils;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.exception.FileException;
-import com.minimalism.result.Result;
+import com.minimalism.base.result.Result;
 
 import java.util.Base64;
 import java.util.List;

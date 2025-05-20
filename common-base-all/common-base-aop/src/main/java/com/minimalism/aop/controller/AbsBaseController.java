@@ -1,8 +1,8 @@
 package com.minimalism.aop.controller;
 
 import com.minimalism.aop.abs.bean.AbsBean;
-import com.minimalism.result.Result;
-import com.minimalism.result.ResultPage;
+import com.minimalism.base.result.Result;
+import com.minimalism.base.result.ResultPage;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

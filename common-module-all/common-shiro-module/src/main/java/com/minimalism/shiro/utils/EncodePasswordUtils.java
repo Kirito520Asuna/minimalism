@@ -1,6 +1,6 @@
 package com.minimalism.shiro.utils;
 
-import com.minimalism.exception.GlobalCustomException;
+import com.minimalism.base.exception.GlobalCustomException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

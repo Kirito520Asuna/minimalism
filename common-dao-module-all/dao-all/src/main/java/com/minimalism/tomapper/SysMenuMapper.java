@@ -1,14 +1,14 @@
 package com.minimalism.tomapper;
 
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.constant.Constants;
-import com.minimalism.constant.user.UserConstants;
+import com.minimalism.base.constant.Constants;
+import com.minimalism.base.constant.user.UserConstants;
 import com.minimalism.dto.SysMenuDto;
 import com.minimalism.user.domain.SysMenu;
-import com.minimalism.utils.object.ObjectUtils;
-import com.minimalism.utils.str.StrUtils;
+import com.minimalism.base.utils.object.ObjectUtils;
+import com.minimalism.common_code.utils.str.StrUtils;
 import com.minimalism.vo.SysMenuTreeVo;
-import com.minimalism.utils.bean.CustomBeanUtils;
+import com.minimalism.base.utils.bean.CustomBeanUtils;
 import com.minimalism.vo.user.router.MetaVo;
 import com.minimalism.vo.user.router.RouterVo;
 import org.apache.commons.lang3.StringUtils;

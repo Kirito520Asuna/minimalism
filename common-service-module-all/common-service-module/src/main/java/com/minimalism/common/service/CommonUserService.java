@@ -2,10 +2,10 @@ package com.minimalism.common.service;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
-import com.minimalism.abstractinterface.service.AbstractUserService;
-import com.minimalism.config.AuthorizationConfig;
-import com.minimalism.constant.Roles;
-import com.minimalism.pojo.User;
+import com.minimalism.common_code.abs.service.AbstractUserService;
+import com.minimalism.base.config.AuthorizationConfig;
+import com.minimalism.base.constant.Roles;
+import com.minimalism.common_code.pojo.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
