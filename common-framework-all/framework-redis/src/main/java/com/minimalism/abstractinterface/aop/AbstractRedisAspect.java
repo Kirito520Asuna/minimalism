@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ValueNode;
+import com.minimalism.redis.aop.order.Order;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.apache.commons.jexl3.JexlEngine;
@@ -22,6 +23,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.Ordered;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
@@ -36,7 +38,8 @@ import java.util.stream.Collectors;
  * @Date 2024/5/24 0024 10:00
  * @Description
  */
-public interface AbstractRedisAspect {
+public interface AbstractRedisAspect extends Ordered {
+
     JSONConfig config = new JSONConfig().setIgnoreNullValue(false);
     /*#####################################################################################################################################*/
     /*常量模块*/
@@ -46,6 +49,12 @@ public interface AbstractRedisAspect {
     List<String> comparisonOperators = Arrays.stream("> < = >= <= != + - * / % & | ^ ! ? :".split(" ")).collect(Collectors.toList());
     // 条件截取剔除
     List<String> conditionOperators = Arrays.stream("( ) { }".split(" ")).collect(Collectors.toList());
+
+
+    @Override
+    default int getOrder() {
+        return Order.DEFAULT_ORDER;
+    }
 
     /*#####################################################################################################################################*/
     /*记录实体模块*/
@@ -87,9 +96,9 @@ public interface AbstractRedisAspect {
             }
             Object bean;
             if (JSONUtil.isTypeJSON(json)) {
-                Map<String,Object> map1 = JSONUtil.toBean(json, Map.class);
+                Map<String, Object> map1 = JSONUtil.toBean(json, Map.class);
                 bean = map1;
-            }else {
+            } else {
                 bean = pointArg;
             }
 
@@ -136,7 +145,6 @@ public interface AbstractRedisAspect {
      * @param joinPoint
      */
     @SneakyThrows
-//    @Before(value = "pointcutAspect()")
     default void doBefore(JoinPoint joinPoint) {
     }
 
@@ -147,7 +155,6 @@ public interface AbstractRedisAspect {
      * @return
      * @throws Throwable
      */
-//    @Around(value = "pointcutAspect()")
     default Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         //joinPoint.proceed() 目标方法执行
         return joinPoint.proceed();
@@ -160,7 +167,6 @@ public interface AbstractRedisAspect {
      * @param result
      */
     @SneakyThrows
-//    @AfterReturning(pointcut = "pointcutAspect()", returning = "result")
     default void afterReturning(JoinPoint joinPoint, Object result) {
     }
 

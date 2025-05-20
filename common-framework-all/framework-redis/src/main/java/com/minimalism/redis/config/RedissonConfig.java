@@ -1,12 +1,11 @@
 package com.minimalism.redis.config;
 
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
 import com.minimalism.abstractinterface.config.AbstractRedissonConfig;
+import com.minimalism.redis.ban.BanConfiguration;
+import com.minimalism.redis.ban.SimpleBanManager;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.cache.CacheManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -35,7 +34,6 @@ public class RedissonConfig implements AbstractRedissonConfig {
     private Environment env;
 
 
-
     @Bean
     public RedissonClient redissonClient() {
         return initRedissonClient();
@@ -45,25 +43,22 @@ public class RedissonConfig implements AbstractRedissonConfig {
         return AbstractRedissonConfig.super.getRedissonClient(configuration);
     }
 
-    @Bean @Primary
+    @Bean
+    @Primary
     @SuppressWarnings(value = {"unchecked", "rawtypes"})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         return initRedisTemplate(connectionFactory);
     }
 
-    //    @Bean(name = "cacheDataManager")使自动装配失效 弃用
-    public CacheManager cacheDataManager(RedisConnectionFactory connectionFactory) {
-        log.info("初始化缓存管理器");
-        List<String> list = Arrays.asList("");
-        CacheManager cacheManager = initEntryTtlCacheManager(list, Duration.ofMinutes(5), connectionFactory);
-        return cacheManager;
+    @Bean
+    @ConditionalOnExpression("${ip.enable:false}")
+    public BanConfiguration banConfiguration() {
+        return new BanConfiguration();
     }
 
-    //    @Bean(name = "loginCacheManager")使自动装配失效 弃用
-    public CacheManager loginCacheManager(RedisConnectionFactory connectionFactory) {
-        String property = env.getProperty("spring.cache.cache-names");
-        List<String> list = Arrays.asList(property);
-        CacheManager cacheManager = initEntryTtlCacheManager(list, Duration.ofMinutes(5), connectionFactory);
-        return cacheManager;
+    @Bean
+    @ConditionalOnBean({RedissonClient.class, BanConfiguration.class})
+    public SimpleBanManager banManager() {
+        return new SimpleBanManager();
     }
 }
