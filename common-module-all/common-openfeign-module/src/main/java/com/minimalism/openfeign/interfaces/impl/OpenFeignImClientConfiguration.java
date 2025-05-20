@@ -1,7 +1,7 @@
 package com.minimalism.openfeign.interfaces.impl;
 
-import com.minimalism.openfeign.factory.AbstractEnum;
-import com.minimalism.openfeign.interfaces.AbstractOpenFeignClientConfiguration;
+import com.minimalism.openfeign.factory.AbsEnum;
+import com.minimalism.openfeign.interfaces.AbsOpenFeignClientConfiguration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @SuppressWarnings("SpringFacetCodeInspection")
 @Component
-public class OpenFeignImClientConfiguration implements AbstractOpenFeignClientConfiguration {
+public class OpenFeignImClientConfiguration implements AbsOpenFeignClientConfiguration {
     @Override
-    public AbstractEnum getAbstractEnum() {
-        return AbstractEnum.IM;
+    public AbsEnum getAbstractEnum() {
+        return AbsEnum.IM;
     }
 }

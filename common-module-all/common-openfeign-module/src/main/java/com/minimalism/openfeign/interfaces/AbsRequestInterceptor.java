@@ -4,8 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
@@ -13,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.minimalism.abstractinterface.bean.AbstractBean;
 import com.minimalism.enums.Openfeign;
-import com.minimalism.openfeign.factory.AbstractEnum;
+import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.utils.api.ApiUtil;
 import com.minimalism.utils.api.SingleSignature;
 import feign.Request;
@@ -37,16 +35,16 @@ import java.util.*;
  * @Date 2024/5/14 0014 12:25
  * @Description
  */
-public interface AbstractRequestInterceptor extends RequestInterceptor, AbstractBean {
+public interface AbsRequestInterceptor extends RequestInterceptor, AbstractBean {
     List<Request.HttpMethod> GET_OR_DELETE_HTTP_METHOD = CollUtil.newArrayList(Request.HttpMethod.GET, Request.HttpMethod.DELETE);
     List<Request.HttpMethod> POST_OR_PUT_HTTP_METHOD = CollUtil.newArrayList(Request.HttpMethod.POST, Request.HttpMethod.PUT);
 
-    default AbstractEnum getAbstractEnum() {
-        return AbstractEnum.DEFAULT;
+    default AbsEnum getAbstractEnum() {
+        return AbsEnum.DEFAULT;
     }
 
-    default AbstractOpenFeignClientConfiguration getAbstractOpenFeignClientConfiguration() {
-        Class<? extends AbstractOpenFeignClientConfiguration> aClass = AbstractOpenFeignClientConfiguration.OPEN_MAP.get(getAbstractEnum());
+    default AbsOpenFeignClientConfiguration getAbstractOpenFeignClientConfiguration() {
+        Class<? extends AbsOpenFeignClientConfiguration> aClass = AbsOpenFeignClientConfiguration.OPEN_MAP.get(getAbstractEnum());
         return SpringUtil.getBean(aClass);
     }
 
@@ -62,7 +60,7 @@ public interface AbstractRequestInterceptor extends RequestInterceptor, Abstract
         Collection<String> collection = requestTemplate.headers().get(Openfeign.OPENFEIGN.getHeader());
         //防止多次调用
         if (CollUtil.isEmpty(collection)) {
-            AbstractOpenFeignClientConfiguration openFeignClientConfiguration = getAbstractOpenFeignClientConfiguration();
+            AbsOpenFeignClientConfiguration openFeignClientConfiguration = getAbstractOpenFeignClientConfiguration();
 
             info("openFeignClientConfiguration:{}", openFeignClientConfiguration.getAClass());
 

@@ -2,7 +2,7 @@ package com.minimalism.openfeign.factory;
 
 import cn.hutool.core.collection.CollUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
-import com.minimalism.openfeign.factory.interfaces.AbstractClient;
+import com.minimalism.openfeign.factory.interfaces.AbsClient;
 import lombok.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -16,14 +16,14 @@ import java.util.Map;
 /**
  * @author yan
  */
-public class AbstractFactory implements BeanFactoryAware, InitializingBean, AbstractBean {
+public class AbsFactory implements BeanFactoryAware, InitializingBean, AbstractBean {
     private ConfigurableListableBeanFactory beanFactory;
-    private static List<AbstractClient> abstractClients = CollUtil.newArrayList();
+    private static List<AbsClient> absClients = CollUtil.newArrayList();
 
-    public static AbstractClient getClient(AbstractEnum abstractEnum) {
-        for (AbstractClient abstractClient : abstractClients) {
-            if (abstractClient.support(abstractEnum)) {
-                return abstractClient;
+    public static AbsClient getClient(AbsEnum absEnum) {
+        for (AbsClient absClient : absClients) {
+            if (absClient.support(absEnum)) {
+                return absClient;
             }
         }
         throw new IllegalArgumentException();
@@ -37,16 +37,16 @@ public class AbstractFactory implements BeanFactoryAware, InitializingBean, Abst
     @Override
     public void afterPropertiesSet() throws Exception {
         info("abstractClients init ...");
-        Map<String, AbstractClient> beansOfType = beanFactory.getBeansOfType(AbstractClient.class);
+        Map<String, AbsClient> beansOfType = beanFactory.getBeansOfType(AbsClient.class);
         beansOfType.keySet().forEach(key -> {
             if (beanFactory.containsBeanDefinition(key)) {
                 if (beanFactory.getBeanDefinition(key).isPrimary()) {
-                    abstractClients.add(beansOfType.get(key));
+                    absClients.add(beansOfType.get(key));
                 }
             } else if (beanFactory.getParentBeanFactory() instanceof ConfigurableListableBeanFactory) {
                 if (((ConfigurableListableBeanFactory) beanFactory.getParentBeanFactory()).containsBeanDefinition(key)) {
                     if (((ConfigurableListableBeanFactory) beanFactory.getParentBeanFactory()).getBeanDefinition(key).isPrimary()) {
-                        abstractClients.add(beansOfType.get(key));
+                        absClients.add(beansOfType.get(key));
                     }
                 }
             }

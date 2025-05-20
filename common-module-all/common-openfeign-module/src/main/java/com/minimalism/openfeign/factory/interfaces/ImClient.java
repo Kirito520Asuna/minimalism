@@ -2,7 +2,7 @@ package com.minimalism.openfeign.factory.interfaces;
 
 import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.minimalism.openfeign.factory.AbstractEnum;
+import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.openfeign.factory.interfaces.impl.OrderClientFallback;
 import com.minimalism.openfeign.interfaces.impl.OpenFeignDefaultClientConfiguration;
 import com.minimalism.pojo.openfeign.OpenfeignChatMessage;
@@ -21,11 +21,11 @@ import java.util.List;
 @FeignClient(name = "im", path = "/im", fallback = OrderClientFallback.class
         , configuration = OpenFeignDefaultClientConfiguration.class
 )
-public interface ImClient extends AbstractClient{
-    List<AbstractEnum> imClientList = CollUtil.newArrayList(AbstractEnum.IM);
+public interface ImClient extends AbsClient {
+    List<AbsEnum> imClientList = CollUtil.newArrayList(AbsEnum.IM);
     @Override
-    default boolean support(AbstractEnum abstractEnum) {
-        return imClientList.contains(abstractEnum);
+    default boolean support(AbsEnum absEnum) {
+        return imClientList.contains(absEnum);
     }
 
     @PostMapping(value = "/api/chat/send/message")

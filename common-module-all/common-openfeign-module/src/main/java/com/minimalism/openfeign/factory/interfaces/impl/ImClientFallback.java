@@ -1,6 +1,6 @@
 package com.minimalism.openfeign.factory.interfaces.impl;
 
-import com.minimalism.openfeign.factory.AbstractEnum;
+import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.openfeign.factory.interfaces.ImClient;
 import com.minimalism.pojo.openfeign.OpenfeignChatMessage;
 import com.minimalism.result.Result;
@@ -12,8 +12,8 @@ import com.minimalism.result.Result;
  */
 public class ImClientFallback implements ImClient {
     @Override
-    public boolean support(AbstractEnum abstractEnum) {
-        return ImClient.super.support(abstractEnum);
+    public boolean support(AbsEnum absEnum) {
+        return ImClient.super.support(absEnum);
     }
     @Override
     public Result sendMessage(OpenfeignChatMessage openfeignChatMessage) {

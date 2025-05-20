@@ -1,10 +1,9 @@
 package com.minimalism.openfeign.interfaces.impl;
 
-import com.minimalism.openfeign.factory.AbstractEnum;
-import com.minimalism.openfeign.interfaces.AbstractOpenFeignClientConfiguration;
+import com.minimalism.openfeign.factory.AbsEnum;
+import com.minimalism.openfeign.interfaces.AbsOpenFeignClientConfiguration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +18,11 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @SuppressWarnings("SpringFacetCodeInspection")
 @Component
-public class OpenFeignDefaultClientConfiguration implements AbstractOpenFeignClientConfiguration {
+public class OpenFeignDefaultClientConfiguration implements AbsOpenFeignClientConfiguration {
 
     @Override
-    public AbstractEnum getAbstractEnum() {
-        return AbstractEnum.DEFAULT;
+    public AbsEnum getAbstractEnum() {
+        return AbsEnum.DEFAULT;
     }
 
     @Bean("OpenFeignDefaultRequestInterceptor")
@@ -34,8 +33,8 @@ public class OpenFeignDefaultClientConfiguration implements AbstractOpenFeignCli
     @Override
     @PostConstruct
     public void init() {
-        AbstractOpenFeignClientConfiguration.super.init();
-        OPEN_MAP.put(AbstractEnum.DEFAULT, getClass());
+        AbsOpenFeignClientConfiguration.super.init();
+        OPEN_MAP.put(AbsEnum.DEFAULT, getClass());
         info("openMap:{}", OPEN_MAP);
     }
 

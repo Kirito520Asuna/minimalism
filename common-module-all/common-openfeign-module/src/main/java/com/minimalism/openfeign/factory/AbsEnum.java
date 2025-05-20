@@ -10,7 +10,7 @@ import lombok.Getter;
  * @Description
  */
 @Getter @AllArgsConstructor
-public enum AbstractEnum {
+public enum AbsEnum {
     DEFAULT, ORDER("order","订单模块"),
     OPENFEIGN_ONE("open-one"),
     IM("im","即时通讯模块"),
@@ -21,17 +21,17 @@ public enum AbstractEnum {
     private void apiSalt() {
         this.apiSalt = ApiOpenfeignClientEnum.DEFAULT;
     }
-    AbstractEnum() {
+    AbsEnum() {
         this.serverName = "DEFAULT";
         this.desc = "默认模块";
         apiSalt();
     }
-    AbstractEnum(String serverName) {
+    AbsEnum(String serverName) {
         this.serverName = serverName;
         this.desc = serverName + "模块";
         apiSalt();
     }
-    AbstractEnum(String serverName, String desc) {
+    AbsEnum(String serverName, String desc) {
         this.serverName = serverName;
         this.desc = desc;
         apiSalt();

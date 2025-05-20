@@ -1,7 +1,7 @@
 package com.minimalism.openfeign.factory.interfaces;
 
 import com.minimalism.enums.ApiCode;
-import com.minimalism.openfeign.factory.AbstractEnum;
+import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.result.Result;
 
 /**
@@ -11,9 +11,9 @@ import com.minimalism.result.Result;
  */
 /*@FeignClient(name = "AbstractClient", path = "/abstract", fallback = AbstractClientFallback.class,
         configuration = FeignClientConfiguration.class)*/
-public interface AbstractClient {
+public interface AbsClient {
     Result SERVICE_BUSYNESS = Result.result(ApiCode.SERVICE_BUSYNESS);
-    default boolean support(AbstractEnum abstractEnum) {
+    default boolean support(AbsEnum absEnum) {
         return false;
     }
 

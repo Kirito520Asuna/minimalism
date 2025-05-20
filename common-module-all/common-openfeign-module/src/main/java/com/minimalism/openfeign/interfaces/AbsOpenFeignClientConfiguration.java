@@ -2,7 +2,7 @@ package com.minimalism.openfeign.interfaces;
 
 import com.google.common.collect.Maps;
 import com.minimalism.abstractinterface.bean.AbstractBean;
-import com.minimalism.openfeign.factory.AbstractEnum;
+import com.minimalism.openfeign.factory.AbsEnum;
 import feign.Target;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
@@ -13,8 +13,8 @@ import java.util.Map;
  * @author yan
  * @date 2024/5/21 6:58
  */
-public interface AbstractOpenFeignClientConfiguration extends AbstractBean {
-    Map<AbstractEnum,Class<? extends AbstractOpenFeignClientConfiguration>> OPEN_MAP = Maps.newConcurrentMap();
+public interface AbsOpenFeignClientConfiguration extends AbstractBean {
+    Map<AbsEnum,Class<? extends AbsOpenFeignClientConfiguration>> OPEN_MAP = Maps.newConcurrentMap();
 
     /**
      * Feign url 重构
@@ -29,8 +29,8 @@ public interface AbstractOpenFeignClientConfiguration extends AbstractBean {
         return defaultUriBuilderFactory.uriString(new StringBuffer(feignTarget.url()).append(originalUri).toString()).replaceQuery(null).build().toString();
     }
 
-    default AbstractEnum getAbstractEnum(){
-        return AbstractEnum.DEFAULT;
+    default AbsEnum getAbstractEnum(){
+        return AbsEnum.DEFAULT;
     }
 
     default String getApiSalt(){

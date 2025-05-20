@@ -1,7 +1,7 @@
 package com.minimalism.openfeign.factory.interfaces;
 
 import cn.hutool.core.collection.CollUtil;
-import com.minimalism.openfeign.factory.AbstractEnum;
+import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.openfeign.factory.interfaces.impl.OrderClientFallback;
 import com.minimalism.openfeign.interfaces.impl.OpenFeignDefaultClientConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,10 +15,10 @@ import java.util.List;
 @FeignClient(name = "order", path = "/order", fallback = OrderClientFallback.class
         , configuration = OpenFeignDefaultClientConfiguration.class
 )
-public interface OrderClient extends AbstractClient{
-    List<AbstractEnum> orderClientList = CollUtil.newArrayList(AbstractEnum.ORDER);
+public interface OrderClient extends AbsClient {
+    List<AbsEnum> orderClientList = CollUtil.newArrayList(AbsEnum.ORDER);
     @Override
-    default boolean support(AbstractEnum abstractEnum) {
-        return orderClientList.contains(abstractEnum);
+    default boolean support(AbsEnum absEnum) {
+        return orderClientList.contains(absEnum);
     }
 }
