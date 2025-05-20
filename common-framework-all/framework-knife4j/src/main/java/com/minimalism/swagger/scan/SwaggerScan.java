@@ -1,4 +1,4 @@
-package com.minimalism.scan;
+package com.minimalism.swagger.scan;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

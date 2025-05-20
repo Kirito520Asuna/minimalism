@@ -1,7 +1,7 @@
 package com.minimalism.swagger.config;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.swagger.AbstractSwagger;
+import com.minimalism.swagger.abs.AbsSwagger;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -31,7 +31,7 @@ import java.util.*;
 @NoArgsConstructor
 @Configuration
 @Slf4j @ConditionalOnBean(SwaggerConfiguration.class)
-public class SwaggerConfig implements AbstractSwagger {
+public class SwaggerConfig implements AbsSwagger {
     @Lazy
     @Resource
     private SwaggerConfiguration config;

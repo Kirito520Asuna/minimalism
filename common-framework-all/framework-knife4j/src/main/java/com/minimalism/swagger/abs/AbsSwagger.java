@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.swagger;
+package com.minimalism.swagger.abs;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @Date 2024/7/26 0026 11:47:39
  * @Description
  */
-public interface AbstractSwagger {
+public interface AbsSwagger {
     String authorization = HttpHeaders.AUTHORIZATION;
     String apiGroupName = "api";
     String jwtGroupName = "jwt";
