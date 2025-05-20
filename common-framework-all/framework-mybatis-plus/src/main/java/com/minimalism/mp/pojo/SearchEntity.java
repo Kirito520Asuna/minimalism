@@ -3,7 +3,7 @@ package com.minimalism.mp.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.minimalism.abstractinterface.entity.AbstractEntity;
+import com.minimalism.abs.entity.AbstractEntity;
 import com.minimalism.mp.util.MpObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

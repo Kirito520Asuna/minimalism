@@ -1,6 +1,6 @@
 package com.minimalism.common.service.impl.mp;
 
-import com.minimalism.abstractinterface.service.impl.DataScopeDefaultServiceImpl;
+import com.minimalism.abs.service.impl.DataScopeDefaultServiceImpl;
 import com.minimalism.constant.table.TableConstants;
 import com.minimalism.mp.aop.domain.DataScopeAboutTable;
 import org.springframework.context.annotation.Primary;

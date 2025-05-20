@@ -2,7 +2,7 @@ package com.minimalism.mp.config;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.minimalism.abstractinterface.config.AbstractMybatisPlusConfig;
+import com.minimalism.abs.config.AbstractMybatisPlusConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

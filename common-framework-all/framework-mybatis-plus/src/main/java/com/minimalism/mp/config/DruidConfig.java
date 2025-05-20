@@ -1,6 +1,6 @@
 package com.minimalism.mp.config;
 
-import com.minimalism.abstractinterface.config.AbstractDruidConfig;
+import com.minimalism.abs.config.AbstractDruidConfig;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;

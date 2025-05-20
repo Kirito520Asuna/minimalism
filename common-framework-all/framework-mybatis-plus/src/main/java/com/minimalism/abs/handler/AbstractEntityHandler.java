@@ -1,8 +1,8 @@
-package com.minimalism.abstractinterface.handler;
+package com.minimalism.abs.handler;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.minimalism.abstractinterface.service.MpUserService;
+import com.minimalism.abs.service.MpUserService;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.time.LocalDateTime;

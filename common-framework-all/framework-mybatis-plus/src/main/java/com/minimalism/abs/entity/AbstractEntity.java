@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.entity;
+package com.minimalism.abs.entity;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;

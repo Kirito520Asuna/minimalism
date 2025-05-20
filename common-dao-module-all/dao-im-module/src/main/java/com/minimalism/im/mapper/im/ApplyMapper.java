@@ -1,8 +1,7 @@
 package com.minimalism.im.mapper.im;
 
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.minimalism.abstractinterface.mapper.MpMapper;
+import com.minimalism.abs.mapper.MpMapper;
 import com.minimalism.im.domain.im.Apply;
 import org.apache.ibatis.annotations.Mapper;
 

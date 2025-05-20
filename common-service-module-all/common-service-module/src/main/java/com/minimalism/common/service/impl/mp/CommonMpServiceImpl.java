@@ -2,8 +2,8 @@ package com.minimalism.common.service.impl.mp;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.bean.AbstractBean;
-import com.minimalism.abstractinterface.handler.AbstractEntityHandler;
-import com.minimalism.abstractinterface.service.MpUserService;
+import com.minimalism.abs.handler.AbstractEntityHandler;
+import com.minimalism.abs.service.MpUserService;
 import com.minimalism.common.service.CommonUserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Primary;

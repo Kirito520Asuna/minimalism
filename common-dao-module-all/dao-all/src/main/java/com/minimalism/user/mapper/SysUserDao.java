@@ -1,7 +1,6 @@
 package com.minimalism.user.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.minimalism.abstractinterface.mapper.MpMapper;
+import com.minimalism.abs.mapper.MpMapper;
 import com.minimalism.enums.im.ChatType;
 import com.minimalism.user.domain.SysUser;
 import com.minimalism.vo.user.UserVo;

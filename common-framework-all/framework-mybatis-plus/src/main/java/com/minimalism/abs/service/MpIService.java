@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.service;
+package com.minimalism.abs.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;

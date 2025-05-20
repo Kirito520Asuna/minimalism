@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.mapper;
+package com.minimalism.abs.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 

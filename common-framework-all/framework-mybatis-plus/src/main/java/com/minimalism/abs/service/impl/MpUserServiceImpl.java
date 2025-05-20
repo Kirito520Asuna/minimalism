@@ -1,7 +1,7 @@
-package com.minimalism.abstractinterface.service.impl;
+package com.minimalism.abs.service.impl;
 
-import com.minimalism.abstractinterface.handler.AbstractEntityHandler;
-import com.minimalism.abstractinterface.service.MpUserService;
+import com.minimalism.abs.handler.AbstractEntityHandler;
+import com.minimalism.abs.service.MpUserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 

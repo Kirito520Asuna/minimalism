@@ -1,7 +1,6 @@
 package com.minimalism.gen.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.minimalism.abstractinterface.mapper.MpMapper;
+import com.minimalism.abs.mapper.MpMapper;
 import com.minimalism.gen.domain.GenTable;
 
 import java.util.List;

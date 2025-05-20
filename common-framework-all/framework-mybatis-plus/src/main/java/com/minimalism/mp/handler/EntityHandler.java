@@ -1,12 +1,8 @@
 package com.minimalism.mp.handler;
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.handler.AbstractEntityHandler;
-import com.minimalism.abstractinterface.service.MpUserService;
+import com.minimalism.abs.handler.AbstractEntityHandler;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 
 /**

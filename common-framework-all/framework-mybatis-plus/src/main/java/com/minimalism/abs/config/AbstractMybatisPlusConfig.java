@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.config;
+package com.minimalism.abs.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
