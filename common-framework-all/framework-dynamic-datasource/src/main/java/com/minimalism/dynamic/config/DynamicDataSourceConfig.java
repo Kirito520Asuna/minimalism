@@ -3,7 +3,7 @@ package com.minimalism.dynamic.config;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.dynamic.datasource.provider.DynamicDataSourceProvider;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration;
-import com.minimalism.abstractinterface.config.dynamic.AbstractDynamicDataSource;
+import com.minimalism.dynamic.abs.AbsDynamicDataSource;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +24,8 @@ import javax.sql.DataSource;
 @Configuration
 @AutoConfigureBefore({DynamicDataSourceAutoConfiguration.class, SpringBootConfiguration.class})
 public class DynamicDataSourceConfig {
-    private AbstractDynamicDataSource getAbstractDynamicDataSource() {
-        return SpringUtil.getBean(AbstractDynamicDataSource.class);
+    private AbsDynamicDataSource getAbstractDynamicDataSource() {
+        return SpringUtil.getBean(AbsDynamicDataSource.class);
     }
 
 

@@ -1,6 +1,6 @@
 package com.minimalism.sharding_sphere.dynamic.Impl;
 
-import com.minimalism.abstractinterface.config.dynamic.AbstractDynamicDataSource;
+import com.minimalism.dynamic.abs.AbsDynamicDataSource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 @Service
-public class ShardingSphereDynamicDataSourceImpl implements AbstractDynamicDataSource {
+public class ShardingSphereDynamicDataSourceImpl implements AbsDynamicDataSource {
 }

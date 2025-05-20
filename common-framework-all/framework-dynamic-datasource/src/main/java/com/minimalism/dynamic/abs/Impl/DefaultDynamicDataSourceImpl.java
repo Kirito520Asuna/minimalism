@@ -1,6 +1,6 @@
-package com.minimalism.abstractinterface.config.dynamic.Impl;
+package com.minimalism.dynamic.abs.Impl;
 
-import com.minimalism.abstractinterface.config.dynamic.AbstractDynamicDataSource;
+import com.minimalism.dynamic.abs.AbsDynamicDataSource;
 import com.minimalism.dynamic.config.DynamicDataSourceConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
@@ -12,5 +12,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @ConditionalOnBean(DynamicDataSourceConfig.class)
-public class DefaultDynamicDataSourceImpl implements AbstractDynamicDataSource {
+public class DefaultDynamicDataSourceImpl implements AbsDynamicDataSource {
 }

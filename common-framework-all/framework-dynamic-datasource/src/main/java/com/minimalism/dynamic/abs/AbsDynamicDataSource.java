@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.config.dynamic;
+package com.minimalism.dynamic.abs;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @Date 2024/10/25 上午8:05:07
  * @Description
  */
-public interface AbstractDynamicDataSource {
+public interface AbsDynamicDataSource {
     /**
      * 默认分表数据源名称
      */
