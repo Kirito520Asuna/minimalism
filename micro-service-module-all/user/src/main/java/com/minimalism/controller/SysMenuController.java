@@ -26,7 +26,7 @@ import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.enums.BusinessType;
-import com.minimalism.aop.shiro.ShiroPermissions;
+import com.minimalism.shiro.aop.ShiroPermissions;
 import com.minimalism.user.domain.SysMenu;
 import com.minimalism.user.service.SysMenuService;
 import com.minimalism.result.Result;

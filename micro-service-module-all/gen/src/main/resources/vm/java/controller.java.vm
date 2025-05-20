@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.enums.BusinessType;
 #if($table.isShiro())
-import com.minimalism.aop.shiro.ShiroPermissions;
+import com.minimalism.shiro.aop.ShiroPermissions;
 #else
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.minimalism.security.SecurityContextUtil;

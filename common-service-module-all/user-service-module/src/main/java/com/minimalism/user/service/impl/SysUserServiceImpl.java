@@ -19,7 +19,7 @@ import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.pojo.User;
 import com.minimalism.pojo.UserInfo;
 import com.minimalism.user.domain.SysUserRole;
-import com.minimalism.utils.EncodePasswordUtils;
+import com.minimalism.shiro.utils.EncodePasswordUtils;
 import com.minimalism.utils.enums.EnumUtils;
 import org.springframework.stereotype.Service;
 

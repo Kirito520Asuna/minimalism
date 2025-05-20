@@ -3,7 +3,7 @@ package com.minimalism.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import com.minimalism.aop.log.SysLog;
-import com.minimalism.aop.shiro.ShiroPermissions;
+import com.minimalism.shiro.aop.ShiroPermissions;
 import com.minimalism.dict.domain.SysDictData;
 import com.minimalism.dict.service.SysDictDataService;
 import com.minimalism.enums.BusinessType;

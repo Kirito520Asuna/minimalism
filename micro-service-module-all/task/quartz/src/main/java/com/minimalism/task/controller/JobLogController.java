@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.enums.BusinessType;
-import com.minimalism.aop.shiro.ShiroPermissions;
+import com.minimalism.shiro.aop.ShiroPermissions;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
 import com.minimalism.mp.util.PageUtils;

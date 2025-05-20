@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.minimalism.aop.shiro.ShiroPermissions;
+import com.minimalism.shiro.aop.ShiroPermissions;
 //import org.springframework.security.access.prepost.PreAuthorize;
 
 @Tag(description = "定时任务管理", name = "定时任务管理")

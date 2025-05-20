@@ -14,7 +14,7 @@ import com.minimalism.utils.bean.CustomBeanUtils;
 import com.minimalism.utils.jwt.JwtUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.poi.ExcelUtil;
-import com.minimalism.utils.shiro.SecurityContextUtil;
+import com.minimalism.shiro.utils.SecurityContextUtil;
 import com.minimalism.view.BaseJsonView;
 import com.minimalism.vo.UserInfoVo;
 import com.minimalism.vo.user.UserVo;
@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.enums.BusinessType;
-import com.minimalism.aop.shiro.ShiroPermissions;
+import com.minimalism.shiro.aop.ShiroPermissions;
 
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;

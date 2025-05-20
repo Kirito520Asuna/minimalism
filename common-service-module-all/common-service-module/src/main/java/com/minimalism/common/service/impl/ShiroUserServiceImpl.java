@@ -2,7 +2,7 @@ package com.minimalism.common.service.impl;
 
 import com.minimalism.abstractinterface.service.config.AbsAuthShiroConfig;
 import com.minimalism.common.service.CommonUserService;
-import com.minimalism.utils.shiro.SecurityContextUtil;
+import com.minimalism.shiro.utils.SecurityContextUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 

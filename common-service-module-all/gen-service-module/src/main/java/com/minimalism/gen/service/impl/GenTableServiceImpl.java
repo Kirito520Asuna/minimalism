@@ -14,7 +14,7 @@ import com.minimalism.gen.utli.VelocityInitializer;
 import com.minimalism.gen.utli.VelocityUtils;
 import com.minimalism.text.CharsetKit;
 import com.minimalism.utils.other.StringUtils;
-import com.minimalism.utils.shiro.SecurityContextUtil;
+import com.minimalism.shiro.utils.SecurityContextUtil;
 import com.minimalism.utils.str.StrUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

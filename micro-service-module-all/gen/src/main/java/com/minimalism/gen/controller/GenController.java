@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.async.AsyncFuture;
 import com.minimalism.aop.log.SysLog;
-import com.minimalism.aop.shiro.ShiroPermissions;
+import com.minimalism.shiro.aop.ShiroPermissions;
 import com.minimalism.controller.AbsBaseController;
 import com.minimalism.dto.gen.ImportGenTableDto;
 import com.minimalism.enums.BusinessType;
