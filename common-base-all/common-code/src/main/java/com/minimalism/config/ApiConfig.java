@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import com.google.common.io.ByteSource;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.exception.GlobalCustomException;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 @Configuration
 @Data @NoArgsConstructor
 @AllArgsConstructor
-public class ApiConfig implements AbstractBean {
+public class ApiConfig implements AbsBean {
     public static JSONConfig JSON_CONFIG = JSONConfig.create().setIgnoreNullValue(false);
     @Resource
     @Lazy

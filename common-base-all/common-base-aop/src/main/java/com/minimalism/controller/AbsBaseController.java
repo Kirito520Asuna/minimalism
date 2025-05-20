@@ -1,7 +1,6 @@
 package com.minimalism.controller;
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +13,7 @@ import java.util.List;
  * @Description
  */
 @RestController
-public interface AbstractBaseController extends AbstractBean {
+public interface AbsBaseController extends AbsBean {
     default <T> Result<T> ok() {
         return Result.ok();
     }

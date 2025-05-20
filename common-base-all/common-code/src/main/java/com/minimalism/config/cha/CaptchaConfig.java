@@ -2,7 +2,7 @@ package com.minimalism.config.cha;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import static com.google.code.kaptcha.Constants.*;
  */
 @ConditionalOnExpression("${captcha.enabled:false}")
 @Configuration
-public class CaptchaConfig implements AbstractBean {
+public class CaptchaConfig implements AbsBean {
     public static final String CAPTCHA_PRODUCER = "captchaProducer";
     public static final String CAPTCHA_PRODUCER_MATH = "captchaProducerMath";
     @Bean(name = CaptchaConfig.CAPTCHA_PRODUCER)

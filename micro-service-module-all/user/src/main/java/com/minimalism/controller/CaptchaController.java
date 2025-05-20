@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 @RestController
 @Tag(name = "验证码模块")
 @RequestMapping(value = {"/api/captcha","/captcha"})
-public class CaptchaController implements AbstractBaseController {
+public class CaptchaController implements AbsBaseController {
     @Resource
     private ValidateCodeService validateCodeService;
     @SysLog

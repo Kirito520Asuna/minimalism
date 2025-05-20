@@ -1,6 +1,6 @@
 package com.minimalism.abstractinterface.service.properties;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 
 import javax.annotation.PostConstruct;
 
@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
  * @Date 2025/3/10 19:52:45
  * @Description
  */
-public interface BeanProperties extends AbstractBean {
+public interface BeanProperties extends AbsBean {
     @Override
     @PostConstruct
     default void init() {

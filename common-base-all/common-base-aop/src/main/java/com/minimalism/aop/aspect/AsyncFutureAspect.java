@@ -1,6 +1,5 @@
 package com.minimalism.aop.aspect;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 @Component
-public class AsyncFutureAspect implements AbstractAsyncFutureAspect {
+public class AsyncFutureAspect implements AbsAsyncFutureAspect {
 
 
     /**
@@ -26,7 +25,7 @@ public class AsyncFutureAspect implements AbstractAsyncFutureAspect {
     @Override
     @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        return AbstractAsyncFutureAspect.super.around(joinPoint);
+        return AbsAsyncFutureAspect.super.around(joinPoint);
     }
 
 }

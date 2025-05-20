@@ -1,18 +1,12 @@
 package com.minimalism.aop.aspect;
 
-import com.minimalism.abstractinterface.aop.AbstractAop;
-import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.abstractinterface.aop.AbsAop;
 import com.minimalism.aop.AopConstants;
 import com.minimalism.aop.security.Login;
-import com.minimalism.enums.ApiCode;
-import com.minimalism.exception.GlobalCustomException;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
@@ -22,7 +16,7 @@ import java.lang.reflect.Method;
  * @Description
  */
 
-public interface AbstractLoginAspect extends AbstractAop {
+public interface AbsLoginAspect extends AbsAop {
 
     @Override
     default int getOrder() {
@@ -43,7 +37,7 @@ public interface AbstractLoginAspect extends AbstractAop {
         checkMethodAnnotation(signature.getMethod());
         try {
             // 执行原有逻辑
-            return AbstractAop.super.around(joinPoint);
+            return AbsAop.super.around(joinPoint);
         } catch (Throwable e) {
             throw e;
         }

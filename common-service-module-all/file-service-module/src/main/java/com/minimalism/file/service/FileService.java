@@ -1,6 +1,6 @@
 package com.minimalism.file.service;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.vo.PartVo;
 import lombok.SneakyThrows;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @Date 2025/3/6 15:15:12
  * @Description
  */
-public interface FileService extends AbstractBean {
+public interface FileService extends AbsBean {
     PartVo partToInputStream(PartVo partVo);
 
     List<PartVo> getPartList(String identifier, Long fileId);

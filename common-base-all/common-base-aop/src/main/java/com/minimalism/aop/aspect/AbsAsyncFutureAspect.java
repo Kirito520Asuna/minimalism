@@ -3,8 +3,7 @@ package com.minimalism.aop.aspect;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.aop.AbstractAop;
-import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.abstractinterface.aop.AbsAop;
 import com.minimalism.aop.AopConstants;
 import com.minimalism.aop.async.AsyncFuture;
 import com.minimalism.utils.object.ObjectUtils;
@@ -22,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @Date 2024/11/3 上午10:48:52
  * @Description
  */
-public interface AbstractAsyncFutureAspect extends AbstractAop {
+public interface AbsAsyncFutureAspect extends AbsAop {
     @Override
     default int getOrder() {
         return AopConstants.AsyncOrder;
@@ -38,7 +37,7 @@ public interface AbstractAsyncFutureAspect extends AbstractAop {
         T t = null;
         Object futureObj = null;
         try {
-            futureObj = AbstractAop.super.around(joinPoint);
+            futureObj = AbsAop.super.around(joinPoint);
         } catch (Throwable e) {
             throwable.set(e);
         } finally {
@@ -53,7 +52,7 @@ public interface AbstractAsyncFutureAspect extends AbstractAop {
     default Object asyncAround(ProceedingJoinPoint joinPoint, AtomicReference<Throwable> throwable) {
         Object futureObj = null;
         try {
-            futureObj = AbstractAop.super.around(joinPoint);
+            futureObj = AbsAop.super.around(joinPoint);
         } catch (Throwable e) {
             throwable.set(e);
         } finally {
@@ -110,7 +109,7 @@ public interface AbstractAsyncFutureAspect extends AbstractAop {
             future.join();
             o = future.get();
         } else {
-            o = AbstractAop.super.around(joinPoint);
+            o = AbsAop.super.around(joinPoint);
         }
 
         if (ObjectUtil.isNotEmpty(throwable.get())) {
@@ -154,7 +153,7 @@ public interface AbstractAsyncFutureAspect extends AbstractAop {
             future.join();
             o = future.get();
         } else {
-            o = AbstractAop.super.around(joinPoint);
+            o = AbsAop.super.around(joinPoint);
         }
 
         if (ObjectUtil.isNotEmpty(throwable.get())) {

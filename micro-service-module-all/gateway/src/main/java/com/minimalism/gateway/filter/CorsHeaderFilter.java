@@ -3,7 +3,7 @@ package com.minimalism.gateway.filter;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.gateway.filter.order.Order;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;
@@ -16,7 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-public class CorsHeaderFilter implements GlobalFilter, Ordered, AbstractBean {
+public class CorsHeaderFilter implements GlobalFilter, Ordered, AbsBean {
     @Override
     public int getOrder() {
         return Order.CORS_HEADER_ORDER;

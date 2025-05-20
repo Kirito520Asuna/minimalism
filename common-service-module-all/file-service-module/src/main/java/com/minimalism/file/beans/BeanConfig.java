@@ -1,18 +1,14 @@
 package com.minimalism.file.beans;
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.clientAbs.AliyunClient;
 import com.minimalism.file.storage.clientAbs.LocalClient;
 import com.minimalism.file.storage.platform.AliyunOssStorageClient;
 import com.minimalism.file.storage.platform.LocalStorageClient;
-import lombok.val;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 /**
  * @Author yan
@@ -20,7 +16,7 @@ import org.springframework.core.env.Environment;
  * @Description
  */
 @Configuration
-public class BeanConfig implements AbstractBean {
+public class BeanConfig implements AbsBean {
     @Bean
     public FileProperties.LocalProperties localProperties() {
         return new FileProperties.LocalProperties();

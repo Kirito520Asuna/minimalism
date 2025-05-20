@@ -45,7 +45,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "菜单权限")
 @RestController
 @RequestMapping({"/api/menu", "/jwt/menu", "/menu"})
-public class SysMenuController implements AbstractBaseController {
+public class SysMenuController implements AbsBaseController {
     @Resource
     private SysMenuService sysMenuService;
 

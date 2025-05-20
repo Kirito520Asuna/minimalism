@@ -21,7 +21,7 @@ import javax.annotation.PreDestroy;
  * @Date 2024/9/22 上午10:46:15
  * @Description
  */
-public interface AbstractBean {
+public interface AbsBean {
     @Data
     @Accessors(chain = true)
     @NoArgsConstructor

@@ -3,7 +3,7 @@ package com.minimalism.gateway.filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.constant.gateway.GatewayConstants;
 import com.minimalism.gateway.config.GatewayConfig;
 import com.minimalism.gateway.filter.order.Order;
@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-public class GatewayDomainsHeaderFilter implements GlobalFilter, Ordered, AbstractBean {
+public class GatewayDomainsHeaderFilter implements GlobalFilter, Ordered, AbsBean {
 
 
     @Override

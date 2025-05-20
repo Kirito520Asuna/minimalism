@@ -3,7 +3,7 @@ package com.minimalism.file.config;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.constant.file.FileConstant;
 import com.minimalism.nacos.utils.NacosUtils;
 import com.minimalism.utils.file.FileUtils;
@@ -32,7 +32,7 @@ import java.util.List;
 @AutoConfigureAfter(NacosDiscoveryProperties.class)
 @Configuration
 @ConditionalOnBean(RedisTemplate.class)
-public class FileUploadConfig implements AbstractBean {
+public class FileUploadConfig implements AbsBean {
     public static String instanceId;
     public static String fileControllerPath = "/file";
     public static String getPathKey = "file.byte.get";
@@ -65,7 +65,7 @@ public class FileUploadConfig implements AbstractBean {
     @Override
     @PostConstruct
     public void init() {
-        AbstractBean.super.init();
+        AbsBean.super.init();
         List<String> fileNameList = LocalOSSUtils.getFileNameList();
         this.instanceId = NacosUtils.getInstanceId();
         RedisTemplate redisTemplate = SpringUtil.getBean(RedisTemplate.class);
@@ -94,7 +94,7 @@ public class FileUploadConfig implements AbstractBean {
                 redisTemplate.opsForHash().delete(FileConstant.FILE_REDIS_INSTANCE_ID, fileName);
             }
         });
-        AbstractBean.super.destroy();
+        AbsBean.super.destroy();
     }
 
     /**

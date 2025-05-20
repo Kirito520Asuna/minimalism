@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.minimalism.aop.env.InterfaceEnv;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.common.service.KeyPairService;
-import com.minimalism.controller.AbstractBaseController;
+import com.minimalism.controller.AbsBaseController;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.key_pair.vo.KeyVo;
 import com.minimalism.result.Result;
@@ -12,16 +12,12 @@ import com.minimalism.utils.key.KeyUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.resource.HttpResource;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
 
 
 /**
@@ -32,7 +28,7 @@ import java.security.interfaces.RSAPublicKey;
 @Tag(name = "密钥对接口")
 @RequestMapping({"/key-pair", "/api/key-pair", "/jwt/key-pair"})
 @RestController
-public class KeyPairController implements AbstractBaseController {
+public class KeyPairController implements AbsBaseController {
     @Resource
     private KeyPairService keyPairService;
 

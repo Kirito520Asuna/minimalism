@@ -1,8 +1,6 @@
 package com.minimalism.interceptor.Impl;
 
-import com.minimalism.interceptor.AbstractLogInInterceptor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.minimalism.interceptor.AbsLogInInterceptor;
 
 /**
  * @Author yan
@@ -10,5 +8,5 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 //@Service
-public class DefaultLogInterceptor implements AbstractLogInInterceptor {
+public class DefaultLogInterceptor implements AbsLogInInterceptor {
 }

@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Tag(name = "部门")
 @RestController
 @RequestMapping({"/api/dept", "/jwt/dept", "/dept"})
-public class SysDeptController implements AbstractBaseController {
+public class SysDeptController implements AbsBaseController {
     @Resource
     private SysDeptService deptService;
     @Resource

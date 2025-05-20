@@ -3,7 +3,7 @@ package com.minimalism.filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CorsRequestFilter extends OncePerRequestFilter implements AbstractBean {
+public class CorsRequestFilter extends OncePerRequestFilter implements AbsBean {
     @Override
     public void init() {
         debug("[Filter]-[Cors]-[init] {}", getClass().getName());

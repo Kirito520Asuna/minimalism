@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Tag(name = "字典类型")
 @RestController
 @RequestMapping({"/api/dict/type", "/jwt/dict/type", "/dict/type"})
-public class SysDictTypeController implements AbstractBaseController {
+public class SysDictTypeController implements AbsBaseController {
     @Resource
     private SysDictTypeService dictTypeService;
 

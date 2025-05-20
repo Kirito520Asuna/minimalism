@@ -3,8 +3,8 @@ package com.minimalism.config.security;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.AbstractSecurityConfig;
-import com.minimalism.abstractinterface.service.config.AbstractAuthSecurityConfig;
+import com.minimalism.abstractinterface.AbsSecurityConfig;
+import com.minimalism.abstractinterface.service.config.AbsAuthSecurityConfig;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.service.AbstractUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 //开启权限校验
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter implements AbstractAuthSecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements AbsAuthSecurityConfig {
 
     /**
      * 密码加密存储
@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Abst
         //http.addFilterBefore(SpringUtil.getBean(ApiFilter.class), JwtFilter.class);
 
         if (openFilter) {
-            SpringUtil.getBean(AbstractSecurityConfig.class).addFilterBeforeList(http);
+            SpringUtil.getBean(AbsSecurityConfig.class).addFilterBeforeList(http);
         }
     }
 

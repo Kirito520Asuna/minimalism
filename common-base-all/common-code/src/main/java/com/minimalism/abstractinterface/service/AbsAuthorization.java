@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.exception.GlobalCustomException;
@@ -25,7 +25,7 @@ import java.util.Map;
  * @Date 2024/10/20 上午4:54:32
  * @Description
  */
-public interface AbstractAuthorization extends AbstractBean {
+public interface AbsAuthorization extends AbsBean {
     @Override
     default void init() {
         debug("[Bean]-[Authorization]-[init]::[{}]: ",getAClassName());

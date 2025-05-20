@@ -1,7 +1,5 @@
 package com.minimalism.abstractinterface.service.config;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
-
 import javax.annotation.PostConstruct;
 
 /**
@@ -9,7 +7,7 @@ import javax.annotation.PostConstruct;
  * @Date 2025/3/10 4:04:43
  * @Description
  */
-public interface AbstractAuthorizationConfig extends BeanConfig {
+public interface AbsAuthorizationConfig extends BeanConfig {
     @Override
     @PostConstruct
     default void init() {

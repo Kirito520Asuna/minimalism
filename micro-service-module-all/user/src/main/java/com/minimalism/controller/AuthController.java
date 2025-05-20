@@ -15,7 +15,6 @@ import com.minimalism.result.Result;
 //import com.minimalism.security.SecurityContextUtil;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.validate_code.service.ValidateCodeService;
-import com.minimalism.utils.shiro.SecurityContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +31,7 @@ import javax.validation.constraints.NotNull;
 @RestController
 @Tag(name = "登陆注册模块")
 @RequestMapping(value = {"/api/auth", "/jwt/auth", "/auth"})
-public class AuthController implements AbstractBaseController {
+public class AuthController implements AbsBaseController {
     /**
      * 查询用户信息列表
      */

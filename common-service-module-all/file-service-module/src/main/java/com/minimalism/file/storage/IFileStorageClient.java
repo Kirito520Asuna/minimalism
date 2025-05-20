@@ -2,7 +2,7 @@ package com.minimalism.file.storage;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.utils.io.IoUtils;
@@ -20,7 +20,7 @@ import java.util.List;
  * @Date 2025/3/7 18:58:37
  * @Description
  */
-public interface IFileStorageClient extends AbstractBean {
+public interface IFileStorageClient extends AbsBean {
     default boolean support(StorageType storageType) {
         return false;
     }

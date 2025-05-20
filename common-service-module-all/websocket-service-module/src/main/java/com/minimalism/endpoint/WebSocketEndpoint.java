@@ -2,7 +2,7 @@ package com.minimalism.endpoint;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.domain.Message;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/ws/{userId}")
 @Component
-public class WebSocketEndpoint implements AbstractBean {
+public class WebSocketEndpoint implements AbsBean {
 
 
     // 本地存储当前实例的在线用户（线程安全）

@@ -1,7 +1,7 @@
 package com.minimalism.openfeign.interfaces;
 
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.openfeign.factory.AbsEnum;
 import feign.Target;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @author yan
  * @date 2024/5/21 6:58
  */
-public interface AbsOpenFeignClientConfiguration extends AbstractBean {
+public interface AbsOpenFeignClientConfiguration extends AbsBean {
     Map<AbsEnum,Class<? extends AbsOpenFeignClientConfiguration>> OPEN_MAP = Maps.newConcurrentMap();
 
     /**

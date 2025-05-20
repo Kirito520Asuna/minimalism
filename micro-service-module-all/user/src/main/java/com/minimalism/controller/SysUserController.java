@@ -51,7 +51,7 @@ import static com.minimalism.result.Result.ok;
 @RestController
 @Tag(name = "用户模块")
 @RequestMapping(value = {"/api/user/", "/jwt/user/", "/user/"})
-public class SysUserController implements AbstractBaseController {
+public class SysUserController implements AbsBaseController {
     @Resource
     private SysUserService sysUserService;
 

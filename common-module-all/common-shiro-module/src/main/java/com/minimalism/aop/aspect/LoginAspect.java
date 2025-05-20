@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 @Component
-public class LoginAspect implements AbstractLoginAspect {
+public class LoginAspect implements AbsLoginAspect {
     @Override
     public void checkLogin() {
         SecurityContextUtil.getUserId();

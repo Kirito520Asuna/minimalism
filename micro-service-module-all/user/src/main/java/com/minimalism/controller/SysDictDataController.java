@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Tag(name = "字典数据")
 @RestController
 @RequestMapping({"/api/dict/data", "/jwt/dict/data", "/dict/data"})
-public class SysDictDataController implements AbstractBaseController {
+public class SysDictDataController implements AbsBaseController {
     @Resource
     private SysDictDataService dictDataService;
 

@@ -3,7 +3,7 @@ package com.minimalism.abstractinterface;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.abstractinterface.service.AbstractUserService;
 import com.minimalism.constant.Roles;
 import com.minimalism.exception.GlobalCustomException;
@@ -22,7 +22,7 @@ import java.util.List;
  * @Date 2024/10/11 下午10:44:35
  * @Description
  */
-public interface AbstractShiroAuthorization extends AbstractBean {
+public interface AbsShiroAuthorization extends AbsBean {
     /**
      * 授权
      */

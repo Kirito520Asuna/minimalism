@@ -1,13 +1,8 @@
 package com.minimalism.exception;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.result.Result;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,7 +17,7 @@ import java.io.IOException;
  * @Date 2024/9/27 上午1:37:08
  * @Description
  */
-public interface AbstractExceptionHandler extends AbstractBean {
+public interface AbsExceptionHandler extends AbsBean {
 
     @Override
     @PostConstruct

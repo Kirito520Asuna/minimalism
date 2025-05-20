@@ -1,10 +1,6 @@
 package com.minimalism.interceptor;
 
-import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.AbstractInterceptor;
-import com.minimalism.exception.GlobalCustomException;
-import com.minimalism.result.Result;
-import com.minimalism.utils.response.ResponseUtils;
+import com.minimalism.abstractinterface.AbsInterceptor;
 import lombok.SneakyThrows;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +11,12 @@ import javax.servlet.http.HttpServletResponse;
  * @Date 2024/10/27 下午10:26:58
  * @Description
  */
-public interface AbstractLogInInterceptor extends AbstractInterceptor {
+public interface AbsLogInInterceptor extends AbsInterceptor {
     @SneakyThrows
     @Override
     default boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         checkLogin(request, response);
-        return AbstractInterceptor.super.preHandle(request, response, handler);
+        return AbsInterceptor.super.preHandle(request, response, handler);
     }
 
     /**

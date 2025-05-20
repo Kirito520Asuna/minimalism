@@ -2,7 +2,7 @@ package com.minimalism.service;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.domain.netty.NettyMessage;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.constant.websocket.WebSocket;
@@ -20,7 +20,7 @@ import java.util.Map;
  * @Date 2025/2/5 13:46:01
  * @Description
  */
-public interface MessageService extends AbstractBean {
+public interface MessageService extends AbsBean {
 
     default void onMessage(Message message) {
         String targetUserId = message.getTargetId();

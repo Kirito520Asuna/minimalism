@@ -1,6 +1,6 @@
 package com.minimalism.vo;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 @Data @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoVo implements Serializable, AbstractBean {
+public class UserInfoVo implements Serializable, AbsBean {
     private String userId;
     private String username;
     private String avatar;

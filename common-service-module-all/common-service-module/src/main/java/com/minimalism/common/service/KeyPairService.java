@@ -1,8 +1,7 @@
 package com.minimalism.common.service;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.AbstractKeyPair;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
 import com.minimalism.redis.aop.redis.RedisCachePut;
 import com.minimalism.redis.aop.redis.RedisCacheable;
@@ -11,7 +10,7 @@ import com.minimalism.utils.key.KeyUtils;
 
 import java.util.concurrent.TimeUnit;
 
-public interface KeyPairService extends AbstractKeyPair, AbstractBean {
+public interface KeyPairService extends AbstractKeyPair, AbsBean {
     @Override
     @RedisLock(key = "KEY&PAIR&LOCK:#rq.identity", requestAsName = "rq", exceptionMessage = "非法操作！")
     default String soleDecrypt(String identity, String content) throws Exception {

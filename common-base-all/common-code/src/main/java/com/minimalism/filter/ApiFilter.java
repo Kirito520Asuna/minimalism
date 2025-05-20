@@ -1,7 +1,7 @@
 package com.minimalism.filter;
 
 
-import com.minimalism.abstractinterface.service.filter.AbstractApiFiler;
+import com.minimalism.abstractinterface.service.filter.AbsApiFiler;
 import com.minimalism.pojo.http.CachedBodyHttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
@@ -20,7 +20,7 @@ import java.io.*;
  */
 @Order(-2)
 @Slf4j
-public class ApiFilter extends OncePerRequestFilter implements AbstractApiFiler {
+public class ApiFilter extends OncePerRequestFilter implements AbsApiFiler {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         // 从包装器读取请求体

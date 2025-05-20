@@ -1,26 +1,18 @@
 package com.minimalism.gateway.filter;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbstractBean;
-import com.minimalism.constant.gateway.GatewayConstants;
-import com.minimalism.gateway.config.GatewayConfig;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.gateway.filter.order.Order;
-import com.minimalism.utils.object.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @Author minimalism
@@ -29,7 +21,7 @@ import java.util.Map;
  */
 
 @Slf4j
-public class HttpsToHttpFilter implements GlobalFilter, Ordered, AbstractBean {
+public class HttpsToHttpFilter implements GlobalFilter, Ordered, AbsBean {
 
     @Override
     public int getOrder() {

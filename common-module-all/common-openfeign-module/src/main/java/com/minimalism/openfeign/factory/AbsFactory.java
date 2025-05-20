@@ -1,7 +1,7 @@
 package com.minimalism.openfeign.factory;
 
 import cn.hutool.core.collection.CollUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.openfeign.factory.interfaces.AbsClient;
 import lombok.NonNull;
 import org.springframework.beans.BeansException;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author yan
  */
-public class AbsFactory implements BeanFactoryAware, InitializingBean, AbstractBean {
+public class AbsFactory implements BeanFactoryAware, InitializingBean, AbsBean {
     private ConfigurableListableBeanFactory beanFactory;
     private static List<AbsClient> absClients = CollUtil.newArrayList();
 

@@ -4,13 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.aop.AbstractAop;
-import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.abstractinterface.aop.AbsAop;
 import com.minimalism.aop.security.AutoOperation;
 import com.minimalism.enums.AutoOperationEnum;
 import com.minimalism.utils.bean.CustomBeanUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -28,7 +25,7 @@ import java.util.Set;
  * @Date 2024/10/3 下午4:15:55
  * @Description
  */
-public interface AbstractAutoOperationAspect extends AbstractAop {
+public interface AbsAutoOperationAspect extends AbsAop {
     JSONConfig JSON_CONFIG = JSONConfig.create().setIgnoreNullValue(false);
 
 
@@ -146,7 +143,7 @@ public interface AbstractAutoOperationAspect extends AbstractAop {
 
         try {
             // 执行原有逻辑
-            return AbstractAop.super.around(joinPoint);
+            return AbsAop.super.around(joinPoint);
         } catch (Throwable e) {
             throw e;
         }

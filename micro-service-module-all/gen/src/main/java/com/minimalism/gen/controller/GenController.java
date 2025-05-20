@@ -6,7 +6,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.async.AsyncFuture;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.aop.shiro.ShiroPermissions;
-import com.minimalism.controller.AbstractBaseController;
+import com.minimalism.controller.AbsBaseController;
 import com.minimalism.dto.gen.ImportGenTableDto;
 import com.minimalism.enums.BusinessType;
 import com.minimalism.enums.OperateTypeEnum;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @Tag(name = "代码生成")
 @RequestMapping({"/gen", "/api/gen", "/jwt/gen"})
 @RestController
-public class GenController implements AbstractBaseController {
+public class GenController implements AbsBaseController {
     @Resource
     private GenTableService genTableService;
     @Resource

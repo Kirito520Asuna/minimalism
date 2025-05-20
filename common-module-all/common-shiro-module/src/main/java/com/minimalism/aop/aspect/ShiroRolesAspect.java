@@ -1,6 +1,6 @@
 package com.minimalism.aop.aspect;
 
-import com.minimalism.abstractinterface.AbstractShiroAopAspect;
+import com.minimalism.abstractinterface.AbsShiroAopAspect;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 @Component
-public class ShiroRolesAspect implements AbstractShiroAopAspect {
+public class ShiroRolesAspect implements AbsShiroAopAspect {
     @Pointcut(value = "@annotation(com.minimalism.aop.shiro.ShiroRoles)")
     @Override
     public void Aop() {

@@ -8,13 +8,13 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.abstractinterface.aop.AbsSysLog;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.enums.RequestMethod;
 
 import com.minimalism.pojo.OperateLogInfo;
 import com.minimalism.result.Result;
-import com.minimalism.abstractinterface.service.AbstractOperateLogService;
+import com.minimalism.abstractinterface.service.AbsOperateLogService;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.servlet.ServletUtils;
 import com.minimalism.utils.date.DateUtils;
@@ -50,10 +50,10 @@ import java.util.stream.Stream;
 @Aspect
 @Slf4j
 @Component
-public class OperateLogAspectAbstract implements AbstractSysLog {
+public class OperateLogAspectAbs implements AbsSysLog {
     @Lazy
     @Resource
-    private AbstractSysLogAspect sysLogAspect;
+    private AbsSysLogAspect sysLogAspect;
     @Lazy
     @Resource
     private Environment env;
@@ -102,11 +102,11 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
 
     @Override
     public int getOrder() {
-        return AbstractSysLog.super.getOrder() + 1;
+        return AbsSysLog.super.getOrder() + 1;
     }
 
     @Override
-    @Pointcut("AbstractSysLogAspect.Aop()")
+    @Pointcut("com.minimalism.aop.aspect.AbsSysLogAspect.Aop()")
     public void Aop() {
     }
 
@@ -198,7 +198,7 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
             operateInit(joinPoint, operateLog, sysLog, request, operate);
         }
 
-        Object around = AbstractSysLog.super.around(joinPoint);
+        Object around = AbsSysLog.super.around(joinPoint);
 
         if (hasSysLog && sysLog.enableOperate() && sysLog.logResultData()) {
             //记录响应
@@ -364,7 +364,7 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
                 operateLog.setJavaMethodArgsBody(requestBody);
             }
 
-            AbstractOperateLogService service = SpringUtil.getBean(AbstractOperateLogService.class);
+            AbsOperateLogService service = SpringUtil.getBean(AbsOperateLogService.class);
             Map<String, Object> beanToMap = BeanUtil.beanToMap(operateLog);
             service.createOperateLog(beanToMap);
         }
@@ -390,7 +390,7 @@ public class OperateLogAspectAbstract implements AbstractSysLog {
         operateLog.setResultData(JSONUtil.toJsonStr(bean.getData(), jsonConfig));
         operateLog.setResultTime(resultTime);
         operateLog.setDuration(resultMilliSecond - startMilliSecond);
-        AbstractOperateLogService service = SpringUtil.getBean(AbstractOperateLogService.class);
+        AbsOperateLogService service = SpringUtil.getBean(AbsOperateLogService.class);
         Map<String, Object> beanToMap = BeanUtil.beanToMap(operateLog);
         service.updateOperateLog(beanToMap);
         return operateLog;

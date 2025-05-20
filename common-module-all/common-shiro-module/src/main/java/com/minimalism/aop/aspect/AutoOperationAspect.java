@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 @Component
-public class AutoOperationAspect implements AbstractAutoOperationAspect {
+public class AutoOperationAspect implements AbsAutoOperationAspect {
     @Override
     public String getOperator() {
         return SecurityContextUtil.getUserIdNoThrow();

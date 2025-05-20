@@ -1,6 +1,6 @@
 package com.minimalism.config.security.impl;
 
-import com.minimalism.abstractinterface.AbstractSecurityConfig;
+import com.minimalism.abstractinterface.AbsSecurityConfig;
 import com.minimalism.filter.JwtFilter;
 import com.minimalism.filter.bean.FilterBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 @Service
 @ConditionalOnBean(FilterBean.class)
 //@ConditionalOnExpression(ExpressionConstants.filterExpression)
-public class DefaultSecurityConfigImpl implements AbstractSecurityConfig {
+public class DefaultSecurityConfigImpl implements AbsSecurityConfig {
 
     @Override
     public void addFilterBeforeList(HttpSecurity http) {
-        AbstractSecurityConfig.super.addFilterBeforeList(http);
+        AbsSecurityConfig.super.addFilterBeforeList(http);
     }
     @Bean
     @ConditionalOnBean(FilterBean.class)

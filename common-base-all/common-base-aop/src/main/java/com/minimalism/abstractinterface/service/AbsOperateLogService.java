@@ -5,11 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.aop.async.AsyncFuture;
 import com.minimalism.enums.RequestMethod;
 import com.minimalism.pojo.OperateLogInfo;
-import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.stream.Stream;
  *
  * @author yan
  */
-public interface AbstractOperateLogService extends AbstractBean {
+public interface AbsOperateLogService extends AbsBean {
     //Logger log = Logger.getLogger(AbstractOperateLogService.class.getName());
     JSONConfig jsonConfig = JSONConfig.create().setIgnoreNullValue(false);
 

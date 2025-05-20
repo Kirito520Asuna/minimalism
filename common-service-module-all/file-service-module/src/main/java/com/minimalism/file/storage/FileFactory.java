@@ -2,7 +2,7 @@ package com.minimalism.file.storage;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @Date 2025/3/7 20:37:33
  * @Description
  */
-public class FileFactory implements BeanFactoryAware, InitializingBean, AbstractBean {
+public class FileFactory implements BeanFactoryAware, InitializingBean, AbsBean {
     private ConfigurableListableBeanFactory beanFactory;
     private static List<IFileStorageClient> storages = CollUtil.newArrayList();
     private static int index = 0;
@@ -47,7 +47,7 @@ public class FileFactory implements BeanFactoryAware, InitializingBean, Abstract
     @Override
     @PostConstruct
     public void init() {
-        AbstractBean.super.init();
+        AbsBean.super.init();
         initStorages();
     }
 

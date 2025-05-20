@@ -1,6 +1,6 @@
 package com.minimalism.gateway.web;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.result.Result;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import static com.minimalism.result.Result.ok;
 @RestController
 @Profile(value = {"dev", "test"})
 @RequestMapping(value = "${server.servlet.context-path}")
-public class HomeControllerWebMvc implements AbstractBean {
+public class HomeControllerWebMvc implements AbsBean {
     private final RouteLocator routeLocator;
 
     @GetMapping(value = "/api-path")

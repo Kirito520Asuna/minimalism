@@ -1,15 +1,11 @@
 package com.minimalism.interceptor;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.AbstractInterceptor;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.config.ApiConfig;
 import com.minimalism.config.JwtConfig;
-import com.minimalism.interceptor.Impl.DefaultApiInterceptor;
 import com.minimalism.interceptor.Impl.DefaultInterceptor;
-import com.minimalism.interceptor.Impl.DefaultLogInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 import java.util.Arrays;
@@ -21,7 +17,7 @@ import java.util.stream.Collectors;
  * @Date 2024/10/27 下午10:47:59
  * @Description
  */
-public interface AbstractWebConfigurerAdapter extends AbstractBean {
+public interface AbsWebConfigurerAdapter extends AbsBean {
     default void initInterceptors(InterceptorRegistry registry) {
         //getLogger().info("注册拦截器");
         //注册拦截器
@@ -33,7 +29,7 @@ public interface AbstractWebConfigurerAdapter extends AbstractBean {
             apiPath = new StringBuffer(apiPath).append("**").toString();
         }
 
-        registry.addInterceptor(SpringUtil.getBean(AbstractApiInterceptor.class))
+        registry.addInterceptor(SpringUtil.getBean(AbsApiInterceptor.class))
                 .addPathPatterns(apiPath);
 
         String jwtPath = ObjectUtil.
@@ -41,7 +37,7 @@ public interface AbstractWebConfigurerAdapter extends AbstractBean {
 
         List<String> jwtPaths = Arrays.stream(jwtPath.split(",")).collect(Collectors.toList());
 
-        registry.addInterceptor(SpringUtil.getBean(AbstractLogInInterceptor.class))
+        registry.addInterceptor(SpringUtil.getBean(AbsLogInInterceptor.class))
                 .addPathPatterns(jwtPaths);
         //List<String> excludeList = CollUtil.newArrayList(jwtPaths);
         //excludeList.add(apiPath);

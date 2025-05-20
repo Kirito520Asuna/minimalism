@@ -1,13 +1,12 @@
 package com.minimalism.config.shiro;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.AbstractShiroConfig;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.AbsShiroConfig;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.CorsRequestFilter;
 import com.minimalism.filter.JwtAuthFilter;
 import com.minimalism.filter.bean.FilterBean;
-import com.minimalism.interceptor.Impl.LogInterceptor;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.realm.Realm;
@@ -18,7 +17,6 @@ import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -32,7 +30,7 @@ import java.util.Map;
  * @Description
  */
 @Configuration
-public class ShiroConfig implements AbstractBean, AbstractShiroConfig {
+public class ShiroConfig implements AbsBean, AbsShiroConfig {
 
 
     @Value("${shiro.encodePassword:false}")
@@ -61,53 +59,53 @@ public class ShiroConfig implements AbstractBean, AbstractShiroConfig {
 
     @Bean
     public Authorizer authorizer() {
-        return AbstractShiroConfig.super.authorizer(realm());
+        return AbsShiroConfig.super.authorizer(realm());
     }
 
     @Bean
     @Primary
     @Override
     public SessionManager sessionManager() {
-        return AbstractShiroConfig.super.sessionManager();
+        return AbsShiroConfig.super.sessionManager();
     }
 
     @Bean
     @Override
     public Realm realm() {
-        return AbstractShiroConfig.super.realm();
+        return AbsShiroConfig.super.realm();
     }
 
     //开启shiro权限注解
     @Bean
     @Override
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(WebSecurityManager webSecurityManager) {
-        return AbstractShiroConfig.super.authorizationAttributeSourceAdvisor(webSecurityManager);
+        return AbsShiroConfig.super.authorizationAttributeSourceAdvisor(webSecurityManager);
     }
 
     @Bean
     @Override
     public Authenticator authenticator() {
-        return AbstractShiroConfig.super.authenticator();
+        return AbsShiroConfig.super.authenticator();
     }
 
     //配置securityManager的实现类，变向的配置了securityManager
     @Bean
     public WebSecurityManager webSecurityManager() {
-        return AbstractShiroConfig.super.securityManager(realm());
+        return AbsShiroConfig.super.securityManager(realm());
     }
 
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(WebSecurityManager webSecurityManager) {
-        return AbstractShiroConfig.super.shiroFilterFactoryBean(webSecurityManager);
+        return AbsShiroConfig.super.shiroFilterFactoryBean(webSecurityManager);
     }
 
     @Override
     public Map<String, Filter> getFilters() {
-        return AbstractShiroConfig.super.getFilters();
+        return AbsShiroConfig.super.getFilters();
     }
 
     @Override
     public Map<String, String> getFilterChainDefinitionMap() {
-        return AbstractShiroConfig.super.getFilterChainDefinitionMap();
+        return AbsShiroConfig.super.getFilterChainDefinitionMap();
     }
 }

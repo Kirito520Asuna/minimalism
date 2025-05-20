@@ -1,6 +1,6 @@
 package com.minimalism.im.config.dynamic.Impl;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.dynamic.abs.AbsDynamicDataSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Primary
 @Service
-public class ImDynamicDataSourceImpl implements AbsDynamicDataSource, AbstractBean {
+public class ImDynamicDataSourceImpl implements AbsDynamicDataSource, AbsBean {
     @Override
     public String getDataSourceName() {
         return null;

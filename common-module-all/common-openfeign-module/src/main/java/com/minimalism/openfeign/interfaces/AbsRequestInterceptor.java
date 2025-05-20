@@ -9,7 +9,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.enums.Openfeign;
 import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.utils.api.ApiUtil;
@@ -35,7 +35,7 @@ import java.util.*;
  * @Date 2024/5/14 0014 12:25
  * @Description
  */
-public interface AbsRequestInterceptor extends RequestInterceptor, AbstractBean {
+public interface AbsRequestInterceptor extends RequestInterceptor, AbsBean {
     List<Request.HttpMethod> GET_OR_DELETE_HTTP_METHOD = CollUtil.newArrayList(Request.HttpMethod.GET, Request.HttpMethod.DELETE);
     List<Request.HttpMethod> POST_OR_PUT_HTTP_METHOD = CollUtil.newArrayList(Request.HttpMethod.POST, Request.HttpMethod.PUT);
 
@@ -51,7 +51,7 @@ public interface AbsRequestInterceptor extends RequestInterceptor, AbstractBean 
     @Override
     @PostConstruct
     default void init() {
-        AbstractBean.super.init();
+        AbsBean.super.init();
     }
 
     @SneakyThrows

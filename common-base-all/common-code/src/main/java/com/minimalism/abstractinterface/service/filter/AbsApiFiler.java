@@ -1,8 +1,7 @@
 package com.minimalism.abstractinterface.service.filter;
 
-import com.minimalism.abstractinterface.AbstractApiSign;
+import com.minimalism.abstractinterface.AbsApiSign;
 import com.minimalism.abstractinterface.order.FilerOrderConstants;
-import org.springframework.core.Ordered;
 
 import javax.annotation.PostConstruct;
 
@@ -11,7 +10,7 @@ import javax.annotation.PostConstruct;
  * @Date 2025/3/10 3:31:21
  * @Description
  */
-public interface AbstractApiFiler extends AbstractApiSign, AbstractFilerOrder {
+public interface AbsApiFiler extends AbsApiSign, AbstractFilerOrder {
     @Override
     default int getOrder() {
         return FilerOrderConstants.ApiOrder;

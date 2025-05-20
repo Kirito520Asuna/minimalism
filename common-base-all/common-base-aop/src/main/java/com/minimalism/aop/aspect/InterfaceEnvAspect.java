@@ -9,5 +9,5 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Getter
-public class InterfaceEnvAspect implements AbstractInterfaceEnvAspect {
+public class InterfaceEnvAspect implements AbsInterfaceEnvAspect {
 }

@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.service.AbstractAuthorization;
+import com.minimalism.abstractinterface.service.AbsAuthorization;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.exception.GlobalCustomException;
@@ -18,7 +18,6 @@ import com.minimalism.utils.str.StrUtils;
 import lombok.SneakyThrows;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
@@ -31,26 +30,26 @@ import java.util.Map;
  * @Date 2024/10/20 上午5:01:59
  * @Description
  */
-public interface AbstractAuthorizationShiro extends AbstractAuthorization {
+public interface AbsAuthorizationShiro extends AbsAuthorization {
 
     @Override
     default String getTokenBySubstring(String token) {
-        return AbstractAuthorization.super.getTokenBySubstring(token);
+        return AbsAuthorization.super.getTokenBySubstring(token);
     }
 
     @Override
     default Map<String, String> pushTwoToken(String userId, String tokenName, String refreshTokenName, HttpServletResponse response) {
-        return AbstractAuthorization.super.pushTwoToken(userId, tokenName, refreshTokenName, response);
+        return AbsAuthorization.super.pushTwoToken(userId, tokenName, refreshTokenName, response);
     }
 
     @Override
     default String getUserIdByRefreshToken(String secret, String tokenName, String refreshTokenName, HttpServletRequest request, HttpServletResponse response) {
-        return AbstractAuthorization.super.getUserIdByRefreshToken(secret, tokenName, refreshTokenName, request, response);
+        return AbsAuthorization.super.getUserIdByRefreshToken(secret, tokenName, refreshTokenName, request, response);
     }
 
     @Override
     default String getUserIdByToken(boolean enableTwoToken, String secret, String tokenName, String refreshTokenName, HttpServletRequest request, HttpServletResponse response) {
-        return AbstractAuthorization.super.getUserIdByToken(enableTwoToken, secret, tokenName, refreshTokenName, request, response);
+        return AbsAuthorization.super.getUserIdByToken(enableTwoToken, secret, tokenName, refreshTokenName, request, response);
     }
 
     /**

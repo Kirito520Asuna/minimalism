@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
  * @Date 2023/6/1 0001 17:03
  * @Description
  */
-public interface AbstractSysLog extends AbstractAop {
+public interface AbsSysLog extends AbsAop {
     default SysLog getAnnotationLog(JoinPoint joinPoint) {
         return getAnnotation(joinPoint, SysLog.class);
     }

@@ -1,27 +1,19 @@
 package com.minimalism.file.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONUtil;
-import com.minimalism.aop.aviator.Aviator;
 import com.minimalism.aop.aviator.AviatorValid;
 import com.minimalism.aop.aviator.AviatorValids;
 import com.minimalism.aop.log.SysLog;
-import com.minimalism.controller.AbstractBaseController;
+import com.minimalism.controller.AbsBaseController;
 import com.minimalism.dto.FileUpDto;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.service.FileInfoService;
-import com.minimalism.file.service.FilePartService;
 import com.minimalism.file.service.FileService;
 import com.minimalism.result.Result;
 import com.minimalism.utils.bean.CustomBeanUtils;
-import com.minimalism.utils.io.IoUtils;
 import com.minimalism.utils.jvm.JVMUtils;
 import com.minimalism.utils.object.ObjectUtils;
 import com.minimalism.utils.oss.LocalOSSUtils;
@@ -30,8 +22,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
-import lombok.val;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
-import java.util.UUID;
 
 
 /**
@@ -51,7 +40,7 @@ import java.util.UUID;
 @Tag(name = "文件接口")
 @RequestMapping({"/file", "/api/file", "/jwt/file"})
 @RestController
-public class FileController implements AbstractBaseController {
+public class FileController implements AbsBaseController {
     @Resource
     private FileInfoService fileInfoService;
 

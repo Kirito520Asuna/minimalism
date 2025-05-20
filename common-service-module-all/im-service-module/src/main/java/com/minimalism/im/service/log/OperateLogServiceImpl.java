@@ -1,7 +1,6 @@
 package com.minimalism.im.service.log;
 
-import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.service.AbstractOperateLogService;
+import com.minimalism.abstractinterface.service.AbsOperateLogService;
 import com.minimalism.pojo.OperateLogInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,15 +12,15 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class OperateLogServiceImpl implements AbstractOperateLogService {
+public class OperateLogServiceImpl implements AbsOperateLogService {
     @Override
     public void createOperateLog(OperateLogInfo operateLog) {
-        AbstractOperateLogService.super.createOperateLog(operateLog);
+        AbsOperateLogService.super.createOperateLog(operateLog);
     }
 
     @Override
     public void updateOperateLog(OperateLogInfo operateLog) {
-        AbstractOperateLogService.super.updateOperateLog(operateLog);
+        AbsOperateLogService.super.updateOperateLog(operateLog);
     }
 
 }

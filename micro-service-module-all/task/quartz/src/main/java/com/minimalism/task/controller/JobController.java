@@ -3,7 +3,7 @@ package com.minimalism.task.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import com.minimalism.aop.log.SysLog;
-import com.minimalism.controller.AbstractBaseController;
+import com.minimalism.controller.AbsBaseController;
 import com.minimalism.enums.BusinessType;
 import com.minimalism.job.domain.SysJob;
 import com.minimalism.job.service.SysJobService;
@@ -29,7 +29,7 @@ import com.minimalism.aop.shiro.ShiroPermissions;
 @Tag(description = "定时任务管理", name = "定时任务管理")
 @RestController
 @RequestMapping({"/api/job", "/jwt/job", "/job"})
-public class JobController implements AbstractBaseController {
+public class JobController implements AbsBaseController {
     @Resource
     private SysJobService sysJobService;
 

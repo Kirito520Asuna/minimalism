@@ -3,7 +3,7 @@ package com.minimalism.filter.bean;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.ApiFilter;
 import com.minimalism.filter.CommonFilter;
@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,7 +26,7 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Component
 @ConditionalOnExpression(ExpressionConstants.filterExpression)
-public class FilterBean implements AbstractBean {
+public class FilterBean implements AbsBean {
     @Override
     public void init() {
         debug("[Bean]-[Filter]-[init] {}", getClass().getName());

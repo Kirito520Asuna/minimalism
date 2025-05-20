@@ -2,12 +2,11 @@ package com.minimalism.security;
 
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.security.AbstractSecurityExpressionRoot;
+import com.minimalism.abstractinterface.security.AbsSecurityExpressionRoot;
 import com.minimalism.config.security.SecurityAnnotationConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -17,7 +16,7 @@ import java.util.List;
  */
 @Component("custom")
 @Slf4j
-public class CustomSecurityExpressionRoot  implements AbstractSecurityExpressionRoot {
+public class CustomSecurityExpressionRoot  implements AbsSecurityExpressionRoot {
 
     //@PreAuthorize("@custom.hasAuthority('admin')")
     //@PreAuthorize("@custom.hasRole('admin')")
@@ -38,7 +37,7 @@ public class CustomSecurityExpressionRoot  implements AbstractSecurityExpression
             log.warn("未开启权限认证");
             return true;
         }
-        return AbstractSecurityExpressionRoot.super.hasAuthority(authority);
+        return AbsSecurityExpressionRoot.super.hasAuthority(authority);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class CustomSecurityExpressionRoot  implements AbstractSecurityExpression
             log.warn("未开启权限认证");
             return true;
         }
-        return AbstractSecurityExpressionRoot.super.hasRole(role);
+        return AbsSecurityExpressionRoot.super.hasRole(role);
     }
 
     @Override

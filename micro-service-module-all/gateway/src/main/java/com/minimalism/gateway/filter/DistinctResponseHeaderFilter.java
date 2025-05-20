@@ -2,7 +2,7 @@ package com.minimalism.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.gateway.filter.order.Order;
 import com.minimalism.utils.str.StrUtils;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DistinctResponseHeaderFilter implements GlobalFilter, Ordered, AbstractBean {
+public class DistinctResponseHeaderFilter implements GlobalFilter, Ordered, AbsBean {
     @Override
     public int getOrder() {
         return Order.DISTINCT_RESPONSE_ORDER;

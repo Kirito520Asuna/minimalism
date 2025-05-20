@@ -4,7 +4,7 @@ package com.minimalism.gateway.bean;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.properties.CorsGatewayProperties;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;
@@ -26,7 +26,7 @@ import org.springframework.web.util.pattern.PathPatternParser;
  */
 @Slf4j
 @Configuration
-public class GatewayBeanList implements AbstractBean {
+public class GatewayBeanList implements AbsBean {
 
     /**
      * {@link com.minimalism.properties.CorsProperties}

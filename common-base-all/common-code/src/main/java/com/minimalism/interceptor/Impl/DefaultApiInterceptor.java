@@ -1,7 +1,6 @@
 package com.minimalism.interceptor.Impl;
 
-import com.minimalism.interceptor.AbstractApiInterceptor;
-import org.springframework.stereotype.Service;
+import com.minimalism.interceptor.AbsApiInterceptor;
 
 /**
  * @Author yan
@@ -9,5 +8,5 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 //@Service
-public class DefaultApiInterceptor implements AbstractApiInterceptor {
+public class DefaultApiInterceptor implements AbsApiInterceptor {
 }

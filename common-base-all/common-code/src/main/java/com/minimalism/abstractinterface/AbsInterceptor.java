@@ -1,7 +1,7 @@
 package com.minimalism.abstractinterface;
 
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.utils.thread.ThreadMdcUtil;
 import lombok.SneakyThrows;
 import org.slf4j.MDC;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date 2024/5/14 0014 14:45
  * @Description
  */
-public interface AbstractInterceptor extends HandlerInterceptor, AbstractBean {
+public interface AbsInterceptor extends HandlerInterceptor, AbsBean {
     String TRACE_ID = ThreadMdcUtil.TRACE_ID;
 
     @SneakyThrows

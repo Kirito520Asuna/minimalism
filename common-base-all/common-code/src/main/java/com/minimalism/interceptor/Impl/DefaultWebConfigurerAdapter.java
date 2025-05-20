@@ -1,6 +1,6 @@
 package com.minimalism.interceptor.Impl;
 
-import com.minimalism.interceptor.AbstractWebConfigurerAdapter;
+import com.minimalism.interceptor.AbsWebConfigurerAdapter;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 @Service
-public class DefaultWebConfigurerAdapter implements AbstractWebConfigurerAdapter {
+public class DefaultWebConfigurerAdapter implements AbsWebConfigurerAdapter {
 }

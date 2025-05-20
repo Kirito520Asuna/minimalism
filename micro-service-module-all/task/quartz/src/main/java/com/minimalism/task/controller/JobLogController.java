@@ -10,7 +10,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.minimalism.job.domain.SysJobLog;
 import com.minimalism.job.service.SysJobLogService;
 import com.minimalism.utils.poi.ExcelUtil;
-import com.minimalism.controller.AbstractBaseController;
+import com.minimalism.controller.AbsBaseController;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 import com.minimalism.aop.log.SysLog;
@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "定时任务调度日志")
 @RestController
 @RequestMapping({"/api/job/log", "/jwt/job/log", "/job/log"})
-public class JobLogController implements AbstractBaseController {
+public class JobLogController implements AbsBaseController {
     @Resource
     private SysJobLogService sysJobLogService;
 

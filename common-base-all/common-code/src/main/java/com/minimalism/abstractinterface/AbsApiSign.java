@@ -5,14 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONNull;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.abstractinterface.service.AbstractApiSaltService;
 import com.minimalism.config.ApiConfig;
 import com.minimalism.enums.ApiCode;
@@ -25,7 +21,6 @@ import com.minimalism.utils.api.ApiUtil;
 import com.minimalism.utils.date.DateUtils;
 import com.minimalism.utils.api.SingleSignature;
 import lombok.SneakyThrows;
-import org.slf4j.Logger;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
@@ -43,7 +38,7 @@ import java.util.stream.Collectors;
  * @Date 2024/5/18 0018 2:36
  * @Description
  */
-public interface AbstractApiSign extends AbstractBean {
+public interface AbsApiSign extends AbsBean {
     ObjectMapper objectMapper = ApiUtil.getObjectMapper();
 
     default ObjectMapper getObjectMapper() {

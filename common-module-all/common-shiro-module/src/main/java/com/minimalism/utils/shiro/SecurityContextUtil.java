@@ -5,9 +5,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.minimalism.abstractinterface.AbstractIpBan;
 import com.minimalism.abstractinterface.AbstractUserDetailsByShiroService;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.constant.Redis;
 import com.minimalism.constant.Roles;
 import com.minimalism.enums.ApiCode;
@@ -23,7 +22,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ import java.util.List;
  * @Description
  */
 @Slf4j
-public class SecurityContextUtil implements AbstractBean {
+public class SecurityContextUtil implements AbsBean {
     public static ThreadLocal<UserHolder> threadLocal = new TransmittableThreadLocal<>();
 
     @Data

@@ -1,16 +1,13 @@
 package com.minimalism.gateway.config;
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -23,7 +20,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
  */
 @Profile(value = {"dev", "test"})
 @Configuration(proxyBeanMethods = false)
-public class HomePageConfiguration implements WebFluxConfigurer , AbstractBean {
+public class HomePageConfiguration implements WebFluxConfigurer , AbsBean {
     public String getPath() {
         String prefix = GatewayConfig.getPrefix();
         return prefix;

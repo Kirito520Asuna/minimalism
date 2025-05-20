@@ -1,15 +1,13 @@
 package com.minimalism.interceptor;
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
-import com.minimalism.abstractinterface.service.filter.AbstractApiFiler;
-import com.minimalism.abstractinterface.service.filter.AbstractAuthFiler;
+import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.abstractinterface.service.filter.AbsApiFiler;
+import com.minimalism.abstractinterface.service.filter.AbsAuthFiler;
 import com.minimalism.interceptor.Impl.DefaultApiInterceptor;
 import com.minimalism.interceptor.Impl.DefaultInterceptor;
 import com.minimalism.interceptor.Impl.DefaultLogInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,8 +17,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 //@ConditionalOnExpression("${common.openInterceptor:false}&&!${common.openFilter:true}")
-@ConditionalOnMissingBean({AbstractApiFiler.class,AbstractAuthFiler.class})
-public class InterceptorBean implements AbstractBean {
+@ConditionalOnMissingBean({AbsApiFiler.class, AbsAuthFiler.class})
+public class InterceptorBean implements AbsBean {
     @Override
     public void init() {
         debug("[Bean]-[Interceptor]-[init] {}",getClass().getName());
@@ -31,13 +29,13 @@ public class InterceptorBean implements AbstractBean {
         return new DefaultInterceptor();
     }
     @Bean
-    @ConditionalOnMissingBean(AbstractApiFiler.class)
-    public AbstractApiInterceptor defaultApiInterceptor(){
+    @ConditionalOnMissingBean(AbsApiFiler.class)
+    public AbsApiInterceptor defaultApiInterceptor(){
         return new DefaultApiInterceptor();
     }
     @Bean
-    @ConditionalOnMissingBean(AbstractAuthFiler.class)
-    public AbstractLogInInterceptor defaultLogInterceptor(){
+    @ConditionalOnMissingBean(AbsAuthFiler.class)
+    public AbsLogInInterceptor defaultLogInterceptor(){
         return new DefaultLogInterceptor();
     }
 }

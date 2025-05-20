@@ -2,11 +2,10 @@ package com.minimalism.abstractinterface.security;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.config.AuthorizationConfig;
 import com.minimalism.constant.Roles;
 import com.minimalism.utils.object.ObjectUtils;
-import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
  * @Date 2024/9/27 上午2:12:25
  * @Description
  */
-public interface AbstractSecurityExpressionRoot extends AbstractBean {
+public interface AbsSecurityExpressionRoot extends AbsBean {
     @Override
     @PostConstruct
     default void init() {

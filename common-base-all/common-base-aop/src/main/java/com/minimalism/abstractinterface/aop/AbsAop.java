@@ -3,9 +3,8 @@ package com.minimalism.abstractinterface.aop;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONConfig;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.aop.AopConstants;
-import com.minimalism.aop.log.SysLog;
 import com.minimalism.utils.object.ObjectUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,14 +21,13 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 /**
  * @Author yan
  * @Date 2023/6/1 0001 17:03
  * @Description
  */
-public interface AbstractAop extends AbstractBean, Ordered {
+public interface AbsAop extends AbsBean, Ordered {
     JSONConfig jsonConfig = JSONConfig.create().setIgnoreNullValue(false);
 
     @Override

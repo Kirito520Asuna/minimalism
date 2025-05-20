@@ -1,11 +1,9 @@
 package com.minimalism.gateway.config;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.gateway.filter.*;
-import com.minimalism.properties.CorsProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +15,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
-
 
 /**
  * @Author minimalism
@@ -27,7 +23,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Configuration
-public class GatewayConfig implements AbstractBean {
+public class GatewayConfig implements AbsBean {
     public static String getPrefix() {
         String prefix = SpringUtil.getBean(Environment.class).getProperty("server.servlet.context-path");
         prefix = StringUtils.isEmpty(prefix) ? "" : prefix;

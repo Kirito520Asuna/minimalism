@@ -1,7 +1,7 @@
 package com.minimalism.file.storage;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.platform.AliyunOssStorageClient;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 //@Deprecated
 @RequiredArgsConstructor
-public class IStorageFactory implements IFileStorageProvider, AbstractBean {
+public class IStorageFactory implements IFileStorageProvider, AbsBean {
     @Override
     public void init() {
         debug("[init]-[Factory] {}",getAClass().getName());

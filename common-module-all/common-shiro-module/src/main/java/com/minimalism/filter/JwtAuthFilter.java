@@ -3,14 +3,12 @@ package com.minimalism.filter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.gson.Gson;
-import com.minimalism.abstractinterface.AbstractAuthorizationShiro;
 import com.minimalism.abstractinterface.AuthorizationFilter;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.utils.jwt.JwtUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
-import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletRequest;

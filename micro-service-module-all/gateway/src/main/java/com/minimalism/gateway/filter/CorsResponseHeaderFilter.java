@@ -1,10 +1,8 @@
 package com.minimalism.gateway.filter;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 
-import com.minimalism.utils.object.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import org.reactivestreams.Publisher;
@@ -19,7 +17,6 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.web.server.ServerWebExchange;
@@ -37,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Deprecated
-public class CorsResponseHeaderFilter implements GlobalFilter, Ordered, AbstractBean {
+public class CorsResponseHeaderFilter implements GlobalFilter, Ordered, AbsBean {
 
     @Override
     public int getOrder() {

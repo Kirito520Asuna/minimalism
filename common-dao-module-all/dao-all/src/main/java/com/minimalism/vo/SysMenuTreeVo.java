@@ -2,7 +2,7 @@ package com.minimalism.vo;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.aop.tree.Tree;
 import com.minimalism.aop.tree.TreeMap;
 import com.minimalism.mp.pojo.BaseEntity;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Data @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysMenuTreeVo extends BaseEntity implements AbstractBean {
+public class SysMenuTreeVo extends BaseEntity implements AbsBean {
     /**
      * 菜单ID
      */
@@ -122,7 +122,7 @@ public class SysMenuTreeVo extends BaseEntity implements AbstractBean {
 
     @Override
     public void init() {
-        AbstractBean.super.init();
+        AbsBean.super.init();
     }
 
     public static void main(String[] args) {

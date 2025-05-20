@@ -1,7 +1,7 @@
 package com.minimalism.common.service;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.abstractinterface.service.AbstractUserService;
 import com.minimalism.config.AuthorizationConfig;
 import com.minimalism.constant.Roles;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @Date 2025/3/7 0:39:57
  * @Description
  */
-public interface CommonUserService extends AbstractBean {
+public interface CommonUserService extends AbsBean {
     @Override
     default void init() {
         debug("[Common]-[Auth]-[init] {}", getClass().getName());

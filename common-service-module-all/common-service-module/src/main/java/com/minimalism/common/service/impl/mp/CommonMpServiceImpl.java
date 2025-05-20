@@ -1,7 +1,7 @@
 package com.minimalism.common.service.impl.mp;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import com.minimalism.mp.abs.handler.AbsEntityHandler;
 import com.minimalism.mp.abs.service.MpUserService;
 import com.minimalism.common.service.CommonUserService;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @ConditionalOnBean(AbsEntityHandler.class)
 @Service @Primary
-public class CommonMpServiceImpl implements MpUserService, AbstractBean {
+public class CommonMpServiceImpl implements MpUserService, AbsBean {
     @Override
     public String getUserId() {
         return SpringUtil.getBean(CommonUserService.class).getUserId();

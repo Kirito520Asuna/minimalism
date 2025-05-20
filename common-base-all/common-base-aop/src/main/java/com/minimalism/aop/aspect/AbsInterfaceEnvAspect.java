@@ -2,7 +2,7 @@ package com.minimalism.aop.aspect;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.aop.AbstractAop;
+import com.minimalism.abstractinterface.aop.AbsAop;
 import com.minimalism.aop.AopConstants;
 import com.minimalism.aop.env.InterfaceEnv;
 import com.minimalism.exception.GlobalCustomException;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface AbstractInterfaceEnvAspect extends AbstractAop {
+public interface AbsInterfaceEnvAspect extends AbsAop {
     @Override
     default int getOrder() {
         return AopConstants.EnvOrder;
@@ -51,7 +51,7 @@ public interface AbstractInterfaceEnvAspect extends AbstractAop {
         }
         try {
             // 执行原有逻辑
-            return AbstractAop.super.around(joinPoint);
+            return AbsAop.super.around(joinPoint);
         } catch (Throwable e) {
             throw e;
         }

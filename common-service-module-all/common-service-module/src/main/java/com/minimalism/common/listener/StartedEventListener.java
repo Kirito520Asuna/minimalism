@@ -1,6 +1,6 @@
 package com.minimalism.common.listener;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @Description
  */
 @Component
-public class StartedEventListener implements ApplicationListener<ApplicationStartedEvent>, AbstractBean {
+public class StartedEventListener implements ApplicationListener<ApplicationStartedEvent>, AbsBean {
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
         info("onApplicationEvent:[{}]","应用启动完成，通知监听器执行缓存预加载操作");

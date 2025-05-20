@@ -3,7 +3,7 @@ package com.minimalism.abstractinterface;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.abstractinterface.aop.AbsSysLog;
 import com.minimalism.aop.shiro.ShiroLogical;
 import com.minimalism.aop.shiro.ShiroPermissions;
 import com.minimalism.aop.shiro.ShiroRoles;
@@ -15,7 +15,6 @@ import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.utils.object.ObjectUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.aspectj.lang.JoinPoint;
-import org.springframework.core.env.Environment;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
  * @Date 2024/10/21 下午2:10:02
  * @Description
  */
-public interface AbstractShiroAopAspect extends AbstractSysLog {
+public interface AbsShiroAopAspect extends AbsSysLog {
     default void hasRolesPermissions(JoinPoint joinPoint) throws Exception {
         ShiroAnnotationConfig shiroAnnotationConfig = SpringUtil.getBean(ShiroAnnotationConfig.class);
         //全局控制

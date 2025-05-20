@@ -1,6 +1,6 @@
 package com.minimalism.openfeign.config.seata;
 
-import com.minimalism.abstractinterface.bean.AbstractBean;
+import com.minimalism.abstractinterface.bean.AbsBean;
 import io.seata.config.springcloud.EnableSeataSpringConfig;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,5 +11,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableSeataSpringConfig
-public class SeataConfig implements AbstractBean {
+public class SeataConfig implements AbsBean {
 }

@@ -7,7 +7,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.aop.AbstractSysLog;
+import com.minimalism.abstractinterface.aop.AbsSysLog;
 import com.minimalism.aop.log.SysLog;
 import com.minimalism.enums.RequestMethod;
 
@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 @Slf4j
 @Component
 @Getter
-public class AbstractSysLogAspect implements AbstractSysLog {
+public class AbsSysLogAspect implements AbsSysLog {
     private final static JSONConfig jsonConfig = JSONConfig.create().setIgnoreNullValue(false);
 
     @Resource
@@ -136,7 +136,7 @@ public class AbstractSysLogAspect implements AbstractSysLog {
                     , trackId, applicationName, module, title, remoteAddr, url, method, args, declaringTypeName, name);
         }
         // 执行方法
-        Object around = AbstractSysLog.super.around(joinPoint);
+        Object around = AbsSysLog.super.around(joinPoint);
 
         /**
          * 开启响应日志

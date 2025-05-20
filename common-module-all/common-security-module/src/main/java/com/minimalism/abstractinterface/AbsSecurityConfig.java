@@ -1,13 +1,8 @@
 package com.minimalism.abstractinterface;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.service.config.AbstractAuthorizationConfig;
-import com.minimalism.constant.ExpressionConstants;
-import com.minimalism.filter.ApiFilter;
-import com.minimalism.filter.CorsRequestFilter;
+import com.minimalism.abstractinterface.service.config.AbsAuthorizationConfig;
 import com.minimalism.filter.JwtFilter;
-import com.minimalism.utils.object.ObjectUtils;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -16,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @Date 2024/10/28 下午12:44:53
  * @Description
  */
-public interface AbstractSecurityConfig extends AbstractAuthorizationConfig {
+public interface AbsSecurityConfig extends AbsAuthorizationConfig {
     /**
      * @param http
      */
