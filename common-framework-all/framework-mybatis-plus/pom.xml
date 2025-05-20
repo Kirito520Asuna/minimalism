@@ -22,11 +22,20 @@
         <hutool.version>5.8.22</hutool.version>
         <lombok.version>1.18.34</lombok.version>
         <swagger-annotations.version>2.2.8</swagger-annotations.version>
+
+        <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
     <dependencyManagement>
-
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!--mybatis/mybatis-plus支持（实体注解/MybatisPlusInterceptor分页拦截器/枚举/字段自动填充/查询注解/BaseMapper等）-->
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -88,12 +97,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!--无法访问javax.servlet.http.HttpServlet-->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
-            </dependency>
+<!--            &lt;!&ndash;无法访问javax.servlet.http.HttpServlet&ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>javax.servlet</groupId>-->
+<!--                <artifactId>javax.servlet-api</artifactId>-->
+<!--                <version>${javax.servlet-api.version}</version>-->
+<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
 

@@ -13,6 +13,7 @@ public class BusinessException extends GlobalCustomException{
     }
 
     public BusinessException() {
+        super(ApiCode.FAIL);
     }
 
     public BusinessException(ApiCode apiCode) {

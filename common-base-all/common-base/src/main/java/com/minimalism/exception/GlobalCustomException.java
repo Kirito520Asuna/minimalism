@@ -11,29 +11,29 @@ import lombok.NoArgsConstructor;
  * @Date 2023/10/23 0023 15:06
  * @Description
  */
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 @Getter
-public class GlobalCustomException extends RuntimeException {
-    private Integer code = ApiCode.FAIL.getCode();
+public class GlobalCustomException extends GlobalException {
+    //private Integer code = ApiCode.FAIL.getCode();
 
     public GlobalCustomException(ApiCode apiCode) {
-        super(apiCode.getMessage());
-        this.code = apiCode.getCode();
+        super(apiCode.getCode(),apiCode.getMessage());
     }
 
     public GlobalCustomException(int code, String message) {
-        super(message);
-        this.code = code;
+        super(code,message);
     }
 
     public GlobalCustomException(ApiCode apiCode, String message) {
-        super(message);
-        this.code = apiCode.getCode();
+        super(apiCode.getCode(),message);
     }
 
     public GlobalCustomException(String message) {
-        super(message);
-        this.code = ApiCode.FAIL.getCode();
+        super(ApiCode.FAIL.getCode(),message);
+    }
+
+    public GlobalCustomException(int code) {
+        super(code);
     }
 }
