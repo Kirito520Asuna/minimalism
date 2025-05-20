@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.config;
+package com.minimalism.redis.abs.config;
 
 
 import cn.hutool.core.collection.CollUtil;
@@ -8,7 +8,6 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -16,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -66,8 +64,8 @@ import java.util.List;
  * @Date 2024/5/22 0022 9:50
  * @Description
  */
-public interface AbstractRedissonConfig {
-    Logger log = LoggerFactory.getLogger(AbstractRedissonConfig.class);
+public interface AbsRedissonConfig {
+    Logger log = LoggerFactory.getLogger(AbsRedissonConfig.class);
     String DEFAULT_REDIS = "127.0.0.1:6379";
     enum RedisMode {
         single, cluster,sentinel;

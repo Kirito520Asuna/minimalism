@@ -1,14 +1,12 @@
 package com.minimalism.redis.aop.aspect;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
+import com.minimalism.redis.abs.aop.AbsRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
 import com.minimalism.redis.service.RedisService;
 import lombok.Getter;
@@ -36,7 +34,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @Getter
-public class RedisCacheEvictAspect implements AbstractRedisAspect {
+public class RedisCacheEvictAspect implements AbsRedisAspect {
     @Lazy
     @Resource
     private RedisTemplate redisTemplate;

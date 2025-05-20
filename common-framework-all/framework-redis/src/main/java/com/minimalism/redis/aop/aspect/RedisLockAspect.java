@@ -2,7 +2,7 @@ package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
-import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
+import com.minimalism.redis.abs.aop.AbsRedisAspect;
 import com.minimalism.redis.aop.redis.RedisLock;
 import com.minimalism.redis.exception.RedisException;
 import lombok.*;
@@ -28,7 +28,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @Getter
-public class RedisLockAspect implements AbstractRedisAspect {
+public class RedisLockAspect implements AbsRedisAspect {
     /**
      * 缓存参数缓存key模板
      */
@@ -59,7 +59,7 @@ public class RedisLockAspect implements AbstractRedisAspect {
     @Override
     @Pointcut("@annotation(com.minimalism.redis.aop.redis.RedisLock)")
     public void pointcutAspect() {
-        AbstractRedisAspect.super.pointcutAspect();
+        AbsRedisAspect.super.pointcutAspect();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class RedisLockAspect implements AbstractRedisAspect {
         RedisEntity<RLock> one = getOne();
         try {
             if (annotation == null) {
-                return AbstractRedisAspect.super.around(joinPoint);
+                return AbsRedisAspect.super.around(joinPoint);
             }
             one = one.setRedisCacheParameters(setRequesRedisCacheParameters(one.getRedisCacheParameters(), joinPoint));
         } finally {
@@ -94,7 +94,7 @@ public class RedisLockAspect implements AbstractRedisAspect {
             if (!isLocked) {
                 throw new RedisException(annotation.exceptionMessage());
             }
-            return AbstractRedisAspect.super.around(joinPoint);
+            return AbsRedisAspect.super.around(joinPoint);
         } finally {
             //确保只有当前线程持有锁时，才解锁
             if (isLocked && lock.isHeldByCurrentThread()) {

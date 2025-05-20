@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
+import com.minimalism.redis.abs.aop.AbsRedisAspect;
 import com.minimalism.redis.aop.redis.RedisCacheable;
 import com.minimalism.redis.exception.RedisException;
 import com.minimalism.redis.service.RedisService;
@@ -31,7 +31,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @Getter
-public class RedisCacheableAspect implements AbstractRedisAspect {
+public class RedisCacheableAspect implements AbsRedisAspect {
     @Lazy
     @Resource
     private RedisTemplate redisTemplate;
@@ -65,7 +65,7 @@ public class RedisCacheableAspect implements AbstractRedisAspect {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         RedisCacheable cacheable = getAnnotation(joinPoint, RedisCacheable.class);
         if (cacheable == null) {
-            return AbstractRedisAspect.super.around(joinPoint);
+            return AbsRedisAspect.super.around(joinPoint);
         }
         setOne(setRequesRedisCacheParameters(getOne(), joinPoint));
 
@@ -114,7 +114,7 @@ public class RedisCacheableAspect implements AbstractRedisAspect {
                 o = bean;
                 //log.info("缓存命中，key:{},value:{}", formatKey, o);
             } else {
-                Object around = AbstractRedisAspect.super.around(joinPoint);
+                Object around = AbsRedisAspect.super.around(joinPoint);
                 if (around != null) {
                     o = around;
                 } else if (cacheable.throwException()) {

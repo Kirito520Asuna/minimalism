@@ -1,4 +1,4 @@
-package com.minimalism.abstractinterface.ban;
+package com.minimalism.redis.abs.ban;
 
 
 import cn.hutool.extra.spring.SpringUtil;

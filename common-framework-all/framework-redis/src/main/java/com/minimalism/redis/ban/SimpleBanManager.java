@@ -1,7 +1,7 @@
 package com.minimalism.redis.ban;
 
 //import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.ban.BanManager;
+import com.minimalism.redis.abs.ban.BanManager;
 import com.minimalism.redis.service.RedisService;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RSet;

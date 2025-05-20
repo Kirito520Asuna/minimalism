@@ -1,11 +1,10 @@
-package com.minimalism.abstractinterface.aop;
+package com.minimalism.redis.abs.aop;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
  * @Date 2024/5/24 0024 10:00
  * @Description
  */
-public interface AbstractRedisAspect extends Ordered {
+public interface AbsRedisAspect extends Ordered {
 
     JSONConfig config = new JSONConfig().setIgnoreNullValue(false);
     /*#####################################################################################################################################*/

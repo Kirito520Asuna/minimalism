@@ -6,7 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
-import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
+import com.minimalism.redis.abs.aop.AbsRedisAspect;
 import com.minimalism.redis.aop.redis.RedisNoRepeatSubmit;
 import com.minimalism.redis.exception.RedisException;
 import com.minimalism.redis.service.RedisService;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 @Getter
-public class RedisNoRepeatSubmitAspect implements AbstractRedisAspect {
+public class RedisNoRepeatSubmitAspect implements AbsRedisAspect {
     @Lazy
     @Resource
     private RedisTemplate redisTemplate;
@@ -145,7 +145,7 @@ public class RedisNoRepeatSubmitAspect implements AbstractRedisAspect {
             }
         }
 
-        return AbstractRedisAspect.super.around(joinPoint);
+        return AbsRedisAspect.super.around(joinPoint);
 
     }
 }

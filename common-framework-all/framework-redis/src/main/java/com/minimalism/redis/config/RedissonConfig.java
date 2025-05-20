@@ -1,6 +1,6 @@
 package com.minimalism.redis.config;
 
-import com.minimalism.abstractinterface.config.AbstractRedissonConfig;
+import com.minimalism.redis.abs.config.AbsRedissonConfig;
 import com.minimalism.redis.ban.BanConfiguration;
 import com.minimalism.redis.ban.SimpleBanManager;
 import org.redisson.api.RedissonClient;
@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 @EnableAspectJAutoProxy
 @EnableCaching // 开启Spring Redis Cache，使用注解驱动缓存机制
 @ConditionalOnBean(RedisConfiguration.class)
-public class RedissonConfig implements AbstractRedissonConfig {
+public class RedissonConfig implements AbsRedissonConfig {
 
     @Resource
     @Lazy
@@ -40,7 +40,7 @@ public class RedissonConfig implements AbstractRedissonConfig {
     }
 
     public RedissonClient initRedissonClient() {
-        return AbstractRedissonConfig.super.getRedissonClient(configuration);
+        return AbsRedissonConfig.super.getRedissonClient(configuration);
     }
 
     @Bean

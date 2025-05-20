@@ -1,8 +1,8 @@
 package com.minimalism.redis.aop.aspect;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.aop.AbstractRedisAspect;
-import com.minimalism.abstractinterface.ban.BanManager;
+import com.minimalism.redis.abs.aop.AbsRedisAspect;
+import com.minimalism.redis.abs.ban.BanManager;
 import com.minimalism.redis.aop.ban.Ban;
 import com.minimalism.redis.ban.BanConfiguration;
 import com.minimalism.redis.ban.SimpleBanManager;
@@ -12,14 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.Set;
@@ -34,7 +31,7 @@ import static cn.hutool.extra.servlet.ServletUtil.getClientIP;
 @Aspect
 @Slf4j
 @Component
-public class RedisBanAspect implements AbstractRedisAspect {
+public class RedisBanAspect implements AbsRedisAspect {
     static SimpleBanManager DEFAULT_BAN_MANAGER;
     static BanConfiguration DEFAULT_BAN_CONFIGURATION;
 
@@ -141,6 +138,6 @@ public class RedisBanAspect implements AbstractRedisAspect {
                 break;
         }
 
-        return AbstractRedisAspect.super.around(joinPoint);
+        return AbsRedisAspect.super.around(joinPoint);
     }
 }
