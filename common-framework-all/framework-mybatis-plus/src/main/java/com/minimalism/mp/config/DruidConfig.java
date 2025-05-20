@@ -1,6 +1,6 @@
 package com.minimalism.mp.config;
 
-import com.minimalism.abs.config.AbstractDruidConfig;
+import com.minimalism.mp.abs.config.AbsDruidConfig;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -14,13 +14,13 @@ import org.springframework.context.annotation.Configuration;
  * @Description Druid配置
  */
 @Configuration
-public class DruidConfig implements AbstractDruidConfig {
+public class DruidConfig implements AbsDruidConfig {
     /**
      * 注册servletRegistrationBean
      */
     @Bean @Override
     public ServletRegistrationBean servletRegistrationBean() {
-        return AbstractDruidConfig.super.servletRegistrationBean();
+        return AbsDruidConfig.super.servletRegistrationBean();
     }
 
     /**
@@ -28,6 +28,6 @@ public class DruidConfig implements AbstractDruidConfig {
      */
     @Bean @Override
     public FilterRegistrationBean filterRegistrationBean() {
-        return AbstractDruidConfig.super.filterRegistrationBean();
+        return AbsDruidConfig.super.filterRegistrationBean();
     }
 }

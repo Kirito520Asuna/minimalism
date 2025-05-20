@@ -2,7 +2,7 @@ package com.minimalism.mp.config;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.minimalism.abs.config.AbstractMybatisPlusConfig;
+import com.minimalism.mp.abs.config.AbsMybatisPlusConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-public class MybatisPlusConfig implements AbstractMybatisPlusConfig {
+public class MybatisPlusConfig implements AbsMybatisPlusConfig {
     /**
      * 3.4.0之前的版本用这个
      * @return
@@ -26,7 +26,7 @@ public class MybatisPlusConfig implements AbstractMybatisPlusConfig {
      */
     @Bean @Override
     public PaginationInnerInterceptor paginationInnerInterceptor() {
-        return AbstractMybatisPlusConfig.super.paginationInnerInterceptor();
+        return AbsMybatisPlusConfig.super.paginationInnerInterceptor();
     }
 
     /**
@@ -36,7 +36,7 @@ public class MybatisPlusConfig implements AbstractMybatisPlusConfig {
      */
     @Bean @Override
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        return AbstractMybatisPlusConfig.super.mybatisPlusInterceptor();
+        return AbsMybatisPlusConfig.super.mybatisPlusInterceptor();
     }
 
     /**
@@ -46,7 +46,7 @@ public class MybatisPlusConfig implements AbstractMybatisPlusConfig {
     @Bean
     @Override
     public MybatisPlusInterceptor blockAttackInnerInterceptor() {
-        return AbstractMybatisPlusConfig.super.blockAttackInnerInterceptor();
+        return AbsMybatisPlusConfig.super.blockAttackInnerInterceptor();
     }
 
     /**
@@ -55,6 +55,6 @@ public class MybatisPlusConfig implements AbstractMybatisPlusConfig {
      */
     @Bean @Override
     public MybatisPlusInterceptor optimisticLockerInterceptor() {
-        return AbstractMybatisPlusConfig.super.optimisticLockerInterceptor();
+        return AbsMybatisPlusConfig.super.optimisticLockerInterceptor();
     }
 }

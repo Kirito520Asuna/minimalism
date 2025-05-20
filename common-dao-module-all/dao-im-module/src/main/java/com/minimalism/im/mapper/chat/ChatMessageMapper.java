@@ -1,6 +1,6 @@
 package com.minimalism.im.mapper.chat;
 
-import com.minimalism.abs.mapper.MpMapper;
+import com.minimalism.mp.abs.mapper.MpMapper;
 import com.minimalism.im.domain.chat.ChatMessage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

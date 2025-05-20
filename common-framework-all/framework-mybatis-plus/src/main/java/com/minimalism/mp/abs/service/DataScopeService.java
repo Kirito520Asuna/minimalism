@@ -1,4 +1,4 @@
-package com.minimalism.abs.service;
+package com.minimalism.mp.abs.service;
 
 import com.minimalism.mp.aop.constants.DataScopeConstants;
 import com.minimalism.mp.aop.domain.DataScopeAboutTable;

@@ -1,6 +1,6 @@
 package com.minimalism.mp.handler;
 
-import com.minimalism.abs.handler.AbstractEntityHandler;
+import com.minimalism.mp.abs.handler.AbsEntityHandler;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -11,18 +11,18 @@ import org.springframework.stereotype.Component;
  * @Description
  */
 @Component
-public class EntityHandler implements AbstractEntityHandler {
+public class EntityHandler implements AbsEntityHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         String userId = getUserId();
-        AbstractEntityHandler.super.insertFill(metaObject);
+        AbsEntityHandler.super.insertFill(metaObject);
         this.strictInsertFill(metaObject, "createBy", () -> userId, String.class);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         String userId = getUserId();
-        AbstractEntityHandler.super.updateFill(metaObject);
+        AbsEntityHandler.super.updateFill(metaObject);
         this.strictInsertFill(metaObject, "updateBy", () -> userId, String.class);
     }
 

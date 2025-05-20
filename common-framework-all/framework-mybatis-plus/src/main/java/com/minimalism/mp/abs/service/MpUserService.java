@@ -1,4 +1,4 @@
-package com.minimalism.abs.service;
+package com.minimalism.mp.abs.service;
 
 /**
  * @Author yan

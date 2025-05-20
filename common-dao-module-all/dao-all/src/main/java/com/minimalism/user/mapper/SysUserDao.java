@@ -1,6 +1,6 @@
 package com.minimalism.user.mapper;
 
-import com.minimalism.abs.mapper.MpMapper;
+import com.minimalism.mp.abs.mapper.MpMapper;
 import com.minimalism.enums.im.ChatType;
 import com.minimalism.user.domain.SysUser;
 import com.minimalism.vo.user.UserVo;

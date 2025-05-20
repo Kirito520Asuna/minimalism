@@ -1,7 +1,7 @@
 package com.minimalism.im.mapper.im;
 
 
-import com.minimalism.abs.mapper.MpMapper;
+import com.minimalism.mp.abs.mapper.MpMapper;
 import com.minimalism.im.domain.im.Friend;
 import org.apache.ibatis.annotations.Mapper;
 

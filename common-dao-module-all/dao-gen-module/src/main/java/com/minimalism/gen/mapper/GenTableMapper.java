@@ -1,6 +1,6 @@
 package com.minimalism.gen.mapper;
 
-import com.minimalism.abs.mapper.MpMapper;
+import com.minimalism.mp.abs.mapper.MpMapper;
 import com.minimalism.gen.domain.GenTable;
 
 import java.util.List;

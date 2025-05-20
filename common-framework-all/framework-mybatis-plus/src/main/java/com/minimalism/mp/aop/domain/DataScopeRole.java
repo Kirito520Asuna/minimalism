@@ -3,7 +3,7 @@ package com.minimalism.mp.aop.domain;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abs.service.DataScopeService;
+import com.minimalism.mp.abs.service.DataScopeService;
 import com.minimalism.mp.aop.constants.DataScopeConstants;
 import com.minimalism.mp.util.MpObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;

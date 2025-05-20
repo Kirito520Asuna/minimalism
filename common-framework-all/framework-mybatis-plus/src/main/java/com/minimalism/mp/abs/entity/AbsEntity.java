@@ -1,4 +1,4 @@
-package com.minimalism.abs.entity;
+package com.minimalism.mp.abs.entity;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @Date 2024/11/1 下午7:04:45
  * @Description
  */
-public interface AbstractEntity {
+public interface AbsEntity {
     String ABSTRACT_ENTITY_PARAMS = "params";
     String DATA_SCOPE = DataScopeConstants.DATA_SCOPE;
     /**

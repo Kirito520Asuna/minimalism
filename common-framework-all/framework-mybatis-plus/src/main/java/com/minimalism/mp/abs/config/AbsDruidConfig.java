@@ -1,4 +1,4 @@
-package com.minimalism.abs.config;
+package com.minimalism.mp.abs.config;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
@@ -10,7 +10,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
  * @Date 2024/5/22 0022 10:38
  * @Description
  */
-public interface AbstractDruidConfig {
+public interface AbsDruidConfig {
     /**
      * 注册servletRegistrationBean
      */

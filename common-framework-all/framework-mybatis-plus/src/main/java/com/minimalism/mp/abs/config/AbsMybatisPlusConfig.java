@@ -1,13 +1,11 @@
-package com.minimalism.abs.config;
+package com.minimalism.mp.abs.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.context.annotation.Bean;
 
 /**
  * @Author yan
@@ -15,7 +13,7 @@ import org.springframework.context.annotation.Bean;
  * @Description
  */
 @MapperScan(basePackages = {"com.minimalism.**.dao","com.minimalism.**.**.dao","com.minimalism.**.mapper","com.minimalism.**.**.mapper"})
-public interface AbstractMybatisPlusConfig {
+public interface AbsMybatisPlusConfig {
 
     /**
      * 3.4.0之前的版本用这个

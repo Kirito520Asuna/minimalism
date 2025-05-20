@@ -1,8 +1,8 @@
-package com.minimalism.abs.service.impl;
+package com.minimalism.mp.abs.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.minimalism.abs.mapper.MpMapper;
-import com.minimalism.abs.service.MpIService;
+import com.minimalism.mp.abs.mapper.MpMapper;
+import com.minimalism.mp.abs.service.MpIService;
 
 /**
  * @Author yan

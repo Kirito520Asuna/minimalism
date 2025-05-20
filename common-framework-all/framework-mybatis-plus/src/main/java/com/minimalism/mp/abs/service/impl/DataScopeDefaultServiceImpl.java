@@ -1,6 +1,6 @@
-package com.minimalism.abs.service.impl;
+package com.minimalism.mp.abs.service.impl;
 
-import com.minimalism.abs.service.DataScopeService;
+import com.minimalism.mp.abs.service.DataScopeService;
 import com.minimalism.mp.aop.domain.DataScopeAboutTable;
 import org.springframework.stereotype.Service;
 

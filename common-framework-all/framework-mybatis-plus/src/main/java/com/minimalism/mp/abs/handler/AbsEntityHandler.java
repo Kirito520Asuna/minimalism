@@ -1,8 +1,8 @@
-package com.minimalism.abs.handler;
+package com.minimalism.mp.abs.handler;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.minimalism.abs.service.MpUserService;
+import com.minimalism.mp.abs.service.MpUserService;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @Date 2024/5/22 0022 17:42
  * @Description
  */
-public interface AbstractEntityHandler extends MetaObjectHandler {
+public interface AbsEntityHandler extends MetaObjectHandler {
     @Override
     default void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", () -> LocalDateTime.now(), LocalDateTime.class);
