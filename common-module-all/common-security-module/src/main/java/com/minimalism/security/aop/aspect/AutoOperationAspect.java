@@ -1,5 +1,6 @@
 package com.minimalism.security.aop.aspect;
 
+import com.minimalism.aop.aspect.AbsAutoOperationAspect;
 import com.minimalism.security.utils.SecurityContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;

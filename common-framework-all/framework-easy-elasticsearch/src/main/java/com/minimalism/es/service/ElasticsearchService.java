@@ -1,8 +1,9 @@
 package com.minimalism.es.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.alibaba.fastjson.JSON;
+import cn.hutool.json.JSONUtil;
 import lombok.SneakyThrows;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -77,8 +78,9 @@ public interface ElasticsearchService {
         SearchResponse searchResponse = getRestHighLevelClient().search(searchRequest, RequestOptions.DEFAULT);
         try {
             SearchHit[] searchHits = Optional.ofNullable(searchResponse).map(SearchResponse::getHits).map(SearchHits::getHits).get();
+
             List<T> documents = Arrays.stream(searchHits)
-                    .map(hit -> JSON.parseObject(hit.getSourceAsString(), clazz))
+                    .map(hit -> JSONUtil.toBean(hit.getSourceAsString(), clazz))
                     .collect(Collectors.toList());
             list.addAll(documents);
         } catch (Exception e) {
