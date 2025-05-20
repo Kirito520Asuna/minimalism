@@ -3,7 +3,7 @@ package com.minimalism.abstractinterface.entity;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.minimalism.mp.aop.constants.DataScopeConstants;
-import com.minimalism.util.MpObjectUtils;
+import com.minimalism.mp.util.MpObjectUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

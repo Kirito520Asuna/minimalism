@@ -9,7 +9,7 @@ import com.minimalism.job.domain.SysJob;
 import com.minimalism.job.service.SysJobService;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
-import com.minimalism.util.PageUtils;
+import com.minimalism.mp.util.PageUtils;
 import com.minimalism.utils.poi.ExcelUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

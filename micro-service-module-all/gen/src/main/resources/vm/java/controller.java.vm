@@ -25,7 +25,7 @@ import ${packageName}.domain.${ClassName};
 import ${packageName}.service.${ClassName}Service;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
-import com.minimalism.util.PageUtils;
+import com.minimalism.mp.util.PageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 #if($table.crud || $table.sub)

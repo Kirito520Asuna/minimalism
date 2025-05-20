@@ -7,7 +7,7 @@ import com.minimalism.mp.aop.dataScope.DataScope;
 import com.minimalism.mp.aop.domain.DataScopeRole;
 import com.minimalism.mp.aop.domain.DataScopeUser;
 import com.minimalism.mp.pojo.BaseEntity;
-import com.minimalism.util.MpObjectUtils;
+import com.minimalism.mp.util.MpObjectUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

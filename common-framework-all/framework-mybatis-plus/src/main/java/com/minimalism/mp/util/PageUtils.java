@@ -1,4 +1,4 @@
-package com.minimalism.util;
+package com.minimalism.mp.util;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;

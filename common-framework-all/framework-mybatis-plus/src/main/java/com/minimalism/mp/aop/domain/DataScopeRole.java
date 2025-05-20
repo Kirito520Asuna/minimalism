@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.service.DataScopeService;
 import com.minimalism.mp.aop.constants.DataScopeConstants;
-import com.minimalism.util.MpObjectUtils;
+import com.minimalism.mp.util.MpObjectUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

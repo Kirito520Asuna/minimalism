@@ -31,7 +31,7 @@ import com.minimalism.user.domain.SysMenu;
 import com.minimalism.user.service.SysMenuService;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
-import com.minimalism.util.PageUtils;
+import com.minimalism.mp.util.PageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

@@ -18,7 +18,7 @@ import com.minimalism.enums.BusinessType;
 import com.minimalism.aop.shiro.ShiroPermissions;
 import com.minimalism.result.Result;
 import com.minimalism.result.ResultPage;
-import com.minimalism.util.PageUtils;
+import com.minimalism.mp.util.PageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
