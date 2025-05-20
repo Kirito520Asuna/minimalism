@@ -1,7 +1,7 @@
 package com.minimalism.task.quartz.dstributed;
 
 import cn.hutool.core.date.DatePattern;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;

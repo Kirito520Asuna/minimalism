@@ -1,7 +1,7 @@
 package com.minimalism.common.service.impl.mp;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.mp.abs.handler.AbsEntityHandler;
 import com.minimalism.mp.abs.service.MpUserService;
 import com.minimalism.common.service.CommonUserService;

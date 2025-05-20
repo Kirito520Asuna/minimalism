@@ -2,7 +2,7 @@ package com.minimalism.service;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.domain.netty.NettyMessage;
 import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.constant.websocket.WebSocket;

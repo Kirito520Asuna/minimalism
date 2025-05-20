@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.minimalism.shiro.abs.AbstractUserDetailsByShiroService;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.constant.Redis;
 import com.minimalism.constant.Roles;
 import com.minimalism.enums.ApiCode;

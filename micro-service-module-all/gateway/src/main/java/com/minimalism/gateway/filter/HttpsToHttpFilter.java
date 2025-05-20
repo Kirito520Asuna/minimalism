@@ -1,7 +1,7 @@
 package com.minimalism.gateway.filter;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.gateway.filter.order.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

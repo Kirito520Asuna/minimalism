@@ -9,15 +9,13 @@ import com.minimalism.user.service.SysMenuAncestorService;
 import com.minimalism.user.service.SysMenuService;
 import com.minimalism.user.service.SysRoleService;
 import com.minimalism.config.AuthorizationConfig;
-import com.minimalism.constant.Roles;
 import com.minimalism.dto.SysMenuDto;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.tomapper.SysMenuMapper;
 import com.minimalism.user.domain.*;
-import com.minimalism.user.service.*;
 import com.minimalism.utils.object.ObjectUtils;
-import com.minimalism.utils.tree.TreeUtils;
+import com.minimalism.aop.utils.tree.TreeUtils;
 import com.minimalism.vo.SysMenuTreeVo;
 import org.springframework.stereotype.Service;
 

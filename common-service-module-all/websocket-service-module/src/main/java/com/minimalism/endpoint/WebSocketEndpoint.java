@@ -2,7 +2,7 @@ package com.minimalism.endpoint;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.domain.Message;
 import com.minimalism.constant.websocket.WebSocket;
 import com.minimalism.service.MessageService;

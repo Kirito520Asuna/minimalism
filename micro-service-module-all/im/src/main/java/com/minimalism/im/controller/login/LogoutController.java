@@ -1,6 +1,6 @@
 //package com.minimalism.im.controller.login;
 //
-//import com.minimalism.aop.log.SysLog;
+//import com.minimalism.aop.all.log.SysLog;
 //import com.minimalism.enums.Header;
 //import com.minimalism.im.service.security.LoginServcie;
 //import com.minimalism.result.Result;

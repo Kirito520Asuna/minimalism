@@ -1,7 +1,7 @@
 package com.minimalism.gen.controller;
 
-import com.minimalism.aop.log.SysLog;
-import com.minimalism.controller.AbsBaseController;
+import com.minimalism.aop.all.log.SysLog;
+import com.minimalism.aop.controller.AbsBaseController;
 import com.minimalism.gen.domain.BuildAncestorSql;
 import com.minimalism.result.Result;
 import io.swagger.v3.oas.annotations.Operation;

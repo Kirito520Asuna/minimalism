@@ -1,7 +1,7 @@
 package com.minimalism.im.service.log;
 
-import com.minimalism.abstractinterface.service.AbsOperateLogService;
-import com.minimalism.pojo.OperateLogInfo;
+import com.minimalism.aop.abs.service.AbsOperateLogService;
+import com.minimalism.aop.pojo.OperateLogInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

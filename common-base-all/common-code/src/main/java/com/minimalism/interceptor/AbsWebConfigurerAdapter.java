@@ -2,7 +2,7 @@ package com.minimalism.interceptor;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.config.ApiConfig;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.interceptor.Impl.DefaultInterceptor;

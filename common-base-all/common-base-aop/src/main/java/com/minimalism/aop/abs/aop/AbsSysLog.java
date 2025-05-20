@@ -1,0 +1,25 @@
+package com.minimalism.aop.abs.aop;
+
+import com.minimalism.aop.all.AopConstants;
+import com.minimalism.aop.all.log.SysLog;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Pointcut;
+
+/**
+ * @Author yan
+ * @Date 2023/6/1 0001 17:03
+ * @Description
+ */
+public interface AbsSysLog extends AbsAop {
+    default SysLog getAnnotationLog(JoinPoint joinPoint) {
+        return getAnnotation(joinPoint, SysLog.class);
+    }
+    @Override
+    @Pointcut(value = "@annotation(com.minimalism.aop.all.log.SysLog)")
+    default void Aop() {
+    }
+    @Override
+    default int getOrder() {
+        return AopConstants.SysLogOrder;
+    }
+}

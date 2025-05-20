@@ -1,7 +1,7 @@
 package com.minimalism.gateway.filter;
 
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 
 import lombok.extern.slf4j.Slf4j;
 

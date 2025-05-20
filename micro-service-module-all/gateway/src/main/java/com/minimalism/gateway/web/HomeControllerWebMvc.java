@@ -1,6 +1,6 @@
 package com.minimalism.gateway.web;
 
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.result.Result;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

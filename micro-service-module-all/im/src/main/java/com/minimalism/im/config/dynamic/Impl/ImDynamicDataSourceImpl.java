@@ -1,6 +1,6 @@
 package com.minimalism.im.config.dynamic.Impl;
 
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.dynamic.abs.AbsDynamicDataSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

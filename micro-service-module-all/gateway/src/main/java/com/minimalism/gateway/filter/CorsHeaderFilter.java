@@ -3,7 +3,7 @@ package com.minimalism.gateway.filter;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.gateway.filter.order.Order;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;

@@ -3,7 +3,7 @@ package com.minimalism.user.service;
 import java.util.List;
 import java.util.Map;
 
-import com.minimalism.aop.security.AutoOperation;
+import com.minimalism.aop.all.security.AutoOperation;
 import com.minimalism.dto.SysMenuDto;
 import com.minimalism.enums.AutoOperationEnum;
 import com.minimalism.user.domain.SysMenu;

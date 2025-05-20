@@ -1,7 +1,7 @@
 package com.minimalism.common.service;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.abstractinterface.service.AbstractUserService;
 import com.minimalism.config.AuthorizationConfig;
 import com.minimalism.constant.Roles;

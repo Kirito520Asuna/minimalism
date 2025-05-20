@@ -4,14 +4,14 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.config.JwtConfig;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.utils.date.DateUtils;
 import com.minimalism.utils.jwt.JwtUtils;
 import com.minimalism.utils.object.ObjectUtils;
-import com.minimalism.utils.response.ResponseUtils;
+import com.minimalism.aop.utils.response.ResponseUtils;
 import io.jsonwebtoken.Claims;
 
 import javax.servlet.http.HttpServletRequest;

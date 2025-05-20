@@ -9,7 +9,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.enums.Openfeign;
 import com.minimalism.openfeign.factory.AbsEnum;
 import com.minimalism.utils.api.ApiUtil;

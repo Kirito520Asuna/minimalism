@@ -2,7 +2,7 @@ package com.minimalism.file.storage;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.file.domain.FileInfo;
 import com.minimalism.file.domain.FilePart;
 import com.minimalism.utils.io.IoUtils;

@@ -1,6 +1,6 @@
 package com.minimalism.exception;
 
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.enums.ApiCode;
 import com.minimalism.result.Result;
 import org.springframework.http.HttpStatus;

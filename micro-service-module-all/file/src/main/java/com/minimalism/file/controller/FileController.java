@@ -2,10 +2,10 @@ package com.minimalism.file.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.aop.aviator.AviatorValid;
-import com.minimalism.aop.aviator.AviatorValids;
-import com.minimalism.aop.log.SysLog;
-import com.minimalism.controller.AbsBaseController;
+import com.minimalism.aop.all.aviator.AviatorValid;
+import com.minimalism.aop.all.aviator.AviatorValids;
+import com.minimalism.aop.all.log.SysLog;
+import com.minimalism.aop.controller.AbsBaseController;
 import com.minimalism.dto.FileUpDto;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.file.config.FileUploadConfig;

@@ -1,6 +1,6 @@
 package com.minimalism.file.service;
 
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.vo.PartVo;
 import lombok.SneakyThrows;
 

@@ -10,8 +10,8 @@
 //import com.minimalism.im.domain.security.User;
 //import com.minimalism.im.domain.test.TestAop;
 //import com.minimalism.im.utils.EncodePasswordUtils;
-//import com.minimalism.aop.log.SysLog;
-//import com.minimalism.aop.security.AutoOperation;
+//import com.minimalism.aop.all.log.SysLog;
+//import com.minimalism.aop.all.security.AutoOperation;
 //import com.minimalism.enums.Header;
 //import com.minimalism.im.domain.security.LoginUser;
 //import com.minimalism.im.service.security.LoginServcie;

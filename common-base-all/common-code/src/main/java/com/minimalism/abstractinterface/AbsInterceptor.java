@@ -1,7 +1,7 @@
 package com.minimalism.abstractinterface;
 
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.utils.thread.ThreadMdcUtil;
 import lombok.SneakyThrows;
 import org.slf4j.MDC;

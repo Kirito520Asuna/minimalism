@@ -3,7 +3,7 @@ package com.minimalism.gateway.filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.constant.gateway.GatewayConstants;
 import com.minimalism.gateway.config.GatewayConfig;
 import com.minimalism.gateway.filter.order.Order;

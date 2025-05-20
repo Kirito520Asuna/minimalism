@@ -2,7 +2,7 @@ package com.minimalism.security.expression.root;
 
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.security.AbsSecurityExpressionRoot;
+import com.minimalism.aop.abs.security.AbsSecurityExpressionRoot;
 import com.minimalism.security.config.SecurityAnnotationConfig;
 import com.minimalism.security.utils.SecurityContextUtil;
 import lombok.extern.slf4j.Slf4j;

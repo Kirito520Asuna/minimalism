@@ -2,10 +2,11 @@ package com.minimalism.controller;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.service.AbstractLoginService;
-import com.minimalism.aop.aviator.AviatorNotBlank;
-import com.minimalism.aop.aviator.AviatorValid;
-import com.minimalism.aop.aviator.AviatorValids;
-import com.minimalism.aop.log.SysLog;
+import com.minimalism.aop.all.aviator.AviatorNotBlank;
+import com.minimalism.aop.all.aviator.AviatorValid;
+import com.minimalism.aop.all.aviator.AviatorValids;
+import com.minimalism.aop.all.log.SysLog;
+import com.minimalism.aop.controller.AbsBaseController;
 import com.minimalism.dto.LoginDto;
 import com.minimalism.dto.RegisterDto;
 import com.minimalism.pojo.TokenInfo;

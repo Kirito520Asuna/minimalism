@@ -1,10 +1,9 @@
 package com.minimalism.controller;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.aop.log.SysLog;
-import com.minimalism.aop.security.Login;
+import com.minimalism.aop.all.log.SysLog;
+import com.minimalism.aop.all.security.Login;
 import com.minimalism.domain.Message;
-import com.minimalism.endpoint.WebSocketEndpoint;
 import com.minimalism.result.Result;
 
 import com.minimalism.service.MessageService;

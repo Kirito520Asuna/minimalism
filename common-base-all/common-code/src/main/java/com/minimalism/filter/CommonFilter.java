@@ -2,7 +2,7 @@ package com.minimalism.filter;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.abstractinterface.service.filter.AbstractFilerOrder;
 import com.minimalism.exception.BusinessException;
 import com.minimalism.utils.http.HttpRequestUtils;

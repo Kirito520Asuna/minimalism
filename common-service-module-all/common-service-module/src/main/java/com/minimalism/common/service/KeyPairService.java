@@ -1,7 +1,7 @@
 package com.minimalism.common.service;
 
 import com.minimalism.abstractinterface.AbstractKeyPair;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.redis.aop.redis.RedisCacheEvict;
 import com.minimalism.redis.aop.redis.RedisCachePut;
 import com.minimalism.redis.aop.redis.RedisCacheable;

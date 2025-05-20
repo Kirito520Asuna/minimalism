@@ -2,7 +2,7 @@ package com.minimalism.shiro.config;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.shiro.abs.AbsShiroConfig;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.CorsRequestFilter;
 import com.minimalism.shiro.filter.JwtAuthFilter;

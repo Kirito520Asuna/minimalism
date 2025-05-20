@@ -1,7 +1,7 @@
 package com.minimalism.openfeign.interfaces;
 
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.openfeign.factory.AbsEnum;
 import feign.Target;
 import org.springframework.web.util.DefaultUriBuilderFactory;

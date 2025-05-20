@@ -2,7 +2,7 @@ package com.minimalism.im.controller.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.minimalism.aop.log.SysLog;
+import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.im.domain.im.Apply;
 import com.minimalism.im.domain.im.Friend;
 import com.minimalism.im.service.im.ApplyService;

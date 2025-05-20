@@ -1,6 +1,6 @@
 package com.minimalism.interceptor;
 
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.abstractinterface.service.filter.AbsApiFiler;
 import com.minimalism.abstractinterface.service.filter.AbsAuthFiler;
 import com.minimalism.interceptor.Impl.DefaultApiInterceptor;

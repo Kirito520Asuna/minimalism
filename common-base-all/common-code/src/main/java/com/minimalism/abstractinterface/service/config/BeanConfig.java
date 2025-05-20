@@ -1,6 +1,6 @@
 package com.minimalism.abstractinterface.service.config;
 
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 
 import javax.annotation.PostConstruct;
 

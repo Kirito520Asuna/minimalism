@@ -3,7 +3,7 @@ package com.minimalism.filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.minimalism.openfeign.factory;
 
 import cn.hutool.core.collection.CollUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.openfeign.factory.interfaces.AbsClient;
 import lombok.NonNull;
 import org.springframework.beans.BeansException;

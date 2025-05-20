@@ -12,7 +12,7 @@ import com.minimalism.shiro.pojo.UserBase;
 import com.minimalism.result.Result;
 import com.minimalism.utils.jwt.JwtUtils;
 import com.minimalism.utils.object.ObjectUtils;
-import com.minimalism.utils.response.ResponseUtils;
+import com.minimalism.aop.utils.response.ResponseUtils;
 import com.minimalism.shiro.utils.SecurityContextUtil;
 import com.minimalism.utils.str.StrUtils;
 import lombok.SneakyThrows;

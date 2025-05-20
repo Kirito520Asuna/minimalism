@@ -3,7 +3,7 @@ package com.minimalism.file.config;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.constant.file.FileConstant;
 import com.minimalism.nacos.utils.NacosUtils;
 import com.minimalism.utils.file.FileUtils;

@@ -3,7 +3,7 @@ package com.minimalism.filter.bean;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.constant.ExpressionConstants;
 import com.minimalism.filter.ApiFilter;
 import com.minimalism.filter.CommonFilter;

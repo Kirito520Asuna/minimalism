@@ -4,7 +4,7 @@ package com.minimalism.gateway.bean;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.properties.CorsGatewayProperties;
 import com.minimalism.properties.CorsProperties;
 import com.minimalism.utils.object.ObjectUtils;

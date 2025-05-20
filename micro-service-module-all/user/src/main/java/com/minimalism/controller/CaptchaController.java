@@ -1,6 +1,7 @@
 package com.minimalism.controller;
 
-import com.minimalism.aop.log.SysLog;
+import com.minimalism.aop.all.log.SysLog;
+import com.minimalism.aop.controller.AbsBaseController;
 import com.minimalism.pojo.CaptchaInfo;
 import com.minimalism.result.Result;
 import com.minimalism.validate_code.service.ValidateCodeService;

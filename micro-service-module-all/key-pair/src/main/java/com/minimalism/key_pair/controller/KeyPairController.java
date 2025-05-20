@@ -1,10 +1,10 @@
 package com.minimalism.key_pair.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.minimalism.aop.env.InterfaceEnv;
-import com.minimalism.aop.log.SysLog;
+import com.minimalism.aop.all.env.InterfaceEnv;
+import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.common.service.KeyPairService;
-import com.minimalism.controller.AbsBaseController;
+import com.minimalism.aop.controller.AbsBaseController;
 import com.minimalism.exception.GlobalCustomException;
 import com.minimalism.key_pair.vo.KeyVo;
 import com.minimalism.result.Result;

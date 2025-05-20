@@ -1,6 +1,6 @@
 package com.minimalism.file.beans;
 
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.file.properties.FileProperties;
 import com.minimalism.file.storage.clientAbs.AliyunClient;
 import com.minimalism.file.storage.clientAbs.LocalClient;

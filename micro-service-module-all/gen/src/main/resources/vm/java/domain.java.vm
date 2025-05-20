@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 #if($table.isCrud() || $table.isSub())
 #elseif($table.isTree())
-import com.minimalism.aop.tree.Tree;
+import com.minimalism.aop.all.tree.Tree;
 #end
 import static ${packageName}.domain.${ClassName}.TABLE_$tableName.toUpperCase();
 /**

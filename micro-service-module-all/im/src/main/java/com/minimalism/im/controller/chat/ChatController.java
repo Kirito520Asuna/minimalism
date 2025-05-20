@@ -2,7 +2,7 @@ package com.minimalism.im.controller.chat;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.minimalism.aop.log.SysLog;
+import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.enums.im.ChatType;
 import com.minimalism.im.domain.chat.ChatMessage;
 import com.minimalism.im.service.chat.ChatMessageService;

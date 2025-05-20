@@ -3,7 +3,7 @@ package com.minimalism.shiro.abs;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.abstractinterface.bean.AbsBean;
+import com.minimalism.aop.abs.bean.AbsBean;
 import com.minimalism.abstractinterface.service.AbstractUserService;
 import com.minimalism.constant.Roles;
 import com.minimalism.exception.GlobalCustomException;
