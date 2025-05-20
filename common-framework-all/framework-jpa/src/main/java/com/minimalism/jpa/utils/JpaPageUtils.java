@@ -1,4 +1,4 @@
-package com.minimalism.utils;
+package com.minimalism.jpa.utils;
 
 
 import cn.hutool.core.collection.CollUtil;
