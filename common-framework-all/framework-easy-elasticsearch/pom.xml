@@ -14,7 +14,7 @@
         <!--<elasticsearch.high.version>7.17.8</elasticsearch.high.version>-->
         <elasticsearch.high.version>7.10.1</elasticsearch.high.version>
 <!--        <elasticsearch.high.version>7.14.0</elasticsearch.high.version>-->
-        <easy-es.version>2.0.0</easy-es.version>
+        <easy-es.version>3.0.0</easy-es.version>
     </properties>
 
     <dependencies>
