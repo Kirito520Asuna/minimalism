@@ -1,11 +1,11 @@
 package com.minimalism.redis.ban;
 
-import cn.hutool.extra.spring.SpringUtil;
+//import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.abstractinterface.ban.BanManager;
 import com.minimalism.redis.service.RedisService;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RSet;
-import org.redisson.api.RedissonClient;
+//import org.redisson.api.RedissonClient;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,15 +15,15 @@ import java.util.concurrent.TimeUnit;
  * @Description
  */
 public class SimpleBanManager implements BanManager {
-    private final RedissonClient redissonClient;
+    //private final RedissonClient redissonClient;
 
     public SimpleBanManager() {
-        this.redissonClient = SpringUtil.getBean(RedissonClient.class);
+        //this.redissonClient = SpringUtil.getBean(RedissonClient.class);
     }
 
-    public SimpleBanManager(RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
-    }
+    //public SimpleBanManager(RedissonClient redissonClient) {
+    //    this.redissonClient = redissonClient;
+    //}
 
     // 封禁 IP（全局）
     @Override
@@ -86,7 +86,7 @@ public class SimpleBanManager implements BanManager {
         RedisService redisService = getRedisService();
         redisService.getBucketByRS(key).set(true);
         if (duration > 0) {
-            redissonClient.getBucket(key).expire(duration, timeUnit);
+            redisService.getBucketByRS(key).expire(duration, timeUnit);
         }
     }
 
