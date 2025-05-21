@@ -1,4 +1,4 @@
-package com.minimalism.aop.all.aspect;
+package com.minimalism.aop.abs.aspect;
 
 import com.minimalism.aop.abs.aop.AbsAop;
 import com.minimalism.aop.all.AopConstants;

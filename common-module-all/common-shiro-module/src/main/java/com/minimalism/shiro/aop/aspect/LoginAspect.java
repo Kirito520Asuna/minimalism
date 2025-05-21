@@ -1,6 +1,6 @@
 package com.minimalism.shiro.aop.aspect;
 
-import com.minimalism.aop.all.aspect.AbsLoginAspect;
+import com.minimalism.aop.abs.aspect.AbsLoginAspect;
 import com.minimalism.shiro.utils.SecurityContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;

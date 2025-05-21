@@ -1,4 +1,4 @@
-package com.minimalism.aop.all.aspect;
+package com.minimalism.aop.abs.aspect;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
