@@ -1,7 +1,7 @@
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
-import com.minimalism.file.FileApplication;
+import com.minimalism.FileApplication;
 import com.minimalism.file.controller.FileController;
 import com.minimalism.common_code.utils.io.IoUtils;
 import com.minimalism.file.utils.oss.LocalOSSUtils;

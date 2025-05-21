@@ -1,4 +1,4 @@
-package com.minimalism.key_pair;
+package com.minimalism;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
