@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface AbsInterfaceEnvAspect extends AbsAop {
+public interface AbsInterfaceEnv extends AbsAop {
     @Override
     default int getOrder() {
         return AopConstants.EnvOrder;

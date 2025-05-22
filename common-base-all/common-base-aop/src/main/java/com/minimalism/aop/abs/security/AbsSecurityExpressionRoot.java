@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * @Author yan
  * @Date 2024/9/27 上午2:12:25
- * @Description
+ * @Description (归于模板)
  */
 public interface AbsSecurityExpressionRoot extends AbsBean {
     @Override

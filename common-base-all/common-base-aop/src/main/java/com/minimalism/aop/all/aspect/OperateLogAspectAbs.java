@@ -8,7 +8,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.minimalism.aop.abs.aop.AbsSysLog;
+import com.minimalism.aop.abs.aspect.AbsSysLog;
 import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.base.enums.RequestMethod;
 
@@ -53,7 +53,7 @@ import java.util.stream.Stream;
 public class OperateLogAspectAbs implements AbsSysLog {
     @Lazy
     @Resource
-    private AbsSysLogAspect sysLogAspect;
+    private SysLogAspect sysLogAspect;
     @Lazy
     @Resource
     private Environment env;
@@ -106,7 +106,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
     }
 
     @Override
-    @Pointcut("com.minimalism.aop.all.aspect.AbsSysLogAspect.Aop()")
+    @Pointcut("com.minimalism.aop.abs.aspect.AbsSysLog.Aop()")
     public void Aop() {
     }
 

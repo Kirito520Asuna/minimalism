@@ -18,10 +18,4 @@ public class AviatorValidInfo {
     private boolean throwException = true;
     private String expression;
     private String errorMessage;
-
-    public static void main(String[] args) {
-        String key = "a";
-        String format = String.format("%s!=nil&&%s!=''", key, key);
-        System.out.println(format);
-    }
 }

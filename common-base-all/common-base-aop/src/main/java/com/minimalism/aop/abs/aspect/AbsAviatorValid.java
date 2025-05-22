@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @Date 2024/11/12 下午3:09:40
  * @Description
  */
-public interface AbsAviatorValidAspect extends AbsAop {
+public interface AbsAviatorValid extends AbsAop {
     @Override
     default int getOrder() {
         return AopConstants.AviatorOrder;

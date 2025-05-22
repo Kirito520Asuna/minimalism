@@ -25,7 +25,7 @@ import java.util.Set;
  * @Date 2024/10/3 下午4:15:55
  * @Description
  */
-public interface AbsAutoOperationAspect extends AbsAop {
+public interface AbsAutoOperation extends AbsAop {
     JSONConfig JSON_CONFIG = JSONConfig.create().setIgnoreNullValue(false);
 
 

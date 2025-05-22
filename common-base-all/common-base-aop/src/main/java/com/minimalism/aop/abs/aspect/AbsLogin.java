@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  * @Description
  */
 
-public interface AbsLoginAspect extends AbsAop {
+public interface AbsLogin extends AbsAop {
 
     @Override
     default int getOrder() {

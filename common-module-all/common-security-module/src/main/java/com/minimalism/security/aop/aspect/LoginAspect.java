@@ -1,6 +1,6 @@
 package com.minimalism.security.aop.aspect;
 
-import com.minimalism.aop.abs.aspect.AbsLoginAspect;
+import com.minimalism.aop.abs.aspect.AbsLogin;
 import com.minimalism.security.utils.SecurityContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 @Component
-public class LoginAspect implements AbsLoginAspect {
+public class LoginAspect implements AbsLogin {
     @Override
     public void checkLogin() {
         SecurityContextUtil.getUserId();

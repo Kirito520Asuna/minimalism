@@ -1,5 +1,6 @@
-package com.minimalism.aop.abs.aop;
+package com.minimalism.aop.abs.aspect;
 
+import com.minimalism.aop.abs.aop.AbsAop;
 import com.minimalism.aop.all.AopConstants;
 import com.minimalism.aop.all.log.SysLog;
 import org.aspectj.lang.JoinPoint;

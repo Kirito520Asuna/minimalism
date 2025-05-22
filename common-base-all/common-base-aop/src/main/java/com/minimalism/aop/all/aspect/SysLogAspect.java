@@ -7,7 +7,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.minimalism.aop.abs.aop.AbsSysLog;
+import com.minimalism.aop.abs.aspect.AbsSysLog;
 import com.minimalism.aop.all.log.SysLog;
 import com.minimalism.base.enums.RequestMethod;
 
@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 @Slf4j
 @Component
 @Getter
-public class AbsSysLogAspect implements AbsSysLog {
+public class SysLogAspect implements AbsSysLog {
     private final static JSONConfig jsonConfig = JSONConfig.create().setIgnoreNullValue(false);
 
     @Resource

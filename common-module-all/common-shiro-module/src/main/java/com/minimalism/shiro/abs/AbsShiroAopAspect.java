@@ -3,7 +3,7 @@ package com.minimalism.shiro.abs;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.minimalism.aop.abs.aop.AbsSysLog;
+import com.minimalism.aop.abs.aspect.AbsSysLog;
 import com.minimalism.shiro.aop.ShiroLogical;
 import com.minimalism.shiro.aop.ShiroPermissions;
 import com.minimalism.shiro.aop.ShiroRoles;

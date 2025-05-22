@@ -1,6 +1,6 @@
 package com.minimalism.aop.all.aspect;
 
-import com.minimalism.aop.abs.aspect.AbsAviatorValidAspect;
+import com.minimalism.aop.abs.aspect.AbsAviatorValid;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 @Component
-public class AviatorValidAspect implements AbsAviatorValidAspect {
+public class AviatorValidAspect implements AbsAviatorValid {
 
 
     /**
@@ -27,7 +27,7 @@ public class AviatorValidAspect implements AbsAviatorValidAspect {
     @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         check(joinPoint);
-        return AbsAviatorValidAspect.super.around(joinPoint);
+        return AbsAviatorValid.super.around(joinPoint);
     }
 
 
