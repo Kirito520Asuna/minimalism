@@ -62,8 +62,8 @@ public class RedisBanAspect implements AbsRedisAspect {
         //log.debug("[{}]执行全局检查", System.currentTimeMillis());
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
-            log.debug("没有请求上下文，放行");
-            // 如果没有请求上下文，则直接放行
+            log.debug("内部自调 没有请求上下文，放行");
+            //内部自调 如果没有请求上下文，则直接放行
             return joinPoint.proceed();
         }
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
