@@ -1,8 +1,6 @@
 package com.minimalism.common_code.config.thread_pool;
 
 import com.minimalism.common_code.utils.thread.ThreadMdcUtil;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -14,7 +12,6 @@ import java.util.concurrent.Future;
  * @Date 2024/5/14 0014 15:00
  * @Description
  */
-@Data @NoArgsConstructor
 public abstract class AbstractThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
     @Override
     public boolean prefersShortLivedTasks() {
