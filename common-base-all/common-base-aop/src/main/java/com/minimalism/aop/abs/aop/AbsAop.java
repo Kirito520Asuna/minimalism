@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  * @Description
  */
 public interface AbsAop extends AbsBean, Ordered {
-    JSONConfig jsonConfig = JSONConfig.create().setIgnoreNullValue(false);
+    JSONConfig JSON_CONFIG = JSONConfig.create().setIgnoreNullValue(false);
 
     @Override
     @PostConstruct
@@ -36,9 +36,6 @@ public interface AbsAop extends AbsBean, Ordered {
         debug("[init]-[Aop]:[Order:{}]::[{}]: ", getOrder(), getAClassName());
     }
 
-    default void log() {
-        debug("==>[Aop]:[Order:{}]:[class:{}]<==", getOrder(),getAClassName());
-    }
 
     @SneakyThrows
     default <T extends Annotation> T getAnnotation(JoinPoint joinPoint, Class<T> annotationClass) {

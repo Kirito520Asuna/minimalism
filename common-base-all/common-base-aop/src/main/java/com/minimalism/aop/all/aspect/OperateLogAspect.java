@@ -10,6 +10,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.minimalism.aop.abs.aspect.AbsSysLog;
 import com.minimalism.aop.all.log.SysLog;
+import com.minimalism.aop.utils.thread.AopThreadMdcUtil;
 import com.minimalism.base.enums.RequestMethod;
 
 import com.minimalism.aop.pojo.OperateLogInfo;
@@ -50,10 +51,8 @@ import java.util.stream.Stream;
 @Aspect
 @Slf4j
 @Component
-public class OperateLogAspectAbs implements AbsSysLog {
-    @Lazy
-    @Resource
-    private SysLogAspect sysLogAspect;
+public class OperateLogAspect implements AbsSysLog {
+
     @Lazy
     @Resource
     private Environment env;
@@ -86,8 +85,11 @@ public class OperateLogAspectAbs implements AbsSysLog {
             //获取秒数
             //Long second = now.toEpochSecond(ZoneOffset.of("+8"));
             //获取毫秒数 自动获取时区
-            Long milliSecond = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            String traceId = new StringBuffer().append(UUID.randomUUID()).append("::").append(milliSecond).toString();
+            String traceId = AopThreadMdcUtil.getTraceId();
+            if (ObjectUtil.isEmpty(traceId)){
+                Long milliSecond = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                traceId = new StringBuffer().append(UUID.randomUUID()).append("::").append(milliSecond).toString();
+            }
             operateLog = new OperateLogInfo();
             operateLog.setTraceId(traceId);
             setOperateLog(operateLog);
@@ -129,7 +131,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
                 Map<String, String> paramMap = ServletUtil.getParamMap(request);
                 Object[] pointArgs = joinPoint.getArgs();
                 String args = Arrays.toString(pointArgs);
-                args = CollUtil.isEmpty(paramMap) ? args : JSONUtil.parse(paramMap, jsonConfig).toString();
+                args = CollUtil.isEmpty(paramMap) ? args : JSONUtil.parse(paramMap, JSON_CONFIG).toString();
 
                 String declaringTypeName = joinPoint.getSignature().getDeclaringTypeName();
                 String name = joinPoint.getSignature().getName();
@@ -148,7 +150,6 @@ public class OperateLogAspectAbs implements AbsSysLog {
                         .setDeclaringTypeName(declaringTypeName)
                         .setInterfaceName(name);
                 operateInit(joinPoint, operateLog, sysLog, request, operate);
-                log.debug("start::syslog:id:{}", operateLog == null ? null : operateLog.getTraceId());//
             }
         } finally {
 //            sysLogAspect.doBefore(joinPoint);
@@ -163,8 +164,8 @@ public class OperateLogAspectAbs implements AbsSysLog {
 
         LocalDateTime now = DateUtils.longToLocalDateTime(System.currentTimeMillis());
         OperateLogInfo operateLog = getOperateLog(now);
-        log.debug("|TRACE_ID:{}|", operateLog == null ? null : operateLog.getTraceId());
-        SysLog sysLog = getAnnotationLog(joinPoint);
+        log.debug("|TRACE_ID:{}|", AopThreadMdcUtil.getTraceId());
+        SysLog sysLog = getSysLog(joinPoint);
 
         boolean hasSysLog = ObjectUtils.isNotEmpty(sysLog);
         if (hasSysLog && sysLog.enableOperate()) {
@@ -177,7 +178,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
             Map<String, String> paramMap = ServletUtil.getParamMap(request);
             Object[] pointArgs = joinPoint.getArgs();
             String args = Arrays.toString(pointArgs);
-            args = CollUtil.isEmpty(paramMap) ? args : JSONUtil.parse(paramMap, jsonConfig).toString();
+            args = CollUtil.isEmpty(paramMap) ? args : JSONUtil.parse(paramMap, JSON_CONFIG).toString();
 
             String declaringTypeName = joinPoint.getSignature().getDeclaringTypeName();
             String name = joinPoint.getSignature().getName();
@@ -202,7 +203,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
 
         if (hasSysLog && sysLog.enableOperate() && sysLog.logResultData()) {
             //记录响应
-            JSON parse = JSONUtil.parse(around != null ? around : new LinkedHashMap<>(), jsonConfig);
+            JSON parse = JSONUtil.parse(around != null ? around : new LinkedHashMap<>(), JSON_CONFIG);
             Result bean = parse.toBean(Result.class);
             operateFinish(operateLog, bean);
         }
@@ -217,10 +218,10 @@ public class OperateLogAspectAbs implements AbsSysLog {
         OperateLogInfo operateLog = getOperateLog(null);
         log.debug("|TRACE_ID:{}|", operateLog == null ? null : operateLog.getTraceId());
         try {
-            SysLog sysLog = getAnnotationLog(joinPoint);
+            SysLog sysLog = getSysLog(joinPoint);
             if (sysLog.enableOperate() && sysLog.logResultData()) {
                 //记录响应
-                JSON parse = JSONUtil.parse(reValue != null ? reValue : new LinkedHashMap<>(), jsonConfig);
+                JSON parse = JSONUtil.parse(reValue != null ? reValue : new LinkedHashMap<>(), JSON_CONFIG);
                 Result bean = parse.toBean(Result.class);
                 operateFinish(operateLog, bean);
             }
@@ -335,7 +336,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
         if (sysLog.enableOperate() && sysLog.logArgs()) {
             String requestBody = null;
             if (ObjectUtil.isEmpty(args)) {
-                String toJsonStr = JSONUtil.toJsonStr(pointArgs, jsonConfig);
+                String toJsonStr = JSONUtil.toJsonStr(pointArgs, JSON_CONFIG);
                 args = toJsonStr;
             } else {
                 //requestBody = ServletUtils.getRequestContent(request);
@@ -343,7 +344,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
                 JSON requestBodyJson = null;
                 if (ObjectUtil.isEmpty(requestBody)) {
                     try {
-                        requestBodyJson = JSONUtil.parse(args, jsonConfig);
+                        requestBodyJson = JSONUtil.parse(args, JSON_CONFIG);
                         requestBody = requestBodyJson.toString();
                     } catch (Exception e) {
                         //解析失败
@@ -357,7 +358,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
             }
             log.debug("args:{}", args);
             //记录请求参数
-            String params = JSONUtil.parse(paramMap, jsonConfig).toString();
+            String params = JSONUtil.parse(paramMap, JSON_CONFIG).toString();
             if (getParamsMethod.contains(method)) {
                 operateLog.setJavaMethodArgsParams(params);
             } else if (getBodyMethod.contains(method)) {
@@ -387,7 +388,7 @@ public class OperateLogAspectAbs implements AbsSysLog {
         Long startMilliSecond = startTime;
         operateLog.setResultCode(bean.getCode());
         operateLog.setResultMsg(bean.getMessage());
-        operateLog.setResultData(JSONUtil.toJsonStr(bean.getData(), jsonConfig));
+        operateLog.setResultData(JSONUtil.toJsonStr(bean.getData(), JSON_CONFIG));
         operateLog.setResultTime(resultTime);
         operateLog.setDuration(resultMilliSecond - startMilliSecond);
         AbsOperateLogService service = SpringUtil.getBean(AbsOperateLogService.class);

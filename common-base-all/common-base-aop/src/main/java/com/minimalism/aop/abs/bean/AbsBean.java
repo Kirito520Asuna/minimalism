@@ -47,6 +47,9 @@ public interface AbsBean {
     default Logger getLogger() {
         return getLogBean().getLogger();
     }
+    default Logger log() {
+        return getLogger();
+    }
 
     @JsonIgnore
     default Class<?> getAClass() {

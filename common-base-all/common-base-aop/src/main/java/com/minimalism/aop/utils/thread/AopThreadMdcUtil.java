@@ -1,6 +1,5 @@
 package com.minimalism.aop.utils.thread;
 
-import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
 import org.slf4j.MDC;
 
@@ -12,7 +11,7 @@ import java.util.concurrent.Callable;
  * @Date 2024/5/14 0014 14:57
  * @Description
  */
-public final class ThreadMdcUtil {
+public final class AopThreadMdcUtil {
     public static final String TRACE_ID = "TRACE_ID";
 
     /**
@@ -84,7 +83,12 @@ public final class ThreadMdcUtil {
      * @return
      */
     public static String getTraceId() {
-        return get(TRACE_ID);
+        String traceId = get(TRACE_ID);
+        if (traceId == null) {
+            traceId = generateTraceId();
+            setTraceId(traceId);
+        }
+        return traceId;
     }
 
     /**

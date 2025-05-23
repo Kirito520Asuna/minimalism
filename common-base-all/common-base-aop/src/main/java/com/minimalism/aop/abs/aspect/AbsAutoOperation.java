@@ -26,7 +26,6 @@ import java.util.Set;
  * @Description
  */
 public interface AbsAutoOperation extends AbsAop {
-    JSONConfig JSON_CONFIG = JSONConfig.create().setIgnoreNullValue(false);
 
 
     @Override

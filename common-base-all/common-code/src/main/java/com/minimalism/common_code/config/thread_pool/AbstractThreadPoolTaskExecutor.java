@@ -1,6 +1,6 @@
 package com.minimalism.common_code.config.thread_pool;
 
-import com.minimalism.aop.utils.thread.ThreadMdcUtil;
+import com.minimalism.aop.utils.thread.AopThreadMdcUtil;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -19,14 +19,14 @@ public abstract class AbstractThreadPoolTaskExecutor extends ThreadPoolTaskExecu
     }
     @Override
     public void execute(Runnable task) {
-        super.execute(ThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));
+        super.execute(AopThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));
     }
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        return super.submit(ThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));
+        return super.submit(AopThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));
     }
     @Override
     public Future<?> submit(Runnable task) {
-        return super.submit(ThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));
+        return super.submit(AopThreadMdcUtil.wrap(task, MDC.getCopyOfContextMap()));
     }
 }

@@ -96,7 +96,7 @@ public interface AbsAviatorValid extends AbsAop {
                 Object argValue = args[i];
                 String name = parameters[i].getName();
                 String argsName = String.format("args[%s]", i);
-                argValue = JSONUtil.toJsonStr(argValue, jsonConfig);
+                argValue = JSONUtil.toJsonStr(argValue, JSON_CONFIG);
 
                 variables.put(argsName, argValue);
                 variables.put(name, argValue);
@@ -106,7 +106,7 @@ public interface AbsAviatorValid extends AbsAop {
             Map<String, Object> compareTo = ObjectUtils.toMap(variables);
             Map<String, Object> variablesMap = ObjectUtils.mapKeyLengthReversed(compareTo);
             variablesMap = ObjectUtils.blankReplace(variablesMap);
-            debug("parameters参数：{}", JSONUtil.toJsonStr(parameters, jsonConfig));
+            debug("parameters参数：{}", JSONUtil.toJsonStr(parameters, JSON_CONFIG));
             debug("variables参数：{}", variables);
             debug("variablesMap参数：{}", variablesMap);
             //log.info("classMaps参数：{}", classMaps);
@@ -244,7 +244,7 @@ public interface AbsAviatorValid extends AbsAop {
             String key = entry.getKey();
             Object value = entry.getValue();
             if (ObjectUtils.isNotEmpty(value)) {
-                expression = expression.replace(key, JSONUtil.toJsonStr(value, jsonConfig));
+                expression = expression.replace(key, JSONUtil.toJsonStr(value, JSON_CONFIG));
             }
         }
         return expression;
