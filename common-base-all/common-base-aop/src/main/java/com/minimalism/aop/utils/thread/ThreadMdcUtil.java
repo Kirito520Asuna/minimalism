@@ -1,4 +1,4 @@
-package com.minimalism.common_code.utils.thread;
+package com.minimalism.aop.utils.thread;
 
 import cn.hutool.core.lang.UUID;
 import org.slf4j.MDC;
