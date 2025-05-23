@@ -1,6 +1,7 @@
 package com.minimalism.aop.utils.thread;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.IdUtil;
 import org.slf4j.MDC;
 
 import java.util.Map;
@@ -14,14 +15,100 @@ import java.util.concurrent.Callable;
 public final class ThreadMdcUtil {
     public static final String TRACE_ID = "TRACE_ID";
 
-    // 获取唯一性标识
+    /**
+     * 生成traceId
+     *
+     * @return
+     */
     public static String generateTraceId() {
-        return UUID.randomUUID().toString();
+        return System.currentTimeMillis() + "^" + IdUtil.getSnowflakeNextIdStr();
     }
 
+    /**
+     * 获取当前线程的MDC信息
+     *
+     * @param key
+     * @return
+     */
+    public static String get(String key) {
+        return MDC.get(key);
+    }
+
+    /**
+     * 设置当前线程的MDC信息
+     *
+     * @param key
+     * @param value
+     */
+    public static void put(String key, String value) {
+        MDC.put(key, value);
+    }
+
+    /**
+     * 移除当前线程的MDC信息 key
+     *
+     * @param key
+     */
+    public static void remove(String key) {
+        MDC.remove(key);
+    }
+
+    /**
+     * 清除当前线程的MDC信息
+     */
+    public static void clear() {
+        MDC.clear();
+    }
+
+    /**
+     * 获取当前线程的MDC信息
+     *
+     * @return
+     */
+    public static Map getCopyOfContextMap() {
+        return MDC.getCopyOfContextMap();
+    }
+
+    /**
+     * 设置当前线程的MDC信息
+     *
+     * @param contextMap
+     */
+    public static void setContextMap(Map contextMap) {
+        MDC.setContextMap(contextMap);
+    }
+
+    /**
+     * 获取当前线程的traceId
+     *
+     * @return
+     */
+    public static String getTraceId() {
+        return get(TRACE_ID);
+    }
+
+    /**
+     * 设置traceId
+     *
+     * @param traceId
+     */
+    public static void setTraceId(String traceId) {
+        put(TRACE_ID, traceId);
+    }
+
+    /**
+     * 移除traceId
+     */
+    public static void removeTraceId() {
+        remove(TRACE_ID);
+    }
+
+    /**
+     * 设置traceId，如果为空则生成一个
+     */
     public static void setTraceIdIfAbsent() {
-        if (MDC.get(TRACE_ID) == null) {
-            MDC.put(TRACE_ID, generateTraceId());
+        if (getTraceId() == null) {
+            setTraceId(generateTraceId());
         }
     }
 
@@ -36,15 +123,15 @@ public final class ThreadMdcUtil {
     public static <T> Callable<T> wrap(final Callable<T> callable, final Map<String, String> context) {
         return () -> {
             if (context == null) {
-                MDC.clear();
+                clear();
             } else {
-                MDC.setContextMap(context);
+                setContextMap(context);
             }
             setTraceIdIfAbsent();
             try {
                 return callable.call();
             } finally {
-                MDC.clear();
+                clear();
             }
         };
     }
@@ -59,15 +146,15 @@ public final class ThreadMdcUtil {
     public static Runnable wrap(final Runnable runnable, final Map<String, String> context) {
         return () -> {
             if (context == null) {
-                MDC.clear();
+                clear();
             } else {
-                MDC.setContextMap(context);
+                setContextMap(context);
             }
             setTraceIdIfAbsent();
             try {
                 runnable.run();
             } finally {
-                MDC.clear();
+                clear();
             }
         };
     }

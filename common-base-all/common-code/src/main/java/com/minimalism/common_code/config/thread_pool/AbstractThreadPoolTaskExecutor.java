@@ -1,6 +1,6 @@
 package com.minimalism.common_code.config.thread_pool;
 
-import com.minimalism.common_code.utils.thread.ThreadMdcUtil;
+import com.minimalism.aop.utils.thread.ThreadMdcUtil;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 

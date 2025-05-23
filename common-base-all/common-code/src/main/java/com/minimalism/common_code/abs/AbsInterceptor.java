@@ -2,7 +2,7 @@ package com.minimalism.common_code.abs;
 
 import cn.hutool.core.util.StrUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
-import com.minimalism.common_code.utils.thread.ThreadMdcUtil;
+import com.minimalism.aop.utils.thread.ThreadMdcUtil;
 import lombok.SneakyThrows;
 import org.slf4j.MDC;
 import org.springframework.lang.Nullable;

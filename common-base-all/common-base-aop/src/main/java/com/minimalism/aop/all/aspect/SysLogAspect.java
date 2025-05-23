@@ -9,6 +9,7 @@ import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.minimalism.aop.abs.aspect.AbsSysLog;
 import com.minimalism.aop.all.log.SysLog;
+import com.minimalism.aop.utils.thread.ThreadMdcUtil;
 import com.minimalism.base.enums.RequestMethod;
 
 import com.minimalism.aop.utils.gateway.GatewayUtils;
@@ -20,6 +21,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -44,26 +47,8 @@ import java.util.stream.Stream;
 @Getter
 public class SysLogAspect implements AbsSysLog {
     private final static JSONConfig jsonConfig = JSONConfig.create().setIgnoreNullValue(false);
-
     @Resource
     private Environment environment;
-
-    /**
-     * 需要获取请求行的请求方法
-     */
-    private final static List<String> getParamsMethod = Stream.
-            of(RequestMethod.GET.name(), RequestMethod.DELETE.name()).collect(Collectors.toList());
-    /**
-     * 需要获取请求体的请求方法
-     */
-    private final static List<String> getBodyMethod = Stream.
-            of(RequestMethod.POST.name(), RequestMethod.PUT.name()).collect(Collectors.toList());
-
-
-    public static <T extends Annotation> T getClassAnnotation(JoinPoint joinPoint, Class<T> annotationClass) {
-        return ((MethodSignature) joinPoint.getSignature()).getMethod().getDeclaringClass().getAnnotation(annotationClass);
-    }
-
 
     /**
      * 是否存在注解，如果存在就获取
@@ -79,14 +64,17 @@ public class SysLogAspect implements AbsSysLog {
         return null;
     }
 
-
     @Override
     @Around(value = "Aop()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         log();
         //获取是否有注解
         SysLog sysLog = getAnnotationLog(joinPoint);
-        String trackId = new StringBuilder().append(System.currentTimeMillis()).append("#").append(IdUtil.getSnowflakeNextIdStr()).toString();
+
+        String trackId = ThreadMdcUtil.getTraceId();
+
+        trackId = StrUtil.isNotEmpty(trackId) ? trackId : ThreadMdcUtil.generateTraceId();
+        ThreadMdcUtil.setTraceId(trackId);
         /**
          * 开启请求日志
          */
@@ -122,7 +110,7 @@ public class SysLogAspect implements AbsSysLog {
             String url = GatewayUtils.replaceUrl(request, requestURL.toString());
             log.info(new StringBuffer()
                             .append("\n====================================请求内容====================================")
-                            .append("\n==>TRACK_ID : {} <==")
+                            .append("\n==>TRACE_ID : {} <==")
                             .append("\n==>请求服务名 : {} <==")
                             .append("\n==>请求模块名 : {} <==")
                             .append("\n==>请求描述 : {} <==")
@@ -157,12 +145,12 @@ public class SysLogAspect implements AbsSysLog {
             String jsonStr = JSONUtil.toJsonStr(returnObj);
             log.info(new StringBuffer()
                     .append("\n====================================响应内容====================================")
-                    .append("\n==>TRACK_ID : {} <==")
+                    .append("\n==>TRACE_ID : {} <==")
                     .append("\n==>响应 : {} <==")
                     .append("\n================================================================================")
-                    .toString(),trackId, jsonStr);
+                    .toString(), trackId, jsonStr);
         }
-
+        ThreadMdcUtil.removeTraceId();
         return around;
     }
 
