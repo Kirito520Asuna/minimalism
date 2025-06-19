@@ -46,6 +46,12 @@ public interface AbsAop extends AbsBean, Ordered {
         if (ObjectUtil.isNotEmpty(method)) {
             annotation = method.getAnnotation(annotationClass);
         }
+        if (annotation == null) {
+            // 获取目标类
+            Class<?> targetClass = joinPoint.getTarget().getClass();
+            // 获取类上的 注解
+            annotation = targetClass.getAnnotation(annotationClass);
+        }
         return annotation;
     }
 
@@ -90,17 +96,17 @@ public interface AbsAop extends AbsBean, Ordered {
                 if (StrUtil.isNotEmpty(tagAnnotation.name())) {
                     // 优先读取 @Tag 的 name 属性
                     module = tagAnnotation.name();
-                }else if (StrUtil.isNotEmpty(tagAnnotation.description())) {
+                } else if (StrUtil.isNotEmpty(tagAnnotation.description())) {
                     // 没有的话，读取 @Tag 的 description 属性
                     module = tagAnnotation.description();
                 }
-            }else {
+            } else {
                 Api apiAnnotation = declaringClass.getAnnotation(Api.class);
                 if (ObjectUtils.isNotEmpty(apiAnnotation)) {
                     if (StrUtil.isNotEmpty(apiAnnotation.value())) {
                         // 优先读取 @Api 的 value 属性
                         module = apiAnnotation.value();
-                    }else if (StrUtil.isNotEmpty(apiAnnotation.description())) {
+                    } else if (StrUtil.isNotEmpty(apiAnnotation.description())) {
                         // 没有的话，读取 @Api 的 description 属性
                         module = apiAnnotation.description();
                     }
