@@ -28,7 +28,7 @@
 <!--        <module>framework-redis</module>-->
 <!--        <module>framework-seata</module>-->
 <!--        <module>framework-sentinel</module>-->
-<!--        <module>framework-sharding-sphere</module>-->
+        <module>framework-sharding-sphere</module>
 <!--        <module>framework-weixin-java</module>-->
 <!--        <module>framework-bom</module>-->
     </modules>
