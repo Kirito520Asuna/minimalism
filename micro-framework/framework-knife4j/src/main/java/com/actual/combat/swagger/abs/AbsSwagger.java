@@ -17,8 +17,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
-import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 
