@@ -23,11 +23,11 @@
 <!--        <module>framework-kafka</module>-->
         <module>framework-knife4j</module>
         <module>framework-mybatis-plus</module>
-<!--        <module>framework-nacos</module>-->
+        <module>framework-nacos</module>
 <!--        <module>framework-quartz</module>-->
 <!--        <module>framework-redis</module>-->
 <!--        <module>framework-seata</module>-->
-<!--        <module>framework-sentinel</module>-->
+        <module>framework-sentinel</module>
         <module>framework-sharding-sphere</module>
         <module>framework-weixin-java</module>
 <!--        <module>framework-bom</module>-->
