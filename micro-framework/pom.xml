@@ -24,7 +24,7 @@
         <module>framework-knife4j</module>
         <module>framework-mybatis-plus</module>
         <module>framework-nacos</module>
-<!--        <module>framework-quartz</module>-->
+        <module>framework-quartz</module>
         <module>framework-redis</module>
         <module>framework-seata</module>
         <module>framework-sentinel</module>
