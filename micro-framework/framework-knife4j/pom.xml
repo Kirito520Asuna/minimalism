@@ -13,7 +13,7 @@
 
     <properties>
         <!--swagger 版本-->
-        <knife4j.version>4.4.0</knife4j.version>
+        <knife4j.version>4.1.0</knife4j.version>
         <springdoc-openapi.version>1.6.15</springdoc-openapi.version>
     </properties>
 
