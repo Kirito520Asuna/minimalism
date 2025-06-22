@@ -35,15 +35,15 @@
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
     </properties>
 
-    <!--<modules>-->
+    <modules>
     <!--    <module>micro-auth</module>-->
     <!--    <module>micro-central</module>-->
     <!--    <module>micro-cores</module>-->
     <!--    <module>micro-database</module>-->
-    <!--    <module>micro-framework</module>-->
+        <module>micro-framework</module>
     <!--    <module>micro-service</module>-->
     <!--    <module>micro-sub-cores</module>-->
-    <!--</modules>-->
+    </modules>
 
     <dependencyManagement>
         <dependencies>

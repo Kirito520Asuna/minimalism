@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.actual.combat</groupId>
+        <artifactId>minimalism</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>micro-framework</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>framework-aop</module>
+<!--        <module>framework-basic</module>-->
+<!--        <module>framework-basic-core</module>-->
+<!--        <module>framework-dynamic-datasource</module>-->
+<!--        <module>framework-easy-elasticsearch</module>-->
+<!--        <module>framework-elasticsearch</module>-->
+<!--        <module>framework-jpa</module>-->
+<!--        <module>framework-kafka</module>-->
+<!--        <module>framework-knife4j</module>-->
+<!--        <module>framework-mybatis-plus</module>-->
+<!--        <module>framework-nacos</module>-->
+<!--        <module>framework-quartz</module>-->
+<!--        <module>framework-redis</module>-->
+<!--        <module>framework-seata</module>-->
+<!--        <module>framework-sentinel</module>-->
+<!--        <module>framework-sharding-sphere</module>-->
+<!--        <module>framework-weixin-java</module>-->
+<!--        <module>framework-bom</module>-->
+    </modules>
+
+
+</project>
