@@ -31,10 +31,7 @@
         <resources.resources-common>resources-common</resources.resources-common>
         <resources.banner.name>banner.txt</resources.banner.name>
         <resources.logstash.name>logback-spring.xml</resources.logstash.name>
-        <!--target dir-->
-        <target.base.dir>../..</target.base.dir>
-        <pom.target.dir></pom.target.dir>
-        <target.dir>${target.base.dir}/targets/${pom.target.dir}/${project.artifactId}</target.dir>
+
         <!-- 插件版本 -->
         <maven-jar-plugin.verison>3.3.0</maven-jar-plugin.verison>
         <maven-resources-plugin.verison>3.3.0</maven-resources-plugin.verison>
@@ -42,14 +39,6 @@
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
     </properties>
 
-    <modules>
-        <module>common-base-all</module>
-        <module>common-framework-all</module>
-        <module>common-module-all</module>
-        <module>common-dao-module-all</module>
-        <module>common-service-module-all</module>
-        <module>micro-service-module-all</module>
-    </modules>
 
     <!--远程仓库-->
     <repositories>
