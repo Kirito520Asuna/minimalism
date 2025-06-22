@@ -15,7 +15,7 @@
     <modules>
         <module>framework-aop</module>
         <module>framework-basic</module>
-<!--        <module>framework-basic-core</module>-->
+        <module>framework-basic-core</module>
 <!--        <module>framework-dynamic-datasource</module>-->
 <!--        <module>framework-easy-elasticsearch</module>-->
 <!--        <module>framework-elasticsearch</module>-->
