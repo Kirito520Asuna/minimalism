@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.user.mapper.SysUserRoleDao">
-  <resultMap id="BaseResultMap" type="com.actual.combat.user.domain.SysUserRole">
+<mapper namespace="com.minimalism.user.mapper.SysUserRoleDao">
+  <resultMap id="BaseResultMap" type="com.minimalism.user.domain.SysUserRole">
     <!--@mbg.generated-->
     <!--@Table sys_user_role-->
     <id column="user_id" jdbcType="BIGINT" property="userId" />
@@ -66,7 +66,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOrUpdate" parameterType="com.actual.combat.user.domain.SysUserRole">
+  <insert id="insertOrUpdate" parameterType="com.minimalism.user.domain.SysUserRole">
     <!--@mbg.generated-->
     insert into sys_user_role
     (user_id, role_id)
@@ -76,7 +76,7 @@
     user_id = #{userId,jdbcType=BIGINT}, 
     role_id = #{roleId,jdbcType=BIGINT}
   </insert>
-  <insert id="insertOrUpdateSelective" parameterType="com.actual.combat.user.domain.SysUserRole">
+  <insert id="insertOrUpdateSelective" parameterType="com.minimalism.user.domain.SysUserRole">
     <!--@mbg.generated-->
     insert into sys_user_role
     <trim prefix="(" suffix=")" suffixOverrides=",">

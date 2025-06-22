@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.file.mapper.FileInfoMapper">
-  <resultMap id="BaseResultMap" type="com.actual.combat.file.domain.FileInfo">
+<mapper namespace="com.minimalism.file.mapper.FileInfoMapper">
+  <resultMap id="BaseResultMap" type="com.minimalism.file.domain.FileInfo">
     <!--@mbg.generated-->
     <!--@Table file_info-->
     <id column="file_id" jdbcType="BIGINT" property="fileId" />
@@ -498,7 +498,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOnDuplicateUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="com.actual.combat.file.domain.FileInfo" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdate" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -570,7 +570,7 @@
       part_code = #{partCode,jdbcType=VARCHAR},
     </trim>
   </insert>
-  <insert id="insertOnDuplicateUpdateSelective" keyColumn="file_id" keyProperty="fileId" parameterType="com.actual.combat.file.domain.FileInfo" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdateSelective" keyColumn="file_id" keyProperty="fileId" parameterType="com.minimalism.file.domain.FileInfo" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_info
     <trim prefix="(" suffix=")" suffixOverrides=",">

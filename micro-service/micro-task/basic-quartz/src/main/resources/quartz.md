@@ -1036,7 +1036,6 @@ public class Minute1Job extends DistributedJob {
 ```java
 package com.minimalism;
 
-import com.actual.combat.BasicQuartzApplication;
 import com.actual.combat.QuartzApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

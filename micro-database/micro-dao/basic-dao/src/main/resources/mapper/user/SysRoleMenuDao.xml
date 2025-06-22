@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.user.mapper.SysRoleMenuDao">
-  <resultMap id="BaseResultMap" type="com.actual.combat.user.domain.SysRoleMenu">
+<mapper namespace="com.minimalism.user.mapper.SysRoleMenuDao">
+  <resultMap id="BaseResultMap" type="com.minimalism.user.domain.SysRoleMenu">
     <!--@mbg.generated-->
     <!--@Table sys_role_menu-->
     <id column="role_id" jdbcType="BIGINT" property="roleId" />
@@ -66,7 +66,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOrUpdate" parameterType="com.actual.combat.user.domain.SysRoleMenu">
+  <insert id="insertOrUpdate" parameterType="com.minimalism.user.domain.SysRoleMenu">
     <!--@mbg.generated-->
     insert into `sys_role_menu`
     (role_id, menu_id)
@@ -76,7 +76,7 @@
     role_id = #{roleId,jdbcType=BIGINT}, 
     menu_id = #{menuId,jdbcType=BIGINT}
   </insert>
-  <insert id="insertOrUpdateSelective" parameterType="com.actual.combat.user.domain.SysRoleMenu">
+  <insert id="insertOrUpdateSelective" parameterType="com.minimalism.user.domain.SysRoleMenu">
     <!--@mbg.generated-->
     insert into sys_role_menu
     <trim prefix="(" suffix=")" suffixOverrides=",">

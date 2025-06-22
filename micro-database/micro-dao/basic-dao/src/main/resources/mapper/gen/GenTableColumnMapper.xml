@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.gen.mapper.GenTableColumnMapper">
-    <resultMap id="BaseResultMap" type="com.actual.combat.gen.domain.GenTableColumn">
+<mapper namespace="com.minimalism.gen.mapper.GenTableColumnMapper">
+    <resultMap id="BaseResultMap" type="com.minimalism.gen.domain.GenTableColumn">
         <!--@mbg.generated-->
         <!--@Table `gen_table_column`-->
         <id column="column_id" jdbcType="BIGINT" property="columnId"/>
@@ -574,7 +574,7 @@
         </foreach>
     </insert>
     <insert id="insertOrUpdate" keyColumn="column_id" keyProperty="columnId"
-            parameterType="com.actual.combat.gen.domain.GenTableColumn" useGeneratedKeys="true">
+            parameterType="com.minimalism.gen.domain.GenTableColumn" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into gen_table_column
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -662,7 +662,7 @@
         </trim>
     </insert>
     <insert id="insertOrUpdateSelective" keyColumn="column_id" keyProperty="columnId"
-            parameterType="com.actual.combat.gen.domain.GenTableColumn" useGeneratedKeys="true">
+            parameterType="com.minimalism.gen.domain.GenTableColumn" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into gen_table_column
         <trim prefix="(" suffix=")" suffixOverrides=",">

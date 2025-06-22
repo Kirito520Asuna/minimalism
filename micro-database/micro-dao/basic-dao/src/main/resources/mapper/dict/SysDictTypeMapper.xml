@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.dict.mapper.SysDictTypeMapper">
-    <resultMap id="BaseResultMap" type="com.actual.combat.dict.domain.SysDictType">
+<mapper namespace="com.minimalism.dict.mapper.SysDictTypeMapper">
+    <resultMap id="BaseResultMap" type="com.minimalism.dict.domain.SysDictType">
         <!--@mbg.generated-->
         <!--@Table sys_dict_type-->
         <id column="dict_id" jdbcType="BIGINT" property="dictId"/>
@@ -265,7 +265,7 @@
         </foreach>
     </insert>
     <insert id="insertOnDuplicateUpdate" keyColumn="dict_id" keyProperty="dictId"
-            parameterType="com.actual.combat.dict.domain.SysDictType" useGeneratedKeys="true">
+            parameterType="com.minimalism.dict.domain.SysDictType" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into sys_dict_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -311,7 +311,7 @@
         </trim>
     </insert>
     <insert id="insertOnDuplicateUpdateSelective" keyColumn="dict_id" keyProperty="dictId"
-            parameterType="com.actual.combat.dict.domain.SysDictType" useGeneratedKeys="true">
+            parameterType="com.minimalism.dict.domain.SysDictType" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into sys_dict_type
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.file.mapper.FilePartMapper">
-  <resultMap id="BaseResultMap" type="com.actual.combat.file.domain.FilePart">
+<mapper namespace="com.minimalism.file.mapper.FilePartMapper">
+  <resultMap id="BaseResultMap" type="com.minimalism.file.domain.FilePart">
     <!--@mbg.generated-->
     <!--@Table file_part-->
     <id column="part_id" jdbcType="BIGINT" property="partId" />
@@ -345,7 +345,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOnDuplicateUpdate" keyColumn="part_id" keyProperty="partId" parameterType="com.actual.combat.file.domain.FilePart" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdate" keyColumn="part_id" keyProperty="partId" parameterType="com.minimalism.file.domain.FilePart" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_part
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -396,7 +396,7 @@
       upload_dir = #{uploadDir,jdbcType=VARCHAR},
     </trim>
   </insert>
-  <insert id="insertOnDuplicateUpdateSelective" keyColumn="part_id" keyProperty="partId" parameterType="com.actual.combat.file.domain.FilePart" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdateSelective" keyColumn="part_id" keyProperty="partId" parameterType="com.minimalism.file.domain.FilePart" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into file_part
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -508,7 +508,7 @@
     </trim>
   </insert>
 
-    <select id="getPartList" resultType="com.actual.combat.vo.PartVo">
+    <select id="getPartList" resultType="com.minimalism.vo.PartVo">
         select url, local_resource localResource, is_local `local`,upload_dir uploadDir,os_type osType
         from file_part
         where

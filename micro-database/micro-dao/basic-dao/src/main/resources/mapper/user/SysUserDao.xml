@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.user.mapper.SysUserDao">
-    <resultMap id="BaseResultMap" type="com.actual.combat.user.domain.SysUser">
+<mapper namespace="com.minimalism.user.mapper.SysUserDao">
+    <resultMap id="BaseResultMap" type="com.minimalism.user.domain.SysUser">
         <!--@mbg.generated-->
         <!--@Table sys_user-->
         <id column="user_id" jdbcType="BIGINT" property="userId"/>
@@ -25,7 +25,7 @@
     </resultMap>
 
 
-    <resultMap type="com.actual.combat.user.domain.SysUser" id="UserResult">
+    <resultMap type="com.minimalism.user.domain.SysUser" id="UserResult">
         <id property="userId" column="user_id"/>
 <!--        <result property="deptId" column="dept_id"/>-->
         <result property="userName" column="user_name"/>
@@ -48,7 +48,7 @@
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
 
-    <resultMap id="deptResult" type="com.actual.combat.dept.domain.SysDept">
+    <resultMap id="deptResult" type="com.minimalism.dept.domain.SysDept">
         <id property="deptId" column="dept_id"/>
         <result property="parentId" column="parent_id"/>
         <result property="deptName" column="dept_name"/>
@@ -58,7 +58,7 @@
         <result property="status" column="dept_status"/>
     </resultMap>
 
-    <resultMap id="RoleResult" type="com.actual.combat.user.domain.SysRole">
+    <resultMap id="RoleResult" type="com.minimalism.user.domain.SysRole">
         <id property="roleId" column="role_id"/>
         <result property="roleName" column="role_name"/>
         <result property="roleKey" column="role_key"/>
@@ -456,7 +456,7 @@
         </foreach>
     </insert>
     <insert id="insertOrUpdate" keyColumn="user_id" keyProperty="userId"
-            parameterType="com.actual.combat.user.domain.SysUser" useGeneratedKeys="true">
+            parameterType="com.minimalism.user.domain.SysUser" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into `sys_user`
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -529,7 +529,7 @@
         </trim>
     </insert>
     <insert id="insertOrUpdateSelective" keyColumn="user_id" keyProperty="userId"
-            parameterType="com.actual.combat.user.domain.SysUser" useGeneratedKeys="true">
+            parameterType="com.minimalism.user.domain.SysUser" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into `sys_user`
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -704,7 +704,7 @@
         </trim>
     </insert>
 
-    <select id="getUserVoById" resultType="com.actual.combat.basic.core.vo.user.UserVo">
+    <select id="getUserVoById" resultType="com.minimalism.basic.core.vo.user.UserVo">
         select
         <include refid="Base_Column_List"/>
         from `sys_user`

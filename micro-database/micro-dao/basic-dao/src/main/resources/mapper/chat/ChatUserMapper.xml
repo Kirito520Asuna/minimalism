@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.im.mapper.chat.ChatUserMapper">
-  <resultMap id="BaseResultMap" type="com.actual.combat.im.domain.chat.ChatUser">
+<mapper namespace="com.minimalism.im.mapper.chat.ChatUserMapper">
+  <resultMap id="BaseResultMap" type="com.minimalism.im.domain.chat.ChatUser">
     <!--@mbg.generated-->
     <!--@Table `chat_user`-->
     <result column="id" jdbcType="BIGINT" property="id" />

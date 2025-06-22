@@ -1,10 +1,10 @@
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
-import com.actual.combat.BasicFileApplication;
-import com.actual.combat.basic.core.utils.io.IoUtils;
-import com.actual.combat.basic.file.core.utils.oss.LocalOSSUtils;
-import com.actual.combat.file.controller.FileController;
+import com.minimalism.BasicFileApplication;
+import com.minimalism.basic.core.utils.io.IoUtils;
+import com.minimalism.basic.file.core.utils.oss.LocalOSSUtils;
+import com.minimalism.file.controller.FileController;
 import javax.annotation.Resource;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;

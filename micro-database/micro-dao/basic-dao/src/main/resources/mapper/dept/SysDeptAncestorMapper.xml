@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.dept.mapper.SysDeptAncestorMapper">
-  <resultMap id="BaseResultMap" type="com.actual.combat.dept.domain.SysDeptAncestor">
+<mapper namespace="com.minimalism.dept.mapper.SysDeptAncestorMapper">
+  <resultMap id="BaseResultMap" type="com.minimalism.dept.domain.SysDeptAncestor">
     <!--@mbg.generated-->
     <!--@Table sys_dept_ancestor-->
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -134,7 +134,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.actual.combat.dept.domain.SysDeptAncestor" useGeneratedKeys="true">
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.minimalism.dept.domain.SysDeptAncestor" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into sys_dept_ancestor
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -164,7 +164,7 @@
       `level` = #{level,jdbcType=BIGINT},
     </trim>
   </insert>
-  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.actual.combat.dept.domain.SysDeptAncestor" useGeneratedKeys="true">
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.minimalism.dept.domain.SysDeptAncestor" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into sys_dept_ancestor
     <trim prefix="(" suffix=")" suffixOverrides=",">

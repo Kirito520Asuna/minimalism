@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.dept.mapper.SysDeptMapper">
-    <resultMap id="BaseResultMap" type="com.actual.combat.dept.domain.SysDept">
+<mapper namespace="com.minimalism.dept.mapper.SysDeptMapper">
+    <resultMap id="BaseResultMap" type="com.minimalism.dept.domain.SysDept">
         <!--@mbg.generated-->
         <!--@Table sys_dept-->
         <id column="dept_id" jdbcType="BIGINT" property="deptId"/>
@@ -368,7 +368,7 @@
         </foreach>
     </insert>
     <insert id="insertOrUpdate" keyColumn="dept_id" keyProperty="deptId"
-            parameterType="com.actual.combat.dept.domain.SysDept" useGeneratedKeys="true">
+            parameterType="com.minimalism.dept.domain.SysDept" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into sys_dept
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -426,7 +426,7 @@
         </trim>
     </insert>
     <insert id="insertOrUpdateSelective" keyColumn="dept_id" keyProperty="deptId"
-            parameterType="com.actual.combat.dept.domain.SysDept" useGeneratedKeys="true">
+            parameterType="com.minimalism.dept.domain.SysDept" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into sys_dept
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -581,7 +581,7 @@
         order by d.`parent_id`, d.`order_num`
     </select>
 
-    <select id="selectTree" resultType="com.actual.combat.vo.dept.DeptTreeVo">
+    <select id="selectTree" resultType="com.minimalism.vo.dept.DeptTreeVo">
         <if test="ids != null and ids.size() != 0">
             SELECT DISTINCT `id`, `parent_id` as parentId, `level`
             FROM (

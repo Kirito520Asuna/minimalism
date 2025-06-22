@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.user.mapper.SysMenuDao">
-  <resultMap id="BaseResultMap" type="com.actual.combat.user.domain.SysMenu">
+<mapper namespace="com.minimalism.user.mapper.SysMenuDao">
+  <resultMap id="BaseResultMap" type="com.minimalism.user.domain.SysMenu">
     <!--@mbg.generated-->
     <!--@Table sys_menu-->
     <id column="menu_id" jdbcType="BIGINT" property="menuId"/>
@@ -448,7 +448,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOrUpdate" keyColumn="menu_id" keyProperty="menuId" parameterType="com.actual.combat.user.domain.SysMenu"
+  <insert id="insertOrUpdate" keyColumn="menu_id" keyProperty="menuId" parameterType="com.minimalism.user.domain.SysMenu"
           useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into sys_menu
@@ -528,7 +528,7 @@
     </trim>
   </insert>
   <insert id="insertOrUpdateSelective" keyColumn="menu_id" keyProperty="menuId"
-          parameterType="com.actual.combat.user.domain.SysMenu" useGeneratedKeys="true">
+          parameterType="com.minimalism.user.domain.SysMenu" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into `sys_menu`
     <trim prefix="(" suffix=")" suffixOverrides=",">

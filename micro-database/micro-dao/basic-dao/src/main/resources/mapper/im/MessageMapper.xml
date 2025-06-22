@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.actual.combat.im.mapper.im.MessageMapper">
-  <resultMap id="BaseResultMap" type="com.actual.combat.im.domain.im.Message">
+<mapper namespace="com.minimalism.im.mapper.im.MessageMapper">
+  <resultMap id="BaseResultMap" type="com.minimalism.im.domain.im.Message">
     <!--@mbg.generated-->
     <!--@Table `message`-->
     <id column="id" jdbcType="BIGINT" property="id" />
