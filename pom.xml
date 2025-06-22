@@ -38,7 +38,7 @@
     <modules>
     <!--    <module>micro-auth</module>-->
     <!--    <module>micro-central</module>-->
-    <!--    <module>micro-cores</module>-->
+        <module>micro-cores</module>
     <!--    <module>micro-database</module>-->
         <module>micro-framework</module>
     <!--    <module>micro-service</module>-->
