@@ -41,7 +41,7 @@
         <module>micro-cores</module>
         <module>micro-database</module>
         <module>micro-framework</module>
-    <!--    <module>micro-service</module>-->
+        <module>micro-service</module>
         <module>micro-sub-cores</module>
     </modules>
 
