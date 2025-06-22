@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.actual.combat</groupId>
+		<groupId>com.minimalism</groupId>
 		<artifactId>micro-business</artifactId>
 		<version>${revision}</version>
 	</parent>
@@ -39,13 +39,13 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.actual.combat</groupId>
+			<groupId>com.minimalism</groupId>
 			<artifactId>basic-websocket-core</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.actual.combat</groupId>
+			<groupId>com.minimalism</groupId>
 			<artifactId>framework-knife4j</artifactId>
 		</dependency>
 

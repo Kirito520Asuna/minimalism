@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.actual.combat</groupId>
+        <groupId>com.minimalism</groupId>
         <artifactId>micro-framework</artifactId>
         <version>${revision}</version>
     </parent>
@@ -28,7 +28,7 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.actual.combat</groupId>
+                <groupId>com.minimalism</groupId>
                 <artifactId>framework-bom</artifactId>
                 <version>${revision}</version>
                 <type>pom</type>
@@ -59,11 +59,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-basic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-aop</artifactId>
         </dependency>
         <dependency>

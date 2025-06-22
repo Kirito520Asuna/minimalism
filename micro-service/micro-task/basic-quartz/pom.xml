@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.actual.combat</groupId>
+        <groupId>com.minimalism</groupId>
         <artifactId>micro-task</artifactId>
         <version>${revision}</version>
     </parent>
@@ -38,12 +38,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-quartz-core</artifactId>
             <version>${revision}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.actual.combat</groupId>
+                    <groupId>com.minimalism</groupId>
                     <artifactId>auth-security</artifactId>
                 </exclusion>
                 <exclusion>
@@ -59,16 +59,16 @@
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-openfeign</artifactId>
             <version>${revision}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.actual.combat</groupId>
+                    <groupId>com.minimalism</groupId>
                     <artifactId>framework-nacos</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.actual.combat</groupId>
+                    <groupId>com.minimalism</groupId>
                     <artifactId>framework-seata</artifactId>
                 </exclusion>
             </exclusions>
@@ -103,7 +103,7 @@
 
         <!--seata-start-->
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-seata</artifactId>
             <version>${revision}</version>
             <exclusions>
@@ -128,7 +128,7 @@
         <!--seata-end-->
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-knife4j</artifactId>
             <version>${revision}</version>
         </dependency>

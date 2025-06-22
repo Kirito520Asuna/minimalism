@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.actual.combat</groupId>
+        <groupId>com.minimalism</groupId>
         <artifactId>micro-cores</artifactId>
         <version>${revision}</version>
     </parent>
@@ -54,17 +54,17 @@
                 <version>${poi.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.actual.combat</groupId>
+                <groupId>com.minimalism</groupId>
                 <artifactId>framework-basic</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.actual.combat</groupId>
+                <groupId>com.minimalism</groupId>
                 <artifactId>framework-basic-core</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.actual.combat</groupId>
+                <groupId>com.minimalism</groupId>
                 <artifactId>framework-aop</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -100,15 +100,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-basic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-basic-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-aop</artifactId>
         </dependency>
     </dependencies>

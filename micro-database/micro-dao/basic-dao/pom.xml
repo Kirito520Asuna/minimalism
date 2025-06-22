@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.actual.combat</groupId>
+        <groupId>com.minimalism</groupId>
         <artifactId>micro-dao</artifactId>
         <version>${revision}</version>
     </parent>
@@ -23,7 +23,7 @@
         <dependencies>
             <!--swagger-->
             <dependency>
-                <groupId>com.actual.combat</groupId>
+                <groupId>com.minimalism</groupId>
                 <artifactId>framework-knife4j</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -31,7 +31,7 @@
             <!--framework-mybatis-plus-->
             <!--dao-->
             <dependency>
-                <groupId>com.actual.combat</groupId>
+                <groupId>com.minimalism</groupId>
                 <artifactId>framework-mybatis-plus</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -50,7 +50,7 @@
             <!--dao-->
             <!--common-->
             <dependency>
-                <groupId>com.actual.combat</groupId>
+                <groupId>com.minimalism</groupId>
                 <artifactId>basic-core</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -60,14 +60,14 @@
     <dependencies>
         <!--swagger-->
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-knife4j</artifactId>
         </dependency>
 
         <!--framework-mybatis-plus-->
         <!--dao-->
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-mybatis-plus</artifactId>
             <exclusions>
                 <exclusion>
@@ -105,7 +105,7 @@
         <!--dao-->
         <!--common-->
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-core</artifactId>
             <exclusions>
                 <exclusion>

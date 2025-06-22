@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.actual.combat</groupId>
+        <groupId>com.minimalism</groupId>
         <artifactId>micro-sub-cores</artifactId>
         <version>${revision}</version>
     </parent>
@@ -33,7 +33,7 @@
     <dependencies>
         <!--公共service模块-->
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>auth</artifactId>
             <version>${revision}</version>
             <exclusions>
@@ -45,7 +45,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-job-core</artifactId>
             <version>${revision}</version>
         </dependency>

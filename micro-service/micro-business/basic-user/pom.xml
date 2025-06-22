@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.actual.combat</groupId>
+        <groupId>com.minimalism</groupId>
         <artifactId>micro-business</artifactId>
         <version>${revision}</version>
     </parent>
@@ -33,7 +33,7 @@
     <dependencies>
         <!--nacos-->
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-nacos</artifactId>
         </dependency>
  
@@ -50,37 +50,37 @@
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>auth</artifactId>
             <version>${revision}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.actual.combat</groupId>
+                    <groupId>com.minimalism</groupId>
                     <artifactId>auth-security</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-user-core</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-dict-core</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-dept-core</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.actual.combat</groupId>
+            <groupId>com.minimalism</groupId>
             <artifactId>basic-validate-core</artifactId>
             <version>${revision}</version>
         </dependency>
