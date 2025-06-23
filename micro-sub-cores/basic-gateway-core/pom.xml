@@ -11,9 +11,6 @@
 
     <artifactId>basic-gateway-core</artifactId>
 
-    <properties>
-        <springdoc-openapi.version>2.6.0</springdoc-openapi.version>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -56,11 +53,6 @@
         <dependency>
             <groupId>com.minimalism</groupId>
             <artifactId>basic-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
-            <version>${springdoc-openapi.version}</version>
         </dependency>
         <!--devtools热部署-->
         <dependency>

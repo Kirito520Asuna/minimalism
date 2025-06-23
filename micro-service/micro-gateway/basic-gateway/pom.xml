@@ -29,17 +29,14 @@
             </dependency>
             <dependency>
                 <groupId>com.minimalism</groupId>
+                <artifactId>framework-bom</artifactId>
+                <version>${revision}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.minimalism</groupId>
                 <artifactId>basic-gateway-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.minimalism</groupId>
-                <artifactId>framework-knife4j</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.minimalism</groupId>
-                <artifactId>framework-nacos</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>
