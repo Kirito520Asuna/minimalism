@@ -112,10 +112,6 @@
                     <groupId>com.github.pagehelper</groupId>
                     <artifactId>pagehelper</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>io.springfox</groupId>
-                    <artifactId>springfox-boot-starter</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <!--枚举-->
