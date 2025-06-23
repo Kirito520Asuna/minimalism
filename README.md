@@ -40,7 +40,6 @@ gitee  地址：https://gitee.com/kirito-asuna/actual-combat-ai
 
 - security,shiro 已提供 权限 测试环境 跳过 的配置
 
-
 2.  gateway网关
 - gateway网关使用的是springcloud gateway
 - 已经整合各个微服务的swagger文档(配置只生效于dev,test 如需自定义配置 请修改HomePageConfiguration中@Profile配置的值)
