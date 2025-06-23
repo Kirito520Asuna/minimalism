@@ -13,6 +13,10 @@ gitee  地址：https://gitee.com/kirito-asuna/minimalism
 
 (springboot3)
 
+github 地址：https://github.com/Kirito520Asuna/actual-combat-ai
+
+gitee  地址：https://gitee.com/kirito-asuna/actual-combat-ai
+
 #### 软件架构
 软件架构说明
 
