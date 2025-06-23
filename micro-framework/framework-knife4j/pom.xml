@@ -15,6 +15,8 @@
         <!--swagger 版本-->
         <knife4j.version>4.1.0</knife4j.version>
         <springdoc-openapi.version>1.6.15</springdoc-openapi.version>
+        <swagger.core.version>2.2.20</swagger.core.version>
+        <swagger.version>1.6.16</swagger.version>
     </properties>
 
 
@@ -35,11 +37,29 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
+            <!-- Swagger 注解包（核心） -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${swagger.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${springdoc-openapi.version}</version>
-                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -60,6 +80,21 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
         </dependency>
 
         <dependency>
