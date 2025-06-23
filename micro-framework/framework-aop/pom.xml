@@ -23,6 +23,8 @@
 
         <aviator.version>5.2.0</aviator.version>
         <guava.version>30.0-jre</guava.version>
+        <swagger.core.version>2.2.20</swagger.core.version>
+        <swagger.version>1.6.16</swagger.version>
 
         <itext.version>2.1.7</itext.version>
         <itextpdf.version>5.5.9</itextpdf.version>
@@ -39,6 +41,26 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- Swagger 注解包（核心） -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${swagger.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -79,17 +101,12 @@
                 <version>${itext-asian.version}</version>
             </dependency>
 
-            <!--Swagger3相关-->
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-boot-starter</artifactId>
-                <version>${springfox-boot-starter.version}</version>
-            </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -112,10 +129,26 @@
     </dependencyManagement>
 
     <dependencies>
+
         <!--aop-->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
         </dependency>
 
         <!-- Apache Lang3 -->
@@ -181,12 +214,6 @@
             <artifactId>poi-ooxml</artifactId>
         </dependency>
 
-        <!--Swagger3相关-->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <!--<optional>true</optional>-->
-        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -194,8 +221,8 @@
         </dependency>
 
         <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
         </dependency>
 
         <dependency>
