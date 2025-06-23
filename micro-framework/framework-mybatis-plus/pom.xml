@@ -20,7 +20,7 @@
         <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
         <mysql.version>8.0.28</mysql.version>
         <jackson-annotation.version>2.17.2</jackson-annotation.version>
-        <swagger-annotations.version>2.2.8</swagger-annotations.version>
+        <swagger.core.version>2.2.20</swagger.core.version>
     </properties>
 
     <dependencyManagement>
@@ -105,8 +105,6 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
-            <optional>true</optional><!--不传递-->
         </dependency>
 
         <!--demo地址(不建议使用打破规范)： https://juejin.cn/post/7356450983838334985-->
@@ -166,7 +164,7 @@
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>${swagger-annotations.version}</version>
+            <version>${swagger.core.version}</version>
             <optional>true</optional>
         </dependency>
 
