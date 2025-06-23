@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.minimalism</groupId>
+        <artifactId>micro-dao</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>basic-dao</artifactId>
+
+    <properties>
+        <mybatis-plus-spring-boot-starter.version>3.5.4</mybatis-plus-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.2.13</pagehelper-spring-boot-starter.version>
+        <alibaba-druid.version>1.1.21</alibaba-druid.version>
+        <com.alibaba.fastjson.version>2.0.32</com.alibaba.fastjson.version>
+        <dynamic-datasource.version>3.3.2</dynamic-datasource.version>
+        <mysql.version>8.0.28</mysql.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--swagger-->
+            <dependency>
+                <groupId>com.minimalism</groupId>
+                <artifactId>framework-knife4j</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--framework-mybatis-plus-->
+            <!--dao-->
+            <dependency>
+                <groupId>com.minimalism</groupId>
+                <artifactId>framework-mybatis-plus</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <!--fastjson-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${com.alibaba.fastjson.version}</version>
+            </dependency>
+            <!--ali线程池-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${alibaba-druid.version}</version>
+            </dependency>
+            <!--dao-->
+            <!--common-->
+            <dependency>
+                <groupId>com.minimalism</groupId>
+                <artifactId>basic-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!--swagger-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-knife4j</artifactId>
+        </dependency>
+
+        <!--framework-mybatis-plus-->
+        <!--dao-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>framework-mybatis-plus</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.yulichang</groupId>
+                    <artifactId>mybatis-plus-join-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <!--SQL-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--dao-->
+        <!--common-->
+        <dependency>
+            <groupId>com.minimalism</groupId>
+            <artifactId>basic-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.pagehelper</groupId>
+                    <artifactId>pagehelper</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--枚举-->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,9 +1,22 @@
-# 极简
 
+****************************************************
+---
+# 极简
 #### 介绍
 让代码变简单
+
+(springboot2)
+
 github 地址：https://github.com/Kirito520Asuna/minimalism
+
 gitee  地址：https://gitee.com/kirito-asuna/minimalism
+
+(springboot3)
+
+github 地址：https://github.com/Kirito520Asuna/actual-combat-ai
+
+gitee  地址：https://gitee.com/kirito-asuna/actual-combat-ai
+
 #### 软件架构
 软件架构说明
 
@@ -17,17 +30,15 @@ gitee  地址：https://gitee.com/kirito-asuna/minimalism
 #### 使用说明
 
 1. 关于安全模块的使用
-- common-module-all 公共模块
-- 包含 openfeign、security、shiro
+- micro-auth 模块
+- 包含 auth、security、shiro
 
-- common-service-module-all/common-service-module 服务模块
-- 已经依赖 common-module-all下的common-security-module,common-shiro-module\n
-- 使用时 只需要引入common-service-module即可 注意安全模块 security,shiro只能二选一
+- micro-auth/auth 服务模块
+- 已经依赖 micro-auth下的auth-security,auth-shiro\n
+- 使用时 只需要引入auth即可 注意安全模块 security,shiro只能多选一
 - 不同的服务 可以引入不同的安全模块（已兼容）
 
-- security,shiro 已提供 权限 测试环境 跳过 的配置 
-- security==> security.annotation.enable=false 
-- shiro==> shiro.annotation.enable=false
+- security,shiro 已提供 权限 测试环境 跳过 的配置
 
 2.  gateway网关
 - gateway网关使用的是springcloud gateway

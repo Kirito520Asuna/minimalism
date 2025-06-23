@@ -2,50 +2,51 @@
 <!DOCTYPE configuration>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+<!--    <include resource="org/springframework/boot/logging/logback/base.xml"/>-->
 
-    <springProperty scope="context" name="appName" source="spring.application.name"/>
+    <springProperty scope="context" name="application" source="spring.application.name"/>
     <springProperty scope="context" name="logPath" source="logging.file.name"/>
-    <springProperty scope="context" name="dev" source="spring.profiles.active"/>
+    <springProperty scope="context" name="runEnv" source="spring.profiles.active"/>
     <springProperty scope="context" name="logstashAddr" source="logstash.addr"/>
     <springProperty scope="context" name="logstashFile" source="logstash.file"/>
     <springProperty scope="context" name="logstashMaxHistory" source="logstash.maxHistory"/>
     <springProperty scope="context" name="logstashTotalSizeCap" source="logstash.totalSizeCap"/>
 
-
+    
     <!-- 日志在工程中的输出位置 -->
-    <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${appName}"/>
+    <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${application}"/>
 
     <!-- 控制台的日志输出样式 -->
     <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+              value="%clr([%X{TRACE_ID:-TRACE_ID}]) %clr([%d{yyyy-MM-dd HH:mm:ss.SSS})]{faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
 
     <!-- 控制台输出 -->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>
         <!-- 日志输出编码 -->
         <encoder>
             <!--输出格式化-->
-            <pattern>[%X{TRACE_ID:-DEFAULT}]  %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <pattern>${application} | %X{TRACE_ID:-TRACE_ID} | %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
             <charset>utf8</charset>
         </encoder>
     </appender>
 
     <!-- 根据日志文件地址是否为有效地址，决定是否启用 RollingFileAppender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logstashFile:-var/log/${appName}/${dev}/${appName}-logstash.log}</file>
+        <file>${logstashFile:-var/log/${application}/${runEnv}/${application}-logstash.log}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 设置日志文件名 -->
-            <fileNamePattern>${logstashFileNamePattern:-var/log/${appName}/${dev}/${appName}-logstash.%d{yyyy-MM-dd}.log}</fileNamePattern>
+            <fileNamePattern>${logstashFileNamePattern:-var/log/${application}/${runEnv}/${application}-logstash.%d{yyyy-MM-dd}.log}</fileNamePattern>
             <!-- 最多保留 30 天的日志 -->
             <maxHistory>${logstashMaxHistory:-30}</maxHistory>
             <!--设置日志文件大小，超过就重新生成文件，默认10M-->
             <totalSizeCap>${logstashTotalSizeCap:-10MB}</totalSizeCap>
         </rollingPolicy>
         <encoder>
-            <pattern>[%X{TRACE_ID:-DEFAULT}]  %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <pattern>${application} | %X{TRACE_ID:-TRACE_ID} | %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>utf8</charset>
         </encoder>
     </appender>
 
@@ -62,9 +63,10 @@
                 <pattern>
                     <pattern>
                         {
-                        "dev": "${dev:-}",
+                        "runEnv": "${runEnv:-}",
+                        "traceId": "${TRACE_ID:-TRACE_ID}",
                         "logLevel": "%level",
-                        "serviceName": "${appName:-}",
+                        "application": "${application:-}",
                         "pid": "${PID:-}",
                         "thread": "%thread",
                         "class": "%logger{40}",
@@ -83,10 +85,10 @@
         </connectionStrategy>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="LOGSTASH"/>
-        <appender-ref ref="CONSOLE"/>
-    </root>
+<!--    <root level="INFO">-->
+<!--        <appender-ref ref="LOGSTASH"/>-->
+<!--        <appender-ref ref="CONSOLE"/>-->
+<!--    </root>-->
 
     <!--禁掉一些包-->
     <logger name="com.alibaba.nacos" level="OFF"></logger>
