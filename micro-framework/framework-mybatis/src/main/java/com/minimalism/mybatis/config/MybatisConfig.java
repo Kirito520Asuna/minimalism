@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnMissingBean(AbsMybatisConfig.class)
-public class MybatisPlusConfig implements AbsMybatisConfig {
+public class MybatisConfig implements AbsMybatisConfig {
     @Bean
     @ConditionalOnBean(AbsEntityHandler.class)
     @ConditionalOnMissingBean(MpUserService.class)
