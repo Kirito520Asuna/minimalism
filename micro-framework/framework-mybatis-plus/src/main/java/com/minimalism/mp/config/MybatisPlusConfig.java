@@ -1,5 +1,6 @@
 package com.minimalism.mp.config;
 
+import com.minimalism.database.core.service.UserCoreService;
 import com.minimalism.mp.abs.config.AbsMybatisPlusConfig;
 import com.minimalism.mp.abs.handler.AbsEntityHandler;
 import com.minimalism.mp.abs.service.DataScopeService;
@@ -75,8 +76,8 @@ public class MybatisPlusConfig implements AbsMybatisPlusConfig {
 
     @Bean
     @ConditionalOnBean(AbsEntityHandler.class)
-    @ConditionalOnMissingBean(MpUserService.class)
-    public MpUserService mpUserService() {
+    @ConditionalOnMissingBean(UserCoreService.class)
+    public UserCoreService mpUserService() {
         return new MpUserServiceImpl();
     }
 

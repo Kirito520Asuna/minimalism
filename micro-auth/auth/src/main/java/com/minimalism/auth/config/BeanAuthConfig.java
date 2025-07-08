@@ -4,7 +4,7 @@ import com.minimalism.auth.service.AuthUserService;
 import com.minimalism.auth.service.impl.SecurityAuthUserService;
 import com.minimalism.auth.service.impl.ShiroAuthUserService;
 import com.minimalism.auth.service.impl.SimpleAuthUserService;
-import com.minimalism.auth.service.impl.mp.AuthUserMpService;
+import com.minimalism.auth.service.impl.database.AuthUserCoreService;
 import com.minimalism.basic.core.abs.api.service.AbstractApiSaltService;
 import com.minimalism.basic.core.abs.api.service.SimpleApiSaltService;
 import com.minimalism.basic.core.abs.auth.config.AbsAuthSecurityConfig;
@@ -14,8 +14,9 @@ import com.minimalism.basic.core.abs.auth.core.AbsShiroAuth;
 import com.minimalism.basic.core.abs.bean.AbstractAuthBean;
 import com.minimalism.basic.core.abs.bean.AbstractSecurityBean;
 import com.minimalism.basic.core.abs.bean.AbstractShiroBean;
-import com.minimalism.mp.abs.handler.AbsEntityHandler;
-import com.minimalism.mp.abs.service.MpUserService;
+import com.minimalism.database.core.abs.bean.DatabaseBean;
+import com.minimalism.database.core.service.UserCoreService;
+
 import javax.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -67,9 +68,9 @@ public class BeanAuthConfig implements AbstractAuthBean {
     }
 
     @Bean
-    @ConditionalOnBean(AbsEntityHandler.class)
-    @ConditionalOnMissingBean(MpUserService.class)
-    public MpUserService authUserMpService() {
-        return new AuthUserMpService();
+    @ConditionalOnBean(DatabaseBean.class)
+    @ConditionalOnMissingBean(UserCoreService.class)
+    public UserCoreService authUserCoreService() {
+        return new AuthUserCoreService();
     }
 }

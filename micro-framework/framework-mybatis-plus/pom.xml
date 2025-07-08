@@ -143,6 +143,12 @@
 
         <dependency>
             <groupId>com.minimalism</groupId>
+            <artifactId>framework-database-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.minimalism</groupId>
             <artifactId>framework-dynamic-datasource</artifactId>
             <version>${revision}</version>
         </dependency>

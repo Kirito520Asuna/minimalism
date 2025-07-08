@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.minimalism.database.core.abs.bean.DatabaseBean;
 import org.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -14,7 +15,7 @@ import org.mybatis.spring.annotation.MapperScan;
  */
 
 @MapperScan(basePackages = {"com.minimalism.**.dao","com.minimalism.**.**.dao","com.minimalism.**.mapper","com.minimalism.**.**.mapper"})
-public interface AbsMybatisPlusConfig {
+public interface AbsMybatisPlusConfig extends DatabaseBean {
     /**
      * 3.4.0之前的版本用这个
      *
