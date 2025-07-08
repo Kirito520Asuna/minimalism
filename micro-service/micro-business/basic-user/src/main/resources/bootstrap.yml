@@ -136,7 +136,7 @@ mybatis-plus:
 logging:
   # 日志等级
   level:
-    com.actual.combat: debug
+    com.minimalism: debug
 
 config:
   captcha:
@@ -155,3 +155,8 @@ config:
       allowedHeader: "*"
       allowCredentials: true
       maxAge: 360000
+
+#  auth:
+#    shiro:
+#      annotation:
+#        enable: false

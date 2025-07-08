@@ -42,7 +42,7 @@ spring:
 # 3.修改项目mapper目录日志级别为debug logging.level.com.im.mapper=DEBUG
 logging:
   level:
-    com.actual.combat: DEBUG
+    com.minimalism: DEBUG
 
 knife4j:
   cors: true
