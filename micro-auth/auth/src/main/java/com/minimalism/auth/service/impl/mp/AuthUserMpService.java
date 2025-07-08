@@ -2,6 +2,7 @@ package com.minimalism.auth.service.impl.mp;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.minimalism.aop.abs.bean.AbsBean;
+import com.minimalism.auth.service.AuthUserService;
 import com.minimalism.mp.abs.service.MpUserService;
 
 /**
@@ -12,6 +13,6 @@ import com.minimalism.mp.abs.service.MpUserService;
 public class AuthUserMpService implements MpUserService, AbsBean {
     @Override
     public String getUserId() {
-        return SpringUtil.getBean(AuthUserMpService.class).getUserId();
+        return SpringUtil.getBean(AuthUserService.class).getUserId();
     }
 }
