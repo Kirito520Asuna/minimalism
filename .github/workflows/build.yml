@@ -92,5 +92,5 @@ jobs:
           prerelease: ${{ github.event.inputs.prerelease == 'true' || false }}
           #prerelease: false 
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub Token 认证
+          GITHUB_TOKEN: ${{ secrets.PAT }}  # 使用 GitHub Token 认证
 
