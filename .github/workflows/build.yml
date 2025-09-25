@@ -27,14 +27,15 @@ on:
         description: '输入 Java 版本 (如 8, 11, 17)'
         required: true
         default: '8'
-#       draft:
-#         description: '是否为草稿 Release (true/false)'
-#         type: boolean
-#         default: false
-#       prerelease:
-#         description: '是否为预发布 Release (true/false)'
-#         type: boolean
-#         default: false
+      draft:
+        description: '是否为草稿 Release (true/false)'
+        type: boolean
+        default: false
+      prerelease:
+        description: '是否为预发布 Release (true/false)'
+        type: boolean
+        default: false
+
 
 jobs:
   build-and-release:
@@ -72,7 +73,8 @@ jobs:
       - name: 5.上传 JAR 到 GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: **/target/**.jar  
+          files: |
+          **/target/**.jar  
           tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
           name: Release ${{ github.event.inputs.tag_name || github.ref_name }} ${{ github.event.inputs.draft == 'true' && '(Draft)' || '' }} ${{ github.event.inputs.prerelease == 'true' && '(Pre-release)' || '' }}
           body: |
@@ -80,12 +82,12 @@ jobs:
             - 标签: ${{ github.event.inputs.tag_name || github.ref_name }}
             - Java 版本: ${{ github.event.inputs.java_version || '8' }}
             - 是否跳过测试: ${{ github.event.inputs.skip_tests == 'true' && '是' || '否' }}
-          #- Draft 状态: ${{ github.event.inputs.draft == 'true' && '是' || '否' }}
-          #- Pre-release 状态: ${{ github.event.inputs.prerelease == 'true' && '是' || '否' }}
-          #draft: ${{ github.event.inputs.draft == 'true' || false }}
-          draft: false 
-          #prerelease: ${{ github.event.inputs.prerelease == 'true' || false }}
-          prerelease: false 
+            - Draft 状态: ${{ github.event.inputs.draft == 'true' && '是' || '否' }}
+            - Pre-release 状态: ${{ github.event.inputs.prerelease == 'true' && '是' || '否' }}
+          draft: ${{ github.event.inputs.draft == 'true' || false }}
+          #draft: false 
+          prerelease: ${{ github.event.inputs.prerelease == 'true' || false }}
+          #prerelease: false 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub Token 认证
 
