@@ -50,10 +50,9 @@ jobs:
             ${{ runner.os }}-maven-
       - name: 使用 Maven 构建并生成 JAR
         run: |
-         local key= ${{ inputs.skip_tests == 'true' && '-DskipTests' || '' }}
-         echo "==>key=${key}<=="
-         echo "mvn clean package -B ${key}"  # 打印命令
-         mvn clean package -B ${key}  # 根据输入动态跳过测试
+         echo "==>key=${{ inputs.skip_tests == 'true' && '-DskipTests' || '' }}<=="
+         echo "mvn clean package -B ${{ inputs.skip_tests == 'true' && '-DskipTests' || '' }}"  # 打印命令
+         mvn clean package -B ${{ inputs.skip_tests == 'true' && '-DskipTests' || '' }}  # 根据输入动态跳过测试
          echo "Maven 构建 完成"
 
       - name: 上传 JAR 到 GitHub Release
