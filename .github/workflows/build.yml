@@ -89,10 +89,10 @@ jobs:
           fi
           echo "版本号验证通过"
 
-      - name: 5.设置 Java 环境 version=${{ env.JAVA_VERSION }
+      - name: 5.设置 Java 环境 version=${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }
+          java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
 
       - name: 6.缓存 Maven 依赖
