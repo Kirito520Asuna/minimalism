@@ -5,7 +5,8 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-name: Java 项目构建生成 JAR 包并压缩成 ZIP 发布
+name: Java Jar To Zip Publish
+run-name: "Jar ${{ github.event.inputs.tag_name || 'v-manual' }} version"
 
 on:
   push:
