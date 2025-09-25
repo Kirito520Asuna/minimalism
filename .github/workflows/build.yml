@@ -103,7 +103,7 @@ jobs:
           echo "ZIP 文件内容:"
           unzip -l jars-${{ github.event.inputs.tag_name || github.ref_name }}.zip
 
-      - name: 7.解压 ZIP 文件
+      - name: 8.解压 ZIP 文件
         run: |
           mkdir -p extracted-jars
           unzip jars-${{ github.event.inputs.tag_name || github.ref_name }}.zip -d extracted-jars
