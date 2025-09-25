@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      releases: write
+      #releases: write
       actions: read
     steps:
       - name: 1.检出代码
