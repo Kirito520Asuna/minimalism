@@ -5,7 +5,6 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-
 name: Java 项目构建生成 JAR 包并发布
 
 on:
@@ -38,9 +37,13 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest
-
-    steps:
+      runs-on: ubuntu-latest
+      
+      permissions:
+        contents: write
+        actions: read
+        
+      steps:
       - name: 1.检出代码
         uses: actions/checkout@v4
 
@@ -49,7 +52,7 @@ jobs:
         with:
           java-version: ${{ github.event.inputs.java_version || '8' }}  # 使用输入的 Java 版本，默认为 8
           distribution: 'temurin'
-        
+
       - name: 3.缓存 Maven 依赖
         uses: actions/cache@v4
         with:
@@ -70,13 +73,13 @@ jobs:
             fi
             echo "Maven 构建 完成"
         # 5. 打包所有 JAR 文件成 ZIP
-       - name: 5.打包所有 JAR 文件成 ZIP
-         run: |
+      - name: 5.打包所有 JAR 文件成 ZIP
+        run: |
             # 查找所有 JAR 文件并打包成 ZIP
             find . -type f -path '*/target/*.jar' -exec zip -j jars-${{ github.event.inputs.tag_name || github.ref_name }}.zip {} +
             # -j: 仅打包文件，不保留目录结构
             # +: 尽量将多个文件放入一个 zip 命令，减少调用次数
-         shell: bash
+        shell: bash
 
         # 6. 调试：验证 ZIP 文件
       - name: 6.验证 ZIP 文件
@@ -101,4 +104,3 @@ jobs:
           #prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}  # 使用 GitHub Token 认证
-
