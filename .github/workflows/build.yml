@@ -70,11 +70,14 @@ jobs:
             fi
             echo "Maven 构建 完成"
 
-      - name: 5.上传 JAR 到 GitHub Release
+      # 5. 调试：列出所有 JAR 文件
+      - name: 5.列出所有 JAR 文件
+        run: find . -type f -path '*/target/*.jar' -exec ls -l {} \;
+
+      - name: 6.上传 JAR 到 GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-          **/target/**.jar  
+          files: ${{ steps.collect_jars.outputs.files }}  # 使用动态收集的路径
           tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
           name: Release ${{ github.event.inputs.tag_name || github.ref_name }} ${{ github.event.inputs.draft == 'true' && '(Draft)' || '' }} ${{ github.event.inputs.prerelease == 'true' && '(Pre-release)' || '' }}
           body: |
