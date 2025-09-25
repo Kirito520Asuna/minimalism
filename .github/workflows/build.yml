@@ -48,12 +48,18 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+            
       - name: 使用 Maven 构建并生成 JAR
         run: |
-         echo "==>key=${{ inputs.skip_tests == 'true' && '-DskipTests' || '' }}<=="
-         echo "mvn clean package -B ${{ inputs.skip_tests == 'true' && '-DskipTests' || '' }}"  # 打印命令
-         mvn clean package -B ${{ inputs.skip_tests == 'true' && '-DskipTests' || '' }}  # 根据输入动态跳过测试
-         echo "Maven 构建 完成"
+            if [ "${{ inputs.skip_tests }}" = "true" ]; then
+              echo "跳过测试"
+              echo "mvn clean package -B -DskipTests"  # 打印命令
+              mvn clean package -B -DskipTests  # 根据输入动态跳过测试
+            else
+              echo "mvn clean package -B "  # 打印命令
+              mvn clean package -B   # 根据输入动态跳过测试
+            fi
+            echo "Maven 构建 完成"
 
       - name: 上传 JAR 到 GitHub Release
         uses: softprops/action-gh-release@v2
@@ -63,5 +69,6 @@ jobs:
           name: Release ${{ github.event.inputs.tag_name || github.ref_name }}  # Release 标题
           draft: false  # 非草稿，直接发布
           prerelease: false  # 非预发布
+          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub Token 认证
