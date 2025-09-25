@@ -85,7 +85,7 @@ jobs:
       - name: 6.验证 ZIP 文件
         run: ls -la jars-${{ github.event.inputs.tag_name || github.ref_name }}.zip
 
-      - name: 7.上传 JAR 到 GitHub Release
+      - name: 7.上传 jars-${{ github.event.inputs.tag_name || github.ref_name }}.zip 到 GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: jars-${{ github.event.inputs.tag_name || github.ref_name }}.zip  # 上传生成的 ZIP 文件
@@ -95,9 +95,9 @@ jobs:
             **Release 信息**
             - 标签: ${{ github.event.inputs.tag_name || github.ref_name }}
             - Java 版本: ${{ github.event.inputs.java_version || '8' }}
-            - 是否跳过测试: ${{ github.event.inputs.skip_tests == 'true' && '是' || '否' }}
-            - Draft 状态: ${{ github.event.inputs.draft == 'true' && '是' || '否' }}
-            - Pre-release 状态: ${{ github.event.inputs.prerelease == 'true' && '是' || '否' }}
+#            - 是否跳过测试: ${{ github.event.inputs.skip_tests == 'true' && '是' || '否' }}
+#            - Draft 状态: ${{ github.event.inputs.draft == 'true' && '是' || '否' }}
+#            - Pre-release 状态: ${{ github.event.inputs.prerelease == 'true' && '是' || '否' }}
           draft: ${{ github.event.inputs.draft == 'true' || false }}
           #draft: false
           prerelease: ${{ github.event.inputs.prerelease == 'true' || false }}
