@@ -53,10 +53,10 @@ jobs:
           echo "Event Name: ${{ github.event_name }}"
           echo "Ref: ${{ github.ref }}"
           echo "Tag Name: ${{ github.event.inputs.tag_name || github.ref_name }}"
-          echo "Skip Tests: ${{ github.event.inputs.skip_tests || 'true' }}"
+          echo "Skip Tests: ${{ github.event.inputs.skip_tests || true }}"
           echo "Java Version: ${{ github.event.inputs.java_version || '8' }}"
           echo "Jar Dir Prefix: ${{ github.event.inputs.jar_dir_prefix || 'micro-service' }}"
-          echo "Draft: ${{ github.event.inputs.draft || 'false' }}"
+          echo "Draft: ${{ github.event.inputs.draft || false }}"
           echo "Prerelease: ${{ github.event.inputs.prerelease || 'false' }}"
           echo "Repository: ${{ github.repository }}"
           echo "SHA: ${{ github.sha }}"
@@ -105,7 +105,7 @@ jobs:
 
       - name: 7.使用 Maven 构建并生成 JAR
         run: |
-          if [ "${{ inputs.skip_tests }}" = "true" ]; then
+          if [ ${{ env.SKIP_TESTS }} ]; then
             echo "跳过测试"
             echo "mvn clean package -B -DskipTests -Dquickly"
             mvn clean package -B -DskipTests -Dquickly
@@ -156,7 +156,7 @@ jobs:
             jars-${{ env.TAG_NAME }}.zip
             extracted-jars/*.jar
           tag_name: ${{ env.TAG_NAME }}
-          name: Release ${{ env.TAG_NAME }} ${{ env.DRAFT == 'true' && '(Draft)' || '' }} ${{ env.PRERELEASE == 'true' && '(Pre-release)' || '' }}
+          name: Release ${{ env.TAG_NAME }} ${{ env.DRAFT == true && '(Draft)' || '' }} ${{ env.PRERELEASE == true && '(Pre-release)' || '' }}
           body: |
             **Release 信息**
             - 标签: ${{ env.TAG_NAME }}
@@ -164,7 +164,7 @@ jobs:
           #            - 是否跳过测试: ${{ github.event.inputs.skip_tests == 'true' && '是' || '否' }}
           #            - Draft 状态: ${{ github.event.inputs.draft == 'true' && '是' || '否' }}
           #            - Pre-release 状态: ${{ github.event.inputs.prerelease == 'true' && '是' || '否' }}
-          draft: ${{ env.DRAFT == 'true' || false }}
-          prerelease: ${{ env.PRERELEASE == 'true' || false }}
+          draft: ${{ env.DRAFT == true || false }}
+          prerelease: ${{ env.PRERELEASE == true || false }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
