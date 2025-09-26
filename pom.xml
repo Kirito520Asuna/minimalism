@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <project-module.version>0.0.1-BOOT2-SNAPSHOT</project-module.version>
+        <project-module.version>1.0.0-alpha.1</project-module.version>
         <revision>${project-module.version}</revision>
 
         <java.version>8</java.version>
