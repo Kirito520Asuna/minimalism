@@ -68,7 +68,7 @@ jobs:
         run: |
           TAG_NAME="${{ github.event.inputs.tag_name || github.ref_name }}"
           SKIP_TESTS="${{ github.event.inputs.skip_tests || true }}"
-          JAVA_VERSION="${{ github.event.inputs.java_version || 8 }}"
+          JAVA_VERSION="${{ github.event.inputs.java_version || '8' }}"
           JAR_DIR_PREFIX="${{ github.event.inputs.jar_dir_prefix || 'micro-service' }}"
           DRAFT="${{ github.event.inputs.draft || false }}"
           PRERELEASE="${{ github.event.inputs.prerelease || false }}"
