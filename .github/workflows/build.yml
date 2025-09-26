@@ -57,7 +57,7 @@ jobs:
           echo "Java Version: ${{ github.event.inputs.java_version || '8' }}"
           echo "Jar Dir Prefix: ${{ github.event.inputs.jar_dir_prefix || 'micro-service' }}"
           echo "Draft: ${{ github.event.inputs.draft || false }}"
-          echo "Prerelease: ${{ github.event.inputs.prerelease || 'false' }}"
+          echo "Prerelease: ${{ github.event.inputs.prerelease || false }}"
           echo "Repository: ${{ github.repository }}"
           echo "SHA: ${{ github.sha }}"
 
