@@ -12,15 +12,15 @@ import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCusto
  * @Description
  */
 public interface QpsMetricsCustomizer {
-    //
+    //增强全局 QPS 指标：按路由、按状态码、按异常类型
     default MeterRegistryCustomizer<MeterRegistry> MetricsCustomizer() {
         return registry -> {
             Tags commonTags = Tags.of("application", "gateway");
-            //
+            //全局请求计数器（可替代默认 http.server.requests）
             Counter.builder("gateway.requests.total")
                     .description("gateway request total")
                     .register(registry);
-            //
+            //更细粒度的 Timer（包含路由信息）
             Timer.builder("gateway.requests")
                     .tags(commonTags)
                     .description("gateway request timer")
