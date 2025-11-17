@@ -12,6 +12,44 @@ import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCusto
  * @Description
  */
 public interface QpsMetricsCustomizer {
+    /**
+     * 用法配置：
+     *
+     * server:
+     *   port: 8080
+     *
+     * spring:
+     *   cloud:
+     *     gateway:
+     *       routes:
+     *         - id: user-service
+     *           uri: lb://user-service
+     *           predicates:
+     *             - Path=/user/**
+     *           filters:
+     *             - StripPrefix=1
+     *
+     * management:
+     *   endpoints:
+     *     web:
+     *       exposure:
+     *         include: health,info,prometheus,metrics,gateway   # 暴露 gateway 端点
+     *   endpoint:
+     *     prometheus:
+     *       enabled: true
+     *   metrics:
+     *     tags:
+     *       application: ${spring.application.name:gateway}
+     *     export:
+     *       prometheus:
+     *         enabled: true
+     *     web:
+     *       server:
+     *         request:
+     *           autotime:
+     *             enabled: true           # 自动记录 http.server.requests
+     * @return
+     */
     //增强全局 QPS 指标：按路由、按状态码、按异常类型
     default MeterRegistryCustomizer<MeterRegistry> MetricsCustomizer() {
         return registry -> {
