@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.redis.abs.aop.AbsRedisAspect;
 import com.minimalism.redis.aop.redis.RedisLock;
+import com.minimalism.redis.config.RedissonConfig;
 import com.minimalism.redis.exception.RedisException;
 import javax.annotation.Resource;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @Getter
+@ConditionalOnBean(RedissonConfig.class)
 public class RedisLockAspect implements AbsRedisAspect {
     /**
      * 缓存参数缓存key模板
