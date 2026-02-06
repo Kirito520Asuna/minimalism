@@ -6,7 +6,9 @@ import com.minimalism.redis.ban.BanConfiguration;
 import com.minimalism.redis.ban.SimpleBanManager;
 import com.minimalism.redis.service.RedisService;
 import com.minimalism.redis.service.impl.SimpleRedisService;
+
 import javax.annotation.Resource;
+
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -27,6 +29,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @EnableAspectJAutoProxy
 @EnableCaching // 开启Spring Redis Cache，使用注解驱动缓存机制
 @ConditionalOnBean(RedisConfiguration.class)
+@ConditionalOnExpression("${spring.redis.mode}!= 'none'")
 public class RedissonConfig implements AbsRedissonConfig {
 
     @Resource
@@ -45,7 +48,8 @@ public class RedissonConfig implements AbsRedissonConfig {
         return AbsRedissonConfig.super.getRedissonClient(configuration);
     }
 
-    @Bean @Primary
+    @Bean
+    @Primary
     @SuppressWarnings(value = {"unchecked", "rawtypes"})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         return initRedisTemplate(connectionFactory);
