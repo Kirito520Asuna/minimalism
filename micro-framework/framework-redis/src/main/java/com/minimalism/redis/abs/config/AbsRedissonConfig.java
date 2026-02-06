@@ -136,7 +136,7 @@ public interface AbsRedissonConfig {
                 baseConfig = singleServerConfig;
                 break;
         }
-        if (redisProperties.getPassword() != null&& redisProperties.getPassword().trim() != "") {
+        if (redisProperties.getUsername() != null&& redisProperties.getUsername().trim() != "") {
             baseConfig.setUsername(redisProperties.getUsername());
         }
         if (redisProperties.getPassword() != null&& redisProperties.getPassword().trim() != "") {
