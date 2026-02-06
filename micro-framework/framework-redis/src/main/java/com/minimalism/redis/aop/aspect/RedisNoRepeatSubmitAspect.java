@@ -8,6 +8,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import com.minimalism.redis.abs.aop.AbsRedisAspect;
 import com.minimalism.redis.aop.redis.RedisNoRepeatSubmit;
+import com.minimalism.redis.config.RedissonConfig;
 import com.minimalism.redis.exception.RedisException;
 import com.minimalism.redis.service.RedisService;
 import javax.annotation.Resource;
@@ -18,6 +19,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -38,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 @Getter
+@ConditionalOnBean(RedissonConfig.class)
 public class RedisNoRepeatSubmitAspect implements AbsRedisAspect {
     @Lazy
     @Resource
