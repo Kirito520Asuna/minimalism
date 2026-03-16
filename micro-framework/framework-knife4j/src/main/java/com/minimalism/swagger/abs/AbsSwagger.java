@@ -366,7 +366,7 @@ public interface AbsSwagger {
                 .components(new Components()
                         .addSecuritySchemes(authorization, new SecurityScheme().name(authorization)
                                 .type(SecurityScheme.Type.HTTP)
-                                .scheme("Bearer ")
+                                .scheme("bearer")
                                 .in(SecurityScheme.In.HEADER)
                                 .description("鉴权token")));
         return api;
